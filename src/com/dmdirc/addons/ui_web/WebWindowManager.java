@@ -111,13 +111,13 @@ public class WebWindowManager implements FrameListener {
         return windowsById.get(id);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addWindow(final FrameContainer window, final boolean focus) {
         doAddWindow(window, focus);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void delWindow(final FrameContainer window) {
         if (windows.containsKey(window)) {
@@ -126,7 +126,7 @@ public class WebWindowManager implements FrameListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addWindow(final FrameContainer parent, final FrameContainer window,
             final boolean focus) {
@@ -135,7 +135,7 @@ public class WebWindowManager implements FrameListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void delWindow(final FrameContainer parent, final FrameContainer window) {
         if (windows.containsKey(parent)) {

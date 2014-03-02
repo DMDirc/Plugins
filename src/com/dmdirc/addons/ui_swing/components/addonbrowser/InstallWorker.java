@@ -71,7 +71,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
         this.pluginManager = pluginManager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected String doInBackground() {
         try {
@@ -107,7 +107,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         String message = "";

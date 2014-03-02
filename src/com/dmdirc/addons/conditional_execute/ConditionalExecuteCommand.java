@@ -58,7 +58,7 @@ public class ConditionalExecuteCommand extends Command {
         super(controller);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {

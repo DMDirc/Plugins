@@ -105,25 +105,25 @@ public class ResultsPanel extends JPanel implements TableModelListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mouseReleased(final MouseEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore

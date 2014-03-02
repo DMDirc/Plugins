@@ -232,7 +232,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
 
         updateTimer = new Timer("Nowplaying config timer");
         updateTimer.schedule(new TimerTask() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 try {
@@ -250,55 +250,55 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
      */
     private static class DummyMediaSource implements MediaSource {
 
-        /** {@inheritDoc} */
+        
         @Override
         public MediaSourceState getState() {
             return MediaSourceState.PLAYING;
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getAppName() {
             return "MyProgram";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getArtist() {
             return "The Artist";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getTitle() {
             return "Song about nothing";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getAlbum() {
             return "Album 45";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getLength() {
             return "3:45";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getTime() {
             return "1:20";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getFormat() {
             return "flac";
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public String getBitrate() {
             return "128";

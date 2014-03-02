@@ -105,7 +105,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
             /** The colour renderer we're using for colour cells. */
             private final ColourRenderer colourRenderer = new ColourRenderer(colourManager);
 
-            /** {@inheritDoc} */
+            
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -116,7 +116,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 }
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -224,7 +224,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         return res;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void save() {
         // Remove all old config entries
@@ -239,7 +239,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         final boolean enable = table.getSelectedRow() > -1

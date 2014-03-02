@@ -176,7 +176,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         manager.getTree().repaint();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         if (("ui".equals(domain) || "treeview".equals(domain))

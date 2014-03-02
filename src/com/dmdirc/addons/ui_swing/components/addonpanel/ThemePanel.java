@@ -86,14 +86,14 @@ public class ThemePanel extends AddonPanel {
         this.userConfig = userConfig;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected JTable populateList(final JTable table) {
         final List<Theme> list = new ArrayList<>(themeManager.getAllThemes().values());
         Collections.sort(list);
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 ((DefaultTableModel) addonList.getModel()).setRowCount(0);
@@ -115,7 +115,7 @@ public class ThemePanel extends AddonPanel {
         return addonList;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected String getTypeName() {
         return "themes";

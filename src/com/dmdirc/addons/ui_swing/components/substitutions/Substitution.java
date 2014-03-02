@@ -61,7 +61,7 @@ public final class Substitution {
         return value;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String toString() {
         return value;

@@ -249,7 +249,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         return suceeded;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         if ("nickListAltBackgroundColour".equals(key)
@@ -276,11 +276,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 nicklistModel.replace(clients);
@@ -288,11 +288,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientListUpdated() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 nicklistModel.sort();
@@ -301,11 +301,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientAdded(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 nicklistModel.add(client);
@@ -313,11 +313,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientRemoved(final ChannelClientInfo client) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 nicklistModel.remove(client);

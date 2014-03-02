@@ -78,7 +78,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
         this.colourManager = colourManager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
@@ -267,7 +267,7 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();

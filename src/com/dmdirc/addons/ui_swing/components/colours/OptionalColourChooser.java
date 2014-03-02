@@ -137,7 +137,7 @@ public class OptionalColourChooser extends JPanel implements
         previewPanel.setToolTipText("");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isEnabled() {
         return enabled.isSelected();

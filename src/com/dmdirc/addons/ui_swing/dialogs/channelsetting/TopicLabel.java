@@ -158,7 +158,7 @@ public class TopicLabel extends JPanel {
         return topic;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setBackground(final Color bg) {
         super.setBackground(bg);
@@ -169,7 +169,7 @@ public class TopicLabel extends JPanel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setForeground(final Color fg) {
         super.setForeground(fg);
@@ -180,27 +180,27 @@ public class TopicLabel extends JPanel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void repaint() {
         //Deliberate NOOP
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final Object oldValue, final Object newValue) {
         //Deliberate NOOP
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final boolean oldValue, final boolean newValue) {
         //Deliberate NOOP
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final int oldValue, final int newValue) {

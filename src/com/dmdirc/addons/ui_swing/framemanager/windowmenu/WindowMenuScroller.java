@@ -73,11 +73,11 @@ public class WindowMenuScroller implements ConfigChangeListener {
                 "windowMenuScrollInterval", this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 scroller.dispose();

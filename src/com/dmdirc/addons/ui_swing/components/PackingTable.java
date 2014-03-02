@@ -109,19 +109,19 @@ public class PackingTable extends JTable {
         super.setDragEnabled(false);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setAutoResizeMode(final int mode) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final boolean getScrollableTracksViewportHeight() {
         return getPreferredSize().height < getParent().getHeight();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final void paint(final Graphics g) {
         packColumns();

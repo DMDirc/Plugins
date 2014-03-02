@@ -169,7 +169,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 new AbstractAction("rightArrowAction") {
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent evt) {
                 final JButton button = (JButton) getFocusTraversalPolicy().
@@ -183,7 +183,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 new AbstractAction("leftArrowAction") {
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent evt) {
                 final JButton button = (JButton) getFocusTraversalPolicy().
@@ -250,13 +250,13 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 + " lines.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void keyPressed(final KeyEvent e) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void keyReleased(final KeyEvent e) {
         // Do nothing

@@ -147,7 +147,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
             addMouseListener(this);
             if (this.timeout != null && this.timeout > 0) {
                 new Timer("OSD Display Timer").schedule(new TimerTask() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void run() {
                         osdManager.closeWindow(OsdWindow.this);
@@ -263,7 +263,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
                 Colour.WHITE)));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setVisible(final boolean b) {
         super.setVisible(b);
@@ -318,7 +318,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
         this.desiredY = y;
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 setLocation(getDesiredX(), getDesiredY());
@@ -326,7 +326,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String toString() {
         return label.getText();

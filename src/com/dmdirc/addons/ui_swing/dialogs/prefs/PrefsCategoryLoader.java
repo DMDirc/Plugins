@@ -102,7 +102,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         return addCategory(category);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         categoryPanel.categoryLoaded(this, category);
@@ -138,7 +138,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
         if (!category.getDescription().isEmpty()) {
             UIUtilities.invokeAndWait(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     panel.add(new TextLabel(category.getDescription()), "span, "
@@ -192,7 +192,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
         final JComponent option = UIUtilities.invokeAndWait(
                 new Callable<JComponent>() {
-            /** {@inheritDoc} */
+            
             @Override
             public JComponent call() {
                 JComponent option = factory.getComponent(setting);

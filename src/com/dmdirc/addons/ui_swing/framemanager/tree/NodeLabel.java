@@ -106,7 +106,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         selected = false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void selectionChanged(final TextFrame window) {
         if (equals(window.getContainer())) {
@@ -116,7 +116,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void notificationSet(final FrameContainer window,
             final Colour colour) {
@@ -125,7 +125,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void notificationCleared(final FrameContainer window) {
         if (equals(window)) {
@@ -133,7 +133,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         if (equals(window)) {
@@ -141,13 +141,13 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void titleChanged(final FrameContainer window,
             final String title) {
@@ -190,7 +190,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         return notificationColour;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean equals(final Object obj) {
         if (window == null) {
@@ -200,7 +200,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         return window.equals(obj);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int hashCode() {
         if (window == null) {
@@ -210,7 +210,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
         return window.hashCode();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Font getFont() {
         return UIManager.getFont("TextPane.font");

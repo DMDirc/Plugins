@@ -52,7 +52,7 @@ public class DCCChat extends DCC {
         this.handler = handler;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void socketOpened() {
         active = true;
@@ -67,7 +67,7 @@ public class DCCChat extends DCC {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void socketClosed() {
         out = null;
@@ -78,7 +78,7 @@ public class DCCChat extends DCC {
         active = false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected boolean handleSocket() {
         if (out == null || in == null) {
@@ -100,7 +100,7 @@ public class DCCChat extends DCC {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isWriteable() {
         return out != null;

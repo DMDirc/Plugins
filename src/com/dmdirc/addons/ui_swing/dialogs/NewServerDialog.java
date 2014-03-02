@@ -137,7 +137,7 @@ public class NewServerDialog extends StandardDialog implements
         update();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void display() {
         super.display();
@@ -289,7 +289,7 @@ public class NewServerDialog extends StandardDialog implements
                         getConnection();
 
                 new LoggingSwingWorker<Void, Void>() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     protected Void doInBackground() {
                         if (connection == null) {
@@ -322,24 +322,24 @@ public class NewServerDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean selectionChanged(final VetoableChangeEvent e) {
         return e.getNewValue() != null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configProviderAdded(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 populateProfiles();
@@ -347,18 +347,18 @@ public class NewServerDialog extends StandardDialog implements
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dispose() {
         identityController.unregisterIdentityListener(this);
         super.dispose();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configProviderRemoved(final ConfigProvider configProvider) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 populateProfiles();

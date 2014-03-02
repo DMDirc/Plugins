@@ -76,11 +76,11 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         frame.addFrameInfoListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
@@ -90,11 +90,11 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
@@ -104,7 +104,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         // Do nothing
@@ -121,7 +121,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
                 .getSwingWindow(frame));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void selectionChanged(final TextFrame window) {
         if (frame.equals(window.getContainer())) {
@@ -135,7 +135,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public FrameContainer getFrame() {
         return frame;

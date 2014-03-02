@@ -92,19 +92,19 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         fireTableDataChanged();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getRowCount() {
         return updates.size();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getColumnCount() {
         return 4;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
@@ -121,7 +121,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
@@ -139,13 +139,13 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         return columnIndex == 0;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         if (updates.size() <= rowIndex) {
@@ -179,7 +179,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {
@@ -273,7 +273,7 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
         return updates.indexOf(update);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void updateStatusChanged(final UpdateComponent component,
             final UpdateStatus status, final double progress) {

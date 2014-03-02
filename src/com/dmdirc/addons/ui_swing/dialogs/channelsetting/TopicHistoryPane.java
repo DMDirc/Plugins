@@ -107,7 +107,7 @@ public class TopicHistoryPane extends JPanel implements ListSelectionListener {
         return null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {

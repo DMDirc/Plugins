@@ -30,7 +30,7 @@ import java.util.Comparator;
  */
 public class StringArrayComparator implements Comparator<String[]> {
 
-    /** {@inheritDoc} */
+    
     @Override
     public int compare(final String[] o1, final String[] o2) {
         String array1 = Arrays.toString(o1);

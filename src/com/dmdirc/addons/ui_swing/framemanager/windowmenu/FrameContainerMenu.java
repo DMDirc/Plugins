@@ -72,11 +72,11 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         frame.addFrameInfoListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if ((frame != null && window != null) && frame.equals(window)) {
@@ -86,11 +86,11 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if ((frame != null && window != null) && frame.equals(window)) {
@@ -100,7 +100,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         // Do nothing
@@ -117,7 +117,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
                 .getSwingWindow(frame));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void selectionChanged(final TextFrame window) {
         if (frame.equals(window.getContainer())) {
@@ -134,7 +134,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         setFont(getFont().deriveFont(Font.ITALIC));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public FrameContainer getFrame() {
         return frame;

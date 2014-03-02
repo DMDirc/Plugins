@@ -301,7 +301,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                      */
                     private static final long serialVersionUID = 1;
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public boolean save() {
                         final DefaultListModel<ChannelListModeItem> model
@@ -313,7 +313,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                         return true;
                     }
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void cancelled() {
                         //Ignore
@@ -398,7 +398,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         if (globalConfig.getOptionBool("general", "extendedListModes")) {

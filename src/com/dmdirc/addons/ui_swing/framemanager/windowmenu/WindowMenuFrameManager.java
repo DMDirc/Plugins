@@ -137,13 +137,13 @@ public class WindowMenuFrameManager extends JMenu implements
         closeMenuItem.setEnabled(enabledMenuItems.get());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (parent == null) {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                     new Callable<FrameContainerMenuItem>() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public FrameContainerMenuItem call() {
                     return new FrameContainerMenuItem(controller,
@@ -154,7 +154,7 @@ public class WindowMenuFrameManager extends JMenu implements
             items.put(window.getContainer(), item);
             final int index = getIndex(window.getContainer(), this);
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     add(item, index);
@@ -163,7 +163,7 @@ public class WindowMenuFrameManager extends JMenu implements
         } else {
             final FrameContainerMenuItem item = UIUtilities.invokeAndWait(
                     new Callable<FrameContainerMenuItem>() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public FrameContainerMenuItem call() {
                     return new FrameContainerMenuItem(controller,
@@ -175,7 +175,7 @@ public class WindowMenuFrameManager extends JMenu implements
             if (!menus.containsKey(parent.getContainer())) {
                 final FrameContainerMenu replacement = UIUtilities.invokeAndWait(
                         new Callable<FrameContainerMenu>() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public FrameContainerMenu call() {
                         return new FrameContainerMenu(parent.
@@ -190,7 +190,7 @@ public class WindowMenuFrameManager extends JMenu implements
             }
             items.put(window.getContainer(), item);
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     parentMenu.add(item, getIndex(window.getContainer(),
@@ -201,7 +201,7 @@ public class WindowMenuFrameManager extends JMenu implements
         checkMenuItems();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         if (parent == null) {
@@ -216,7 +216,7 @@ public class WindowMenuFrameManager extends JMenu implements
                 return;
             }
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     remove(item);
@@ -229,7 +229,7 @@ public class WindowMenuFrameManager extends JMenu implements
                         getContainer());
                 items.remove(window.getContainer());
                 UIUtilities.invokeAndWait(new Runnable() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void run() {
                         menu.remove(item);
@@ -297,7 +297,7 @@ public class WindowMenuFrameManager extends JMenu implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void selectionChanged(final TextFrame window) {
         final Collection<SelectionListener> values = new ArrayList<>();
@@ -345,7 +345,7 @@ public class WindowMenuFrameManager extends JMenu implements
         final int count = menu == this ? itemCount : 0;
         final int menuItemCount = UIUtilities.invokeAndWait(
                 new Callable<Integer>() {
-            /** {@inheritDoc} */
+            
             @Override
             public Integer call() {
                 return menu.getMenuComponentCount();
@@ -375,7 +375,7 @@ public class WindowMenuFrameManager extends JMenu implements
         }
 
         return UIUtilities.invokeAndWait(new Callable<Integer>() {
-            /** {@inheritDoc} */
+            
             @Override
             public Integer call() {
                 return menu.getMenuComponentCount();

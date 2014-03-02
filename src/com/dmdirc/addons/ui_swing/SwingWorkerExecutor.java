@@ -50,7 +50,7 @@ public final class SwingWorkerExecutor extends ThreadPoolExecutor implements
         setThreadFactory(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Thread newThread(final Runnable r) {
         final Thread thread = Executors.defaultThreadFactory().newThread(r);

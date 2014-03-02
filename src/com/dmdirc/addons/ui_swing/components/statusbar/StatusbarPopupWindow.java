@@ -68,7 +68,7 @@ public abstract class StatusbarPopupWindow extends StandardDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setVisible(final boolean b) {
         if (b && parent.isVisible()) {

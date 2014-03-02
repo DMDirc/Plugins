@@ -56,7 +56,7 @@ public class DNSCommand extends Command {
         super(controller);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -67,7 +67,7 @@ public class DNSCommand extends Command {
 
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolving: " + args.getArguments()[0]);
         new Timer("DNS Command Timer").schedule(new TimerTask() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if (args.getArguments()[0].matches("\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b")) {

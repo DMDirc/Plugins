@@ -38,7 +38,7 @@ public final class ArrayCellRenderer extends DefaultTableCellRenderer {
      */
     private static final long serialVersionUID = 1;
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValue(final Object value) {
         final String response = Arrays.toString((String[]) value);

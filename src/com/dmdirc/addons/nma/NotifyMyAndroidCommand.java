@@ -66,7 +66,7 @@ public class NotifyMyAndroidCommand extends Command {
         this.configDomain = configDomain;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

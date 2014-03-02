@@ -57,7 +57,7 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         return container;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public InputHandler getInputHandler() {
         return inputHandler;

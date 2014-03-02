@@ -50,33 +50,33 @@ public class XScrollablePanel extends JPanel implements Scrollable {
         super(layout);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Dimension getPreferredScrollableViewportSize() {
         return getPreferredSize();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getScrollableUnitIncrement(final Rectangle visibleRect,
             final int orientation, final int direction) {
         return getFont().getSize();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getScrollableBlockIncrement(final Rectangle visibleRect,
             final int orientation, final int direction) {
         return getFont().getSize() * 3;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;

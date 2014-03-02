@@ -26,7 +26,7 @@ public class WrapLabelView extends LabelView {
         super(elem);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getBreakWeight(final int axis, final float pos, final float len) {
         if (axis == View.X_AXIS) {
@@ -50,7 +50,7 @@ public class WrapLabelView extends LabelView {
         return super.getBreakWeight(axis, pos, len);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public View breakView(final int axis, final int p0, final float pos,
             final float len) {

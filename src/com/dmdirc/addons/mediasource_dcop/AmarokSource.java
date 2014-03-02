@@ -44,7 +44,7 @@ public class AmarokSource implements MediaSource {
         this.myPlugin = myPlugin;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public MediaSourceState getState() {
         final List<String> res = myPlugin.getDcopResult("dcop amarok player status");
@@ -70,49 +70,49 @@ public class AmarokSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAppName() {
         return "Amarok";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getArtist() {
         return myPlugin.getDcopResult("dcop amarok player artist").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTitle() {
         return myPlugin.getDcopResult("dcop amarok player title").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAlbum() {
         return myPlugin.getDcopResult("dcop amarok player album").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getLength() {
         return myPlugin.getDcopResult("dcop amarok player totalTime").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTime() {
         return myPlugin.getDcopResult("dcop amarok player currentTime").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getFormat() {
         return myPlugin.getDcopResult("dcop amarok player type").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getBitrate() {
         return myPlugin.getDcopResult("dcop amarok player bitrate").get(0);

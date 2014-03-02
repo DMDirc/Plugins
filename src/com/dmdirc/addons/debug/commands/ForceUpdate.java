@@ -70,19 +70,19 @@ public class ForceUpdate extends DebugCommand {
         this.updateManager = updateManager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "forceupdate";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return " - Forces a client update check";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

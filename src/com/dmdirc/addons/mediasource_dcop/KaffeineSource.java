@@ -44,7 +44,7 @@ public class KaffeineSource implements MediaSource {
         this.myPlugin = myPlugin;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public MediaSourceState getState() {
         final List<String> res = myPlugin.getDcopResult("dcop kaffeine KaffeineIface isPlaying");
@@ -60,51 +60,51 @@ public class KaffeineSource implements MediaSource {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAppName() {
         return "Kaffeine";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getArtist() {
         return myPlugin.getDcopResult("dcop kaffeine KaffeineIface artist").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTitle() {
         return myPlugin.getDcopResult("dcop kaffeine KaffeineIface title").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAlbum() {
         return myPlugin.getDcopResult("dcop kaffeine KaffeineIface album").get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getLength() {
         return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop kaffeine KaffeineIface getLength").get(0)));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTime() {
         return duration(Integer.parseInt(myPlugin.getDcopResult(
                 "dcop kaffeine KaffeineIface getTimePos").get(0)));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getFormat() {
         return null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getBitrate() {
         return null;

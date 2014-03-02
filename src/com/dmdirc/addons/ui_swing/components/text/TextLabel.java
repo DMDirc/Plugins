@@ -138,13 +138,13 @@ public class TextLabel extends JTextPane {
         setText(text);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final StyledDocument getDocument() {
         return (StyledDocument) super.getDocument();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final void setText(final String t) {
         super.setText(t);
@@ -153,7 +153,7 @@ public class TextLabel extends JTextPane {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setForeground(final Color colour) {
         if (sas == null) {
@@ -166,7 +166,7 @@ public class TextLabel extends JTextPane {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setFont(final Font font) {
         super.setFont(font);

@@ -87,7 +87,7 @@ public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
         maxWidth = Math.max(width, maxWidth);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setSelectedItem(final Object anObject) {
         if (!(anObject instanceof String)) {

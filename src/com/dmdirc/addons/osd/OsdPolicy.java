@@ -29,7 +29,7 @@ public enum OsdPolicy {
 
     /** Spawn new windows below old ones. */
     DOWN("Place new windows below old ones", true) {
-        /** {@inheritDoc} */
+        
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
             int y = startY;
@@ -43,7 +43,7 @@ public enum OsdPolicy {
     },
     /** Spawn new windows above old ones. */
     UP("Place new windows above old ones", true) {
-        /** {@inheritDoc} */
+        
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
             int y = startY;
@@ -57,7 +57,7 @@ public enum OsdPolicy {
     },
     /** Close old OSD windows and display the new windows. */
     CLOSE("Close existing windows", false) {
-        /** {@inheritDoc} */
+        
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
             osdManager.closeAll();
@@ -66,7 +66,7 @@ public enum OsdPolicy {
     },
     /** Place new windows on top of old windows. */
     ONTOP("Place new windows on top of existing windows", false) {
-        /** {@inheritDoc} */
+        
         @Override
         public int getYPosition(final OsdManager osdManager, final int startY) {
             return startY;

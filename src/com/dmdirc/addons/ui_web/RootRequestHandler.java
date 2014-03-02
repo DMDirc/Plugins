@@ -37,7 +37,7 @@ import org.mortbay.jetty.handler.AbstractHandler;
  */
 public class RootRequestHandler extends AbstractHandler {
 
-    /** {@inheritDoc} */
+    
     @Override
     public void handle(final String target, final HttpServletRequest request,
             final HttpServletResponse response, final int dispatch)

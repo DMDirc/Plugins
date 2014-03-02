@@ -93,7 +93,7 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
         return result;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setSelectedItem(final Object anObject) {
         final Object oldItem = getSelectedItem();

@@ -201,7 +201,7 @@ public class WebWindow implements Window, IRCDocumentListener,
                 + colour.getBlue() + ")";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         for (int i = 0; i < length; i++) {
@@ -210,43 +210,43 @@ public class WebWindow implements Window, IRCDocumentListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void cleared() {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void repaintNeeded() {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void titleChanged(final FrameContainer window, final String title) {
         //TODO FIXME
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowClosing(final FrameContainer window) {
         handler.addEvent(new Event("closewindow", id));

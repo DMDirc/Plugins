@@ -63,7 +63,7 @@ public class AddonSorter extends TableRowSorter<DefaultTableModel> implements
         toggleSortOrder(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int compare(final AddonInfoLabel o1, final AddonInfoLabel o2) {
         final AddonInfo info1 = o1.getAddonInfo();

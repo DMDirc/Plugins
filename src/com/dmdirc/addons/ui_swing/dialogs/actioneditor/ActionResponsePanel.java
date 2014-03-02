@@ -173,7 +173,7 @@ public class ActionResponsePanel extends JPanel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setEnabled(final boolean enabled) {
         response.setEnabled(enabled);

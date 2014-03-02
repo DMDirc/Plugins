@@ -180,7 +180,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
         fireContentsChanged(this, 0, nicknames.size());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         switch (key) {

@@ -47,19 +47,19 @@ public class ServerInfo extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "serverinfo";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return " - Outputs information about the server";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

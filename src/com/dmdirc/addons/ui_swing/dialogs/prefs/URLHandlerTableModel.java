@@ -71,19 +71,19 @@ public class URLHandlerTableModel extends AbstractTableModel {
         this.handlers = handlers;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getRowCount() {
         return uris.size();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getColumnCount() {
         return 2;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
@@ -97,7 +97,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
@@ -110,7 +110,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         if (uris.size() <= rowIndex) {
@@ -132,7 +132,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {

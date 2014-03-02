@@ -152,7 +152,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         return showLabels;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void selectionChanged(final TextFrame window) {
         final FrameContainer source = window.getContainer();
@@ -166,7 +166,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         panel.refreshDialog();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
@@ -273,7 +273,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         readConfig();

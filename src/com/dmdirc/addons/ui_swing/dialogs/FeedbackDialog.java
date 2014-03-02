@@ -288,7 +288,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
         validateInput();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void changedUpdate(final DocumentEvent e) {
         // Do nothing

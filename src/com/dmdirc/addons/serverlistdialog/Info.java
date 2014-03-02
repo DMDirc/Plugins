@@ -93,7 +93,7 @@ public class Info extends JPanel implements HyperlinkListener,
         model.addServerListListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {
@@ -101,7 +101,7 @@ public class Info extends JPanel implements HyperlinkListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
         setVisible(false);
@@ -142,20 +142,20 @@ public class Info extends JPanel implements HyperlinkListener,
         setVisible(true);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dialogClosed(final boolean save) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupAdded(final ServerGroupItem parent,
             final ServerGroupItem group) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {

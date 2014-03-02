@@ -95,7 +95,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
         error = new StringBuilder();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected Object doInBackground() {
         final Map<String, String> postData = new HashMap<>();
@@ -146,7 +146,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         super.done();

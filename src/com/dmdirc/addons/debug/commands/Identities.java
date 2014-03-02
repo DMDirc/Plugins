@@ -56,19 +56,19 @@ public class Identities extends DebugCommand {
         this.identityController = controller;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "identities";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return "[type] - Outputs all known identities";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

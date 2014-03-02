@@ -150,7 +150,7 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dragGestureRecognized(final DragGestureEvent dge) {
         dragSource.startDrag(dge, Cursor.getPredefinedCursor(

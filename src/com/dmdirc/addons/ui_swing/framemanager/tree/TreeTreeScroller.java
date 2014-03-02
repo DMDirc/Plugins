@@ -49,7 +49,7 @@ public class TreeTreeScroller extends TreeScroller {
         this.controller = controller;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void setPath(final TreePath path) {
         if (path == null) {

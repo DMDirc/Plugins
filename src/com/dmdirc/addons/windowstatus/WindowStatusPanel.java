@@ -58,7 +58,7 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
      */
     public void setText(final String text) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 label.setText(Styliser.stipControlCodes(text));

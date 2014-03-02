@@ -39,7 +39,7 @@ public final class ActionConditionCellRenderer extends DefaultTableCellRenderer 
      */
     private static final long serialVersionUID = 2;
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValue(final Object value) {
         if (value == null) {

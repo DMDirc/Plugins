@@ -84,19 +84,19 @@ public final class ErrorTableModel extends AbstractTableModel implements
         fireTableDataChanged();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getRowCount() {
         return errors.size();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getColumnCount() {
         return 5;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
@@ -115,7 +115,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
@@ -134,13 +134,13 @@ public final class ErrorTableModel extends AbstractTableModel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         return false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         synchronized (errors) {
@@ -161,7 +161,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {
@@ -249,11 +249,11 @@ public final class ErrorTableModel extends AbstractTableModel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void errorAdded(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 addRow(error);
@@ -261,11 +261,11 @@ public final class ErrorTableModel extends AbstractTableModel implements
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void errorDeleted(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 removeRow(error);
@@ -273,11 +273,11 @@ public final class ErrorTableModel extends AbstractTableModel implements
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void errorStatusChanged(final ProgramError error) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 synchronized (errors) {
@@ -290,7 +290,7 @@ public final class ErrorTableModel extends AbstractTableModel implements
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isReady() {
         return ready;

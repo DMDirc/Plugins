@@ -105,7 +105,7 @@ public final class CommunicationStep extends Step {
         return updates.isSelected();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTitle() {
         return "Communication settings";

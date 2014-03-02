@@ -92,7 +92,7 @@ public class NickColourPlugin extends BasePlugin {
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
                 new Callable<NickColourPanel>() {
-            /** {@inheritDoc} */
+            
             @Override
             public NickColourPanel call() {
                 return new NickColourPanel(mainFrame, iconManager, colourManager,

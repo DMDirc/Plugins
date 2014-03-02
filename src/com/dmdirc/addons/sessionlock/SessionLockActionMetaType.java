@@ -47,25 +47,25 @@ public enum SessionLockActionMetaType implements ActionMetaType {
         this.argTypes = argTypes;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getGroup() {
         return "Session events";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getArity() {
         return argNames.length;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Class[] getArgTypes() {
         return argTypes;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String[] getArgNames() {
         return argNames;

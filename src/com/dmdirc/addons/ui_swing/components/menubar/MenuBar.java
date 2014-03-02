@@ -90,7 +90,7 @@ public class MenuBar extends JMenuBar {
         getActionMap().clear();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addImpl(final Component comp, final Object constraints,
             final int index) {

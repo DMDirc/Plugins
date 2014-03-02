@@ -400,7 +400,7 @@ public final class UIUtilities {
      */
     public static void resetScrollPane(final JScrollPane scrollPane) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 scrollPane.getHorizontalScrollBar().setValue(0);

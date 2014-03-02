@@ -55,7 +55,7 @@ public class FixedXmppConnection extends XMPPConnection
         super(config);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void connect() throws XMPPException {
         // We're fiddling with a static array
@@ -80,7 +80,7 @@ public class FixedXmppConnection extends XMPPConnection
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void connectionCreated(final Connection xmppc) {

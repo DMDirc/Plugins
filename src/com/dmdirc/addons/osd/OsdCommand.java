@@ -75,7 +75,7 @@ public class OsdCommand extends Command implements IntelligentCommand {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -102,7 +102,7 @@ public class OsdCommand extends Command implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

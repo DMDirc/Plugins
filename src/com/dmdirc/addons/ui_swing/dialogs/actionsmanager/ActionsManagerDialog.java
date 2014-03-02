@@ -317,7 +317,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public boolean save() {
                 if (!saving.getAndSet(true)) {
@@ -336,7 +336,7 @@ public class ActionsManagerDialog extends StandardDialog implements
                 return false;
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void cancelled() {
                 groups.setSelectedIndex(index);
@@ -355,7 +355,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public boolean save() {
                 if (!saving.getAndSet(true)) {
@@ -371,7 +371,7 @@ public class ActionsManagerDialog extends StandardDialog implements
                 return false;
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void cancelled() {
                 //Ignore
@@ -394,7 +394,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             /** Java Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public boolean save() {
                 int location =
@@ -413,7 +413,7 @@ public class ActionsManagerDialog extends StandardDialog implements
                 return true;
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void cancelled() {
                 //Ignore

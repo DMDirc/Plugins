@@ -54,7 +54,7 @@ public class SettingsRevertButton extends JButton implements SettingChangeListen
         setVisible(false);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void settingChanged(final PreferencesSetting setting) {
         setVisible(setting.needsSaving());

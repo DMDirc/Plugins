@@ -77,7 +77,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
         eventBus.unregister(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
         for (ChannelClientInfo client : clients) {
@@ -85,13 +85,13 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientListUpdated() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientAdded(final ChannelClientInfo client) {
         final Query query = channel.getConnection().
@@ -100,7 +100,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
         query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clientRemoved(final ChannelClientInfo client) {
         // Do nothing

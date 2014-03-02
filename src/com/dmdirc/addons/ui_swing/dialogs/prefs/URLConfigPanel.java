@@ -129,7 +129,7 @@ public class URLConfigPanel extends JPanel implements
         table = new PackingTable(model, tableScrollPane) {
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -195,7 +195,7 @@ public class URLConfigPanel extends JPanel implements
         add(activeComponent, "growx, pushx, wmax 100%");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void save() {
         valueChanged(null);
@@ -280,7 +280,7 @@ public class URLConfigPanel extends JPanel implements
                 /** Serial version UID. */
                 private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public boolean save() {
                     try {
@@ -293,7 +293,7 @@ public class URLConfigPanel extends JPanel implements
                     }
                 }
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public void cancelled() {
                     //Ignore

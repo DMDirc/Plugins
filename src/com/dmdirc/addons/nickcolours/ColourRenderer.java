@@ -57,7 +57,7 @@ public class ColourRenderer extends DefaultTableCellRenderer {
         setOpaque(true);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,

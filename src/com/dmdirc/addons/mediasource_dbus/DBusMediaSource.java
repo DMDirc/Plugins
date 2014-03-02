@@ -49,7 +49,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
     /** The path to qdbus. */
     private String qdbus;
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onLoad() {
         sources = new ArrayList<>();
@@ -61,13 +61,13 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onUnload() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public List<MediaSource> getSources() {
         for (String mpris : doDBusCall("org.mpris.*", "/", "/")) {

@@ -107,7 +107,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         this.urlBuilder = urlBuilder;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -121,7 +121,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     || parser.getStringConverter().equalsIgnoreCase(target,
                     myNickname)) {
                 new Thread(new Runnable() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void run() {
                         if (parser.getStringConverter().equalsIgnoreCase(target,
@@ -223,7 +223,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             return;
         }
         new Thread(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 final DCCTransfer send = new DCCTransfer(origin
@@ -326,7 +326,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

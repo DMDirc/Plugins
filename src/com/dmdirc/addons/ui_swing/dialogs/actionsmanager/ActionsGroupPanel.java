@@ -154,7 +154,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             /** Action response renrderer. */
             private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
 
-            /** {@inheritDoc} */
+            
             @Override
             public TableCellRenderer getCellRenderer(final int row, final int column) {
                 switch (column) {
@@ -175,7 +175,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
 
         table.setRowSorter(sorter);
         table.addMouseListener(new MouseAdapter() {
-            /** {@inheritDoc} */
+            
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -265,14 +265,14 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
                  */
                 private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public boolean save() {
                     group.deleteAction(action);
                     return true;
                 }
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public void cancelled() {
                     //Ignore
@@ -281,7 +281,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {

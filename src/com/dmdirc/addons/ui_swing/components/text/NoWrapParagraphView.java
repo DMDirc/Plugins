@@ -23,13 +23,13 @@ public class NoWrapParagraphView extends ParagraphView {
         super(elem);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void layout(final int width, final int height) {
         super.layout(Short.MAX_VALUE, height);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public float getMinimumSpan(final int axis) {
         return super.getPreferredSpan(axis);

@@ -71,17 +71,17 @@ public final class AliasTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    /** {@inheritDoc} */
+    
     public int getRowCount() {
         return aliases.size();
     }
 
-    /** {@inheritDoc} */
+    
     public int getColumnCount() {
         return 3;
     }
 
-    /** {@inheritDoc} */
+    
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
             case 0:
@@ -96,7 +96,7 @@ public final class AliasTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
             case 0:
@@ -111,12 +111,12 @@ public final class AliasTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         return false;
     }
 
-    /** {@inheritDoc} */
+    
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         if (aliases.size() <= rowIndex) {
             throw new IndexOutOfBoundsException(rowIndex + " >= " + aliases.size());
@@ -137,7 +137,7 @@ public final class AliasTableModel extends AbstractTableModel {
         }
     }
 
-    /** {@inheritDoc} */
+    
     public void setValueAt(final Object aValue, final int rowIndex,
             final int columnIndex) {
         if (aliases.size() <= rowIndex) {

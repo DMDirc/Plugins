@@ -257,7 +257,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         super.validate();
 
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 centreOnOwner();

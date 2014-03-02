@@ -42,37 +42,37 @@ public class XmppLocalClientInfo extends XmppClientInfo implements LocalClientIn
         super(parser, nick, user, host);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setNickname(final String name) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getModes() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setAway(final String reason) {
         getParser().setAway(reason);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setBack() {
         getParser().setBack();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void alterMode(final boolean add, final Character mode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void flushModes() {
         throw new UnsupportedOperationException("Not supported yet.");

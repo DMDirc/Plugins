@@ -38,7 +38,7 @@ import javax.swing.SwingWorker;
  */
 public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         if (isCancelled()) {

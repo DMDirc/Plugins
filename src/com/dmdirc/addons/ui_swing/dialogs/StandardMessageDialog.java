@@ -99,7 +99,7 @@ public class StandardMessageDialog extends StandardDialog {
      */
     private void addListeners() {
         final ActionListener listener = new ActionListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (save()) {
@@ -110,13 +110,13 @@ public class StandardMessageDialog extends StandardDialog {
         getCancelButton().addActionListener(listener);
         getOkButton().addActionListener(listener);
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+            
             @Override
             public void windowOpened(final WindowEvent e) {
                 //Ignore
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void windowClosed(final WindowEvent e) {
                 cancelled();

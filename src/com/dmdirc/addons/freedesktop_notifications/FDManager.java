@@ -157,7 +157,7 @@ public class FDManager implements ConfigChangeListener {
         stripcodes = config.getOptionBool(domain, "advanced.stripcodes");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();

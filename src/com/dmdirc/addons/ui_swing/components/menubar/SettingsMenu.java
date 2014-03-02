@@ -107,7 +107,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
         add(menuItem);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {

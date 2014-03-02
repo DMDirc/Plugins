@@ -62,7 +62,7 @@ public class DockBounceCommand extends Command {
         this.apple = apple;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(
             final FrameContainer origin,

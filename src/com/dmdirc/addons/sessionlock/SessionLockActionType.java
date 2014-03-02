@@ -46,13 +46,13 @@ public enum SessionLockActionType implements ActionType {
         this.name = name;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public ActionMetaType getType() {
         return SessionLockActionMetaType.SESSION_EVENT;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return name;

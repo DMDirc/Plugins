@@ -67,7 +67,7 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
         component.addPropertyChangeListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void paintExpandControl(final Graphics g, final Rectangle clipBounds,
             final Insets insets, final Rectangle bounds, final TreePath path,
@@ -79,7 +79,7 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if ("showHandles".equals(evt.getPropertyName())) {

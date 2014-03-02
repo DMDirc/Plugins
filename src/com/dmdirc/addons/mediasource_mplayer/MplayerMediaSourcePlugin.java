@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource {
 
-    /** {@inheritDoc} */
+    
     @Override
     public MediaSourceState getState() {
         if (getInfo().isEmpty()) {
@@ -48,49 +48,49 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAppName() {
         return "MPlayer";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getArtist() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTitle() {
         return getInfo().get(0);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAlbum() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getLength() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getTime() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getFormat() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getBitrate() {
         return "";

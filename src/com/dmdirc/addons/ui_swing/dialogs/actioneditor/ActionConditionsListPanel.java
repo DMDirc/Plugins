@@ -245,7 +245,7 @@ public class ActionConditionsListPanel extends JPanel implements
         layoutComponents();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void conditionRemoved(final ActionConditionDisplayPanel condition) {
         synchronized (conditions) {
@@ -256,7 +256,7 @@ public class ActionConditionsListPanel extends JPanel implements
         layoutComponents();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setEnabled(final boolean enabled) {
         for (final ActionConditionDisplayPanel condition : conditions) {
@@ -264,7 +264,7 @@ public class ActionConditionsListPanel extends JPanel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt != null) {

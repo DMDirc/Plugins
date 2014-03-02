@@ -30,7 +30,7 @@ import java.util.Comparator;
  */
 public class ActionGroupNameComparator implements Comparator<ActionGroup> {
 
-    /** {@inheritDoc} */
+    
     @Override
     public int compare(final ActionGroup o1, final ActionGroup o2) {
         return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());

@@ -108,7 +108,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         initComponents();
 
         worker = new LoggingSwingWorker<PreferencesDialogModel, Void>() {
-            /** {@inheritDoc} */
+            
             @Override
             protected PreferencesDialogModel doInBackground() {
                 mainPanel.setWaiting(true);
@@ -123,7 +123,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                 return prefsManager;
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             protected void done() {
                 if (!isCancelled()) {
@@ -297,7 +297,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         return selected;
     }
 
-    /** {@inheritDoc} */
+    
     public void saveOptions() {
         if (manager != null && manager.save()) {
             dispose();
@@ -323,7 +323,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         this.panelSize = panelSize;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dispose() {
         synchronized (SwingPreferencesDialog.this) {

@@ -120,7 +120,7 @@ public class ActionConditionEditorPanel extends JPanel implements
             /** Serial version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public void setEnabled(final boolean enabled) {
                 firePropertyChange("validationResult", target.isEnabled(),
@@ -250,7 +250,7 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void insertUpdate(final DocumentEvent e) {
         synchronized (condition) {
@@ -259,7 +259,7 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeUpdate(final DocumentEvent e) {
         synchronized (condition) {
@@ -268,13 +268,13 @@ public class ActionConditionEditorPanel extends JPanel implements
         firePropertyChange("edit", null, null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void changedUpdate(final DocumentEvent e) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
@@ -304,7 +304,7 @@ public class ActionConditionEditorPanel extends JPanel implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", evt.getOldValue(),

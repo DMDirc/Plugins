@@ -162,7 +162,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
         manager.registerSaveListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void categorySelected(final PreferencesCategory category) {
         osdWindow = new OsdWindow(mainFrame, identityController, osdManager, colourManager,
@@ -172,7 +172,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
         osdWindow.setFontSize(Integer.parseInt(fontSizeSetting.getValue()));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void categoryDeselected(final PreferencesCategory category) {
         x = osdWindow.getLocationOnScreen().x;
@@ -182,14 +182,14 @@ public class OsdPlugin extends BaseCommandPlugin implements
         osdWindow = null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void save() {
         identityController.getUserSettings().setOption(domain, "locationX", x);
         identityController.getUserSettings().setOption(domain, "locationY", y);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void settingChanged(final PreferencesSetting setting) {
         if (osdWindow == null) {

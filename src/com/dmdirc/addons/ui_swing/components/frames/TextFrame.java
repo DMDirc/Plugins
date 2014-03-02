@@ -274,7 +274,7 @@ public abstract class TextFrame extends JPanel implements Window,
         getActionMap().put("endAction", new TextPaneEndAction(getTextPane()));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public FrameContainer getContainer() {
         return frameParent;
@@ -289,7 +289,7 @@ public abstract class TextFrame extends JPanel implements Window,
         return textPane;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final String getName() {
         if (frameParent == null) {
@@ -308,7 +308,7 @@ public abstract class TextFrame extends JPanel implements Window,
         textPane = newTextPane;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mouseClicked(final ClickTypeValue clicktype,
             final MouseEventType eventType, final MouseEvent event) {
@@ -517,7 +517,7 @@ public abstract class TextFrame extends JPanel implements Window,
         return searchBar;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         if (getContainer().getConfigManager() == null || getTextPane() == null) {
@@ -530,14 +530,14 @@ public abstract class TextFrame extends JPanel implements Window,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowClosing(final FrameContainer window) {
         setVisible(false);
         getTextPane().close();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @Deprecated
     public SwingController getController() {

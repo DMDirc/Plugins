@@ -63,7 +63,7 @@ public final class CopyAction extends AbstractAction {
         comp.copy();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isEnabled() {
         return comp.isEnabled() && comp.getSelectedText() != null

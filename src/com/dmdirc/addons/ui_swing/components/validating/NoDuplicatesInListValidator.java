@@ -67,7 +67,7 @@ public class NoDuplicatesInListValidator<T> implements Validator<String> {
         this.caseSensitive = caseSensitive;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public ValidationResponse validate(final String object) {
         final String string = caseSensitive ? object : object.toLowerCase();

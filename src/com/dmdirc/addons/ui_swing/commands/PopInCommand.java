@@ -63,12 +63,12 @@ public class PopInCommand extends Command {
         this.windowFactory = windowFactory;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 final TextFrame swingWindow = windowFactory.getSwingWindow(origin);

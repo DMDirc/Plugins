@@ -47,86 +47,86 @@ public class WebInputField implements InputField {
         this.client = client;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addActionListener(final ActionListener listener) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addKeyListener(final KeyListener listener) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean hasFocus() {
         //TODO FIXME
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeActionListener(final ActionListener listener) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeKeyListener(final KeyListener listener) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getSelectedText() {
         return text.substring(selStart, selEnd);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getSelectionEnd() {
         return selEnd;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getSelectionStart() {
         return selStart;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getText() {
         return text;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setText(final String text) {
         client.addEvent(new Event("settext", text));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getCaretPosition() {
         return selEnd;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setCaretPosition(final int position) {
         client.addEvent(new Event("setcaret", position));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hideColourPicker() {
         // Do nothing

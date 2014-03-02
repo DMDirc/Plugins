@@ -65,7 +65,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
         inputFrame.doPaste();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isEnabled() {
         try {

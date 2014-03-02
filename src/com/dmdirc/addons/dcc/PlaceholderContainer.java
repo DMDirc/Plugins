@@ -61,7 +61,7 @@ public class PlaceholderContainer extends FrameContainer {
         this.mainFrame = mainFrame;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void close() {
         int dccs = 0;
@@ -86,7 +86,7 @@ public class PlaceholderContainer extends FrameContainer {
                  */
                 private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public boolean save() {
                     PlaceholderContainer.super.close();
@@ -94,7 +94,7 @@ public class PlaceholderContainer extends FrameContainer {
                     return true;
                 }
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public void cancelled() {
                     // Don't close!
@@ -106,13 +106,13 @@ public class PlaceholderContainer extends FrameContainer {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Connection getConnection() {
         return null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeChild(final FrameContainer child) {
         super.removeChild(child);

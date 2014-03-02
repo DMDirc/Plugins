@@ -64,7 +64,7 @@ public class ErrorTable extends PackingTable {
         getTableHeader().setReorderingAllowed(false);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public TableCellRenderer getCellRenderer(final int row,
             final int column) {

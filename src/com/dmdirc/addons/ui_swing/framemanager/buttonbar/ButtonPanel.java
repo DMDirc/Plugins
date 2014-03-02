@@ -69,39 +69,39 @@ public class ButtonPanel extends JPanel implements Scrollable,
         this.buttonBar = buttonBar;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Dimension getPreferredScrollableViewportSize() {
         return super.getPreferredSize();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getScrollableUnitIncrement(final Rectangle visibleRect,
             final int orientation, final int direction) {
         return buttonBar.getButtonHeight();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getScrollableBlockIncrement(final Rectangle visibleRect,
             final int orientation, final int direction) {
         return buttonBar.getButtonHeight();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         e.consume();

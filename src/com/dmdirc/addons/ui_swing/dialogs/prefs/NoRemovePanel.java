@@ -48,7 +48,7 @@ public class NoRemovePanel extends JPanel {
         super(layout);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void remove(final Component comp) {
         //Ignore

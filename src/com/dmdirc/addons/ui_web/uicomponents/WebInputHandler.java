@@ -46,31 +46,31 @@ public class WebInputHandler extends InputHandler {
         return target;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addUpHandler() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addDownHandler() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addTabHandler() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addKeyHandler() {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void addEnterHandler() {
         // Do nothing
@@ -80,28 +80,28 @@ public class WebInputHandler extends InputHandler {
         return tabCompleter;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @SuppressWarnings("PMD")
     public void doTabCompletion(final boolean shiftPressed) {
         super.doTabCompletion(shiftPressed);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @SuppressWarnings("PMD")
     public void doBufferDown() {
         super.doBufferDown();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @SuppressWarnings("PMD")
     public void doBufferUp() {
         super.doBufferUp();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     @SuppressWarnings("PMD")
     public void handleKeyPressed(final String line, final int caretPosition,

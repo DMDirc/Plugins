@@ -63,19 +63,19 @@ public class StatusbarMessage extends DebugCommand {
         this.globalConfig = globalConfig;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "statusmessage";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return "message - Sets the status bar message";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

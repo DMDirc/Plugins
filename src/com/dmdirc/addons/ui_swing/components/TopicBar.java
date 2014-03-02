@@ -200,7 +200,7 @@ public class TopicBar extends JComponent implements ActionListener,
                      */
                     private static final long serialVersionUID = 1;
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         commitTopicEdit();
@@ -212,7 +212,7 @@ public class TopicBar extends JComponent implements ActionListener,
                 "escapeButton") {
                     private static final long serialVersionUID = 1;
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         cancelTopicEdit();
@@ -238,11 +238,11 @@ public class TopicBar extends JComponent implements ActionListener,
         topicChanged(channel, channel.getCurrentTopic());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public final void topicChanged(final Channel channel, final Topic topic) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if (topicText.isEditable()) {
@@ -265,7 +265,7 @@ public class TopicBar extends JComponent implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setVisible(final boolean visibility) {
         if (!showBar || !visibility) {
@@ -355,7 +355,7 @@ public class TopicBar extends JComponent implements ActionListener,
         topicChanged(channel, null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -425,7 +425,7 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setCaretPosition(final int position) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 topicText.setCaretPosition(position);
@@ -440,7 +440,7 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setCaretColor(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 topicText.setCaretColor(optionColour);
@@ -456,7 +456,7 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void setForeground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 topicText.setForeground(optionColour);
@@ -471,7 +471,7 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void setDisabledTextColour(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 topicText.setDisabledTextColor(optionColour);
@@ -487,7 +487,7 @@ public class TopicBar extends JComponent implements ActionListener,
     @Override
     public void setBackground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 topicText.setBackground(optionColour);
@@ -495,7 +495,7 @@ public class TopicBar extends JComponent implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         updateOptions();
@@ -528,7 +528,7 @@ public class TopicBar extends JComponent implements ActionListener,
      */
     public void validateTopic() {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 if (topicText.isEditable()) {
@@ -601,7 +601,7 @@ public class TopicBar extends JComponent implements ActionListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void insertUpdate(final DocumentEvent e) {
         validateTopic();
@@ -615,13 +615,13 @@ public class TopicBar extends JComponent implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeUpdate(final DocumentEvent e) {
         validateTopic();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void changedUpdate(final DocumentEvent e) {
         validateTopic();

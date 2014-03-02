@@ -40,25 +40,25 @@ public class WebStatusBar implements StatusBar {
         this.handler = handler;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void clearMessage() {
         handler.addEvent(new Event("statusbar", "Ready"));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addComponent(final StatusBarComponent component) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeComponent(final StatusBarComponent component) {
         // Do nothing
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setMessage(final StatusMessage message) {
         handler.addEvent(new Event("statusbar", message.getMessage()));

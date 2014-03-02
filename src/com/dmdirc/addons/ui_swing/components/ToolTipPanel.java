@@ -172,7 +172,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
                 private static final long serialVersionUID =
                         -8698248993206174390L;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 protected void processMouseEvent(final MouseEvent e,
                         final JXLayer<? extends JComponent> comp) {
@@ -186,7 +186,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
                 }
             };
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     ((JXLayer<JComponent>) component).setUI(layerUI);

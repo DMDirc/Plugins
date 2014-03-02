@@ -77,7 +77,7 @@ public class StandardDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setTitle(final String title) {
         super.setTitle("DMDirc: " + title);
@@ -122,7 +122,7 @@ public class StandardDialog extends JDialog {
             return;
         }
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+            
             @Override
             public void windowClosing(final WindowEvent e) {
                 executeAction(getCancelButton());
@@ -154,7 +154,7 @@ public class StandardDialog extends JDialog {
         }
         final Semaphore semaphore = new Semaphore(0);
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 display();

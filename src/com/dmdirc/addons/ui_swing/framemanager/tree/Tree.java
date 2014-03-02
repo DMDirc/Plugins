@@ -116,7 +116,7 @@ public class Tree extends JTree implements MouseMotionListener,
         addMouseMotionListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void scrollRectToVisible(final Rectangle aRect) {
         final Rectangle rect = new Rectangle(0, aRect.y, aRect.width, aRect.height);
@@ -156,7 +156,7 @@ public class Tree extends JTree implements MouseMotionListener,
         return node;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         switch (key) {

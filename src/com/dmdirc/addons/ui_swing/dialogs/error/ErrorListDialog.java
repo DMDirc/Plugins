@@ -231,7 +231,7 @@ public final class ErrorListDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());
@@ -284,14 +284,14 @@ public final class ErrorListDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void display() {
         super.display();
         setSize(new Dimension(600, 550));
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dispose() {
         tableModel.dispose();

@@ -49,7 +49,7 @@ public class DMDircHTMLFactory extends HTMLFactory {
         this.urlBuilder = urlBuilder;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public View create(final Element elem) {
         final View view = super.create(elem);

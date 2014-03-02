@@ -56,12 +56,12 @@ public final class FDNotifyCommand extends Command {
         this.manager = manager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {
         new Thread() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 manager.showNotification("", args.getArgumentsAsString());

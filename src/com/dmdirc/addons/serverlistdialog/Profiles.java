@@ -85,7 +85,7 @@ public class Profiles extends JPanel implements ServerListListener {
         model.addServerListListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupChanged(final ServerGroupItem item) {
         setVisible(false);
@@ -121,7 +121,7 @@ public class Profiles extends JPanel implements ServerListListener {
         return combos.get(item);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dialogClosed(final boolean save) {
         if (save) {
@@ -138,14 +138,14 @@ public class Profiles extends JPanel implements ServerListListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupAdded(final ServerGroupItem parent,
             final ServerGroupItem group) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void serverGroupRemoved(final ServerGroupItem parent,
             final ServerGroupItem group) {

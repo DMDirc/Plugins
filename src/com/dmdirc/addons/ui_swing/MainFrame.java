@@ -188,13 +188,13 @@ public class MainFrame extends JFrame implements WindowListener,
         globalConfig.addChangeListener("icon", "icon", this);
 
         addWindowFocusListener(new WindowFocusListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void windowGainedFocus(final WindowEvent e) {
                 eventBus.post(new ClientFocusGainedEvent());
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void windowLostFocus(final WindowEvent e) {
                 eventBus.post(new ClientFocusLostEvent());
@@ -233,13 +233,13 @@ public class MainFrame extends JFrame implements WindowListener,
         return activeFrame;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public MenuBar getJMenuBar() {
         return (MenuBar) super.getJMenuBar();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setTitle(final String title) {
         UIUtilities.invokeLater(new Runnable() {
@@ -292,7 +292,7 @@ public class MainFrame extends JFrame implements WindowListener,
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
         new Thread(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 lifecycleController.quit(exitCode);
@@ -343,7 +343,7 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Initialiases the frame managers. */
     private void initFrameManagers() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 frameManagerPanel.removeAll();
@@ -375,7 +375,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void initComponents() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 frameManagerPanel = new JPanel();
@@ -407,7 +407,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void setMenuBar(final MenuBar menuBar) {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 apple.setMenuBar(menuBar);
@@ -532,7 +532,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 /** Serial version UID. */
                 private static final long serialVersionUID = 9;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 protected void handleQuit() {
                     doQuit(exitCode);
@@ -556,7 +556,7 @@ public class MainFrame extends JFrame implements WindowListener,
         quitWorker.get().executeInExecutor();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         if ("ui".equals(domain)) {
@@ -567,7 +567,7 @@ public class MainFrame extends JFrame implements WindowListener,
                 case "framemanager":
                 case "framemanagerPosition":
                     UIUtilities.invokeAndWait(new Runnable() {
-                        /** {@inheritDoc} */
+                        
                         @Override
                         public void run() {
                             setVisible(false);
@@ -592,7 +592,7 @@ public class MainFrame extends JFrame implements WindowListener,
         } else {
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     setIconImage(imageIcon.getImage());
@@ -608,7 +608,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public void setActiveFrame(final TextFrame activeFrame) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 focusOrder.offerAndMove(activeFrame);
@@ -671,7 +671,7 @@ public class MainFrame extends JFrame implements WindowListener,
         listeners.remove(SelectionListener.class, listener);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowAdded(final TextFrame parent, final TextFrame window) {
         if (activeFrame == null) {
@@ -680,7 +680,7 @@ public class MainFrame extends JFrame implements WindowListener,
         window.getContainer().addFrameInfoListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
         focusOrder.remove(window);
@@ -691,7 +691,7 @@ public class MainFrame extends JFrame implements WindowListener,
             framePanel.setVisible(true);
             if (focusOrder.peek() == null) {
                 SwingUtilities.invokeLater(new Runnable() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void run() {
                         frameManager.scrollUp();
@@ -704,19 +704,19 @@ public class MainFrame extends JFrame implements WindowListener,
         window.getContainer().removeFrameInfoListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void iconChanged(final FrameContainer window, final String icon) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void nameChanged(final FrameContainer window, final String name) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void titleChanged(final FrameContainer window,
             final String title) {
@@ -725,7 +725,7 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void notificationSet(final FrameContainer window,
             final Colour colour) {
@@ -734,13 +734,13 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void notificationCleared(final FrameContainer window) {
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void dispose() {
         if (!quitting) {

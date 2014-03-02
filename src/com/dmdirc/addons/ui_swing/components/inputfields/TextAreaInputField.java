@@ -85,19 +85,19 @@ public class TextAreaInputField extends JTextArea implements InputField,
                 .addPropertyChangeListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (config.getOptionBool("general", "showcolourdialog")) {
@@ -122,7 +122,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hideColourPicker() {
         if (colourPicker != null) {
@@ -131,7 +131,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (!isFocusOwner()) {

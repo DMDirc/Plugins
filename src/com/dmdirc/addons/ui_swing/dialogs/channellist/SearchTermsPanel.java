@@ -82,7 +82,7 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
         search.setEnabled(false);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onGroupListFinished() {
         if (search != null) {
@@ -90,7 +90,7 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onGroupListStarted() {
         // Do nothing

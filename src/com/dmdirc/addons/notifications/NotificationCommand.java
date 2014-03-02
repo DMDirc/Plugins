@@ -65,7 +65,7 @@ public class NotificationCommand extends Command implements
         this.manager = manager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -124,7 +124,7 @@ public class NotificationCommand extends Command implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

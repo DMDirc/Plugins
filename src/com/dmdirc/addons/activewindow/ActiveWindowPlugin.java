@@ -33,7 +33,7 @@ public class ActiveWindowPlugin extends BaseCommandPlugin {
     /** Manager to use for the active window sink. */
     private ActiveWindowManager activeWindowManager;
 
-    /** {@inheritDoc} */
+    
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
@@ -44,14 +44,14 @@ public class ActiveWindowPlugin extends BaseCommandPlugin {
         activeWindowManager = getObjectGraph().get(ActiveWindowManager.class);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onLoad() {
         super.onLoad();
         activeWindowManager.register();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onUnload() {
         super.onUnload();

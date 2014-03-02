@@ -109,7 +109,7 @@ public class OsdManager {
 
         windowList.add(UIUtilities.invokeAndWait(
                 new Callable<OsdWindow>() {
-            /** {@inheritDoc} */
+            
             @Override
             public OsdWindow call() {
                 return new OsdWindow(
@@ -142,7 +142,7 @@ public class OsdManager {
         windowList.remove(window);
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 window.dispose();

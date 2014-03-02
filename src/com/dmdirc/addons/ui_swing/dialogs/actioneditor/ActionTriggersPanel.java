@@ -196,7 +196,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void triggerRemoved(final ActionType trigger) {
         if (triggerList.getTriggerCount() == 0) {
@@ -287,7 +287,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         comboChange = false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setEnabled(final boolean enabled) {
         triggerList.setEnabled(enabled);
@@ -304,7 +304,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         firePropertyChange("validationResult", (Integer) evt.getOldValue() > 0,

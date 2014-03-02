@@ -49,25 +49,25 @@ public class TopicTable extends JTable {
         setTableHeader(null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isCellEditable(final int row, final int column) {
         return false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public TableCellRenderer getCellRenderer(final int row, final int column) {
         return new TopicCellRenderer();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public DefaultTableModel getModel() {
         return (DefaultTableModel) super.getModel();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setModel(final TableModel dataModel) {
         if (!(dataModel instanceof DefaultTableModel)) {

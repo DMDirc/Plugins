@@ -105,14 +105,14 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
         config.addChangeListener("ui", "useOneTouchExpandable", this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         useOneTouchExpandable = config.getOptionBool(
                 "ui", "useOneTouchExpandable");
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 setOneTouchExpandable(useOneTouchExpandable);

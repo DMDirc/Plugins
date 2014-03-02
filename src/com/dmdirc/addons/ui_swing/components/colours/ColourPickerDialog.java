@@ -107,7 +107,7 @@ public class ColourPickerDialog extends JDialog {
     public void setWindow(final Window window) {
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void windowClosed(final WindowEvent e) {
                     dispose();
@@ -116,7 +116,7 @@ public class ColourPickerDialog extends JDialog {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setVisible(final boolean visible) {
         super.setVisible(visible);

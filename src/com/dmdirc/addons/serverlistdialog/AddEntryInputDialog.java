@@ -131,7 +131,7 @@ public class AddEntryInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (save()) {
@@ -140,39 +140,39 @@ public class AddEntryInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent e) {
                 dispose();
             }
         });
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+            
             @Override
             public void windowOpened(final WindowEvent e) {
                 entryName.requestFocusInWindow();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void windowClosed(final WindowEvent e) {
                 //Ignore
             }
         });
         final DocumentListener dl = new DocumentListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 //Ignore
@@ -182,7 +182,7 @@ public class AddEntryInputDialog extends StandardDialog {
         uri.getDocument().addDocumentListener(dl);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());

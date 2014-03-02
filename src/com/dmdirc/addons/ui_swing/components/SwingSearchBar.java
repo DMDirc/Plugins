@@ -182,7 +182,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void open() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 validator.setValidates(true);
@@ -197,7 +197,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void close() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 setVisible(false);
@@ -320,7 +320,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Focuses the search box in the search bar. */
     public void getFocus() {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 searchBox.requestFocusInWindow();
@@ -366,11 +366,11 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addKeyListener(final KeyListener l) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 listeners.add(KeyListener.class, l);
@@ -378,11 +378,11 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeKeyListener(final KeyListener l) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 listeners.remove(KeyListener.class, l);
@@ -390,7 +390,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         setColours();

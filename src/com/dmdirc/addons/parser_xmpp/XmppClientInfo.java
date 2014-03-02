@@ -59,7 +59,7 @@ public class XmppClientInfo extends BaseClientInfo {
         super(parser, nick, user, host);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getChannelCount() {
         return 0;
@@ -117,7 +117,7 @@ public class XmppClientInfo extends BaseClientInfo {
         return presence == null || presence.compareTo(Mode.away) >= 0;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AwayState getAwayState() {
         return isAway() ? AwayState.AWAY : AwayState.HERE;
@@ -171,7 +171,7 @@ public class XmppClientInfo extends BaseClientInfo {
         setRealname(entry.getName());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public XmppParser getParser() {
         return (XmppParser) super.getParser();

@@ -79,13 +79,13 @@ public enum DCCActions implements ActionType {
         this.name = name;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public ActionMetaType getType() {
         return type;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return name;

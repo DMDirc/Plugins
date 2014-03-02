@@ -49,25 +49,25 @@ public class AddonTable extends JTable {
         setTableHeader(null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public TableCellRenderer getCellRenderer(final int row, final int column) {
         return new AddonInfoCellRenderer();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public TableCellEditor getCellEditor(final int row, final int column) {
         return new AddonInfoCellEditor();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public DefaultTableModel getModel() {
         return (DefaultTableModel) super.getModel();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setModel(final TableModel dataModel) {
         if (!(dataModel instanceof DefaultTableModel)) {
@@ -77,13 +77,13 @@ public class AddonTable extends JTable {
         super.setModel(dataModel);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AddonSorter getRowSorter() {
         return (AddonSorter) super.getRowSorter();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setRowSorter(final RowSorter<? extends TableModel> sorter) {
         if (sorter == null || sorter instanceof AddonSorter) {

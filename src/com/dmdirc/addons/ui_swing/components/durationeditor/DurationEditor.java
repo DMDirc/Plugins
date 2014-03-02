@@ -237,7 +237,7 @@ public class DurationEditor extends StandardDialog implements ActionListener {
 
         if (window != null) {
             window.addWindowListener(new WindowAdapter() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void windowClosed(final WindowEvent e) {
                     dispose();

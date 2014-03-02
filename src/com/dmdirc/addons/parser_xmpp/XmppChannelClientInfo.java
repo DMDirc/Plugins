@@ -42,37 +42,37 @@ public class XmppChannelClientInfo extends BaseChannelClientInfo {
         super(channel, client);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getImportantModePrefix() {
         return ""; // TODO: Implement
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getImportantMode() {
         return ""; // TODO: Implement
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAllModes() {
         return ""; // TODO: Implement
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAllModesPrefix() {
         return ""; // TODO: Implement
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void kick(final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int compareTo(final ChannelClientInfo o) {
         return 0; // TODO: Implement

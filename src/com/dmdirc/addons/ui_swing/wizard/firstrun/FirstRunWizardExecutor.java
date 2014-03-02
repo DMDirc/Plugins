@@ -63,7 +63,7 @@ public class FirstRunWizardExecutor {
      */
     private class FirstRunWizardRunnable implements Runnable {
 
-        /** {@inheritDoc} */
+        
         @Override
         public void run() {
             final SwingFirstRunWizard wizard = wizardProvider.get();
@@ -78,13 +78,13 @@ public class FirstRunWizardExecutor {
      */
     private class FirstRunWizardListener implements WizardListener {
 
-        /** {@inheritDoc} */
+        
         @Override
         public void wizardFinished() {
             semaphore.release();
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public void wizardCancelled() {
             semaphore.release();

@@ -77,7 +77,7 @@ public class NotificationsPlugin extends BaseCommandPlugin {
     public void showConfig(final PreferencesDialogModel manager) {
         final NotificationConfig configPanel = UIUtilities.invokeAndWait(
                 new Callable<NotificationConfig>() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public NotificationConfig call() {
                         return new NotificationConfig(manager.getIdentity(), pluginInfo.getDomain(),

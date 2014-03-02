@@ -78,7 +78,7 @@ public final class AboutPanel extends JPanel implements HyperlinkListener {
         add(about, "align center");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {

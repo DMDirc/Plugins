@@ -171,14 +171,14 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                     + "made will be lost, are you sure you want to close this " + "dialog?") {
                         private static final long serialVersionUID = 1;
 
-                        /** {@inheritDoc} */
+                        
                         @Override
                         public boolean save() {
                             ServerSettingsDialog.this.dispose();
                             return true;
                         }
 
-                        /** {@inheritDoc} */
+                        
                         @Override
                         public void cancelled() {
                             //Ignore

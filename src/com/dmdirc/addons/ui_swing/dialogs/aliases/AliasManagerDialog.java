@@ -148,7 +148,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             /** Java Serialisation verion ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -307,13 +307,13 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
                     /** Java Serialisation verion ID. */
                     private static final long serialVersionUID = 1;
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public boolean save() {
                         return true;
                     }
 
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void cancelled() {
                         //Ignore

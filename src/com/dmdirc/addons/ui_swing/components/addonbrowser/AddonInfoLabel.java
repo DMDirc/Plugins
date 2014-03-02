@@ -119,27 +119,27 @@ public class AddonInfoLabel extends JPanel {
         return addonInfo;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void repaint() {
         //NOOP for performance reasons
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final Object oldValue, final Object newValue) {
         //NOOP for performance reasons
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final boolean oldValue, final boolean newValue) {
         //NOOP for performance reasons
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void firePropertyChange(final String propertyName,
             final int oldValue, final int newValue) {

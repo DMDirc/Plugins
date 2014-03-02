@@ -158,7 +158,7 @@ public class KFileChooser extends JFileChooser {
                 currentDirectoryPath) : new JFileChooser(currentDirectoryPath);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int showOpenDialog(final Component parent) throws HeadlessException {
         if (!useKFileChooser(config, plugin)) {
@@ -219,7 +219,7 @@ public class KFileChooser extends JFileChooser {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int showSaveDialog(final Component parent) throws HeadlessException {
         if (!useKFileChooser(config, plugin)) {

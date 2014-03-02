@@ -98,7 +98,7 @@ public class Licence {
         this.name = name;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String toString() {
         return getComponent();

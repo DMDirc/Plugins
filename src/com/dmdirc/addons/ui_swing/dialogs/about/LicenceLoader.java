@@ -131,7 +131,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     private void addLicensesToNode(final Map<String, InputStream> licences,
             final DefaultMutableTreeNode root) {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 model.insertNodeInto(root, (MutableTreeNode) model.
@@ -144,7 +144,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
                 continue;
             }
             UIUtilities.invokeAndWait(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     model.insertNodeInto(new DefaultMutableTreeNode(licence),
@@ -154,7 +154,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         model.nodeStructureChanged((TreeNode) model.getRoot());

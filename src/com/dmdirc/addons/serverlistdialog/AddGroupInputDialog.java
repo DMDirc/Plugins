@@ -140,7 +140,7 @@ public class AddGroupInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (save()) {
@@ -149,39 +149,39 @@ public class AddGroupInputDialog extends StandardDialog {
             }
         });
         getCancelButton().addActionListener(new ActionListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void actionPerformed(final ActionEvent e) {
                 dispose();
             }
         });
         addWindowListener(new WindowAdapter() {
-            /** {@inheritDoc} */
+            
             @Override
             public void windowOpened(final WindowEvent e) {
                 groupName.requestFocusInWindow();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void windowClosed(final WindowEvent e) {
                 //Ignore
             }
         });
         groupName.getDocument().addDocumentListener(new DocumentListener() {
-            /** {@inheritDoc} */
+            
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 validateText();
             }
 
-            /** {@inheritDoc} */
+            
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 //Ignore
@@ -189,7 +189,7 @@ public class AddGroupInputDialog extends StandardDialog {
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());

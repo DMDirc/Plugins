@@ -49,19 +49,19 @@ public class Threads extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "threads";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return " - Shows a thread dump for the running JVM";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

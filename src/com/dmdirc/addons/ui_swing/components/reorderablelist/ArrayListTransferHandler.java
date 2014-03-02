@@ -132,7 +132,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void exportDone(final JComponent source, final Transferable data,
             final int action) {

@@ -35,7 +35,7 @@ import javax.swing.plaf.ComponentUI;
  */
 public class TextPaneUI extends ComponentUI {
 
-    /** {@inheritDoc} */
+    
     @Override
     public void installUI(final JComponent c) {
         Border border;

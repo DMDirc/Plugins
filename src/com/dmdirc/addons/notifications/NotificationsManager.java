@@ -89,7 +89,7 @@ public class NotificationsManager implements ActionListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {

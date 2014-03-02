@@ -54,69 +54,69 @@ public final class UserModesPane extends ModesPane {
         initModesPanel();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean hasModeValue(final String mode) {
         return server.getConfigManager().hasOptionString("server",
                 "umode" + mode);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getModeValue(final String mode) {
         return server.getConfigManager().getOption("server", "umode" + mode);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isModeEnabled(final String mode) {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isModeSettable(final String mode) {
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAvailableBooleanModes() {
         return server.getParser().getUserModes();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getOurBooleanModes() {
         return server.getParser().getLocalClient().getModes();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getAllParamModes() {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getParamModeValue(final String mode) {
         return "";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void alterMode(final boolean add, final String mode,
             final String parameter) {
         server.getParser().getLocalClient().alterMode(add, mode.toCharArray()[0]);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void flushModes() {
         server.getParser().getLocalClient().flushModes();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public SwingController getSwingController() {
         return controller;

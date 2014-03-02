@@ -46,19 +46,19 @@ public class MemInfo extends DebugCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "meminfo";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return " - shows JVM memory information";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {

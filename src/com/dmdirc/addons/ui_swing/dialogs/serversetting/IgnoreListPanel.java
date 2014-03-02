@@ -184,7 +184,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                 /** A version number for this class. */
                 private static final long serialVersionUID = 2;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public boolean save() {
                     if (viewToggle.isSelected()) {
@@ -197,7 +197,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                     return true;
                 }
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public void cancelled() {
                     //Ignore
@@ -211,7 +211,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                 /** A version number for this class. */
                 private static final long serialVersionUID = 1;
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public boolean save() {
                     cachedIgnoreList.remove(list.getSelectedIndex());
@@ -220,7 +220,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
                     return true;
                 }
 
-                /** {@inheritDoc} */
+                
                 @Override
                 public void cancelled() {
                     //Ignore

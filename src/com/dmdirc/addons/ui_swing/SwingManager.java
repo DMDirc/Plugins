@@ -211,7 +211,7 @@ public class SwingManager {
      */
     private void installEventQueue() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
@@ -231,7 +231,7 @@ public class SwingManager {
      */
     private void installKeyListener() {
         UIUtilities.invokeAndWait(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 KeyboardFocusManager.getCurrentKeyboardFocusManager()

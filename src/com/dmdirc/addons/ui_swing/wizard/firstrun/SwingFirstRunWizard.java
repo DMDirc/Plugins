@@ -101,7 +101,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void wizardFinished() {
         if (ResourceManager.getResourceManager() == null) {
@@ -125,19 +125,19 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         wizardDialog.dispose();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void wizardCancelled() {
         wizardDialog.dispose();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void extractPlugins() {
         corePluginExtractor.extractCorePlugins(null);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void extractActions() {
         extractCoreActions();
@@ -176,7 +176,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void display() {
         wizardDialog.addStep(new FirstRunExtractionStep());

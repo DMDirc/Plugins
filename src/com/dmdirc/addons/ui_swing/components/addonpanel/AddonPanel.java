@@ -94,7 +94,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
             /** Serial Version UID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -196,7 +196,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void save() {
         if (addonList.getRowCount() == 0) {
@@ -209,7 +209,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addonToggled() {
         addonList.repaint();

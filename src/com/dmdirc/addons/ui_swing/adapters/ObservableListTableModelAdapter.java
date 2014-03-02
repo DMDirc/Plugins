@@ -50,7 +50,7 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
         this.list.addListListener(new Listener());
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getRowCount() {
         return this.list.size();
@@ -61,12 +61,12 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
      */
     private class Listener implements ListObserver {
 
-        /** {@inheritDoc} */
+        
         @Override
         public void onItemsAdded(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     fireTableRowsInserted(startIndex, endIndex);
@@ -74,12 +74,12 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
             });
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public void onItemsRemoved(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     fireTableRowsDeleted(startIndex, endIndex);
@@ -87,12 +87,12 @@ public abstract class ObservableListTableModelAdapter<T> extends AbstractTableMo
             });
         }
 
-        /** {@inheritDoc} */
+        
         @Override
         public void onItemsChanged(final Object source, final int startIndex,
                 final int endIndex) {
             UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     fireTableRowsUpdated(startIndex, endIndex);

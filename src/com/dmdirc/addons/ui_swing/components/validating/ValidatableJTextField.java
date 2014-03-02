@@ -97,7 +97,7 @@ public class ValidatableJTextField extends JComponent implements Validatable {
         errorIcon.setVisible(false);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setValidation(final ValidationResponse validation) {
         if (validation.isFailure()) {

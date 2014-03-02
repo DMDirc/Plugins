@@ -128,7 +128,7 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         return info.getState();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setForeground(final Color fg) {
         if (name != null) {
@@ -139,7 +139,7 @@ public class AddonCell extends JPanel implements AddonToggleListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addonToggled() {
         status.setText(info.getState() ? "Enabled" : "Disabled");

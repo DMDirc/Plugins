@@ -119,7 +119,7 @@ public class DataLoaderWorker
         this.scrollPane = scrollPane;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected Collection<AddonInfo> doInBackground() {
         final JPanel loadingPanel = new JPanel(
@@ -159,7 +159,7 @@ public class DataLoaderWorker
         return list;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void done() {
         if (isCancelled()) {
@@ -190,11 +190,11 @@ public class DataLoaderWorker
         scrollPane.setViewportView(table);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void downloadProgress(final float percent) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 jpb.setValue((int) percent);
@@ -202,11 +202,11 @@ public class DataLoaderWorker
         });
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void setIndeterminate(final boolean indeterminate) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 jpb.setIndeterminate(indeterminate);

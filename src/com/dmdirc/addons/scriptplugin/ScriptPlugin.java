@@ -47,7 +47,7 @@ public class ScriptPlugin extends BaseCommandPlugin {
         scriptPluginManager = getObjectGraph().get(ScriptPluginManager.class);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onLoad() {
         scriptPluginManager.onLoad();

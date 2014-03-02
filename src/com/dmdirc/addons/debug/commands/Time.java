@@ -50,19 +50,19 @@ public class Time extends DebugCommand implements IntelligentCommand {
         super(commandProvider);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getName() {
         return "time";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getUsage() {
         return "<command to time> - times the specified command";
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
@@ -94,7 +94,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {

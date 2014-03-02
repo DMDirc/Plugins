@@ -55,7 +55,7 @@ public class MircStyle implements TabCompletionStyle {
         this.window = window;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public TabCompletionResult getResult(final String original, final int start,
             final int end, final boolean shiftPressed,

@@ -89,19 +89,19 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
         this.globalConfig = globalConfig;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void addActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void removeActionListener(final ActionListener listener) {
         // Ignore request - we don't handle returns for text areas
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (globalConfig.getOptionBool("general", "showcolourdialog")) {
@@ -125,7 +125,7 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void hideColourPicker() {
         if (colourPicker != null) {

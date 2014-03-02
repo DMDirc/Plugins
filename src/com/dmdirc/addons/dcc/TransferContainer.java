@@ -105,7 +105,7 @@ public class TransferContainer extends FrameContainer implements
         otherNickname = targetNick;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void onSocketClosed(final Parser parser, final Date date) {
         // Remove our reference to the parser (and its reference to us)
@@ -308,7 +308,7 @@ public class TransferContainer extends FrameContainer implements
             if (connection.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
                 final Thread errorThread = new Thread(new Runnable() {
-                    /** {@inheritDoc} */
+                    
                     @Override
                     public void run() {
                         JOptionPane.showMessageDialog(null,
@@ -359,7 +359,7 @@ public class TransferContainer extends FrameContainer implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Connection getConnection() {
         return null;

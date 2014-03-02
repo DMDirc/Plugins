@@ -74,7 +74,7 @@ public class DcopMediaSourcePlugin extends BasePlugin
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public List<MediaSource> getSources() {
         return Collections.unmodifiableList(sources);

@@ -93,7 +93,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         pluginManager.refreshPlugins();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected JTable populateList(final JTable table) {
         final List<PluginInfo> list = new ArrayList<>();
@@ -116,7 +116,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
 
 
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 ((DefaultTableModel) table.getModel()).setNumRows(0);
@@ -136,14 +136,14 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         return table;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
         populateList(addonList);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected String getTypeName() {
         return "plugins";

@@ -158,7 +158,7 @@ public class ServerList implements ConfigProviderListener {
         return null;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configProviderAdded(final ConfigProvider configProvider) {
         try {
@@ -172,7 +172,7 @@ public class ServerList implements ConfigProviderListener {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configProviderRemoved(final ConfigProvider configProvider) {
         // TODO: Remove server group

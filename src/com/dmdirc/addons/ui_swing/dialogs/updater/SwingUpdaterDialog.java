@@ -133,7 +133,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             /** Serialisation version ID. */
             private static final long serialVersionUID = 1;
 
-            /** {@inheritDoc} */
+            
             @Override
             public TableCellRenderer getCellRenderer(final int row,
                     final int column) {
@@ -189,7 +189,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             header.setText("DMDirc is updating the following components:");
 
             new LoggingSwingWorker<Void, Void>() {
-                /** {@inheritDoc} */
+                
                 @Override
                 protected Void doInBackground() {
                     for (UpdateComponent update : ((UpdateTableModel) table.getModel()).getUpdates()) {
@@ -210,19 +210,19 @@ public class SwingUpdaterDialog extends StandardDialog implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean enterPressed() {
         executeAction(getOkButton());
         return true;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void updateManagerStatusChanged(final UpdateManager manager,
             final UpdateManagerStatus status) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 getOkButton().setEnabled(status != UpdateManagerStatus.WORKING);

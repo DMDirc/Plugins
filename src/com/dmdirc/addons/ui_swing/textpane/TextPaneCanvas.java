@@ -154,7 +154,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void updateCachedSettings() {
         quickCopy = manager.getOptionBool("ui", "quickCopy");
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc} */
+            
             @Override
             public void run() {
                 recalc();
@@ -591,7 +591,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             textPane.copy((e.getModifiers() & MouseEvent.CTRL_MASK)
                     == MouseEvent.CTRL_MASK);
             SwingUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc} */
+                
                 @Override
                 public void run() {
                     clearSelection();
@@ -1001,13 +1001,13 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         //Ignore
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void configChanged(final String domain, final String key) {
         updateCachedSettings();
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String getToolTipText(final MouseEvent event) {
         final AttributedCharacterIterator iterator = getIterator(

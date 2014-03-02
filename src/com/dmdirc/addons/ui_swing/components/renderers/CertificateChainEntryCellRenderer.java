@@ -57,7 +57,7 @@ public class CertificateChainEntryCellRenderer extends DMDircListCellRenderer<Ce
         invalidIcon = iconManager.getIcon("cross");
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void renderValue(final JLabel label, final CertificateChainEntry value,
             final int index, final boolean isSelected,

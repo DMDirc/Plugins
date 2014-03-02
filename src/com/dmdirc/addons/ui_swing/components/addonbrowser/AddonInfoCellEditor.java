@@ -45,7 +45,7 @@ public class AddonInfoCellEditor extends AbstractCellEditor implements
     /** Table to edit. */
     private Object value;
 
-    /** {@inheritDoc} */
+    
     @Override
     public Component getTableCellEditorComponent(final JTable table,
             final Object value, final boolean isSelected, final int row,
@@ -65,7 +65,7 @@ public class AddonInfoCellEditor extends AbstractCellEditor implements
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public Object getCellEditorValue() {
         return value;

@@ -56,7 +56,7 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
         this.dialogFactory = dialogFactory;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected StatusbarPopupWindow getWindow() {
         return dialogFactory.getServerInfoDialog(this);

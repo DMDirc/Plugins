@@ -65,7 +65,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
         this.iconManager = iconManager;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void initContent(final JPanel panel) {
         final List<ProgramError> errors = ErrorManager.getErrorManager().getErrors();

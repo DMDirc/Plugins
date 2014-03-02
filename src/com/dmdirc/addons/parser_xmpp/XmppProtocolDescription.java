@@ -31,20 +31,20 @@ import java.net.URI;
  */
 public class XmppProtocolDescription implements ProtocolDescription {
 
-    /** {@inheritDoc} */
+    
     @Override
     public int getDefaultPort() {
         return 5222;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public String[] parseHostmask(final String hostmask) {
         final String[] parts = hostmask.split("/");
         return new String[]{parts[0], parts.length > 1 ? parts[1] : "unknown", ""};
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean isSecure(final URI uri) {
         return uri.getScheme().endsWith("s");

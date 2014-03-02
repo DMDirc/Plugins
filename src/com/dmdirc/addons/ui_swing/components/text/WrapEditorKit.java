@@ -57,7 +57,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         wrap = wrapping;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void install(final JEditorPane c) {
         super.install(c);
@@ -66,7 +66,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         c.addMouseMotionListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void deinstall(final JEditorPane c) {
         c.removeMouseListener(this);
@@ -75,7 +75,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener,
         super.deinstall(c);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public ViewFactory getViewFactory() {
         if (wrap) {

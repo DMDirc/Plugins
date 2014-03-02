@@ -313,7 +313,7 @@ public class DCCTransfer extends DCC {
         handlers.add(DCCTransferHandler.class, handler);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void socketOpened() {
         try {
@@ -334,7 +334,7 @@ public class DCCTransfer extends DCC {
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void socketClosed() {
         // Try to close both, even if one fails.
@@ -367,7 +367,7 @@ public class DCCTransfer extends DCC {
         active = false;
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected boolean handleSocket() {
         if (out == null || in == null) {

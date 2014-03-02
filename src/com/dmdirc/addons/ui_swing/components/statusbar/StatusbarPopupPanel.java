@@ -110,14 +110,14 @@ public abstract class StatusbarPopupPanel<T extends JComponent> extends Statusba
         }
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void openDialog() {
         super.openDialog();
         getDialog().addMouseListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     protected void closeDialog() {
         if (getDialog() != null) {

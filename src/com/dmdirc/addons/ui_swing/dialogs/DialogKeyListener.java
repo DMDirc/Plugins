@@ -45,7 +45,7 @@ public class DialogKeyListener implements KeyEventDispatcher {
     public DialogKeyListener() {
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public boolean dispatchKeyEvent(final KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_RELEASED

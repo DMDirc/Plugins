@@ -114,7 +114,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
         addMouseWheelListener(this);
     }
 
-    /** {@inheritDoc} */
+    
     @Override
     public void paint(final Graphics g) {
         int offset = 20;
