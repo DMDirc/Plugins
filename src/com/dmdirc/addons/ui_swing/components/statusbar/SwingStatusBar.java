@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.logger.ErrorLevel;
@@ -71,13 +69,13 @@ public class SwingStatusBar extends JPanel implements StatusBar {
      * @param mainFrame    Main frame
      * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
+     * @param errorLabel   The error label to add to the status bar.
      * @param messageLabel The message label to add to the status bar.
      */
     public SwingStatusBar(
-            final SwingController controller,
-            final MainFrame mainFrame,
             final InviteLabel inviteLabel,
             final UpdaterLabel updaterLabel,
+            final ErrorPanel errorLabel,
             final MessageLabel messageLabel) {
         checkOnEDT();
 
@@ -88,7 +86,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
                 + ", wmin 20, shrink 0";
 
         this.messageLabel = messageLabel;
-        errorPanel = new ErrorPanel(controller, mainFrame, this);
+        this.errorPanel = errorLabel;
         this.updateLabel = updaterLabel;
         this.inviteLabel = inviteLabel;
 

@@ -41,6 +41,7 @@ import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.addonpanel.PluginPanel;
 import com.dmdirc.addons.ui_swing.components.addonpanel.ThemePanel;
+import com.dmdirc.addons.ui_swing.components.statusbar.ErrorPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.InviteLabel;
 import com.dmdirc.addons.ui_swing.components.statusbar.MessageLabel;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -139,16 +140,14 @@ public class SwingModule {
     @Provides
     @Singleton
     public SwingStatusBar getSwingStatusBar(
-            final SwingController swingController,
-            final MainFrame mainFrame,
             final InviteLabel inviteLabel,
+            final ErrorPanel errorLabel,
             final UpdaterLabel updaterLabel,
             final MessageLabel messageLabel) {
         return UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
             @Override
             public SwingStatusBar call() {
-                return new SwingStatusBar(swingController, mainFrame, inviteLabel, updaterLabel,
-                        messageLabel);
+                return new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel);
             }
         });
     }

@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;
@@ -45,14 +47,12 @@ import javax.swing.JLabel;
 public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, UpdateManagerListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The manager to use to retrieve icons. */
+    private final IconManager iconManager;
+    /** The frame that owns this label. */
+    private final MainFrame mainFrame;
     /** The update manager to use to retrieve information. */
     private final CachingUpdateManager updateManager;
     /** Provider of updater dialogs. */
@@ -63,20 +63,23 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     /**
      * Instantiates a new updater label, handles showing updates on the status bar.
      *
-     * @param controller            Swing controller
+     * @param iconManager           The manager to use to retrieve icons.
+     * @param mainFrame             The frame that owns this label.
      * @param updateManager         The manager to use to retrieve information.
      * @param updaterDialogProvider Provider of updater dialogs.
      * @param restartDialogProvider Provider of restart dialogs.
      */
     @Inject
     public UpdaterLabel(
-            final SwingController controller,
+            @GlobalConfig final IconManager iconManager,
+            final MainFrame mainFrame,
             final CachingUpdateManager updateManager,
             final DialogProvider<SwingUpdaterDialog> updaterDialogProvider,
             @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider) {
         super(new JLabel());
 
-        this.controller = controller;
+        this.iconManager = iconManager;
+        this.mainFrame = mainFrame;
         this.updateManager = updateManager;
         this.updaterDialogProvider = updaterDialogProvider;
         this.restartDialogProvider = restartDialogProvider;
@@ -106,7 +109,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(updateManager, this, controller.getMainFrame());
+        return new UpdaterPopup(updateManager, this, mainFrame);
     }
 
     @Override
@@ -119,11 +122,11 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         }
 
         if (status == UpdateManagerStatus.WORKING) {
-            label.setIcon(controller.getIconManager().getIcon("hourglass"));
+            label.setIcon(iconManager.getIcon("hourglass"));
         } else if (status == UpdateManagerStatus.IDLE_UPDATE_AVAILABLE) {
-            label.setIcon(controller.getIconManager().getIcon("update"));
+            label.setIcon(iconManager.getIcon("update"));
         } else if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-            label.setIcon(controller.getIconManager().getIcon("restart-needed"));
+            label.setIcon(iconManager.getIcon("restart-needed"));
         }
     }
 

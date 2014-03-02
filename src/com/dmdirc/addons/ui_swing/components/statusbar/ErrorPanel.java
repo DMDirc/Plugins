@@ -22,12 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +37,9 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -46,20 +51,22 @@ import javax.swing.SwingUtilities;
  *
  * @since 0.6.3m1
  */
+@Singleton
 public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         ErrorListener, ActionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
     /** non error state image icon. */
-    private final Icon DEFAULT_ICON;
+    private final Icon defaultIcon;
     /** Status controller. */
     private final MainFrame mainFrame;
     /** Swing status bar. */
-    private final SwingStatusBar statusBar;
+    private final Provider<SwingStatusBar> statusBar;
+    /** The manager to use to retrieve icons. */
+    private final IconManager iconManager;
     /** Error manager. */
-    private final transient ErrorManager errorManager = ErrorManager
-            .getErrorManager();
+    private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Dismiss menu item. */
@@ -74,23 +81,29 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /**
      * Creates a new ErrorPanel for the specified status bar.
      *
-     * @param controller Swing controller
-     * @param mainFrame  Main frame
-     * @param statusBar  Status bar
+     * @param swingController Swing controller
+     * @param iconManager     The manager to use to retrieve icons.
+     * @param mainFrame       Main frame
+     * @param statusBar       Status bar
      */
-    public ErrorPanel(final SwingController controller,
-            final MainFrame mainFrame, final SwingStatusBar statusBar) {
+    @Inject
+    public ErrorPanel(
+            final SwingController swingController,
+            @GlobalConfig final IconManager iconManager,
+            final MainFrame mainFrame,
+            final Provider<SwingStatusBar> statusBar) {
         super(new JLabel());
 
-        this.controller = controller;
+        this.controller = swingController;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
-        DEFAULT_ICON = controller.getIconManager().getIcon("normal");
+        this.iconManager = iconManager;
+        defaultIcon = iconManager.getIcon("normal");
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Clear All");
         show = new JMenuItem("Open");
-        label.setIcon(DEFAULT_ICON);
+        label.setIcon(defaultIcon);
         setVisible(errorManager.getErrorCount() > 0);
         menu.add(show);
         menu.add(dismiss);
@@ -102,12 +115,12 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(controller.getIconManager(), this, mainFrame);
+        return new ErrorPopup(iconManager, this, mainFrame);
     }
 
     /** Clears the error. */
     public void clearError() {
-        label.setIcon(DEFAULT_ICON);
+        label.setIcon(defaultIcon);
         errorLevel = null;
     }
 
@@ -141,8 +154,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
                     for (final ProgramError error : errors) {
                         if (errorLevel == null || !error.getLevel().moreImportant(errorLevel)) {
                             errorLevel = error.getLevel();
-                            label.setIcon(controller.getIconManager()
-                                    .getIcon(errorLevel.getIcon()));
+                            label.setIcon(iconManager.getIcon(errorLevel.getIcon()));
                         }
                     }
                     setVisible(true);
@@ -153,7 +165,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     public boolean isReady() {
-        return statusBar.isValid();
+        return statusBar.get().isValid();
     }
 
     /**
