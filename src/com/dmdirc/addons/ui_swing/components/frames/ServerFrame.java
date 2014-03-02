@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.Connection;
@@ -41,6 +42,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -65,13 +67,17 @@ public final class ServerFrame extends InputTextFrame implements
     /**
      * Creates a new ServerFrame.
      *
-     * @param deps  The dependencies required by text frames.
-     * @param owner Parent Frame container
+     * @param deps               The dependencies required by text frames.
+     * @param inputFieldProvider The provider to use to create a new input field.
+     * @param owner              Parent Frame container
      */
-    public ServerFrame(final TextFrameDependencies deps, @Unbound final Server owner) {
-        super(deps, owner);
+    public ServerFrame(
+            final TextFrameDependencies deps,
+            final Provider<SwingInputField> inputFieldProvider,
+            @Unbound final Server owner) {
+        super(deps, inputFieldProvider, owner);
 
-        this.controller = getController();
+        this.controller = deps.controller;
         initComponents();
 
         owner.addCertificateProblemListener(this);
@@ -148,8 +154,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(getController().getIconManager(), getController().
-                getMainFrame(),
+        sslDialog = new SSLCertificateDialog(controller.getIconManager(), controller.getMainFrame(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }

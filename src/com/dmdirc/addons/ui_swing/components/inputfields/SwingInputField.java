@@ -22,12 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
-import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Color;
@@ -42,6 +45,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -68,21 +72,33 @@ public class SwingInputField extends JComponent implements InputField,
     private final ListenerList listeners;
     /** Parent Window. */
     private final Window parentWindow;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** The config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** The icon manager to use for icons. */
+    private final IconManager iconManager;
+    /** The colour manager to use. */
+    private final ColourManager colourManager;
 
     /**
      * Instantiates a new swing input field.
      *
-     * @param textFrame    Parent textFrame
-     * @param parentWindow Parent window
+     * @param parentWindow  Parent window
+     * @param globalConfig  The configuration to read settings from.
+     * @param iconManager   The icon manager to use for icons.
+     * @param colourManager The colour manager to use.
      */
-    public SwingInputField(final InputTextFrame textFrame,
-            final Window parentWindow) {
+    @Inject
+    public SwingInputField(
+            final MainFrame parentWindow,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @GlobalConfig final IconManager iconManager,
+            final ColourManager colourManager) {
         super();
 
-        controller = textFrame.getController();
         this.parentWindow = parentWindow;
+        this.globalConfig = globalConfig;
+        this.iconManager = iconManager;
+        this.colourManager = colourManager;
 
         listeners = new ListenerList();
 
@@ -90,11 +106,9 @@ public class SwingInputField extends JComponent implements InputField,
         textField.setFocusTraversalKeysEnabled(false);
         textField.addKeyListener(this);
         textField.setOpaque(true);
-        wrapIndicator =
-                new JLabel(textFrame.getIconManager().getIcon("linewrap"));
+        wrapIndicator = new JLabel(iconManager.getIcon("linewrap"));
         wrapIndicator.setVisible(false);
-        errorIndicator =
-                new JLabel(textFrame.getIconManager().getIcon("input-error"));
+        errorIndicator = new JLabel(iconManager.getIcon("input-error"));
         errorIndicator.setVisible(false);
 
         setLayout(new MigLayout("ins 0, hidemode 3"));
@@ -147,18 +161,16 @@ public class SwingInputField extends JComponent implements InputField,
             /** {@inheritDoc} */
             @Override
             public void run() {
-                if (controller.getGlobalConfig().getOptionBool("general",
-                        "showcolourdialog")) {
+                if (globalConfig.getOptionBool("general", "showcolourdialog")) {
                     colourPicker = new ColourPickerDialog(SwingInputField.this,
-                            controller.getColourManager(), controller.getIconManager(),
-                            irc, hex, parentWindow);
+                            colourManager, iconManager, irc, hex, parentWindow);
                     colourPicker.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(final ActionEvent actionEvent) {
                             try {
                                 textField.getDocument().
                                         insertString(textField.getCaretPosition(),
-                                        actionEvent.getActionCommand(), null);
+                                                actionEvent.getActionCommand(), null);
                             } catch (final BadLocationException ex) {
                                 //Ignore, wont happen
                             }

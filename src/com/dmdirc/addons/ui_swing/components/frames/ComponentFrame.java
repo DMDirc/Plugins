@@ -68,7 +68,7 @@ public class ComponentFrame extends TextFrame {
             @Unbound final FrameContainer owner,
             @Unbound final CommandParser commandParser) {
         super(owner, commandParser, deps);
-        this.controller = getController();
+        this.controller = deps.controller;
         this.urlBuilder = urlBuilder;
         this.owner = owner;
         initComponents();

@@ -95,11 +95,13 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /**
      * Creates a new instance of InputFrame.
      *
-     * @param deps  The dependencies required by text frames.
-     * @param owner WritableFrameContainer owning this frame.
+     * @param deps               The dependencies required by text frames.
+     * @param inputFieldProvider The provider to use to create a new input field.
+     * @param owner              WritableFrameContainer owning this frame.
      */
     public InputTextFrame(
             final TextFrameDependencies deps,
+            final Provider<SwingInputField> inputFieldProvider,
             final WritableFrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
@@ -109,7 +111,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         this.pluginManager = deps.pluginManager;
         this.pasteDialogFactory = deps.pasteDialog;
 
-        initComponents();
+        initComponents(inputFieldProvider);
 
         if (!UIUtilities.isGTKUI()) {
             //GTK users appear to dislike choice, ignore them if they want some.
@@ -145,9 +147,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /**
      * Initialises the components for this frame.
+     *
+     * @param inputFieldProvider The provider to use to create a new input field.
      */
-    private void initComponents() {
-        inputField = new SwingInputField(this, mainFrame.get());
+    private void initComponents(final Provider<SwingInputField> inputFieldProvider) {
+        inputField = inputFieldProvider.get();
         inputHandler = new SwingInputHandler(pluginManager, inputField,
                 getContainer().getCommandParser(), getContainer());
         inputHandler.addValidationListener(inputField);

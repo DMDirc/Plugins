@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
+import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -46,6 +47,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
@@ -85,17 +87,19 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
      * for the form.
      *
-     * @param deps            The dependencies required by text frames.
-     * @param identityFactory The factory to use to create a channel identity.
-     * @param topicBarFactory The factory to use to create topic bars.
-     * @param owner           The Channel object that owns this frame
+     * @param deps               The dependencies required by text frames.
+     * @param inputFieldProvider The provider to use to create a new input field.
+     * @param identityFactory    The factory to use to create a channel identity.
+     * @param topicBarFactory    The factory to use to create topic bars.
+     * @param owner              The Channel object that owns this frame
      */
     public ChannelFrame(
             final TextFrameDependencies deps,
+            final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
             final TopicBarFactory topicBarFactory,
             @Unbound final Channel owner) {
-        super(deps, owner);
+        super(deps, inputFieldProvider, owner);
 
         this.controller = deps.controller;
         this.eventBus = deps.eventBus;
