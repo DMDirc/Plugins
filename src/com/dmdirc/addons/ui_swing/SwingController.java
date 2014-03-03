@@ -50,7 +50,6 @@ import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.validators.NumericalValidator;
@@ -98,8 +97,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final IconManager iconManager;
     /** Apple handler, deals with Mac specific code. */
     private final Apple apple;
-    /** The colour manager to use to parse colours. */
-    private final ColourManager colourManager;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
     /** This plugin's settings domain. */
@@ -112,7 +109,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      * @param identityManager Identity Manager
      * @param serverManager   Server manager to use for server information.
      * @param urlBuilder      URL builder to use to resolve icons etc.
-     * @param colourManager   The colour manager to use to parse colours.
      * @param eventBus        The bus to publish and subscribe to events on.
      */
     public SwingController(
@@ -120,10 +116,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             final IdentityController identityManager,
             final ServerManager serverManager,
             final URLBuilder urlBuilder,
-            final ColourManager colourManager,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
-        this.colourManager = colourManager;
         this.domain = pluginInfo.getDomain();
 
         globalConfig = identityManager.getGlobalConfiguration();
@@ -145,18 +139,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return iconManager;
     }
 
-    @Deprecated
-    public ColourManager getColourManager() {
-        return colourManager;
-    }
-
     /**
      * Make swing not use Anti Aliasing if the user doesn't want it.
      */
     public final void setAntiAlias() {
         // For this to work it *HAS* to be before anything else UI related.
-        final boolean aaSetting = getGlobalConfig()
-                .getOptionBool("ui", "antialias");
+        final boolean aaSetting = globalConfig.getOptionBool("ui", "antialias");
         System.setProperty("awt.useSystemAAFontSettings",
                 Boolean.toString(aaSetting));
         System.setProperty("swing.aatext", Boolean.toString(aaSetting));
@@ -218,7 +206,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void updateLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                    getGlobalConfig().getOption("ui", "lookandfeel")));
+                    globalConfig.getOption("ui", "lookandfeel")));
             updateComponentTrees();
         } catch (ClassNotFoundException | InstantiationException |
                 IllegalAccessException | UnsupportedLookAndFeelException ex) {
