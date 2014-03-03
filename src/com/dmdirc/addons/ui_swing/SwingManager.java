@@ -215,18 +215,6 @@ public class SwingManager {
     }
 
     /**
-     * Retrieves the window factory to use.
-     *
-     * @return A swing window factory instance.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public SwingWindowFactory getWindowFactory() {
-        return windowFactory;
-    }
-
-    /**
      * Retrieves the main frame.
      *
      * @return A main frame instance.
