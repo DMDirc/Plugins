@@ -47,7 +47,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -96,8 +95,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final ConfigProvider addonIdentity;
     /** Global Swing UI Icon manager. */
     private final IconManager iconManager;
-    /** Plugin manager. */
-    private final PluginManager pluginManager;
     /** Apple handler, deals with Mac specific code. */
     private final Apple apple;
     /** The colour manager to use to parse colours. */
@@ -112,7 +109,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @param pluginInfo      Plugin info
      * @param identityManager Identity Manager
-     * @param pluginManager   Plugin manager
      * @param serverManager   Server manager to use for server information.
      * @param urlBuilder      URL builder to use to resolve icons etc.
      * @param colourManager   The colour manager to use to parse colours.
@@ -121,13 +117,11 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public SwingController(
             final PluginInfo pluginInfo,
             final IdentityController identityManager,
-            final PluginManager pluginManager,
             final ServerManager serverManager,
             final URLBuilder urlBuilder,
             final ColourManager colourManager,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
-        this.pluginManager = pluginManager;
         this.colourManager = colourManager;
         this.domain = pluginInfo.getDomain();
 
@@ -148,11 +142,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public IconManager getIconManager() {
         return iconManager;
-    }
-
-    @Deprecated
-    public PluginManager getPluginManager() {
-        return pluginManager;
     }
 
     @Deprecated
