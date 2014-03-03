@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -41,32 +42,38 @@ import javax.swing.SwingUtilities;
 public class FrameContainerMenu extends JMenu implements FrameInfoListener,
         ActionListener, SelectionListener, FrameContainerMenuInterface {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The swing controller that owns this item. */
     private final SwingController controller;
+    /** The swing frame. */
+    private final TextFrame window;
     /** Wrapped frame. */
     private final FrameContainer frame;
 
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
-     * @param frame      Wrapped frame
-     * @param controller Controller
+     * @param controller   Controller
+     * @param globalConfig The config to read settings from
+     * @param domain       The domain to read settings from
+     * @param window       The swing window being wrapped
+     * @param frame        Wrapped frame
      */
-    public FrameContainerMenu(final FrameContainer frame,
-            final SwingController controller) {
+    public FrameContainerMenu(
+            final SwingController controller,
+            final AggregateConfigProvider globalConfig,
+            final String domain,
+            final TextFrame window,
+            final FrameContainer frame) {
         super(frame.getName());
-        setIcon(frame.getIconManager().getIcon(frame.getIcon()));
-        new WindowMenuScroller(this, controller.getGlobalConfig(),
-                controller.getDomain(), 0);
 
         this.controller = controller;
+        this.window = window;
         this.frame = frame;
+
+        setIcon(frame.getIconManager().getIcon(frame.getIcon()));
+        new WindowMenuScroller(this, globalConfig, domain, 0);
 
         addActionListener(this);
         frame.addFrameInfoListener(this);
@@ -110,8 +117,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        controller.requestWindowFocus(controller.getWindowFactory()
-                .getSwingWindow(frame));
+        controller.requestWindowFocus(window);
     }
 
     @Override

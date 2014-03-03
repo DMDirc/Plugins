@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -31,6 +32,9 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -81,20 +85,32 @@ public class WindowMenuFrameManager extends JMenu implements
     private final Map<FrameContainer, FrameContainerMenuItem> items;
     private final Map<FrameContainer, FrameContainerMenuItem> menuItems;
 
+    private final MainFrame mainFrame;
+    private final AggregateConfigProvider globalConfig;
+    private final String domain;
+
     /**
      * Creates a new instance of WindowMenuFrameManager.
      *
      * @param controller    Swing controller
+     * @param iconManager   Icon manager to use for window icons.
+     * @param globalConfig  Config to read settings from.
+     * @param domain        Domain to read settings from.
      * @param windowFactory The window factory to use to create and listen for windows.
      * @param mainFrame     The frame that owns this manager
      */
     @Inject
     public WindowMenuFrameManager(
             final SwingController controller,
+            @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @PluginDomain(SwingController.class) final String domain,
             final SwingWindowFactory windowFactory,
             final MainFrame mainFrame) {
-        super();
         this.controller = controller;
+        this.globalConfig = globalConfig;
+        this.domain = domain;
+        this.mainFrame = mainFrame;
 
         menus = Collections.synchronizedMap(
                 new HashMap<FrameContainer, FrameContainerMenu>());
@@ -107,8 +123,7 @@ public class WindowMenuFrameManager extends JMenu implements
         setMnemonic('w');
         windowFactory.addWindowListener(this);
 
-        closeMenuItem = new JMenuItem(controller
-                .getIconManager().getIcon("close"));
+        closeMenuItem = new JMenuItem(iconManager.getIcon("close"));
         closeMenuItem.setMnemonic('c');
         closeMenuItem.setText("Close");
         closeMenuItem.setActionCommand("Close");
@@ -122,8 +137,7 @@ public class WindowMenuFrameManager extends JMenu implements
 
         mainFrame.addSelectionListener(this);
 
-        new WindowMenuScroller(this, controller.getGlobalConfig(),
-                controller.getDomain(), itemCount);
+        new WindowMenuScroller(this, globalConfig, domain, itemCount);
         checkMenuItems();
     }
 
@@ -144,8 +158,10 @@ public class WindowMenuFrameManager extends JMenu implements
 
                         @Override
                         public FrameContainerMenuItem call() {
-                            return new FrameContainerMenuItem(controller,
+                            return new FrameContainerMenuItem(
+                                    controller,
                                     window.getContainer(),
+                                    window,
                                     WindowMenuFrameManager.this);
                         }
                     });
@@ -164,8 +180,10 @@ public class WindowMenuFrameManager extends JMenu implements
 
                         @Override
                         public FrameContainerMenuItem call() {
-                            return new FrameContainerMenuItem(controller,
+                            return new FrameContainerMenuItem(
+                                    controller,
                                     window.getContainer(),
+                                    window,
                                     WindowMenuFrameManager.this);
                         }
                     });
@@ -176,8 +194,12 @@ public class WindowMenuFrameManager extends JMenu implements
 
                             @Override
                             public FrameContainerMenu call() {
-                                return new FrameContainerMenu(parent.
-                                        getContainer(), controller);
+                                return new FrameContainerMenu(
+                                        controller,
+                                        globalConfig,
+                                        domain,
+                                        parent,
+                                        parent.getContainer());
                             }
                         });
                 replaceItemWithMenu(getParentMenu(parent.getContainer()),
@@ -234,8 +256,10 @@ public class WindowMenuFrameManager extends JMenu implements
                             replaceMenuWithItem(getParentMenu(parent.
                                     getContainer()),
                                     menus.get(parent.getContainer()),
-                                    new FrameContainerMenuItem(controller,
+                                    new FrameContainerMenuItem(
+                                            controller,
                                             parent.getContainer(),
+                                            parent,
                                             WindowMenuFrameManager.this));
                         }
                     }
@@ -290,7 +314,7 @@ public class WindowMenuFrameManager extends JMenu implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (enabledMenuItems.get() && e.getActionCommand().equals("Close")) {
-            controller.getMainFrame().getActiveFrame().getContainer().close();
+            mainFrame.getActiveFrame().getContainer().close();
         }
     }
 
@@ -362,10 +386,9 @@ public class WindowMenuFrameManager extends JMenu implements
             final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
             if (sortBefore(newChild, child)) {
                 return i;
-            } else if (!sortAfter(newChild, child) && controller
-                    .getGlobalConfig().getOptionBool("treeview",
-                            "sortwindows") && newChild.getName().compareToIgnoreCase(
-                            child.getName()) < 0) {
+            } else if (!sortAfter(newChild, child)
+                    && globalConfig.getOptionBool("treeview", "sortwindows")
+                    && newChild.getName().compareToIgnoreCase(child.getName()) < 0) {
                 return i;
             }
         }

@@ -42,16 +42,14 @@ import javax.swing.SwingUtilities;
 public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListener,
         ActionListener, SelectionListener, FrameContainerMenuInterface {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The swing controller that owns this item. */
     private final SwingController controller;
     /** Wrapped frame. */
     private final FrameContainer frame;
+    /** Swing window. */
+    private final TextFrame window;
     /** Parent window menu frame manager. */
     private final WindowMenuFrameManager manager;
 
@@ -60,16 +58,19 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
      *
      * @param controller The Swing Controller that owns this item
      * @param frame      Wrapped frame
+     * @param window     The window this menu item corresponds to.
      * @param manager    Parent window menu frame manager.
      */
-    public FrameContainerMenuItem(final SwingController controller,
+    public FrameContainerMenuItem(
+            final SwingController controller,
             final FrameContainer frame,
+            final TextFrame window,
             final WindowMenuFrameManager manager) {
-        super(frame.getName(),
-                frame.getIconManager().getIcon(frame.getIcon()));
+        super(frame.getName(), frame.getIconManager().getIcon(frame.getIcon()));
 
         this.controller = controller;
         this.frame = frame;
+        this.window = window;
         this.manager = manager;
 
         addActionListener(this);
@@ -107,15 +108,9 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        controller.requestWindowFocus(controller.getWindowFactory()
-                .getSwingWindow(frame));
+        controller.requestWindowFocus(window);
     }
 
     @Override
