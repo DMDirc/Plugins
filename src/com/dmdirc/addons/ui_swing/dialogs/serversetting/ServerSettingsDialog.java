@@ -27,7 +27,6 @@ import com.dmdirc.ServerState;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
@@ -36,7 +35,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,16 +70,12 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ServerSettingsDialog.
      *
-     * @param controller     Swing controller
-     * @param iconManager    Icon manager
      * @param compFactory    Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
      * @param server         The server object that we're editing settings for
      * @param parentWindow   Parent window
      */
     public ServerSettingsDialog(
-            final SwingController controller,
-            final IconManager iconManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Server server,
@@ -93,35 +87,34 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         setTitle("Server settings");
         setResizable(false);
 
-        initComponents(controller, parentWindow, iconManager, server.getConfigManager(),
-                compFactory);
+        initComponents(parentWindow, server.getConfigManager(), compFactory);
         initListeners();
     }
 
     /**
      * Initialises the main UI components.
      *
-     * @param controller  Swing controller
-     * @param iconManager Icon manager
-     *
-     * @config Config to read from
-     * @param compFactory Preferences setting component factory
+     * @param parentWindow The window that owns this dialog
+     * @param config       Config to read from
+     * @param compFactory  Preferences setting component factory
      */
-    private void initComponents(final SwingController controller, final MainFrame parentWindow,
-            final IconManager iconManager, final AggregateConfigProvider config,
+    private void initComponents(
+            final MainFrame parentWindow,
+            final AggregateConfigProvider config,
             final PrefsComponentFactory compFactory) {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(controller, server);
+        modesPanel = new UserModesPane(server);
 
-        ignoreList = new IgnoreListPanel(iconManager, server, parentWindow);
+        ignoreList = new IgnoreListPanel(server.getIconManager(), server, parentWindow);
 
-        performPanel = new PerformTab(iconManager, config, performWrapper, server);
+        performPanel = new PerformTab(server.getIconManager(), config, performWrapper, server);
 
-        settingsPanel = new SettingsPanel(iconManager, compFactory, "These settings are specific"
-                + " to this network, any settings specified here will overwrite global settings");
+        settingsPanel = new SettingsPanel(server.getIconManager(), compFactory,
+                "These settings are specific to this network, any settings specified here will "
+                + "overwrite global settings");
 
         if (settingsPanel != null) {
             addSettings();

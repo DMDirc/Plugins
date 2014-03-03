@@ -22,9 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.RegexStringValidator;
 
 import java.awt.Component;
@@ -60,21 +61,25 @@ public final class ParamModePanel extends JPanel implements ActionListener {
     /**
      * Creates a new instance of ParamModePanel.
      *
-     * @param thisMode   The mode that this panel should deal with
-     * @param state      The current state of the mode
-     * @param value      The current value of the mode
-     * @param controller Swing controller to gain access to settings/icons
+     * @param config      The config to read mode aliases information from.
+     * @param iconManager The manager to use to retrieve validation error icons.
+     * @param thisMode    The mode that this panel should deal with
+     * @param state       The current state of the mode
+     * @param value       The current value of the mode
      */
-    public ParamModePanel(final String thisMode, final boolean state,
-            final String value, final SwingController controller) {
+    public ParamModePanel(
+            final AggregateConfigProvider config,
+            final IconManager iconManager,
+            final String thisMode,
+            final boolean state,
+            final String value) {
         super();
         this.mode = thisMode;
         this.originalValue = value;
         String text;
         String tooltip;
-        if (controller.getGlobalConfig().hasOptionString("server", "mode" + mode)) {
-            tooltip = "Mode " + mode + ": " + controller.getGlobalConfig()
-                    .getOption("server", "mode" + mode);
+        if (config.hasOptionString("server", "mode" + mode)) {
+            tooltip = "Mode " + mode + ": " + config.getOption("server", "mode" + mode);
         } else {
             tooltip = "Mode " + mode + ": Unknown";
         }
@@ -83,8 +88,8 @@ public final class ParamModePanel extends JPanel implements ActionListener {
 
         text = "Mode " + mode + ": ";
 
-        if (controller.getGlobalConfig().hasOptionString("server", "mode" + mode)) {
-            text = controller.getGlobalConfig().getOption("server", "mode" + mode)
+        if (config.hasOptionString("server", "mode" + mode)) {
+            text = config.getOption("server", "mode" + mode)
                     + " [+" + mode + "]: ";
         }
 
@@ -93,7 +98,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
         checkBox.setOpaque(UIUtilities.getTabbedPaneOpaque());
         add(checkBox);
 
-        textField = new ValidatingJTextField(controller.getIconManager(),
+        textField = new ValidatingJTextField(iconManager,
                 new RegexStringValidator("^[^ ]*$", "Cannot contain spaces"));
         textField.setText(value);
         add(textField, "growx, pushx");

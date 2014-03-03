@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.Channel;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.parser.interfaces.Parser;
 
 /** Non list mode panel. */
@@ -33,28 +32,22 @@ public final class ChannelModesPane extends ModesPane {
     private static final long serialVersionUID = 1;
     /** Parent channel. */
     private final Channel channel;
-    /** Swing controller. */
-    private final SwingController controller;
 
     /**
      * Creates a new instance of ChannelModesPane.
      *
-     * @param controller Swing controller
-     * @param channel    Parent channel
+     * @param channel Parent channel
      */
-    public ChannelModesPane(final SwingController controller,
-            final Channel channel) {
-        super();
+    public ChannelModesPane(final Channel channel) {
+        super(channel.getConfigManager(), channel.getIconManager());
 
-        this.controller = controller;
         this.channel = channel;
         initModesPanel();
     }
 
     @Override
     public boolean hasModeValue(final String mode) {
-        return channel.getConfigManager().hasOptionString("server", "mode"
-                + mode);
+        return channel.getConfigManager().hasOptionString("server", "mode" + mode);
     }
 
     @Override
@@ -112,11 +105,6 @@ public final class ChannelModesPane extends ModesPane {
     @Override
     public void flushModes() {
         channel.getChannelInfo().flushModes();
-    }
-
-    @Override
-    public SwingController getSwingController() {
-        return controller;
     }
 
 }
