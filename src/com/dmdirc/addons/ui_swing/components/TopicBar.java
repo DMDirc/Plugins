@@ -27,7 +27,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
@@ -37,7 +36,6 @@ import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
@@ -83,12 +81,10 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     private final JButton topicEdit;
     /** Cancel button. */
     private final JButton topicCancel;
-    /** The factory to use to retrieve windows. */
-    private final SwingWindowFactory windowFactory;
     /** Manager to use to resolve colours. */
     private final ColourManager colourManager;
     /** The window this topic bar is for. */
-    private final Window window;
+    private final ChannelFrame window;
     /** Associated channel. */
     private final Channel channel;
     /** the maximum length allowed for a topic. */
@@ -118,9 +114,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param domain          The domain that settings are stored in.
      * @param colourManager   The colour manager to use for colour input.
      * @param pluginManager   The plugin manager to use for plugin information.
-     * @param windowFactory   The factory to use to find and create windows.
-     * @param urlHandler      The URL handler to use to open URLs.
-     * @param swingController The controller to use to manage window focus.
      * @param channel         The channel that this topic bar is for.
      * @param window          The window this topic bar is for.
      * @param iconManager     The icon manager to use for this bar's icons.
@@ -131,13 +124,11 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final ColourManager colourManager,
             final PluginManager pluginManager,
-            final SwingWindowFactory windowFactory,
             @Unbound final Channel channel,
-            @Unbound final Window window,
+            @Unbound final ChannelFrame window,
             @Unbound final IconManager iconManager) {
         this.channel = channel;
         this.domain = domain;
-        this.windowFactory = windowFactory;
         this.colourManager = colourManager;
         this.window = window;
         topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
@@ -258,11 +249,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         super.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (!channel.isOnChannel()) {
@@ -290,8 +276,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 .equals(topicText.getText()))) {
             channel.setTopic(topicText.getText());
         }
-        ((ChannelFrame) windowFactory.getSwingWindow(channel))
-                .getInputField().requestFocusInWindow();
+        window.getInputField().requestFocusInWindow();
         if (channel.getCurrentTopic() == null) {
             topicText.setText("");
         } else {
@@ -327,10 +312,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         topicText.setFocusable(false);
         topicText.setEditable(false);
         topicCancel.setVisible(false);
-        final ChannelFrame channelFrame = (ChannelFrame) windowFactory.getSwingWindow(channel);
-        if (channelFrame != null) {
-            channelFrame.getInputField().requestFocusInWindow();
-        }
+        window.getInputField().requestFocusInWindow();
         topicChanged(channel, null);
     }
 
@@ -394,7 +376,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     }
 
     /**
-     * Sets the caret colour to the specified coloour.
+     * Sets the caret colour to the specified colour.
      *
      * @param optionColour Colour for the caret
      */
@@ -408,11 +390,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         });
     }
 
-    /**
-     * Sets the foreground colour to the specified coloour.
-     *
-     * @param optionColour Colour for the foreground
-     */
     @Override
     public void setForeground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
@@ -425,7 +402,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     }
 
     /**
-     * Sets the disabled text colour to the specified coloour.
+     * Sets the disabled text colour to the specified colour.
      *
      * @param optionColour Colour for the disabled text
      */
@@ -439,11 +416,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         });
     }
 
-    /**
-     * Sets the background colour to the specified coloour.
-     *
-     * @param optionColour Colour for the caret
-     */
     @Override
     public void setBackground(final Color optionColour) {
         UIUtilities.invokeLater(new Runnable() {
@@ -508,11 +480,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         });
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getClickCount() == 2 && !topicText.isEditable()) {
@@ -520,41 +487,21 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
