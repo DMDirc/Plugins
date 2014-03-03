@@ -684,18 +684,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Retrieves the window factory to use.
-     *
-     * @return The window factory to use.
-     *
-     * @deprecated Should be injected where needed.
-     */
-    @Deprecated
-    public SwingWindowFactory getWindowFactory() {
-        return swingManager.getWindowFactory();
-    }
-
-    /**
      * Retrieves the main frame to use.
      *
      * @return The main frame to use.
