@@ -23,13 +23,11 @@
 package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.Channel;
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.Server;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
@@ -44,11 +42,9 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.LifecycleController;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.ui.IconManager;
 
 import javax.inject.Provider;
 import javax.inject.Qualifier;
@@ -122,16 +118,13 @@ public class DialogModule {
     @Provides
     @Singleton
     public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider(
-            final SwingController controller,
-            @GlobalConfig final IconManager iconManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final MainFrame parentWindow) {
         return new KeyedDialogProvider<Server, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Server key) {
-                return new ServerSettingsDialog(controller, iconManager, compFactory,
-                        performWrapper, key, parentWindow);
+                return new ServerSettingsDialog(compFactory, performWrapper, key, parentWindow);
             }
         };
     }
@@ -139,11 +132,8 @@ public class DialogModule {
     @Provides
     @Singleton
     public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider(
-            final SwingController controller,
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
-            @GlobalConfig final IconManager iconManager,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig,
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
@@ -152,8 +142,8 @@ public class DialogModule {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
-                return new ChannelSettingsDialog(controller, identityFactory, windowFactory,
-                        iconManager, globalConfig, userConfig, serviceManager, preferencesManager,
+                return new ChannelSettingsDialog(identityFactory, windowFactory,
+                        userConfig, serviceManager, preferencesManager,
                         compFactory, key, parentWindow);
             }
         };
