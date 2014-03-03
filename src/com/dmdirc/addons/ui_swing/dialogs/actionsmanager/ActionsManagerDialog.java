@@ -31,7 +31,6 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.SortedListModel;
 import com.dmdirc.addons.ui_swing.components.frames.AppleJFrame;
@@ -113,7 +112,6 @@ public class ActionsManagerDialog extends StandardDialog implements
      *
      * @param apple             Apple instance
      * @param parentWindow      Parent window
-     * @param controller        Parent controller
      * @param config            Config to save dialog state to
      * @param compFactory       Prefs setting component factory
      * @param iconManager       The icon manager to use for validating text fields.
@@ -123,7 +121,6 @@ public class ActionsManagerDialog extends StandardDialog implements
     public ActionsManagerDialog(
             final Apple apple,
             final MainFrame parentWindow,
-            final SwingController controller,
             @UserConfig final ConfigProvider config,
             final PrefsComponentFactory compFactory,
             @GlobalConfig final IconManager iconManager,

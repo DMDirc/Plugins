@@ -31,7 +31,6 @@ import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
@@ -72,8 +71,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     private final ActionFactory actionFactory;
     /** Alias wrapper to retrieve aliases from. */
     private final AliasWrapper aliasWrapper;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Actions substitutor factory. */
     private final ActionSubstitutorFactory substitutorFactory;
     /** Table scrollpane. */
@@ -98,7 +95,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param controller         Swing controller
      * @param parentWindow       Parent window
      * @param substitutorFactory Actions substitution factory
      * @param aliasWrapper       The alias wrapper to read aliases from.
@@ -107,7 +103,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      */
     @Inject
     public AliasManagerDialog(
-            final SwingController controller,
             final MainFrame parentWindow,
             final ActionSubstitutorFactory substitutorFactory,
             final AliasWrapper aliasWrapper,
@@ -115,7 +110,6 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
             final AliasPanel aliasPanel) {
         super(parentWindow, ModalityType.MODELESS);
 
-        this.controller = controller;
         this.substitutorFactory = substitutorFactory;
         this.aliasWrapper = aliasWrapper;
         this.actionFactory = actionFactory;
