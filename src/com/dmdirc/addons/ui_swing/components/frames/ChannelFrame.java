@@ -32,11 +32,14 @@ import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
 import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
@@ -60,11 +63,7 @@ import net.miginfocom.swing.MigLayout;
 @Factory(inject = true, singleton = true, providers = true)
 public final class ChannelFrame extends InputTextFrame implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 10;
     /** Identity. */
     private final ConfigProvider identity;
@@ -76,12 +75,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private NickList nicklist;
     /** Topic bar. */
     private TopicBar topicBar;
-    /** UI controller. */
-    private final SwingController controller;
     /** Event bus to despatch events on. */
     private final EventBus eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
+    /** The domain to read settings from. */
+    private final String domain;
+    /** Channel settings dialog provider. */
+    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
@@ -92,23 +93,28 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param identityFactory    The factory to use to create a channel identity.
      * @param topicBarFactory    The factory to use to create topic bars.
      * @param owner              The Channel object that owns this frame
+     * @param domain             The domain to read settings from
+     * @param dialogProvider     The dialog provider to get the channel settings dialog from.
      */
     public ChannelFrame(
+            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
+            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
             final TopicBarFactory topicBarFactory,
             @Unbound final Channel owner) {
         super(deps, inputFieldProvider, owner);
 
-        this.controller = deps.controller;
         this.eventBus = deps.eventBus;
         this.globalConfig = deps.globalConfig;
+        this.domain = domain;
+        this.dialogProvider = dialogProvider;
 
         initComponents(topicBarFactory);
 
         globalConfig.addChangeListener("ui", "channelSplitPanePosition", this);
-        globalConfig.addChangeListener(controller.getDomain(), "shownicklist", this);
+        globalConfig.addChangeListener(domain, "shownicklist", this);
         eventBus.register(this);
 
         identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
@@ -139,7 +145,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param topicBarFactory The factory to use to produce topic bars.
      */
     private void initComponents(final TopicBarFactory topicBarFactory) {
-        topicBar = topicBarFactory.getTopicBar((Channel) getContainer(),
+        topicBar = topicBarFactory.getTopicBar((Channel) getContainer(), this,
                 getContainer().getIconManager());
 
         nicklist = new NickList(this, getContainer().getConfigManager());
@@ -156,8 +162,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         add(inputPanel, "growx");
 
         splitPane.setLeftComponent(getTextPane());
-        if (getContainer().getConfigManager().getOptionBool(
-                controller.getDomain(), "shownicklist")) {
+        if (getContainer().getConfigManager().getOptionBool(domain, "shownicklist")) {
             splitPane.setRightComponent(nicklist);
         } else {
             splitPane.setRightComponent(null);
@@ -174,7 +179,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            controller.showChannelSettingsDialog((Channel) getContainer());
+            dialogProvider.displayOrRequestFocus((Channel) getContainer());
         }
     }
 
@@ -206,8 +211,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             });
         }
         if ("shownicklist".equals(key)) {
-            if (getContainer().getConfigManager()
-                    .getOptionBool(controller.getDomain(), "shownicklist")) {
+            if (getContainer().getConfigManager().getOptionBool(domain, "shownicklist")) {
                 splitPane.setRightComponent(nicklist);
             } else {
                 splitPane.setRightComponent(null);
@@ -227,8 +231,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             public void run() {
                 if (getContainer().getConfigManager().getOptionInt("ui",
                         "channelSplitPanePosition") != nicklist.getWidth()) {
-                    identity.setOption("ui", "channelSplitPanePosition",
-                            nicklist.getWidth());
+                    identity.setOption("ui", "channelSplitPanePosition", nicklist.getWidth());
                 }
             }
         });

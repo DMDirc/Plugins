@@ -37,11 +37,10 @@ import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.annotations.factory.Factory;
@@ -62,8 +61,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -75,9 +72,8 @@ import net.miginfocom.swing.MigLayout;
  * Component to show and edit topics for a channel.
  */
 @Factory(inject = true, singleton = true)
-public class TopicBar extends JComponent implements ActionListener,
-        ConfigChangeListener, HyperlinkListener, MouseListener,
-        DocumentListener, TopicChangeListener {
+public class TopicBar extends JComponent implements ActionListener, ConfigChangeListener,
+        MouseListener, DocumentListener, TopicChangeListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -91,10 +87,8 @@ public class TopicBar extends JComponent implements ActionListener,
     private final SwingWindowFactory windowFactory;
     /** Manager to use to resolve colours. */
     private final ColourManager colourManager;
-    /** The URL handler to use to launch URLs. */
-    private final URLHandler urlHandler;
-    /** The controller to use to manage window focus. */
-    private final SwingController swingController;
+    /** The window this topic bar is for. */
+    private final Window window;
     /** Associated channel. */
     private final Channel channel;
     /** the maximum length allowed for a topic. */
@@ -128,6 +122,7 @@ public class TopicBar extends JComponent implements ActionListener,
      * @param urlHandler      The URL handler to use to open URLs.
      * @param swingController The controller to use to manage window focus.
      * @param channel         The channel that this topic bar is for.
+     * @param window          The window this topic bar is for.
      * @param iconManager     The icon manager to use for this bar's icons.
      */
     public TopicBar(
@@ -137,23 +132,19 @@ public class TopicBar extends JComponent implements ActionListener,
             final ColourManager colourManager,
             final PluginManager pluginManager,
             final SwingWindowFactory windowFactory,
-            final URLHandler urlHandler,
-            final SwingController swingController,
             @Unbound final Channel channel,
+            @Unbound final Window window,
             @Unbound final IconManager iconManager) {
-        super();
-
         this.channel = channel;
         this.domain = domain;
         this.windowFactory = windowFactory;
-        this.urlHandler = urlHandler;
         this.colourManager = colourManager;
-        this.swingController = swingController;
+        this.window = window;
         topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
         topicLengthMax = channel.getMaxTopicLength();
         updateOptions();
         errorIcon = new JLabel(iconManager.getIcon("input-error"));
-        topicText.setEditorKit(new WrapEditorKit(showFull));
+        topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
         ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
@@ -189,34 +180,26 @@ public class TopicBar extends JComponent implements ActionListener,
         topicText.addActionListener(this);
         topicEdit.addActionListener(this);
         topicCancel.addActionListener(this);
-        topicText.getInputMap().put(KeyStroke.getKeyStroke("ENTER"),
-                "enterButton");
-        topicText.getActionMap().put("enterButton", new AbstractAction(
-                "enterButton") {
-                    /**
-                     * A version number for this class. It should be changed whenever the class
-                     * structure is changed (or anything else that would prevent serialized objects
-                     * being unserialized with the new class).
-                     */
-                    private static final long serialVersionUID = 1;
+        topicText.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enterButton");
+        topicText.getActionMap().put("enterButton", new AbstractAction("enterButton") {
+            /** A version number for this class. */
+            private static final long serialVersionUID = 1;
 
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        commitTopicEdit();
-                    }
-                });
-        topicText.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"),
-                "escapeButton");
-        topicText.getActionMap().put("escapeButton", new AbstractAction(
-                "escapeButton") {
-                    private static final long serialVersionUID = 1;
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                commitTopicEdit();
+            }
+        });
+        topicText.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "escapeButton");
+        topicText.getActionMap().put("escapeButton", new AbstractAction("escapeButton") {
+            /** A version number for this class. */
+            private static final long serialVersionUID = 1;
 
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        cancelTopicEdit();
-                    }
-                });
-        topicText.addHyperlinkListener(this);
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                cancelTopicEdit();
+            }
+        });
         topicText.addMouseListener(this);
         topicText.getDocument().addDocumentListener(this);
 
@@ -351,24 +334,6 @@ public class TopicBar extends JComponent implements ActionListener,
         topicChanged(channel, null);
     }
 
-    @Override
-    public void hyperlinkUpdate(final HyperlinkEvent e) {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            final String url = e.getDescription();
-            if (url == null) {
-                return;
-            }
-            if (url.charAt(0) == '#') {
-                channel.getConnection().join(new ChannelJoinRequest(url));
-            } else if (url.contains("://")) {
-                urlHandler.launchApp(e.getDescription());
-            } else {
-                swingController.requestWindowFocus(
-                        windowFactory.getSwingWindow(channel.getConnection().getQuery(url)));
-            }
-        }
-    }
-
     /**
      * Load and set colours.
      */
@@ -496,7 +461,7 @@ public class TopicBar extends JComponent implements ActionListener,
         setVisible(showBar);
         cancelTopicEdit();
         if ("showfulltopic".equals(key)) {
-            topicText.setEditorKit(new WrapEditorKit(showFull));
+            topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
             ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
                     new NewlinesDocumentFilter());
             topicChanged(channel, null);
