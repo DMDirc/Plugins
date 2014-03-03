@@ -26,6 +26,7 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -36,6 +37,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -97,6 +99,8 @@ public class TreeFrameManager implements FrameManager,
      * @param globalConfig      The provider to read config settings from.
      * @param colourManager     The colour manager to use to retrieve colours.
      * @param mainFrameProvider The provider to use to retrieve the current main frame.
+     * @param windowFactory     The factory to use to retrieve swing windows.
+     * @param domain            The domain to read settings from.
      */
     @Inject
     public TreeFrameManager(
@@ -104,7 +108,9 @@ public class TreeFrameManager implements FrameManager,
             final WindowManager windowManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ColourManager colourManager,
-            final Provider<MainFrame> mainFrameProvider) {
+            final Provider<MainFrame> mainFrameProvider,
+            final SwingWindowFactory windowFactory,
+            @PluginDomain(SwingController.class) final String domain) {
         this.windowManager = windowManager;
         nodes = new HashMap<>();
 
@@ -116,8 +122,8 @@ public class TreeFrameManager implements FrameManager,
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model,
-                        TreeFrameManager.this.controller);
+                tree = new Tree(TreeFrameManager.this, model, controller, globalConfig,
+                        windowFactory, domain);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
                         TreeFrameManager.this));
                 tree.setVisible(true);
