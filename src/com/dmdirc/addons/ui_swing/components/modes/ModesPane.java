@@ -22,9 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Insets;
 import java.util.HashMap;
@@ -56,10 +57,16 @@ public abstract class ModesPane extends JPanel {
     private final JPanel paramModesPanel;
     /** Modes set, used for layout. */
     private final Set<String> modes;
+    /** The config to read mode aliases information from. */
+    private final AggregateConfigProvider config;
+    /** The manager to use to retrieve validation error icons. */
+    private final IconManager iconManager;
 
-    public ModesPane() {
-        super();
-
+    /**
+     * @param config      The config to read mode aliases information from.
+     * @param iconManager The manager to use to retrieve validation error icons.
+     */
+    public ModesPane(final AggregateConfigProvider config, final IconManager iconManager) {
         setLayout(new MigLayout("fill, wmax 100%, wrap 1"));
         booleanModesPanel = new JPanel(new MigLayout("wrap 2"));
         paramModesPanel = new JPanel(new MigLayout("wrap 2"));
@@ -67,6 +74,8 @@ public abstract class ModesPane extends JPanel {
         modeCheckBoxes = new HashMap<>();
         modeInputs = new HashMap<>();
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        this.config = config;
+        this.iconManager = iconManager;
     }
 
     public Map<String, JCheckBox> getBooleanModes() {
@@ -112,8 +121,8 @@ public abstract class ModesPane extends JPanel {
             final boolean state = ourBooleanModes.split(" ")[0].contains(
                     mode.subSequence(0, 1));
 
-            final ParamModePanel panel = new ParamModePanel(mode, state, value,
-                    getSwingController());
+            final ParamModePanel panel = new ParamModePanel(config, iconManager, mode,
+                    state, value);
 
             getParamModes().put(mode, panel);
         }
@@ -235,13 +244,6 @@ public abstract class ModesPane extends JPanel {
             flushModes();
         }
     }
-
-    /**
-     * Returns the Swing controller to grab various objects from.
-     *
-     * @return Swing controller
-     */
-    public abstract SwingController getSwingController();
 
     /**
      * Checks whether there is a plain text description for this mode.

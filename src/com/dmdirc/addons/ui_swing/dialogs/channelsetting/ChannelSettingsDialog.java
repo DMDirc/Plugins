@@ -25,19 +25,16 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,16 +71,10 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private TopicPane topicModesPane;
     /** List modes panel. */
     private ChannelListModesPane channelListModesPane;
-    /** Swing controller. */
-    private final SwingController controller;
-    /** The config to read settings from. */
-    private final AggregateConfigProvider globalConfig;
     /** The config to write settings to. */
     private final ConfigProvider userConfig;
     /** Service manager. */
     private final ServiceManager serviceManager;
-    /** Icon manager. */
-    private final IconManager iconManager;
     /** Preferences Manager. */
     private final PreferencesManager preferencesManager;
     /** Preferences setting component factory. */
@@ -92,11 +83,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /**
      * Creates a new instance of ChannelSettingsDialog.
      *
-     * @param controller         Swing controller
      * @param identityFactory    Identity factory
      * @param windowFactory      Swing window factory
-     * @param iconManager        Icon manager
-     * @param globalConfig       The config to read global settings from.
      * @param userConfig         The config to write global settings to.
      * @param serviceManager     Service manager
      * @param preferencesManager Preferences Manager
@@ -105,11 +93,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param parentWindow       Parent window
      */
     public ChannelSettingsDialog(
-            final SwingController controller,
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
-            final IconManager iconManager,
-            final AggregateConfigProvider globalConfig,
             final ConfigProvider userConfig,
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
@@ -118,9 +103,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final MainFrame parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
-        this.controller = checkNotNull(controller);
-        this.iconManager = checkNotNull(iconManager);
-        this.globalConfig = checkNotNull(globalConfig);
         this.userConfig = checkNotNull(userConfig);
         this.serviceManager = checkNotNull(serviceManager);
         this.preferencesManager = checkNotNull(preferencesManager);
@@ -165,13 +147,14 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the Topic tab. */
     private void initTopicTab() {
-        topicModesPane = new TopicPane(channel, iconManager, serviceManager, this, channelWindow);
+        topicModesPane = new TopicPane(channel, channel.getIconManager(), serviceManager,
+                this, channelWindow);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 
     /** Initialises the IRC Settings tab. */
     private void initIrcTab() {
-        channelModesPane = new ChannelModesPane(controller, channel);
+        channelModesPane = new ChannelModesPane(channel);
 
         final JScrollPane channelModesSP = new JScrollPane(channelModesPane);
         channelModesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -184,8 +167,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(globalConfig, userConfig, iconManager,
-                channel, this);
+        channelListModesPane = new ChannelListModesPane(channel.getConfigManager(), userConfig,
+                channel.getIconManager(), channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
@@ -198,7 +181,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the channel settings. */
     private void initSettingsPanel() {
-        channelSettingsPane = new SettingsPanel(iconManager, compFactory,
+        channelSettingsPane = new SettingsPanel(channel.getIconManager(), compFactory,
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
         channelSettingsPane.addOption(preferencesManager.getChannelSettings(
