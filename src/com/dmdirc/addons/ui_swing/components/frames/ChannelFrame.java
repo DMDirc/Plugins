@@ -83,6 +83,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private final String domain;
     /** Channel settings dialog provider. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
+    /** Channel instance. */
+    private final Channel channel;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
@@ -110,6 +112,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         this.globalConfig = deps.globalConfig;
         this.domain = domain;
         this.dialogProvider = dialogProvider;
+        this.channel = owner;
 
         initComponents(topicBarFactory);
 
@@ -274,6 +277,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     public void windowClosing(final FrameContainer window) {
         saveSplitPanePosition();
         topicBar.close();
+        dialogProvider.dispose(channel);
 
         super.windowClosing(window);
     }
