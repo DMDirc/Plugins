@@ -274,6 +274,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     public void windowClosing(final FrameContainer window) {
         saveSplitPanePosition();
         topicBar.close();
+        dialogProvider.get((Channel) window.getContainer()).dispose();
 
         super.windowClosing(window);
     }
