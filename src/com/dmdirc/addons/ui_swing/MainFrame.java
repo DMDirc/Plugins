@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager;
 import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
@@ -42,8 +41,6 @@ import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
@@ -111,6 +108,8 @@ public class MainFrame extends JFrame implements WindowListener,
     private final ListenerList listeners = new ListenerList();
     /** Window management. */
     private final WindowManager windowManager;
+    /** Provider of frame managers. */
+    private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
     private final EventBus eventBus;
     /** The main application icon. */
@@ -139,15 +138,16 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Creates new form MainFrame.
      *
-     * @param controller          Swing controller
-     * @param apple               Apple instance
-     * @param windowFactory       The window factory to use to create and listen for windows.
-     * @param lifecycleController Controller to use to end the application.
-     * @param globalConfig        The config to read settings from.
-     * @param quitWorker          The quit worker to use when quitting the app.
-     * @param iconManager         The icon manager to use to get icons.
-     * @param windowManager       Window management
-     * @param eventBus            The event bus to post events to.
+     * @param controller           Swing controller
+     * @param apple                Apple instance
+     * @param windowFactory        The window factory to use to create and listen for windows.
+     * @param lifecycleController  Controller to use to end the application.
+     * @param globalConfig         The config to read settings from.
+     * @param quitWorker           The quit worker to use when quitting the app.
+     * @param iconManager          The icon manager to use to get icons.
+     * @param windowManager        Window management
+     * @param frameManagerProvider Provider to use to retrieve frame managers.
+     * @param eventBus             The event bus to post events to.
      */
     public MainFrame(
             final Apple apple,
@@ -158,6 +158,7 @@ public class MainFrame extends JFrame implements WindowListener,
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
             final WindowManager windowManager,
+            final Provider<FrameManager> frameManagerProvider,
             final EventBus eventBus) {
         checkOnEDT();
         this.apple = apple;
@@ -168,6 +169,7 @@ public class MainFrame extends JFrame implements WindowListener,
         this.quitWorker = quitWorker;
         this.iconManager = iconManager;
         this.windowManager = windowManager;
+        this.frameManagerProvider = frameManagerProvider;
         this.eventBus = eventBus;
 
         focusOrder = new QueuedLinkedHashSet<>();
@@ -215,8 +217,7 @@ public class MainFrame extends JFrame implements WindowListener,
      * @return Frame manager size.
      */
     public int getFrameManagerSize() {
-        if (position == FramemanagerPosition.LEFT
-                || position == FramemanagerPosition.RIGHT) {
+        if (position == FramemanagerPosition.LEFT || position == FramemanagerPosition.RIGHT) {
             return frameManagerPanel.getWidth();
         } else {
             return frameManagerPanel.getHeight();
@@ -346,20 +347,9 @@ public class MainFrame extends JFrame implements WindowListener,
                 frameManagerPanel.removeAll();
                 if (mainFrameManager != null) {
                     windowFactory.removeWindowListener(mainFrameManager);
+                    removeSelectionListener(mainFrameManager);
                 }
-                final String manager = globalConfig.getOption("ui", "framemanager");
-                try {
-                    mainFrameManager = (FrameManager) Class.forName(manager)
-                            .getConstructor(WindowManager.class).newInstance(windowManager);
-                } catch (final ReflectiveOperationException | SecurityException | LinkageError ex) {
-                    Logger.appError(ErrorLevel.MEDIUM, "Unable to load frame "
-                            + "manager, falling back to default.", ex);
-                } finally {
-                    if (mainFrameManager == null) {
-                        mainFrameManager = new TreeFrameManager(windowManager);
-                    }
-                }
-                mainFrameManager.setController(controller);
+                mainFrameManager = frameManagerProvider.get();
                 mainFrameManager.setParent(frameManagerPanel);
                 addSelectionListener(mainFrameManager);
                 windowFactory.addWindowListener(mainFrameManager);

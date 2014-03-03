@@ -22,7 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
@@ -46,6 +48,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -73,24 +77,59 @@ public class TreeFrameManager implements FrameManager,
     /** node storage, used for adding and deleting nodes correctly. */
     private final Map<FrameContainer, TreeViewNode> nodes;
     /** UI Controller. */
-    private SwingController controller;
+    private final SwingController controller;
     /** Tree scroller. */
     private TreeScroller scroller;
     /** Configuration manager. */
-    private AggregateConfigProvider config;
+    private final AggregateConfigProvider config;
     /** Colour manager. */
-    private ColourManager colourManager;
+    private final ColourManager colourManager;
     /** Window manage. */
     private final WindowManager windowManager;
+    /** Provider to use to retrieve the current main frame. */
+    private final Provider<MainFrame> mainFrameProvider;
 
     /**
      * Creates a new instance of the TreeFrameManager.
      *
-     * @param windowManager Window Management
+     * @param controller        The controller to use to switch windows.
+     * @param windowManager     The window manager to use to read window state.
+     * @param globalConfig      The provider to read config settings from.
+     * @param colourManager     The colour manager to use to retrieve colours.
+     * @param mainFrameProvider The provider to use to retrieve the current main frame.
      */
-    public TreeFrameManager(final WindowManager windowManager) {
+    @Inject
+    public TreeFrameManager(
+            final SwingController controller,
+            final WindowManager windowManager,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final ColourManager colourManager,
+            final Provider<MainFrame> mainFrameProvider) {
         this.windowManager = windowManager;
         nodes = new HashMap<>();
+
+        this.controller = controller;
+        this.config = globalConfig;
+        this.colourManager = colourManager;
+
+        UIUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                model = new TreeViewModel(config, new TreeViewNode(null, null));
+                tree = new Tree(TreeFrameManager.this, model,
+                        TreeFrameManager.this.controller);
+                tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
+                        TreeFrameManager.this));
+                tree.setVisible(true);
+
+                config.addChangeListener("treeview", TreeFrameManager.this);
+                config.addChangeListener("ui", "sortrootwindows", TreeFrameManager.this);
+                config.addChangeListener("ui", "sortchildwindows", TreeFrameManager.this);
+                config.addChangeListener("ui", "backgroundcolour", TreeFrameManager.this);
+                config.addChangeListener("ui", "foregroundcolour", TreeFrameManager.this);
+            }
+        });
+        this.mainFrameProvider = mainFrameProvider;
     }
 
     @Override
@@ -123,31 +162,6 @@ public class TreeFrameManager implements FrameManager,
                 setColours();
 
                 redoTreeView();
-            }
-        });
-    }
-
-    @Override
-    public void setController(final SwingController controller) {
-        this.controller = controller;
-        this.config = controller.getGlobalConfig();
-        this.colourManager = controller.getColourManager();
-
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model,
-                        TreeFrameManager.this.controller);
-                tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
-                        TreeFrameManager.this));
-                tree.setVisible(true);
-
-                config.addChangeListener("treeview", TreeFrameManager.this);
-                config.addChangeListener("ui", "sortrootwindows", TreeFrameManager.this);
-                config.addChangeListener("ui", "sortchildwindows", TreeFrameManager.this);
-                config.addChangeListener("ui", "backgroundcolour", TreeFrameManager.this);
-                config.addChangeListener("ui", "foregroundcolour", TreeFrameManager.this);
             }
         });
     }
@@ -310,9 +324,10 @@ public class TreeFrameManager implements FrameManager,
                         addWindow(nodes.get(window), childWindow);
                     }
                 }
-                if (controller.getMainFrame() != null
-                        && controller.getMainFrame().getActiveFrame() != null) {
-                    selectionChanged(controller.getMainFrame().getActiveFrame());
+
+                final MainFrame mainFrame = mainFrameProvider.get();
+                if (mainFrame != null && mainFrame.getActiveFrame() != null) {
+                    selectionChanged(mainFrame.getActiveFrame());
                 }
             }
         });

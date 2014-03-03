@@ -20,41 +20,29 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager;
+package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingWindowListener;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 
-import javax.swing.JComponent;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
- * A frame manager is a widget that allows the user to navigate between the various frames that will
- * be open at any one time.
+ * Provider for button bar frame managers.
  */
-public interface FrameManager extends SwingWindowListener, SelectionListener {
+public class ButtonBarProvider implements FrameManagerProvider {
 
-    /**
-     * Sets the parent component of this frame manager. The frame manager should render itself
-     * within the parent.
-     *
-     * @param parent The parent control
-     */
-    void setParent(JComponent parent);
+    private final Provider<ButtonBar> provider;
 
-    /**
-     * Indicates whether this frame manager can be positioned vertically (i.e., at the side of the
-     * screen).
-     *
-     * @return True iff the frame manager can be positioned vertically
-     */
-    boolean canPositionVertically();
+    @Inject
+    public ButtonBarProvider(final Provider<ButtonBar> provider) {
+        this.provider = provider;
+    }
 
-    /**
-     * Indicates whether this frame manager can be positioned horizontally (i.e., at the top or
-     * bottom of the screen).
-     *
-     * @return True iff the frame manager can be positioned horizontally
-     */
-    boolean canPositionHorizontally();
+    @Override
+    public FrameManager getFrameManager() {
+        return provider.get();
+    }
 
 }

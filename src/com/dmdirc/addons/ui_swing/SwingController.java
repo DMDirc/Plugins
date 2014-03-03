@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -423,11 +424,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         final Map<String, String> framemanagers = new HashMap<>();
         final Map<String, String> fmpositions = new HashMap<>();
 
+        // TODO: When we can inject nicely, use a service locator to find all implementations.
         framemanagers.put(
-                "com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManager",
+                "com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider",
                 "Treeview");
         framemanagers.put(
-                "com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBar",
+                "com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider",
                 "Button bar");
 
         fmpositions.put("top", "Top");
@@ -715,6 +717,16 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public MainFrame getMainFrame() {
         return swingManager.getMainFrame();
+    }
+
+    @Exported
+    public FrameManagerProvider getTreeManager() {
+        return swingManager.getTreeProvider();
+    }
+
+    @Exported
+    public FrameManagerProvider getButtonManager() {
+        return swingManager.getButtonProvider();
     }
 
 }

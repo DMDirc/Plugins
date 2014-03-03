@@ -48,12 +48,16 @@ import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.UpdaterLabel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
+import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceLocator;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -118,6 +122,7 @@ public class SwingModule {
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
+            final Provider<FrameManager> frameManagerProvider,
             final EventBus eventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
 
@@ -132,6 +137,7 @@ public class SwingModule {
                         quitWorker,
                         new IconManager(globalConfig, urlBuilder),
                         windowManager,
+                        frameManagerProvider,
                         eventBus);
             }
         });
@@ -174,6 +180,22 @@ public class SwingModule {
             final PluginManager pluginManager) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
                 configManager, identity, actionManager, pluginManager);
+    }
+
+    @Provides
+    public FrameManager getFrameManager(
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final TreeFrameManagerProvider fallbackProvider,
+            final ServiceLocator locator) {
+        final String manager = globalConfig.getOption("ui", "framemanager");
+
+        FrameManagerProvider provider = locator.getService(FrameManagerProvider.class, manager);
+        if (provider == null) {
+            // Couldn't find the user's selected provider - let's just use the fallback.
+            provider = fallbackProvider;
+        }
+
+        return provider.getFrameManager();
     }
 
 }

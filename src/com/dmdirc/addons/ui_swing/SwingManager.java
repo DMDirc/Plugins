@@ -31,7 +31,9 @@ import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
+import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
+import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
@@ -58,12 +60,12 @@ public class SwingManager {
     private final SwingWindowFactory windowFactory;
     /** The status bar manager to register our status bar with. */
     private final StatusBarManager statusBarManager;
+    private final MenuBar menuBar;
     /** The status bar in use. */
     private final SwingStatusBar statusBar;
     /** The window manager to listen on for events. */
     private final WindowManager windowManager;
-    /** The main frame of the Swing UI. */
-    private final MainFrame mainFrame;
+    private final CtrlTabWindowManager ctrlTabManager;
     /** The key listener that supports dialogs. */
     private final DialogKeyListener dialogKeyListener;
     /** Provider of first run executors. */
@@ -80,6 +82,14 @@ public class SwingManager {
     private final SwingLinkHandler linkHandler;
     /** Bus to listen on for events. */
     private final EventBus eventBus;
+    /** The provider to use to create tree-based frame managers. */
+    private final TreeFrameManagerProvider treeProvider;
+    /** The provider to use to create button-based frame managers. */
+    private final ButtonBarProvider buttonProvider;
+    /** The provider to use to create new main frames. */
+    private final Provider<MainFrame> mainFrameProvider;
+    /** The main frame of the Swing UI. */
+    private MainFrame mainFrame;
 
     /**
      * Creates a new instance of {@link SwingManager}.
@@ -88,7 +98,7 @@ public class SwingManager {
      * @param windowFactory                 The window factory in use.
      * @param windowManager                 The window manager to listen on for events.
      * @param statusBarManager              The status bar manager to register our status bar with.
-     * @param mainFrame                     The main frame of the Swing UI.
+     * @param mainFrameProvider             The provider to use for the main frame.
      * @param menuBar                       The menu bar to use for the main frame.
      * @param statusBar                     The status bar to use in the main frame.
      * @param ctrlTabManager                The window manager that handles ctrl+tab behaviour.
@@ -100,6 +110,8 @@ public class SwingManager {
      * @param urlDialogFactory              Factory to use to create URL dialogs.
      * @param linkHandler                   The handler to use when users click links.
      * @param eventBus                      The bus to listen on for events.
+     * @param treeProvider                  Provider to use for tree-based frame managers.
+     * @param buttonProvider                Provider to use for button-based frame managers.
      */
     @Inject
     public SwingManager(
@@ -107,7 +119,7 @@ public class SwingManager {
             final SwingWindowFactory windowFactory,
             final WindowManager windowManager,
             final StatusBarManager statusBarManager,
-            final MainFrame mainFrame,
+            final Provider<MainFrame> mainFrameProvider,
             final MenuBar menuBar,
             final SwingStatusBar statusBar,
             final CtrlTabWindowManager ctrlTabManager,
@@ -118,12 +130,17 @@ public class SwingManager {
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
-            final EventBus eventBus) {
+            final EventBus eventBus,
+            final TreeFrameManagerProvider treeProvider,
+            final ButtonBarProvider buttonProvider) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
+        this.menuBar = menuBar;
         this.statusBar = statusBar;
         this.statusBarManager = statusBarManager;
+        this.mainFrameProvider = mainFrameProvider;
+        this.ctrlTabManager = ctrlTabManager;
         this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
         this.serverSettingsDialogProvider = serverSettingsDialogProvider;
@@ -132,18 +149,20 @@ public class SwingManager {
         this.urlDialogFactory = urlDialogFactory;
         this.linkHandler = linkHandler;
         this.eventBus = eventBus;
-
-        this.mainFrame = mainFrame;
-        this.mainFrame.setMenuBar(menuBar);
-        this.mainFrame.setWindowManager(ctrlTabManager);
-        this.mainFrame.setStatusBar(statusBar);
-        this.mainFrame.initComponents();
+        this.treeProvider = treeProvider;
+        this.buttonProvider = buttonProvider;
     }
 
     /**
      * Handles loading of the UI.
      */
     public void load() {
+        this.mainFrame = mainFrameProvider.get();
+        this.mainFrame.setMenuBar(menuBar);
+        this.mainFrame.setWindowManager(ctrlTabManager);
+        this.mainFrame.setStatusBar(statusBar);
+        this.mainFrame.initComponents();
+
         installEventQueue();
         installKeyListener();
 
@@ -217,6 +236,14 @@ public class SwingManager {
     @Deprecated
     public MainFrame getMainFrame() {
         return mainFrame;
+    }
+
+    public TreeFrameManagerProvider getTreeProvider() {
+        return treeProvider;
+    }
+
+    public ButtonBarProvider getButtonProvider() {
+        return buttonProvider;
     }
 
     /**
