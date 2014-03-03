@@ -86,6 +86,8 @@ public class TreeFrameManager implements FrameManager,
     private final AggregateConfigProvider config;
     /** Colour manager. */
     private final ColourManager colourManager;
+    /** Factory to use to retrieve swing windows. */
+    private final SwingWindowFactory windowFactory;
     /** Window manage. */
     private final WindowManager windowManager;
     /** Provider to use to retrieve the current main frame. */
@@ -111,9 +113,9 @@ public class TreeFrameManager implements FrameManager,
             final Provider<MainFrame> mainFrameProvider,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain) {
+        this.windowFactory = windowFactory;
         this.windowManager = windowManager;
-        nodes = new HashMap<>();
-
+        this.nodes = new HashMap<>();
         this.controller = controller;
         this.config = globalConfig;
         this.colourManager = colourManager;
@@ -320,7 +322,7 @@ public class TreeFrameManager implements FrameManager,
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(controller, tree);
+                scroller = new TreeTreeScroller(controller, windowFactory, tree);
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, window);

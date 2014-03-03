@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
@@ -36,46 +37,47 @@ public class TreeTreeScroller extends TreeScroller {
 
     /** The Swing Controller that owns this scroller. */
     private final SwingController controller;
+    /** Factory to use to retrieve swing windows. */
+    private final SwingWindowFactory windowFactory;
 
     /**
      * Creates a new Tree scroller for the tree view.
      *
-     * @param controller The Swing Controller that owns this item
-     * @param tree       Tree view tree
+     * @param controller    The Swing Controller that owns this item
+     * @param windowFactory Factory to use to retrieve swing windows.
+     * @param tree          Tree view tree
      */
-    public TreeTreeScroller(final SwingController controller, final Tree tree) {
+    public TreeTreeScroller(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
+            final Tree tree) {
         super(tree);
 
         this.controller = controller;
+        this.windowFactory = windowFactory;
     }
 
     @Override
     protected void setPath(final TreePath path) {
         if (path == null) {
-            Logger.appError(ErrorLevel.HIGH,
-                    "Unable to change focus",
+            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
                     new IllegalArgumentException("path == null"));
             return;
         }
         if (path.getLastPathComponent() == null) {
-            Logger.appError(ErrorLevel.HIGH,
-                    "Unable to change focus",
-                    new IllegalArgumentException(
-                            "Last component == null"));
+            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
+                    new IllegalArgumentException("Last component == null"));
             return;
         }
-        if (((TreeViewNode) path.getLastPathComponent()).getWindow()
-                == null) {
-            Logger.appError(ErrorLevel.HIGH,
-                    "Unable to change focus",
+        if (((TreeViewNode) path.getLastPathComponent()).getWindow() == null) {
+            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
                     new IllegalArgumentException("Frame is null"));
             return;
         }
         super.setPath(path);
 
-        controller.requestWindowFocus(controller.getWindowFactory()
-                .getSwingWindow(((TreeViewNode) path.getLastPathComponent())
-                        .getWindow()));
+        controller.requestWindowFocus(windowFactory.getSwingWindow(
+                ((TreeViewNode) path.getLastPathComponent()).getWindow()));
     }
 
 }
