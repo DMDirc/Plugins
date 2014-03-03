@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -33,6 +35,7 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.Colour;
@@ -53,6 +56,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -78,13 +83,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** The default height of buttons. */
     private static final int BUTTON_HEIGHT = 25;
     /** A map of windows to the buttons we're using for them. */
-    private Map<Window, FrameToggleButton> buttons;
+    private final Map<Window, FrameToggleButton> buttons;
     /** The scrolling panel for our ButtonBar. */
     private final JScrollPane scrollPane;
     /** The panel used for our buttons. */
-    private ButtonPanel buttonPanel;
+    private final ButtonPanel buttonPanel;
     /** The position of this frame manager. */
-    private FramemanagerPosition position;
+    private final FramemanagerPosition position;
     /** The default width of buttons. */
     private int buttonWidth = 0;
     /** The parent for the manager. */
@@ -98,19 +103,35 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /** Sort child windows prefs setting. */
     private boolean sortChildWindows;
     /** UI Window Factory. */
-    private SwingWindowFactory windowFactory;
-    /** UI Controller. */
-    private SwingController controller;
+    private final SwingWindowFactory windowFactory;
     /** Window management. */
     private final WindowManager windowManager;
+    /** Global configuration to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** Provider to use to retrieve the current main frame. */
+    private final Provider<MainFrame> mainFrameProvider;
 
     /**
      * Creates a new instance of ButtonBar.
      *
-     * @param windowManager Window management
+     * @param controller        The controller to use to change window focus.
+     * @param windowFactory     The factory to use to retrieve window information.
+     * @param windowManager     The window manager to use to read window state.
+     * @param globalConfig      Global configuration to read settings from.
+     * @param mainFrameProvider The provider to use to retrieve the current main frame.
      */
-    public ButtonBar(final WindowManager windowManager) {
+    @Inject
+    public ButtonBar(
+            final SwingController controller,
+            final SwingWindowFactory windowFactory,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final WindowManager windowManager,
+            final Provider<MainFrame> mainFrameProvider) {
+        this.windowFactory = windowFactory;
+        this.globalConfig = globalConfig;
         this.windowManager = windowManager;
+        this.mainFrameProvider = mainFrameProvider;
+
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -118,6 +139,26 @@ public final class ButtonBar implements FrameManager, ActionListener,
         scrollPane.setMinimumSize(new Dimension(0, BUTTON_HEIGHT
                 + ((int) PlatformDefaults.getUnitValueX("related")
                 .getValue()) * 2));
+
+        position = FramemanagerPosition.getPosition(
+                globalConfig.getOption("ui", "framemanagerPosition"));
+
+        if (position.isHorizontal()) {
+            buttonPanel = new ButtonPanel(controller,
+                    new MigLayout("ins rel, fill, flowx"), this);
+        } else {
+            buttonPanel = new ButtonPanel(controller,
+                    new MigLayout("ins rel, fill, flowy"), this);
+        }
+        scrollPane.getViewport().addMouseWheelListener(buttonPanel);
+        scrollPane.getViewport().add(buttonPanel);
+
+        buttons = Collections.synchronizedMap(new HashMap<Window, FrameToggleButton>());
+        sortChildWindows = globalConfig.getOptionBool("ui", "sortchildwindows");
+        sortRootWindows = globalConfig.getOptionBool("ui", "sortrootwindows");
+
+        globalConfig.addChangeListener("ui", "sortrootwindows", this);
+        globalConfig.addChangeListener("ui", "sortchildwindows", this);
     }
 
     /**
@@ -156,9 +197,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 ButtonBar.this.buttonWidth = position.isHorizontal()
                         ? 150 : (parent.getWidth() / NUM_CELLS);
                 initButtons(windowManager.getRootWindows());
-                if (controller.getMainFrame().getActiveFrame() != null) {
-                    selectionChanged(controller.getMainFrame()
-                            .getActiveFrame());
+
+                final TextFrame activeFrame = mainFrameProvider.get().getActiveFrame();
+                if (activeFrame != null) {
+                    selectionChanged(activeFrame);
                 }
                 parent.setVisible(true);
             }
@@ -207,38 +249,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
             return buttons.get(window);
         }
         return null;
-    }
-
-    @Override
-    public void setController(final SwingController controller) {
-        this.windowFactory = controller.getWindowFactory();
-        this.controller = controller;
-
-        position = FramemanagerPosition.getPosition(
-                controller.getGlobalConfig().getOption("ui",
-                        "framemanagerPosition"));
-
-        if (position.isHorizontal()) {
-            buttonPanel = new ButtonPanel(controller,
-                    new MigLayout("ins rel, fill, flowx"), this);
-        } else {
-            buttonPanel = new ButtonPanel(controller,
-                    new MigLayout("ins rel, fill, flowy"), this);
-        }
-        scrollPane.getViewport().addMouseWheelListener(buttonPanel);
-        scrollPane.getViewport().add(buttonPanel);
-
-        buttons = Collections.synchronizedMap(
-                new HashMap<Window, FrameToggleButton>());
-        sortChildWindows = controller.getGlobalConfig()
-                .getOptionBool("ui", "sortchildwindows");
-        sortRootWindows = controller.getGlobalConfig()
-                .getOptionBool("ui", "sortrootwindows");
-
-        controller.getGlobalConfig().addChangeListener("ui",
-                "sortrootwindows", this);
-        controller.getGlobalConfig().addChangeListener("ui",
-                "sortchildwindows", this);
     }
 
     /**
@@ -363,7 +373,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
         if (frame != null && frame.equals(activeWindow)) {
             button.setSelected(true);
         }
-        controller.getMainFrame().setActiveFrame(frame);
+
+        mainFrameProvider.get().setActiveFrame(frame);
     }
 
     /**
@@ -568,12 +579,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
     public void configChanged(final String domain, final String key) {
         switch (key) {
             case "sortrootwindows":
-                sortRootWindows = controller.getGlobalConfig()
-                        .getOptionBool("ui", "sortrootwindows");
+                sortRootWindows = globalConfig.getOptionBool("ui", "sortrootwindows");
                 break;
             case "sortchildwindows":
-                sortChildWindows = controller.getGlobalConfig()
-                        .getOptionBool("ui", "sortrootwindows");
+                sortChildWindows = globalConfig.getOptionBool("ui", "sortrootwindows");
                 break;
         }
         relayout();
