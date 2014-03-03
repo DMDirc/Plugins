@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -72,21 +73,32 @@ public class Tree extends JTree implements MouseMotionListener,
     private boolean dragButton;
     /** Show handles. */
     private boolean showHandles;
+    /** Factory to use to retrieve swing windows. */
+    private final SwingWindowFactory windowFactory;
 
     /**
      * Specialised JTree for frame manager.
      *
-     * @param manager    Frame manager
-     * @param model      tree model.
-     * @param controller Swing controller
+     * @param manager       Frame manager
+     * @param model         tree model.
+     * @param controller    Swing controller
+     * @param globalConfig  The config to read settings from.
+     * @param domain        The domain to read settings from.
+     * @param windowFactory The factory to use to get swing windows.
      */
-    public Tree(final TreeFrameManager manager, final TreeModel model,
-            final SwingController controller) {
+    public Tree(
+            final TreeFrameManager manager,
+            final TreeModel model,
+            final SwingController controller,
+            final AggregateConfigProvider globalConfig,
+            final SwingWindowFactory windowFactory,
+            final String domain) {
         super(model);
 
         this.manager = manager;
         this.controller = controller;
-        this.config = controller.getGlobalConfig();
+        this.config = globalConfig;
+        this.windowFactory = windowFactory;
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -105,8 +117,8 @@ public class Tree extends JTree implements MouseMotionListener,
         setFocusable(false);
 
         dragSelect = config.getOptionBool("treeview", "dragSelection");
-        showHandles = config.getOptionBool(controller.getDomain(), "showtreeexpands");
-        config.addChangeListener(controller.getDomain(), "showtreeexpands", this);
+        showHandles = config.getOptionBool(domain, "showtreeexpands");
+        config.addChangeListener(domain, "showtreeexpands", this);
         config.addChangeListener("treeview", this);
 
         setShowsRootHandles(showHandles);
@@ -162,7 +174,7 @@ public class Tree extends JTree implements MouseMotionListener,
                 dragSelect = config.getOptionBool("treeview", "dragSelection");
                 break;
             case "showtreeexpands":
-                config.getOptionBool(controller.getDomain(), "showtreeexpands");
+                showHandles = config.getOptionBool(domain, "showtreeexpands");
                 setShowsRootHandles(showHandles);
                 putClientProperty("showHandles", showHandles);
                 break;
@@ -179,9 +191,9 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                controller.requestWindowFocus(controller.getWindowFactory()
-                        .getSwingWindow(((TreeViewNode) new TreePath(node.getPath()).
-                                getLastPathComponent()).getWindow()));
+                controller.requestWindowFocus(windowFactory.getSwingWindow(
+                        ((TreeViewNode) new TreePath(node.getPath()).getLastPathComponent())
+                        .getWindow()));
             }
         }
         manager.checkRollover(e);
@@ -219,9 +231,8 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                controller.requestWindowFocus(controller.getWindowFactory()
-                        .getSwingWindow(((TreeViewNode) selectedPath
-                                .getLastPathComponent()).getWindow()));
+                controller.requestWindowFocus(windowFactory.getSwingWindow(
+                        ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow()));
             }
         }
         processMouseEvents(e);
@@ -266,7 +277,7 @@ public class Tree extends JTree implements MouseMotionListener,
     public void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null && e.isPopupTrigger()) {
-            final TextFrame frame = controller.getWindowFactory().getSwingWindow(
+            final TextFrame frame = windowFactory.getSwingWindow(
                     ((TreeViewNode) localPath.getLastPathComponent()).getWindow());
 
             if (frame == null) {
@@ -333,10 +344,10 @@ public class Tree extends JTree implements MouseMotionListener,
                 }
                 break;
             case "popout":
-                controller.getWindowFactory().getSwingWindow(node.getWindow()).setPopout(true);
+                windowFactory.getSwingWindow(node.getWindow()).setPopout(true);
                 break;
             case "popin":
-                controller.getWindowFactory().getSwingWindow(node.getWindow()).setPopout(false);
+                windowFactory.getSwingWindow(node.getWindow()).setPopout(false);
                 break;
         }
         final TreeViewNode parentNode = (TreeViewNode) node.getParent();
