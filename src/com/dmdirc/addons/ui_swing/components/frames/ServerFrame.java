@@ -25,13 +25,17 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.tls.CertificateManager;
 import com.dmdirc.tls.CertificateProblemListener;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -59,25 +63,38 @@ public final class ServerFrame extends InputTextFrame implements
     private static final long serialVersionUID = 9;
     /** Swing controller. */
     private final SwingController controller;
+    /** Main frame. */
+    private final Provider<MainFrame> mainFrame;
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Dialog provider to close SSD. */
+    private final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider;
     /** popup menu item. */
     private JMenuItem settingsMI;
     /** The SSL certificate dialog we're displaying for this server, if any. */
     private SSLCertificateDialog sslDialog = null;
+    /** Server instance. */
+    private final Server server;
 
     /**
      * Creates a new ServerFrame.
      *
      * @param deps               The dependencies required by text frames.
      * @param inputFieldProvider The provider to use to create a new input field.
+     * @param dialogProvider     Dialog provider to close SSD with
      * @param owner              Parent Frame container
      */
     public ServerFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
+            final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider,
             @Unbound final Server owner) {
         super(deps, inputFieldProvider, owner);
-
+        this.mainFrame = deps.mainFrame;
+        this.iconManager = deps.iconManager;
         this.controller = deps.controller;
+        this.dialogProvider = dialogProvider;
+        this.server = owner;
         initComponents();
 
         owner.addCertificateProblemListener(this);
@@ -148,7 +165,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(controller.getIconManager(), controller.getMainFrame(),
+        sslDialog = new SSLCertificateDialog(iconManager, mainFrame.get(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }
@@ -162,7 +179,7 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        controller.closeServerSettingsDialog((Server) window.getConnection());
+        dialogProvider.dispose(server);
         super.windowClosing(window);
     }
 
