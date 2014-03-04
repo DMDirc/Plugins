@@ -22,19 +22,14 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.Channel;
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
-import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
-import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -70,10 +65,6 @@ public class SwingManager {
     private final DialogKeyListener dialogKeyListener;
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
-    /** Provider of server settings dialogs. */
-    private final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider;
-    /** Provider of channel settings dialogs. */
-    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider;
     /** Provider of feedback nags. */
     private final Provider<FeedbackNag> feedbackNagProvider;
     /** Factory to use to create URL dialogs. */
@@ -104,8 +95,6 @@ public class SwingManager {
      * @param ctrlTabManager                The window manager that handles ctrl+tab behaviour.
      * @param dialogKeyListener             The key listener that supports dialogs.
      * @param firstRunExecutor              A provider of first run executors.
-     * @param serverSettingsDialogProvider  Provider of server settings dialogs.
-     * @param channelSettingsDialogProvider Provider of channel settings dialogs.
      * @param feedbackNagProvider           Provider of feedback nags.
      * @param urlDialogFactory              Factory to use to create URL dialogs.
      * @param linkHandler                   The handler to use when users click links.
@@ -125,8 +114,6 @@ public class SwingManager {
             final CtrlTabWindowManager ctrlTabManager,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
-            final KeyedDialogProvider<Server, ServerSettingsDialog> serverSettingsDialogProvider,
-            final KeyedDialogProvider<Channel, ChannelSettingsDialog> channelSettingsDialogProvider,
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
@@ -143,8 +130,6 @@ public class SwingManager {
         this.ctrlTabManager = ctrlTabManager;
         this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
-        this.serverSettingsDialogProvider = serverSettingsDialogProvider;
-        this.channelSettingsDialogProvider = channelSettingsDialogProvider;
         this.feedbackNagProvider = feedbackNagProvider;
         this.urlDialogFactory = urlDialogFactory;
         this.linkHandler = linkHandler;
@@ -192,16 +177,6 @@ public class SwingManager {
      */
     public FirstRunWizardExecutor getFirstRunExecutor() {
         return firstRunExecutor.get();
-    }
-
-    @Deprecated
-    public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider() {
-        return serverSettingsDialogProvider;
-    }
-
-    @Deprecated
-    public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider() {
-        return channelSettingsDialogProvider;
     }
 
     @Deprecated
