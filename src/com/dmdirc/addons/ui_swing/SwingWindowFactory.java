@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -60,15 +61,15 @@ public class SwingWindowFactory implements FrameListener {
     private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
     private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
-    /** The controller that owns this window factory. */
-    private final SwingController controller;
+    /** The provider to get the main frame to focus frames. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** Our list of listeners. */
     private final ListenerList listeners = new ListenerList();
 
     /**
      * Creates a new window factory for the specified controller.
      *
-     * @param controller              The controller this factory is for
+     * @param mainFrameProvider       The provider to get the main frame to focus frames.
      * @param customFrameFactory      The factory to use to produce custom frames.
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
@@ -77,13 +78,13 @@ public class SwingWindowFactory implements FrameListener {
      */
     @Inject
     public SwingWindowFactory(
-            final SwingController controller,
+            final Provider<MainFrame> mainFrameProvider,
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
             final GlobalCommandParser commandParser) {
-        this.controller = controller;
+        this.mainFrameProvider = mainFrameProvider;
 
         // TODO: Allow auto-factories to implement an interface and simplify this a bit.
         registerImplementation(
@@ -228,7 +229,7 @@ public class SwingWindowFactory implements FrameListener {
                 }
 
                 if (focus) {
-                    controller.requestWindowFocus(childWindow);
+                    mainFrameProvider.get().setActiveFrame(childWindow);
                 }
             }
         });

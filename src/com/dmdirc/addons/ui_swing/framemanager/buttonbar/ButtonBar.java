@@ -26,7 +26,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
@@ -114,7 +113,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /**
      * Creates a new instance of ButtonBar.
      *
-     * @param controller        The controller to use to change window focus.
      * @param windowFactory     The factory to use to retrieve window information.
      * @param windowManager     The window manager to use to read window state.
      * @param globalConfig      Global configuration to read settings from.
@@ -122,7 +120,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
      */
     @Inject
     public ButtonBar(
-            final SwingController controller,
             final SwingWindowFactory windowFactory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
@@ -144,10 +141,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 globalConfig.getOption("ui", "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            buttonPanel = new ButtonPanel(controller,
+            buttonPanel = new ButtonPanel(mainFrameProvider,
                     new MigLayout("ins rel, fill, flowx"), this);
         } else {
-            buttonPanel = new ButtonPanel(controller,
+            buttonPanel = new ButtonPanel(mainFrameProvider,
                     new MigLayout("ins rel, fill, flowy"), this);
         }
         scrollPane.getViewport().addMouseWheelListener(buttonPanel);
@@ -309,7 +306,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         final FrameToggleButton button = new FrameToggleButton(
                 source.getContainer().getName(),
                 source.getContainer().getIconManager().getIcon(source.getContainer().getIcon()),
-                source);
+                (TextFrame) source, source.getContainer());
         button.addActionListener(this);
         button.addMouseListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);
@@ -369,7 +366,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void actionPerformed(final ActionEvent e) {
         final FrameToggleButton button = (FrameToggleButton) e.getSource();
-        final TextFrame frame = (TextFrame) button.getWindow();
+        final TextFrame frame = button.getTextFrame();
         if (frame != null && frame.equals(activeWindow)) {
             button.setSelected(true);
         }
@@ -512,7 +509,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         if (e.isPopupTrigger()) {
             final FrameToggleButton button = (FrameToggleButton) e.getSource();
 
-            final TextFrame frame = (TextFrame) button.getWindow();
+            final TextFrame frame = button.getTextFrame();
             if (frame == null) {
                 return;
             }

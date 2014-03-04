@@ -48,6 +48,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
@@ -62,11 +63,7 @@ import javax.swing.JSeparator;
 public class WindowMenuFrameManager extends JMenu implements
         SwingWindowListener, ActionListener, SelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Comparator. */
     private final FrameContainerComparator comparator = new FrameContainerComparator();
@@ -85,7 +82,7 @@ public class WindowMenuFrameManager extends JMenu implements
     private final Map<FrameContainer, FrameContainerMenuItem> items;
     private final Map<FrameContainer, FrameContainerMenuItem> menuItems;
 
-    private final MainFrame mainFrame;
+    private final Provider<MainFrame> mainFrame;
     private final AggregateConfigProvider globalConfig;
     private final String domain;
 
@@ -106,7 +103,7 @@ public class WindowMenuFrameManager extends JMenu implements
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final SwingWindowFactory windowFactory,
-            final MainFrame mainFrame) {
+            final Provider<MainFrame> mainFrame) {
         this.controller = controller;
         this.globalConfig = globalConfig;
         this.domain = domain;
@@ -135,7 +132,7 @@ public class WindowMenuFrameManager extends JMenu implements
 
         itemCount = getMenuComponentCount();
 
-        mainFrame.addSelectionListener(this);
+        mainFrame.get().addSelectionListener(this);
 
         new WindowMenuScroller(this, globalConfig, domain, itemCount);
         checkMenuItems();
@@ -159,7 +156,7 @@ public class WindowMenuFrameManager extends JMenu implements
                         @Override
                         public FrameContainerMenuItem call() {
                             return new FrameContainerMenuItem(
-                                    controller,
+                                    mainFrame,
                                     window.getContainer(),
                                     window,
                                     WindowMenuFrameManager.this);
@@ -181,7 +178,7 @@ public class WindowMenuFrameManager extends JMenu implements
                         @Override
                         public FrameContainerMenuItem call() {
                             return new FrameContainerMenuItem(
-                                    controller,
+                                    mainFrame,
                                     window.getContainer(),
                                     window,
                                     WindowMenuFrameManager.this);
@@ -195,7 +192,7 @@ public class WindowMenuFrameManager extends JMenu implements
                             @Override
                             public FrameContainerMenu call() {
                                 return new FrameContainerMenu(
-                                        controller,
+                                        mainFrame,
                                         globalConfig,
                                         domain,
                                         parent,
@@ -257,7 +254,7 @@ public class WindowMenuFrameManager extends JMenu implements
                                     getContainer()),
                                     menus.get(parent.getContainer()),
                                     new FrameContainerMenuItem(
-                                            controller,
+                                            mainFrame,
                                             parent.getContainer(),
                                             parent,
                                             WindowMenuFrameManager.this));
@@ -314,7 +311,7 @@ public class WindowMenuFrameManager extends JMenu implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (enabledMenuItems.get() && e.getActionCommand().equals("Close")) {
-            mainFrame.getActiveFrame().getContainer().close();
+            mainFrame.get().getActiveFrame().getContainer().close();
         }
     }
 

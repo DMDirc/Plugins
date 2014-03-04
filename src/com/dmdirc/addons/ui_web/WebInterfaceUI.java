@@ -26,7 +26,6 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
@@ -149,11 +148,6 @@ public class WebInterfaceUI implements UIController {
     @Override
     public void showFeedbackNag() {
         // Do nothing
-    }
-
-    @Override
-    public void requestWindowFocus(final Window window) {
-        // TODO: Tell clients to focus
     }
 
 }

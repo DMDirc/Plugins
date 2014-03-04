@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.ui.messages.Styliser;
@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
@@ -44,8 +45,8 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The swing controller that owns this item. */
-    private final SwingController controller;
+    /** The provider to retrieve the mainframe to set active frames. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** Wrapped frame. */
     private final FrameContainer frame;
     /** Swing window. */
@@ -56,19 +57,19 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
-     * @param controller The Swing Controller that owns this item
-     * @param frame      Wrapped frame
-     * @param window     The window this menu item corresponds to.
-     * @param manager    Parent window menu frame manager.
+     * @param mainFrameProvider The provider to retrieve the mainframe to set active frames.
+     * @param frame             Wrapped frame
+     * @param window            The window this menu item corresponds to.
+     * @param manager           Parent window menu frame manager.
      */
     public FrameContainerMenuItem(
-            final SwingController controller,
+            final Provider<MainFrame> mainFrameProvider,
             final FrameContainer frame,
             final TextFrame window,
             final WindowMenuFrameManager manager) {
         super(frame.getName(), frame.getIconManager().getIcon(frame.getIcon()));
 
-        this.controller = controller;
+        this.mainFrameProvider = mainFrameProvider;
         this.frame = frame;
         this.window = window;
         this.manager = manager;
@@ -110,7 +111,7 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        controller.requestWindowFocus(window);
+        mainFrameProvider.get().setActiveFrame(window);
     }
 
     @Override

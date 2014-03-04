@@ -23,38 +23,37 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
 import javax.swing.Icon;
 import javax.swing.JToggleButton;
 
+
 /**
  * Custom toggle button that contains Window information for this button.
- *
- * @author Simon Mott
- * @since 0.6.4
  */
 public class FrameToggleButton extends JToggleButton {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Contains the window associated with this button. */
-    private final Window window;
+    private final TextFrame textFrame;
+    /** The frame container associated with this button. */
+    private final FrameContainer frameContainer;
 
     /**
      * Create a new instance of FrameToggleButton.
      *
-     * @param text   Text to show
-     * @param icon   Icon to show
-     * @param window Parent window
+     * @param text           Text to show
+     * @param icon           Icon to show
+     * @param textFrame      Text frame
+     * @param frameContainer Associated frame container
      */
-    public FrameToggleButton(final String text, final Icon icon, final Window window) {
+    public FrameToggleButton(final String text, final Icon icon, final TextFrame textFrame,
+            final FrameContainer frameContainer) {
         super(text, icon);
-        this.window = window;
+        this.textFrame = textFrame;
+        this.frameContainer = frameContainer;
     }
 
     /**
@@ -62,8 +61,8 @@ public class FrameToggleButton extends JToggleButton {
      *
      * @return Window associated with this button
      */
-    public Window getWindow() {
-        return window;
+    public TextFrame getTextFrame() {
+        return textFrame;
     }
 
     /**
@@ -72,7 +71,7 @@ public class FrameToggleButton extends JToggleButton {
      * @return FrameContainer associated with this button
      */
     public FrameContainer getFrameContainer() {
-        return window.getContainer();
+        return frameContainer;
     }
 
 }

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.inject.Provider;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -55,16 +56,12 @@ import net.miginfocom.layout.PlatformDefaults;
 public class Tree extends JTree implements MouseMotionListener,
         ConfigChangeListener, MouseListener, ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Tree frame manager. */
     private final TreeFrameManager manager;
-    /** UI Controller. */
-    private final SwingController controller;
+    /** The provider to use to retrieve the current main frame.. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Drag selection enabled? */
@@ -79,26 +76,26 @@ public class Tree extends JTree implements MouseMotionListener,
     /**
      * Specialised JTree for frame manager.
      *
-     * @param manager       Frame manager
-     * @param model         tree model.
-     * @param controller    Swing controller
-     * @param globalConfig  The config to read settings from.
-     * @param domain        The domain to read settings from.
-     * @param windowFactory The factory to use to get swing windows.
+     * @param manager           Frame manager
+     * @param model             tree model.
+     * @param mainFrameProvider The provider to use to retrieve the current main frame.
+     * @param globalConfig      The config to read settings from.
+     * @param domain            The domain to read settings from.
+     * @param windowFactory     The factory to use to get swing windows.
      */
     public Tree(
             final TreeFrameManager manager,
             final TreeModel model,
-            final SwingController controller,
+            final Provider<MainFrame> mainFrameProvider,
             final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
             final String domain) {
         super(model);
 
         this.manager = manager;
-        this.controller = controller;
         this.config = globalConfig;
         this.windowFactory = windowFactory;
+        this.mainFrameProvider = mainFrameProvider;
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -191,7 +188,7 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                controller.requestWindowFocus(windowFactory.getSwingWindow(
+                mainFrameProvider.get().setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) new TreePath(node.getPath()).getLastPathComponent())
                         .getWindow()));
             }
@@ -231,7 +228,7 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                controller.requestWindowFocus(windowFactory.getSwingWindow(
+                mainFrameProvider.get().setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow()));
             }
         }

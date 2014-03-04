@@ -33,6 +33,7 @@ import com.dmdirc.ui.core.util.URLHandler;
 import com.google.common.eventbus.Subscribe;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -42,16 +43,16 @@ import javax.inject.Singleton;
 public class SwingLinkHandler {
 
     private final URLHandler urlHandler;
-    private final SwingController controller;
+    private final Provider<MainFrame> mainFrame;
     private final SwingWindowFactory windowFactory;
 
     @Inject
     public SwingLinkHandler(
-            final SwingController controller,
+            final Provider<MainFrame> mainFrame,
             final URLHandler urlHandler,
             final SwingWindowFactory windowFactory) {
         this.urlHandler = urlHandler;
-        this.controller = controller;
+        this.mainFrame = mainFrame;
         this.windowFactory = windowFactory;
     }
 
@@ -74,7 +75,7 @@ public class SwingLinkHandler {
         final FrameContainer container = event.getWindow().getContainer();
         final Connection connection = container.getConnection();
         if (connection != null) {
-            controller.requestWindowFocus(
+            mainFrame.get().setActiveFrame(
                     windowFactory.getSwingWindow(connection.getQuery(event.getTarget())));
         }
     }
