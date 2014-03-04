@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.commands;
 
+import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -46,30 +48,28 @@ public class ChannelSettings extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("channelsettings",
-            "channelsettings - opens the channel settings window",
-            CommandType.TYPE_CHANNEL);
+            "channelsettings - opens the channel settings window", CommandType.TYPE_CHANNEL);
     /** The controller to use to show the settings window. */
-    private final SwingController controller;
+    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
 
     /**
      * Creates a new instance of the {@link ChannelSettings} command.
      *
-     * @param controller        The controller to use to show the settings window.
      * @param commandController The command controller to use for command info.
+     * @param dialogProvider    Provider to retrieve CSD instances
      */
     @Inject
     public ChannelSettings(
-            final SwingController controller,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider) {
         super(commandController);
-        this.controller = controller;
+        this.dialogProvider = dialogProvider;
     }
 
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        controller.showChannelSettingsDialog(
-                ((ChannelCommandContext) context).getChannel());
+        dialogProvider.displayOrRequestFocus(((ChannelCommandContext) context).getChannel());
     }
 
     @Override

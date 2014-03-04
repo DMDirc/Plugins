@@ -26,7 +26,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
@@ -61,8 +60,6 @@ public final class ServerFrame extends InputTextFrame implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Main frame. */
     private final Provider<MainFrame> mainFrame;
     /** Icon manager. */
@@ -92,7 +89,6 @@ public final class ServerFrame extends InputTextFrame implements
         super(deps, inputFieldProvider, owner);
         this.mainFrame = deps.mainFrame;
         this.iconManager = deps.iconManager;
-        this.controller = deps.controller;
         this.dialogProvider = dialogProvider;
         this.server = owner;
         initComponents();
@@ -121,7 +117,7 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            controller.showServerSettingsDialog((Server) getContainer().getConnection());
+            dialogProvider.displayOrRequestFocus(server);
         }
     }
 
@@ -147,8 +143,7 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getConnection().getState()
-                .equals(ServerState.CONNECTED)) {
+        if (getContainer().getConnection().getState().equals(ServerState.CONNECTED)) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);

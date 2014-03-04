@@ -24,7 +24,8 @@ package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -40,37 +41,34 @@ import javax.inject.Inject;
 
 /**
  * Opens the server settings window for the server.
- *
- * @since 0.6.4
  */
 @CommandOptions(allowOffline = false)
 public class ServerSettings extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("serversettings",
-            "serversettings - opens the server settings window",
-            CommandType.TYPE_SERVER);
-    /** The controller to use to show the settings window. */
-    private final SwingController controller;
+            "serversettings - opens the server settings window", CommandType.TYPE_SERVER);
+    /** The dialog provider used to show the settings dialog. */
+    private final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider;
 
     /**
      * Creates a new instance of the {@link ServerSettings} command.
      *
-     * @param controller        The controller to use to show the settings window.
      * @param commandController The command controller to use for command info.
+     * @param dialogProvider    The dialog provider used to show the settings dialog
      */
     @Inject
     public ServerSettings(
-            final SwingController controller,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider) {
         super(commandController);
-        this.controller = controller;
+        this.dialogProvider = dialogProvider;
     }
 
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        controller.showServerSettingsDialog((Server) context.getSource().getConnection());
+        dialogProvider.displayOrRequestFocus((Server) context.getSource().getConnection());
     }
 
     @Override
