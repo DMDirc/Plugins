@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
+import com.dmdirc.addons.ui_swing.components.SanitisedFilenameFilter;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
@@ -217,7 +218,7 @@ public class ProfileManagerDialogLinker {
                             public void cancelled() {
                             }
                         };
-                inputDialog.setText((String) model.getSelectedNickname());
+                inputDialog.setDocumentFilter(new SanitisedFilenameFilter());
                 inputDialog.display();
             }
         });
@@ -422,6 +423,7 @@ public class ProfileManagerDialogLinker {
                             public void cancelled() {
                             }
                         };
+                inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }

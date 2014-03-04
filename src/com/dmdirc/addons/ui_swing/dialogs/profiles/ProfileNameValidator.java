@@ -50,7 +50,7 @@ public class ProfileNameValidator implements Validator<String> {
 
     @Override
     public ValidationResponse validate(final String object) {
-        return validator.validate(object);
+        return validator.validate(object == null ? "" : object.trim());
     }
 
 }

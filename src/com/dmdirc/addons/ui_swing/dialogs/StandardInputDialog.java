@@ -38,6 +38,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -226,6 +228,15 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     public final void setText(final String text) {
         textField.setText(text);
+    }
+
+    /**
+     * Sets a document filter for this dialog's textfield.
+     *
+     * @param filter Document filter to add
+     */
+    public void setDocumentFilter(final DocumentFilter filter) {
+        ((AbstractDocument) textField.getDocument()).setDocumentFilter(filter);
     }
 
 }
