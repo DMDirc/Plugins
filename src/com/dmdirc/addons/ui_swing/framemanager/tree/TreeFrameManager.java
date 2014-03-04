@@ -78,8 +78,6 @@ public class TreeFrameManager implements FrameManager,
     private TreeViewModel model;
     /** node storage, used for adding and deleting nodes correctly. */
     private final Map<FrameContainer, TreeViewNode> nodes;
-    /** UI Controller. */
-    private final SwingController controller;
     /** Tree scroller. */
     private TreeScroller scroller;
     /** Configuration manager. */
@@ -96,7 +94,6 @@ public class TreeFrameManager implements FrameManager,
     /**
      * Creates a new instance of the TreeFrameManager.
      *
-     * @param controller        The controller to use to switch windows.
      * @param windowManager     The window manager to use to read window state.
      * @param globalConfig      The provider to read config settings from.
      * @param colourManager     The colour manager to use to retrieve colours.
@@ -106,7 +103,6 @@ public class TreeFrameManager implements FrameManager,
      */
     @Inject
     public TreeFrameManager(
-            final SwingController controller,
             final WindowManager windowManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ColourManager colourManager,
@@ -116,7 +112,6 @@ public class TreeFrameManager implements FrameManager,
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();
-        this.controller = controller;
         this.config = globalConfig;
         this.colourManager = colourManager;
 
@@ -124,7 +119,7 @@ public class TreeFrameManager implements FrameManager,
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, controller, globalConfig,
+                tree = new Tree(TreeFrameManager.this, model, mainFrameProvider, globalConfig,
                         windowFactory, domain);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
                         TreeFrameManager.this));
@@ -322,7 +317,7 @@ public class TreeFrameManager implements FrameManager,
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(controller, windowFactory, tree);
+                scroller = new TreeTreeScroller(mainFrameProvider, windowFactory, tree);
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, window);

@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
@@ -41,7 +40,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Exported;
@@ -627,13 +625,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
         getMainFrame().getJMenuBar().addMenuItem(parentMenu, menuItem);
-    }
-
-    @Override
-    public void requestWindowFocus(final Window window) {
-        if (window instanceof TextFrame) {
-            getMainFrame().setActiveFrame((TextFrame) window);
-        }
     }
 
     /**

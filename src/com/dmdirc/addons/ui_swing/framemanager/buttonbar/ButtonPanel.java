@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import javax.inject.Provider;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
@@ -37,35 +38,29 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Implements scrollable onto a JPanel so we have more control over scrolling.
- *
- * @since 0.6.4
  */
 public class ButtonPanel extends JPanel implements Scrollable,
         MouseWheelListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The controller that owns this panel. */
-    private final SwingController controller;
+    /** The provider to get the main frame to set the active frame. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** The ButtonBar that created this Panel. */
     private final ButtonBar buttonBar;
 
     /**
      * Constructor for ButtonPanel.
      *
-     * @param controller The controller that owns this panel
-     * @param layout     Layout settings for this ButtonPanel
-     * @param buttonBar  the buttonBar that created this Panel
+     * @param mainFrameProvider The provider to get the main frame to set the active frame.
+     * @param layout            Layout settings for this ButtonPanel
+     * @param buttonBar         the buttonBar that created this Panel
      */
-    public ButtonPanel(final SwingController controller, final MigLayout layout,
+    public ButtonPanel(final Provider<MainFrame> mainFrameProvider, final MigLayout layout,
             final ButtonBar buttonBar) {
         super(layout);
 
-        this.controller = controller;
+        this.mainFrameProvider = mainFrameProvider;
         this.buttonBar = buttonBar;
     }
 
@@ -110,8 +105,8 @@ public class ButtonPanel extends JPanel implements Scrollable,
             newIndex = (selectedIndex + 1) % getComponentCount();
         }
 
-        controller.requestWindowFocus(
-                ((FrameToggleButton) getComponent(newIndex)).getWindow());
+        mainFrameProvider.get().setActiveFrame(
+                ((FrameToggleButton) getComponent(newIndex)).getTextFrame());
     }
 
     /**

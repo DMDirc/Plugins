@@ -22,12 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
+import javax.inject.Provider;
 import javax.swing.tree.TreePath;
 
 /**
@@ -35,25 +36,25 @@ import javax.swing.tree.TreePath;
  */
 public class TreeTreeScroller extends TreeScroller {
 
-    /** The Swing Controller that owns this scroller. */
-    private final SwingController controller;
+    /** Main frame provider. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** Factory to use to retrieve swing windows. */
     private final SwingWindowFactory windowFactory;
 
     /**
      * Creates a new Tree scroller for the tree view.
      *
-     * @param controller    The Swing Controller that owns this item
-     * @param windowFactory Factory to use to retrieve swing windows.
-     * @param tree          Tree view tree
+     * @param mainFrameProvider Main frame provider.
+     * @param windowFactory     Factory to use to retrieve swing windows.
+     * @param tree              Tree view tree
      */
     public TreeTreeScroller(
-            final SwingController controller,
+            final Provider<MainFrame> mainFrameProvider,
             final SwingWindowFactory windowFactory,
             final Tree tree) {
         super(tree);
 
-        this.controller = controller;
+        this.mainFrameProvider = mainFrameProvider;
         this.windowFactory = windowFactory;
     }
 
@@ -76,7 +77,7 @@ public class TreeTreeScroller extends TreeScroller {
         }
         super.setPath(path);
 
-        controller.requestWindowFocus(windowFactory.getSwingWindow(
+        mainFrameProvider.get().setActiveFrame(windowFactory.getSwingWindow(
                 ((TreeViewNode) path.getLastPathComponent()).getWindow()));
     }
 

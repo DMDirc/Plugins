@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.inject.Provider;
 import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 
@@ -44,8 +45,8 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The swing controller that owns this item. */
-    private final SwingController controller;
+    /** The provider to get the main frame to set the active frame. */
+    private final Provider<MainFrame> mainFrameProvider;
     /** The swing frame. */
     private final TextFrame window;
     /** Wrapped frame. */
@@ -54,21 +55,21 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
     /**
      * Instantiates a new FrameContainer menu item wrapping the specified frame.
      *
-     * @param controller   Controller
+     * @param mainFrameProvider   The provider to get the main frame to set the active frame.
      * @param globalConfig The config to read settings from
      * @param domain       The domain to read settings from
      * @param window       The swing window being wrapped
      * @param frame        Wrapped frame
      */
     public FrameContainerMenu(
-            final SwingController controller,
+            final Provider<MainFrame> mainFrameProvider,
             final AggregateConfigProvider globalConfig,
             final String domain,
             final TextFrame window,
             final FrameContainer frame) {
         super(frame.getName());
 
-        this.controller = controller;
+        this.mainFrameProvider = mainFrameProvider;
         this.window = window;
         this.frame = frame;
 
@@ -117,7 +118,7 @@ public class FrameContainerMenu extends JMenu implements FrameInfoListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        controller.requestWindowFocus(window);
+        mainFrameProvider.get().setActiveFrame(window);
     }
 
     @Override
