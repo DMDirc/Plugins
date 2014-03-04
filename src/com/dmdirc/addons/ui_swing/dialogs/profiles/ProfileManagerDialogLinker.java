@@ -422,6 +422,7 @@ public class ProfileManagerDialogLinker {
                             public void cancelled() {
                             }
                         };
+                inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
