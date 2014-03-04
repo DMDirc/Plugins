@@ -65,7 +65,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -625,16 +624,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Exported
     public UIController getController() {
         return this;
-    }
-
-    /**
-     * Adds the specified menu item to the named parent menu, creating the parent menu if required.
-     *
-     * @param parentMenu Parent menu name
-     * @param menuItem   Menu item to add
-     */
-    public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
-        getMainFrame().getJMenuBar().addMenuItem(parentMenu, menuItem);
     }
 
     /**
