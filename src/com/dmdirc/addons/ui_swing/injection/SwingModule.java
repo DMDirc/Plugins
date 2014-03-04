@@ -161,11 +161,11 @@ public class SwingModule {
     @Provides
     @Singleton
     public URLHandler getURLHandler(
-            final SwingController swingController,
+            final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ServerManager serverManager,
             final StatusBarManager statusBarManager) {
-        return new URLHandler(swingController, globalConfig, serverManager, statusBarManager);
+        return new URLHandler(eventBus, globalConfig, serverManager, statusBarManager);
     }
 
     @Provides

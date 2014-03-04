@@ -36,6 +36,9 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.FeedbackNagEvent;
+import com.dmdirc.events.FirstRunEvent;
+import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -52,10 +55,10 @@ import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +126,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         iconManager = new IconManager(globalConfig, urlBuilder);
         setAntiAlias();
         windows = new ArrayList<>();
+        eventBus.register(this);
     }
 
     @Deprecated
@@ -155,9 +159,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return swingManager != null;
     }
 
-    @Override
-    public void showFirstRunWizard() {
-        swingManager.getFirstRunExecutor().showWizardAndWait();
+    @Subscribe
+    public void showFirstRunWizard(final FirstRunEvent event) {
+        if (!event.isHandled()) {
+            swingManager.getFirstRunExecutor().showWizardAndWait();
+            event.setHandled(true);
+        }
     }
 
     /**
@@ -256,19 +263,22 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         });
     }
 
-    @Override
-    public void showURLDialog(final URI url) {
+    @Subscribe
+    public void showURLDialog(final UnknownURLEvent event) {
+        if (!event.isHandled()) {
+            event.setHandled(true);
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                swingManager.getUrlDialogFactory().getURLDialog(url).display();
+                swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
             }
         });
+        }
     }
 
-    @Override
-    public void showFeedbackNag() {
+    @Subscribe
+    public void showFeedbackNag(final FeedbackNagEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
