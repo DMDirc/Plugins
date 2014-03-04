@@ -195,16 +195,6 @@ public class SwingManager {
     }
 
     @Deprecated
-    public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider() {
-        return serverSettingsDialogProvider;
-    }
-
-    @Deprecated
-    public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider() {
-        return channelSettingsDialogProvider;
-    }
-
-    @Deprecated
     public Provider<FeedbackNag> getFeedbackNagProvider() {
         return feedbackNagProvider;
     }
