@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
+import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
