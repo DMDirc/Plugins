@@ -97,6 +97,7 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         add(info, "grow, pushx, span 2");
         add(getLeftButton(), "split, right");
         add(getRightButton(), "right");
+        pack();
     }
 
     /** {@inheritDoc} */
