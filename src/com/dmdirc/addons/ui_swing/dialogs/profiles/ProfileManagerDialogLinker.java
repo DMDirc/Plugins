@@ -217,7 +217,6 @@ public class ProfileManagerDialogLinker {
                             public void cancelled() {
                             }
                         };
-                inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
         });
@@ -422,6 +421,7 @@ public class ProfileManagerDialogLinker {
                             public void cancelled() {
                             }
                         };
+                inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
                 inputDialog.setText((String) model.getSelectedNickname());
                 inputDialog.display();
             }
