@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
+import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
