@@ -27,9 +27,9 @@ import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.plugins.Service;
+import com.dmdirc.events.FirstRunEvent;
+
+import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -39,20 +39,20 @@ import javax.inject.Provider;
  */
 public class FirstRun extends DebugCommand {
 
-    /** The plugin manager used to hackily poke the Swing UI. */
-    private final PluginManager pluginManager;
+    /** Eventbus to trigger first run event on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param pluginManager   The plugin manager to use to hackily poke the Swing UI.
+     * @param eventBus        Eventbus to trigger first run event on.
      */
     @Inject
-    public FirstRun(final Provider<Debug> commandProvider, final PluginManager pluginManager) {
+    public FirstRun(final Provider<Debug> commandProvider, final EventBus eventBus) {
         super(commandProvider);
 
-        this.pluginManager = pluginManager;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -68,15 +68,7 @@ public class FirstRun extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        for (Service service : pluginManager.getServicesByType("ui")) {
-            if (service.isActive()) {
-                final UIController uiController = ((UIController) service.getActiveProvider().
-                        getExportedService("getController").execute());
-                if (uiController != null) {
-                    uiController.showFirstRunWizard();
-                }
-            }
-        }
+        eventBus.post(new FirstRunEvent());
     }
 
 }

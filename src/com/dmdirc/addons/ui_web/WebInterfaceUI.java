@@ -31,8 +31,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
-import java.net.URI;
-
 import javax.inject.Inject;
 
 import org.mortbay.jetty.Handler;
@@ -133,21 +131,6 @@ public class WebInterfaceUI implements UIController {
      */
     public void addWebHandler(final Handler newHandler) {
         webServer.addHandler(newHandler);
-    }
-
-    @Override
-    public void showFirstRunWizard() {
-        // Do nothing
-    }
-
-    @Override
-    public void showURLDialog(final URI url) {
-        // Do nothing
-    }
-
-    @Override
-    public void showFeedbackNag() {
-        // Do nothing
     }
 
 }
