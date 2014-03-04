@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_web;
 
-import com.dmdirc.Channel;
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -140,16 +138,6 @@ public class WebInterfaceUI implements UIController {
 
     @Override
     public void showFirstRunWizard() {
-        // Do nothing
-    }
-
-    @Override
-    public void showChannelSettingsDialog(final Channel channel) {
-        // Do nothing
-    }
-
-    @Override
-    public void showServerSettingsDialog(final Server server) {
         // Do nothing
     }
 
