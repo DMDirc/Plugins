@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.Channel;
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -162,42 +160,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showFirstRunWizard() {
         swingManager.getFirstRunExecutor().showWizardAndWait();
-    }
-
-    @Override
-    public void showChannelSettingsDialog(final Channel channel) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getChannelSettingsDialogProvider().displayOrRequestFocus(channel);
-            }
-        });
-    }
-
-    @Override
-    public void showServerSettingsDialog(final Server server) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getServerSettingsDialogProvider().displayOrRequestFocus(server);
-            }
-        });
-    }
-
-    /**
-     * @deprecated Callers should be given access to the provider.
-     */
-    @Deprecated
-    public void closeServerSettingsDialog(final Server server) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getServerSettingsDialogProvider().dispose(server);
-            }
-        });
     }
 
     /**

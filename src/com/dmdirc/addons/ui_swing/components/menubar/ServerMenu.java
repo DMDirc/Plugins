@@ -27,10 +27,11 @@ import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,14 +50,8 @@ import javax.swing.event.MenuListener;
 public class ServerMenu extends JMenu implements ActionListener,
         MenuListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Swing controller. */
-    private final SwingController controller;
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Menu items which can be enabled/disabled. */
@@ -64,23 +59,25 @@ public class ServerMenu extends JMenu implements ActionListener,
     private JMenuItem disconnect;
     /** Provider to use to retrieve NSD instances. */
     private final DialogProvider<NewServerDialog> newServerProvider;
+    /** Provider for server settings dialogs. */
+    private final KeyedDialogProvider<Server, ServerSettingsDialog> ssdProvider;
 
     /**
      * Creates a new Server menu.
      *
-     * @param controller        Parent swing controller
      * @param mainFrame         Parent main frame
      * @param newServerProvider Provider to use to retrieve NSD instances.
+     * @param ssdProvider       Provider to get SSD instances
      */
     @Inject
     public ServerMenu(
-            final SwingController controller,
             final MainFrame mainFrame,
-            final DialogProvider<NewServerDialog> newServerProvider) {
+            final DialogProvider<NewServerDialog> newServerProvider,
+            final KeyedDialogProvider<Server, ServerSettingsDialog> ssdProvider) {
         super("Server");
-        this.controller = controller;
         this.mainFrame = mainFrame;
         this.newServerProvider = newServerProvider;
+        this.ssdProvider = ssdProvider;
 
         setMnemonic('s');
         addMenuListener(this);
@@ -133,7 +130,7 @@ public class ServerMenu extends JMenu implements ActionListener,
                 mainFrame.quit();
                 break;
             case "ServerSettings":
-                controller.showServerSettingsDialog(
+                ssdProvider.displayOrRequestFocus(
                         (Server) mainFrame.getActiveFrame().getContainer().getConnection());
                 break;
             case "Disconnect":
