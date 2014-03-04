@@ -33,6 +33,8 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 /**
  * Validating Text field.
@@ -159,6 +161,15 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
     @Override
     public void removeUpdate(final DocumentEvent e) {
         checkError();
+    }
+
+    /**
+     * Sets a document filter for this dialog's textfield.
+     *
+     * @param filter Document filter to add
+     */
+    public void setDocumentFilter(final DocumentFilter filter) {
+        ((AbstractDocument) getDocument()).setDocumentFilter(filter);
     }
 
 }
