@@ -59,7 +59,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.ServiceLocator;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
@@ -115,13 +114,11 @@ public class SwingModule {
     @Singleton
     public MainFrame getMainFrame(
             final Apple apple,
-            final SwingController swingController,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
-            final WindowManager windowManager,
             final Provider<FrameManager> frameManagerProvider,
             final EventBus eventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
@@ -130,13 +127,11 @@ public class SwingModule {
             public MainFrame call() {
                 return new MainFrame(
                         apple,
-                        swingController,
                         windowFactory,
                         lifecycleController,
                         globalConfig,
                         quitWorker,
                         new IconManager(globalConfig, urlBuilder),
-                        windowManager,
                         frameManagerProvider,
                         eventBus);
             }
