@@ -40,6 +40,7 @@ import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
@@ -72,13 +73,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.layout.PlatformDefaults;
 
+import org.slf4j.LoggerFactory;
+
 import dagger.ObjectGraph;
 
 /**
  * Controls the main swing UI.
  */
-public class SwingController extends BaseCommandPlugin implements UIController {
+public class SwingController extends BaseCommandPlugin implements UIController,
+        ConfigChangeListener {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
     /** Top level window list. */
     private final List<java.awt.Window> windows;
     /** Error dialog. */
@@ -126,6 +131,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         setAntiAlias();
         windows = new ArrayList<>();
         eventBus.register(this);
+        globalConfig.addChangeListener("ui", "lookandfeel", this);
+        globalConfig.addChangeListener("ui", "textPaneFontName", this);
+        globalConfig.addChangeListener("ui", "textPaneFontSize", this);
     }
 
     @Deprecated
@@ -266,13 +274,13 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void showURLDialog(final UnknownURLEvent event) {
         if (!event.isHandled()) {
             event.setHandled(true);
-        UIUtilities.invokeLater(new Runnable() {
+            UIUtilities.invokeLater(new Runnable() {
 
-            @Override
-            public void run() {
-                swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
-            }
-        });
+                @Override
+                public void run() {
+                    swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
+                }
+            });
         }
     }
 
@@ -339,6 +347,11 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             }
         });
 
+        addonIdentity.setOption("ui", "textPaneFontName",
+                UIManager.getFont("TextPane.font").getFamily());
+        addonIdentity.setOption("ui", "textPaneFontSize",
+                UIManager.getFont("TextPane.font").getSize());
+
         super.onLoad();
     }
 
@@ -352,14 +365,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             window.dispose();
         }
         super.onUnload();
-    }
-
-    @Override
-    public void domainUpdated() {
-        addonIdentity.setOption("ui", "textPaneFontName",
-                UIManager.getFont("TextPane.font").getFamily());
-        addonIdentity.setOption("ui", "textPaneFontSize",
-                UIManager.getFont("TextPane.font").getSize());
     }
 
     @Override
@@ -655,6 +660,24 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Exported
     public FrameManagerProvider getButtonManager() {
         return swingManager.getButtonProvider();
+    }
+
+    @Override
+    public void configChanged(final String domain, final String key) {
+        switch (key) {
+            case "lookandfeel":
+                updateLookAndFeel();
+                break;
+            case "textPaneFontSize":
+            case "textPaneFontName":
+                final String font = globalConfig.getOptionString("ui", "textPaneFontName");
+                log.debug("Changing textpane font: {}", font);
+                UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
+                updateComponentTrees();
+                break;
+            default:
+                break;
+        }
     }
 
 }

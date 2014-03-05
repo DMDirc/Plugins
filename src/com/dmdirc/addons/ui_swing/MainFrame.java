@@ -44,14 +44,12 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
 import com.google.common.eventbus.EventBus;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
@@ -88,8 +86,6 @@ public class MainFrame extends JFrame implements WindowListener,
     private final QueuedLinkedHashSet<TextFrame> focusOrder;
     /** Apple instance. */
     private final Apple apple;
-    /** Swing Controller. */
-    private final SwingController controller;
     /** Controller to use to end the program. */
     private final LifecycleController lifecycleController;
     /** The window factory to use to create and listen for windows. */
@@ -106,8 +102,6 @@ public class MainFrame extends JFrame implements WindowListener,
     private CtrlTabWindowManager frameManager;
     /** The listeners registered with this class. */
     private final ListenerList listeners = new ListenerList();
-    /** Window management. */
-    private final WindowManager windowManager;
     /** Provider of frame managers. */
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
@@ -138,37 +132,31 @@ public class MainFrame extends JFrame implements WindowListener,
     /**
      * Creates new form MainFrame.
      *
-     * @param controller           Swing controller
      * @param apple                Apple instance
      * @param windowFactory        The window factory to use to create and listen for windows.
      * @param lifecycleController  Controller to use to end the application.
      * @param globalConfig         The config to read settings from.
      * @param quitWorker           The quit worker to use when quitting the app.
      * @param iconManager          The icon manager to use to get icons.
-     * @param windowManager        Window management
      * @param frameManagerProvider Provider to use to retrieve frame managers.
      * @param eventBus             The event bus to post events to.
      */
     public MainFrame(
             final Apple apple,
-            final SwingController controller,
             final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
             final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
-            final WindowManager windowManager,
             final Provider<FrameManager> frameManagerProvider,
             final EventBus eventBus) {
         checkOnEDT();
         this.apple = apple;
-        this.controller = controller;
         this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
         this.globalConfig = globalConfig;
         this.quitWorker = quitWorker;
         this.iconManager = iconManager;
-        this.windowManager = windowManager;
         this.frameManagerProvider = frameManagerProvider;
         this.eventBus = eventBus;
 
@@ -182,11 +170,9 @@ public class MainFrame extends JFrame implements WindowListener,
 
         showVersion = globalConfig.getOptionBool("ui", "showversion");
         version = globalConfig.getOption("version", "version");
-        globalConfig.addChangeListener("ui", "lookandfeel", this);
         globalConfig.addChangeListener("ui", "showversion", this);
         globalConfig.addChangeListener("ui", "framemanager", this);
         globalConfig.addChangeListener("ui", "framemanagerPosition", this);
-        globalConfig.addChangeListener("ui", "textPaneFontName", this);
         globalConfig.addChangeListener("icon", "icon", this);
 
         addWindowFocusListener(new WindowFocusListener() {
@@ -546,9 +532,6 @@ public class MainFrame extends JFrame implements WindowListener,
     public void configChanged(final String domain, final String key) {
         if ("ui".equals(domain)) {
             switch (key) {
-                case "lookandfeel":
-                    controller.updateLookAndFeel();
-                    break;
                 case "framemanager":
                 case "framemanagerPosition":
                     UIUtilities.invokeAndWait(new Runnable() {
@@ -563,12 +546,6 @@ public class MainFrame extends JFrame implements WindowListener,
                             setVisible(true);
                         }
                     });
-                    break;
-                case "textPaneFontName":
-                    final String font = globalConfig.getOptionString("ui", "textPaneFontName");
-                    log.debug("Changing textpane font: {}", font);
-                    UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
-                    controller.updateComponentTrees();
                     break;
                 default:
                     showVersion = globalConfig.getOptionBool("ui", "showversion");
