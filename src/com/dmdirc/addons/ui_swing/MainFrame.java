@@ -64,8 +64,6 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.slf4j.LoggerFactory;
-
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /**
@@ -75,12 +73,7 @@ public class MainFrame extends JFrame implements WindowListener,
         ConfigChangeListener, SwingWindowListener, FrameInfoListener,
         NotificationListener {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 9;
     /** Focus queue. */
     private final QueuedLinkedHashSet<TextFrame> focusOrder;

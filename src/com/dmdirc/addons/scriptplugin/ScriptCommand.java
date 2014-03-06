@@ -60,7 +60,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     /** Plugin settings domain. */
     private final String domain;
     /** Manager used to retrieve script engines. */
-    private final ScriptEngineManager ScriptEngineManager;
+    private final ScriptEngineManager scriptEngineManager;
     /** Script directory. */
     private final String scriptDirectory;
     /** Script manager to handle scripts. */
@@ -86,7 +86,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         super(commandController);
         this.globalConfig = globalConfig;
         this.domain = domain;
-        this.ScriptEngineManager = scriptEngineManager;
+        this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
         this.scriptManager = scriptManager;
     }
@@ -127,12 +127,12 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                         final String baseFile = scriptDirectory + '/'
                                 + globalConfig.getOption(domain, "eval.baseFile");
                         if (new File(baseFile).exists()) {
-                            wrapper = new ScriptEngineWrapper(ScriptEngineManager, baseFile);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, baseFile);
                         } else {
-                            wrapper = new ScriptEngineWrapper(ScriptEngineManager, null);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
                         }
                     } else {
-                        wrapper = new ScriptEngineWrapper(ScriptEngineManager, null);
+                        wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
                     }
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());

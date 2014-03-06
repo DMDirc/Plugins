@@ -65,8 +65,9 @@ public class FDManager implements ConfigChangeListener {
     private boolean stripcodes;
 
     @Inject
-    public FDManager(@GlobalConfig final AggregateConfigProvider config,
-            @UserConfig ConfigProvider userConfig,
+    public FDManager(
+            @GlobalConfig final AggregateConfigProvider config,
+            @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
             final PluginFilesHelper filesHelper) {
         this.domain = domain;

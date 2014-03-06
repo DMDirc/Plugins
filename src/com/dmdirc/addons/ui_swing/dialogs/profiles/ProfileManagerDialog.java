@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
-import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
