@@ -51,6 +51,7 @@ import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
+import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -81,6 +82,7 @@ import dagger.Provides;
         includes = DialogModule.class,
         injects = {
             SwingManager.class,
+            SwingWindowManager.class,
             PopInCommand.class,
             PopOutCommand.class,
             Input.class,
