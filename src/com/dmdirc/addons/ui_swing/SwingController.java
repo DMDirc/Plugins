@@ -264,26 +264,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * @return Global config object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public AggregateConfigProvider getGlobalConfig() {
-        return globalConfig;
-    }
-
-    /**
-     * @return Global icon manager object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public IconManager getIconManager() {
-        return iconManager;
-    }
-
-    /**
      * Make swing not use Anti Aliasing if the user doesn't want it.
      */
     private void setAntiAlias() {
