@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
+import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
@@ -38,6 +39,7 @@ import com.google.common.eventbus.EventBus;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.awt.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -79,28 +81,31 @@ public class SwingManager {
     private final ButtonBarProvider buttonProvider;
     /** The provider to use to create new main frames. */
     private final Provider<MainFrame> mainFrameProvider;
+    /** Swing window manager. */
+    private final SwingWindowManager swingWindowManager;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
 
     /**
      * Creates a new instance of {@link SwingManager}.
      *
-     * @param eventQueue                    The event queue to use.
-     * @param windowFactory                 The window factory in use.
-     * @param windowManager                 The window manager to listen on for events.
-     * @param statusBarManager              The status bar manager to register our status bar with.
-     * @param mainFrameProvider             The provider to use for the main frame.
-     * @param menuBar                       The menu bar to use for the main frame.
-     * @param statusBar                     The status bar to use in the main frame.
-     * @param ctrlTabManager                The window manager that handles ctrl+tab behaviour.
-     * @param dialogKeyListener             The key listener that supports dialogs.
-     * @param firstRunExecutor              A provider of first run executors.
-     * @param feedbackNagProvider           Provider of feedback nags.
-     * @param urlDialogFactory              Factory to use to create URL dialogs.
-     * @param linkHandler                   The handler to use when users click links.
-     * @param eventBus                      The bus to listen on for events.
-     * @param treeProvider                  Provider to use for tree-based frame managers.
-     * @param buttonProvider                Provider to use for button-based frame managers.
+     * @param eventQueue          The event queue to use.
+     * @param windowFactory       The window factory in use.
+     * @param windowManager       The window manager to listen on for events.
+     * @param statusBarManager    The status bar manager to register our status bar with.
+     * @param mainFrameProvider   The provider to use for the main frame.
+     * @param menuBar             The menu bar to use for the main frame.
+     * @param statusBar           The status bar to use in the main frame.
+     * @param ctrlTabManager      The window manager that handles ctrl+tab behaviour.
+     * @param dialogKeyListener   The key listener that supports dialogs.
+     * @param firstRunExecutor    A provider of first run executors.
+     * @param feedbackNagProvider Provider of feedback nags.
+     * @param urlDialogFactory    Factory to use to create URL dialogs.
+     * @param linkHandler         The handler to use when users click links.
+     * @param eventBus            The bus to listen on for events.
+     * @param treeProvider        Provider to use for tree-based frame managers.
+     * @param buttonProvider      Provider to use for button-based frame managers.
+     * @param swingWindowManager  Swing window manager
      */
     @Inject
     public SwingManager(
@@ -119,7 +124,8 @@ public class SwingManager {
             final SwingLinkHandler linkHandler,
             final EventBus eventBus,
             final TreeFrameManagerProvider treeProvider,
-            final ButtonBarProvider buttonProvider) {
+            final ButtonBarProvider buttonProvider,
+            final SwingWindowManager swingWindowManager) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -136,6 +142,7 @@ public class SwingManager {
         this.eventBus = eventBus;
         this.treeProvider = treeProvider;
         this.buttonProvider = buttonProvider;
+        this.swingWindowManager = swingWindowManager;
     }
 
     /**
@@ -163,6 +170,9 @@ public class SwingManager {
         uninstallEventQueue();
         uninstallKeyListener();
 
+        for (final Window window : swingWindowManager.getTopLevelWindows()) {
+            window.dispose();
+        }
         windowManager.removeListener(windowFactory);
         windowFactory.dispose();
         mainFrame.dispose();
