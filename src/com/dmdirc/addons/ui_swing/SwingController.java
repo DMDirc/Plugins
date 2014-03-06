@@ -248,9 +248,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        // Init the UI settings before we start any DI, as we might create frames etc.
-        initUISettings();
-
         setObjectGraph(graph.plus(new SwingModule(this, pluginInfo.getDomain())));
         getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
@@ -269,6 +266,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                     "Swing UI can't be run in a headless environment");
         }
 
+        // Init the UI settings before we start any DI, as we might create frames etc.
+        initUISettings();
         swingManager.load();
 
         UIUtilities.invokeAndWait(new Runnable() {
