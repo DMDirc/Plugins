@@ -24,7 +24,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
@@ -73,31 +74,31 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem dismiss;
     /** Show menu item. */
     private final JMenuItem show;
-    /** Swing controller. */
-    private final SwingController controller;
+    /** Error list dialog provider. */
+    private final DialogProvider<ErrorListDialog> errorListDialogProvider;
     /** Currently showing error level. */
     private ErrorLevel errorLevel;
 
     /**
      * Creates a new ErrorPanel for the specified status bar.
      *
-     * @param swingController Swing controller
-     * @param iconManager     The manager to use to retrieve icons.
-     * @param mainFrame       Main frame
-     * @param statusBar       Status bar
+     * @param iconManager             The manager to use to retrieve icons.
+     * @param mainFrame               Main frame
+     * @param statusBar               Status bar
+     * @param errorListDialogProvider Error list dialog provider.
      */
     @Inject
     public ErrorPanel(
-            final SwingController swingController,
             @GlobalConfig final IconManager iconManager,
             final MainFrame mainFrame,
-            final Provider<SwingStatusBar> statusBar) {
+            final Provider<SwingStatusBar> statusBar,
+            final DialogProvider<ErrorListDialog> errorListDialogProvider) {
         super(new JLabel());
 
-        this.controller = swingController;
         this.mainFrame = mainFrame;
         this.statusBar = statusBar;
         this.iconManager = iconManager;
+        this.errorListDialogProvider = errorListDialogProvider;
         defaultIcon = iconManager.getIcon("normal");
 
         menu = new JPopupMenu();
@@ -188,7 +189,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-            controller.showErrorDialog();
+            errorListDialogProvider.displayOrRequestFocus();
         }
         checkMouseEvent(mouseEvent);
     }
@@ -245,7 +246,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
-            controller.showErrorDialog();
+            errorListDialogProvider.displayOrRequestFocus();
         } else {
             final Collection<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
             for (final ProgramError error : errors) {

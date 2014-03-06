@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.logger.ErrorManager;
@@ -34,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -79,7 +81,9 @@ public final class ErrorListDialog extends StandardDialog implements
      * @param mainFrame   The parent window.
      * @param iconManager The manager to use to load icons.
      */
-    public ErrorListDialog(final MainFrame mainFrame, final IconManager iconManager) {
+    @Inject
+    public ErrorListDialog(final MainFrame mainFrame,
+            @GlobalConfig final IconManager iconManager) {
         super(mainFrame, ModalityType.MODELESS);
 
         setTitle("Error list");
@@ -92,6 +96,15 @@ public final class ErrorListDialog extends StandardDialog implements
         initListeners();
 
         selectedRow.set(table.getSelectedRow());
+    }
+
+    /**
+     * Loads the dialog and sets it as ready.
+     *
+     * @param errorManager Error manager to register with.
+     */
+    public void load(final ErrorManager errorManager) {
+        tableModel.load(errorManager);
     }
 
     /** Initialises the components. */
