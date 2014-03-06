@@ -33,7 +33,6 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Point;
-import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -52,16 +51,11 @@ import javax.swing.text.JTextComponent;
 @Singleton
 public class DMDircEventQueue extends EventQueue {
 
-    /** Swing Controller. */
-    private final SwingController controller;
     /** Event bus to despatch events to. */
     private final EventBus eventBus;
 
     @Inject
-    public DMDircEventQueue(final SwingController controller, final EventBus eventBus) {
-        super();
-
-        this.controller = controller;
+    public DMDircEventQueue(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
@@ -75,7 +69,7 @@ public class DMDircEventQueue extends EventQueue {
         } else if (event instanceof KeyEvent) {
             handleKeyEvent((KeyEvent) event);
         } else if (event instanceof WindowEvent) {
-            handleWindowEvent((WindowEvent) event);
+            eventBus.post(new SwingWindowEvent((WindowEvent) event));
         }
     }
 
@@ -134,21 +128,6 @@ public class DMDircEventQueue extends EventQueue {
         final Point pt = SwingUtilities.convertPoint(me.getComponent(),
                 me.getPoint(), tc);
         menu.show(tc, pt.x, pt.y);
-    }
-
-    /**
-     * Handles window events.
-     *
-     * @param we Window event
-     */
-    private void handleWindowEvent(final WindowEvent we) {
-        if ((we.getSource() instanceof Window) && controller.hasMainFrame()) {
-            if (we.getID() == WindowEvent.WINDOW_OPENED) {
-                controller.addTopLevelWindow((Window) we.getSource());
-            } else if (we.getID() == WindowEvent.WINDOW_CLOSED) {
-                controller.delTopLevelWindow((Window) we.getSource());
-            }
-        }
     }
 
     @Override

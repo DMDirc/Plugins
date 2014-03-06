@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -40,7 +41,6 @@ import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
@@ -60,13 +60,9 @@ import com.google.common.eventbus.Subscribe;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -77,15 +73,13 @@ import org.slf4j.LoggerFactory;
 
 import dagger.ObjectGraph;
 
+
 /**
  * Controls the main swing UI.
  */
-public class SwingController extends BaseCommandPlugin implements UIController,
-        ConfigChangeListener {
+public class SwingController extends BaseCommandPlugin implements UIController {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
-    /** Top level window list. */
-    private final List<java.awt.Window> windows;
     /** Error dialog. */
     private ErrorListDialog errorDialog;
     /** This plugin's plugin info object. */
@@ -106,6 +100,8 @@ public class SwingController extends BaseCommandPlugin implements UIController,
     private final String domain;
     /** Event bus to subscribe to events with. */
     private final EventBus eventBus;
+    /** Swing window manager. */
+    private SwingWindowManager swingWindowManager;
 
     /**
      * Instantiates a new SwingController.
@@ -132,7 +128,6 @@ public class SwingController extends BaseCommandPlugin implements UIController,
         apple = new Apple(globalConfig, serverManager, eventBus);
         iconManager = new IconManager(globalConfig, urlBuilder);
         setAntiAlias();
-        windows = new ArrayList<>();
     }
 
     @Deprecated
@@ -156,76 +151,12 @@ public class SwingController extends BaseCommandPlugin implements UIController,
         System.setProperty("swing.aatext", Boolean.toString(aaSetting));
     }
 
-    /**
-     * Does the main frame exist?
-     *
-     * @return true iif mainframe exists
-     */
-    protected boolean hasMainFrame() {
-        return swingManager != null;
-    }
-
     @Subscribe
     public void showFirstRunWizard(final FirstRunEvent event) {
         if (!event.isHandled()) {
             swingManager.getFirstRunExecutor().showWizardAndWait();
             event.setHandled(true);
         }
-    }
-
-    /**
-     * Updates the look and feel to the current config setting.
-     */
-    public void updateLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                    globalConfig.getOption("ui", "lookandfeel")));
-            updateComponentTrees();
-        } catch (ClassNotFoundException | InstantiationException |
-                IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to change Look and Feel: " + ex.getMessage());
-        }
-    }
-
-    /**
-     * Updates the component trees of all known windows in the Swing UI.
-     */
-    public void updateComponentTrees() {
-        final int state = UIUtilities.invokeAndWait(
-                new Callable<Integer>() {
-
-                    @Override
-                    public Integer call() {
-                        return getMainFrame().getExtendedState();
-                    }
-                });
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                SwingUtilities.updateComponentTreeUI(errorDialog);
-            }
-        });
-        for (final java.awt.Window window : getTopLevelWindows()) {
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    SwingUtilities.updateComponentTreeUI(window);
-                    if (window != getMainFrame()) {
-                        window.pack();
-                    }
-                }
-            });
-        }
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                getMainFrame().setExtendedState(state);
-            }
-        });
     }
 
     /**
@@ -320,6 +251,7 @@ public class SwingController extends BaseCommandPlugin implements UIController,
         setObjectGraph(graph.plus(new SwingModule(this, pluginInfo.getDomain())));
         getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
+        swingWindowManager = getObjectGraph().get(SwingWindowManager.class);
 
         registerCommand(ServerSettings.class, ServerSettings.INFO);
         registerCommand(ChannelSettings.class, ChannelSettings.INFO);
@@ -352,9 +284,6 @@ public class SwingController extends BaseCommandPlugin implements UIController,
                 UIManager.getFont("TextPane.font").getSize());
 
         eventBus.register(this);
-        globalConfig.addChangeListener("ui", "lookandfeel", this);
-        globalConfig.addChangeListener("ui", "textPaneFontName", this);
-        globalConfig.addChangeListener("ui", "textPaneFontSize", this);
 
         super.onLoad();
     }
@@ -365,9 +294,8 @@ public class SwingController extends BaseCommandPlugin implements UIController,
 
         errorDialog.dispose();
         eventBus.unregister(this);
-        globalConfig.removeListener(this);
 
-        for (final java.awt.Window window : getTopLevelWindows()) {
+        for (final java.awt.Window window : swingWindowManager.getTopLevelWindows()) {
             window.dispose();
         }
         super.onUnload();
@@ -414,23 +342,23 @@ public class SwingController extends BaseCommandPlugin implements UIController,
 
         general.addSetting(new PreferencesSetting("ui", "lookandfeel",
                 "Look and feel", "The Java look and feel to use", lafs,
-                globalConfig, globalIdentity));
+                globalConfig, globalIdentity).setRestartNeeded());
         general.addSetting(new PreferencesSetting("ui", "framemanager",
                 "Window manager", "Which window manager should be used?",
                 framemanagers,
-                globalConfig, globalIdentity));
+                globalConfig, globalIdentity).setRestartNeeded());
         general.addSetting(new PreferencesSetting("ui", "framemanagerPosition",
                 "Window manager position", "Where should the window "
                 + "manager be positioned?", fmpositions,
-                globalConfig, globalIdentity));
+                globalConfig, globalIdentity).setRestartNeeded());
         general.addSetting(new PreferencesSetting(PreferencesType.FONT,
                 "ui", "textPaneFontName", "Textpane font",
                 "Font for the textpane",
-                globalConfig, globalIdentity));
+                globalConfig, globalIdentity).setRestartNeeded());
         general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 "ui", "textPaneFontSize", "Textpane font size",
                 "Font size for the textpane",
-                globalConfig, globalIdentity));
+                globalConfig, globalIdentity).setRestartNeeded());
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "sortrootwindows", "Sort root windows",
                 "Sort child windows in the frame managers?",
@@ -595,39 +523,6 @@ public class SwingController extends BaseCommandPlugin implements UIController,
     }
 
     /**
-     * Adds a top level window to the window list.
-     *
-     * @param source New window
-     */
-    protected void addTopLevelWindow(final java.awt.Window source) {
-        synchronized (windows) {
-            windows.add(source);
-        }
-    }
-
-    /**
-     * Deletes a top level window to the window list.
-     *
-     * @param source Old window
-     */
-    protected void delTopLevelWindow(final java.awt.Window source) {
-        synchronized (windows) {
-            windows.remove(source);
-        }
-    }
-
-    /**
-     * Returns a list of top level windows.
-     *
-     * @return Top level window list
-     */
-    public List<java.awt.Window> getTopLevelWindows() {
-        synchronized (windows) {
-            return new ArrayList<>(windows);
-        }
-    }
-
-    /**
      * Returns an instance of SwingController. This method is exported for use in other plugins.
      *
      * @return A reference to this SwingController.
@@ -666,24 +561,6 @@ public class SwingController extends BaseCommandPlugin implements UIController,
     @Exported
     public FrameManagerProvider getButtonManager() {
         return swingManager.getButtonProvider();
-    }
-
-    @Override
-    public void configChanged(final String domain, final String key) {
-        switch (key) {
-            case "lookandfeel":
-                updateLookAndFeel();
-                break;
-            case "textPaneFontSize":
-            case "textPaneFontName":
-                final String font = globalConfig.getOptionString("ui", "textPaneFontName");
-                log.debug("Changing textpane font: {}", font);
-                UIUtilities.setUIFont(new Font(font, Font.PLAIN, 12));
-                updateComponentTrees();
-                break;
-            default:
-                break;
-        }
     }
 
 }
