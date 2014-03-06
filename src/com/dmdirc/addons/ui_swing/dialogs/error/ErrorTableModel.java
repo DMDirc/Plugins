@@ -29,6 +29,7 @@ import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,36 +38,25 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Table model for displaying program errors.
  */
-public final class ErrorTableModel extends AbstractTableModel implements
-        ErrorListener {
+public final class ErrorTableModel extends AbstractTableModel implements ErrorListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Data list. */
     private final List<ProgramError> errors;
     /** Are we ready? */
     private boolean ready = false;
 
-    /** Creates a new instance of ErrorTableModel. */
-    public ErrorTableModel() {
-        this(ErrorManager.getErrorManager().getErrors());
-    }
-
     /**
      * Creates a new instance of ErrorTableModel.
-     *
-     * @param errors List of errors.
      */
-    public ErrorTableModel(final List<ProgramError> errors) {
-        super();
+    public ErrorTableModel() {
+        this.errors = Collections.synchronizedList(new ArrayList<ProgramError>());
+    }
 
-        this.errors = Collections.synchronizedList(errors);
-
-        ErrorManager.getErrorManager().addErrorListener(this);
+    public void load(final ErrorManager errorManager) {
+        setErrors(errorManager.getErrors());
+        errorManager.addErrorListener(this);
         ready = true;
     }
 

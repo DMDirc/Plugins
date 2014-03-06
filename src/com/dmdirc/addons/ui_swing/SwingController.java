@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
 import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -66,8 +65,6 @@ import dagger.ObjectGraph;
  */
 public class SwingController extends BaseCommandPlugin implements UIController {
 
-    /** Error dialog. */
-    private ErrorListDialog errorDialog;
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
     /** Global config manager. */
@@ -145,7 +142,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             @Override
             public void run() {
                 getMainFrame().setVisible(true);
-                errorDialog = new ErrorListDialog(getMainFrame(), getIconManager());
             }
         });
 
@@ -162,8 +158,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void onUnload() {
         swingManager.unload();
-
-        errorDialog.dispose();
         eventBus.unregister(this);
 
         super.onUnload();
@@ -287,16 +281,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public IconManager getIconManager() {
         return iconManager;
-    }
-
-    /**
-     * Shows the error dialog.
-     *
-     * @deprecated callers should use DI instead.
-     */
-    @Deprecated
-    public void showErrorDialog() {
-        errorDialog.display();
     }
 
     /**
