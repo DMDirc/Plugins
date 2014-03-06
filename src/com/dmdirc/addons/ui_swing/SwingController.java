@@ -43,7 +43,6 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.Version;
 import com.dmdirc.util.URLBuilder;
 
@@ -69,12 +68,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** Global config manager. */
     private final AggregateConfigProvider globalConfig;
-    /** Global config identity. */
-    private final ConfigProvider globalIdentity;
     /** Addon config identity. */
     private final ConfigProvider addonIdentity;
-    /** Global Swing UI Icon manager. */
-    private final IconManager iconManager;
     /** Apple handler, deals with Mac specific code. */
     private final Apple apple;
     /** The manager we're using for dependencies. */
@@ -104,10 +99,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         this.eventBus = eventBus;
 
         globalConfig = identityManager.getGlobalConfiguration();
-        globalIdentity = identityManager.getUserSettings();
         addonIdentity = identityManager.getAddonSettings();
         apple = new Apple(globalConfig, serverManager, eventBus);
-        iconManager = new IconManager(globalConfig, urlBuilder);
         setAntiAlias();
     }
 
@@ -166,8 +159,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         manager.getCategory("GUI").addSubCategory(
-                new SwingPreferencesModel(pluginInfo, domain, globalConfig, globalIdentity)
-                        .getSwingUICategory());
+                new SwingPreferencesModel(pluginInfo, domain, manager.getConfigManager(),
+                        manager.getIdentity()).getSwingUICategory());
     }
 
     @Subscribe
@@ -261,26 +254,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public MainFrame getMainFrame() {
         return swingManager.getMainFrame();
-    }
-
-    /**
-     * @return Global config object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public AggregateConfigProvider getGlobalConfig() {
-        return globalConfig;
-    }
-
-    /**
-     * @return Global icon manager object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public IconManager getIconManager() {
-        return iconManager;
     }
 
     /**
