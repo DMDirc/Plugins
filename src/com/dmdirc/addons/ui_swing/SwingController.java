@@ -68,8 +68,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.layout.PlatformDefaults;
 
-import org.slf4j.LoggerFactory;
-
 import dagger.ObjectGraph;
 
 /**
@@ -77,7 +75,6 @@ import dagger.ObjectGraph;
  */
 public class SwingController extends BaseCommandPlugin implements UIController {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MainFrame.class);
     /** Error dialog. */
     private ErrorListDialog errorDialog;
     /** This plugin's plugin info object. */
@@ -126,11 +123,21 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         setAntiAlias();
     }
 
+    /**
+     * @return Global config object.
+     *
+     * @deprecated Should be injected.
+     */
     @Deprecated
     public AggregateConfigProvider getGlobalConfig() {
         return globalConfig;
     }
 
+    /**
+     * @return Global icon manager object.
+     *
+     * @deprecated Should be injected.
+     */
     @Deprecated
     public IconManager getIconManager() {
         return iconManager;

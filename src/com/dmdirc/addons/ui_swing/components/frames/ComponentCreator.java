@@ -39,6 +39,8 @@ import javax.swing.JComponent;
 
 /**
  * Utility class to create frame components.
+ *
+ * @deprecated Not really compatible with dependency injection. Replace.... somehow.
  */
 @Deprecated
 public class ComponentCreator {
@@ -52,6 +54,8 @@ public class ComponentCreator {
      * @param owner      container
      *
      * @return Set of initialised components
+     *
+     * @deprecated Not really compatible with dependency injection. Replace.... somehow.
      */
     @Deprecated
     public Set<JComponent> initFrameComponents(

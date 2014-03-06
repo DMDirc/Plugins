@@ -189,11 +189,21 @@ public class SwingManager {
         return firstRunExecutor.get();
     }
 
+    /**
+     * @return Feedback nag provider.
+     *
+     * @deprecated Should be injected.
+     */
     @Deprecated
     public Provider<FeedbackNag> getFeedbackNagProvider() {
         return feedbackNagProvider;
     }
 
+    /**
+     * @return URL dialog factory.
+     *
+     * @deprecated Should be injected.
+     */
     @Deprecated
     public URLDialogFactory getUrlDialogFactory() {
         return urlDialogFactory;
