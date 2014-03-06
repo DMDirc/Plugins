@@ -114,127 +114,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         setAntiAlias();
     }
 
-    /**
-     * @return Global config object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public AggregateConfigProvider getGlobalConfig() {
-        return globalConfig;
-    }
-
-    /**
-     * @return Global icon manager object.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public IconManager getIconManager() {
-        return iconManager;
-    }
-
-    /**
-     * Make swing not use Anti Aliasing if the user doesn't want it.
-     */
-    public final void setAntiAlias() {
-        // For this to work it *HAS* to be before anything else UI related.
-        final boolean aaSetting = globalConfig.getOptionBool("ui", "antialias");
-        System.setProperty("awt.useSystemAAFontSettings",
-                Boolean.toString(aaSetting));
-        System.setProperty("swing.aatext", Boolean.toString(aaSetting));
-    }
-
-    @Subscribe
-    public void showFirstRunWizard(final FirstRunEvent event) {
-        if (!event.isHandled()) {
-            swingManager.getFirstRunExecutor().showWizardAndWait();
-            event.setHandled(true);
-        }
-    }
-
-    /**
-     * Initialises the global UI settings for the Swing UI.
-     */
-    private void initUISettings() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                // This will do nothing on non OS X Systems
-                if (Apple.isApple()) {
-                    apple.setUISettings();
-                    apple.setListener();
-                }
-
-                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
-                if (UIManager.getFont("TextField.font") == null) {
-                    UIManager.put("TextField.font", defaultFont);
-                }
-                if (UIManager.getFont("TextPane.font") == null) {
-                    UIManager.put("TextPane.font", defaultFont);
-                }
-
-                try {
-                    UIUtilities.initUISettings();
-                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                            getGlobalConfig().getOption("ui", "lookandfeel")));
-                    UIUtilities.setUIFont(new Font(getGlobalConfig()
-                            .getOption("ui", "textPaneFontName"), Font.PLAIN, 12));
-                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
-                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-                }
-
-                if ("Metal".equals(UIManager.getLookAndFeel().getName())
-                        || Apple.isAppleUI()) {
-                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
-                }
-            }
-        });
-    }
-
-    @Subscribe
-    public void showURLDialog(final UnknownURLEvent event) {
-        if (!event.isHandled()) {
-            event.setHandled(true);
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
-                }
-            });
-        }
-    }
-
-    @Subscribe
-    public void showFeedbackNag(final FeedbackNagEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getFeedbackNagProvider().get();
-            }
-        });
-    }
-
-    /**
-     * Shows the error dialog.
-     */
-    public void showErrorDialog() {
-        errorDialog.display();
-    }
-
-    /**
-     * Returns the current look and feel.
-     *
-     * @return Current look and feel
-     */
-    public static String getLookAndFeel() {
-        return UIManager.getLookAndFeel().getName();
-    }
-
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
@@ -297,6 +176,57 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                         .getSwingUICategory());
     }
 
+    @Subscribe
+    public void showFirstRunWizard(final FirstRunEvent event) {
+        if (!event.isHandled()) {
+            swingManager.getFirstRunExecutor().showWizardAndWait();
+            event.setHandled(true);
+        }
+    }
+
+    @Subscribe
+    public void showURLDialog(final UnknownURLEvent event) {
+        if (!event.isHandled()) {
+            event.setHandled(true);
+            UIUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void showFeedbackNag(final FeedbackNagEvent event) {
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                swingManager.getFeedbackNagProvider().get();
+            }
+        });
+    }
+
+    /**
+     * Returns the version of this swing UI.
+     *
+     * @return Swing version
+     */
+    public Version getVersion() {
+        return pluginInfo.getMetaData().getVersion();
+    }
+
+    /**
+     * Returns the current look and feel.
+     *
+     * @return Current look and feel
+     */
+    public static String getLookAndFeel() {
+        return UIManager.getLookAndFeel().getName();
+    }
+
     /**
      * Returns an instance of SwingController. This method is exported for use in other plugins.
      *
@@ -308,12 +238,23 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Returns the version of this swing UI.
+     * Returns the exported tree manager provider.
      *
-     * @return Swing version
+     * @return A tree manager provider.
      */
-    public Version getVersion() {
-        return pluginInfo.getMetaData().getVersion();
+    @Exported
+    public FrameManagerProvider getTreeManager() {
+        return swingManager.getTreeProvider();
+    }
+
+    /**
+     * Returns the exported button manager provider.
+     *
+     * @return A button manager provider.
+     */
+    @Exported
+    public FrameManagerProvider getButtonManager() {
+        return swingManager.getButtonProvider();
     }
 
     /**
@@ -328,14 +269,86 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         return swingManager.getMainFrame();
     }
 
-    @Exported
-    public FrameManagerProvider getTreeManager() {
-        return swingManager.getTreeProvider();
+    /**
+     * @return Global config object.
+     *
+     * @deprecated Should be injected.
+     */
+    @Deprecated
+    public AggregateConfigProvider getGlobalConfig() {
+        return globalConfig;
     }
 
-    @Exported
-    public FrameManagerProvider getButtonManager() {
-        return swingManager.getButtonProvider();
+    /**
+     * @return Global icon manager object.
+     *
+     * @deprecated Should be injected.
+     */
+    @Deprecated
+    public IconManager getIconManager() {
+        return iconManager;
+    }
+
+    /**
+     * Shows the error dialog.
+     *
+     * @deprecated callers should use DI instead.
+     */
+    @Deprecated
+    public void showErrorDialog() {
+        errorDialog.display();
+    }
+
+    /**
+     * Make swing not use Anti Aliasing if the user doesn't want it.
+     */
+    private void setAntiAlias() {
+        // For this to work it *HAS* to be before anything else UI related.
+        final boolean aaSetting = globalConfig.getOptionBool("ui", "antialias");
+        System.setProperty("awt.useSystemAAFontSettings",
+                Boolean.toString(aaSetting));
+        System.setProperty("swing.aatext", Boolean.toString(aaSetting));
+    }
+
+    /**
+     * Initialises the global UI settings for the Swing UI.
+     */
+    private void initUISettings() {
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                // This will do nothing on non OS X Systems
+                if (Apple.isApple()) {
+                    apple.setUISettings();
+                    apple.setListener();
+                }
+
+                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
+                if (UIManager.getFont("TextField.font") == null) {
+                    UIManager.put("TextField.font", defaultFont);
+                }
+                if (UIManager.getFont("TextPane.font") == null) {
+                    UIManager.put("TextPane.font", defaultFont);
+                }
+
+                try {
+                    UIUtilities.initUISettings();
+                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
+                            globalConfig.getOption("ui", "lookandfeel")));
+                    UIUtilities.setUIFont(new Font(globalConfig.getOption("ui", "textPaneFontName"),
+                            Font.PLAIN, 12));
+                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
+                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
+                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
+                }
+
+                if ("Metal".equals(UIManager.getLookAndFeel().getName())
+                        || Apple.isAppleUI()) {
+                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
+                }
+            }
+        });
     }
 
 }
