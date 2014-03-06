@@ -54,12 +54,12 @@ public class SwingManager {
     /** The event queue to use. */
     private final DMDircEventQueue eventQueue;
     /** The window factory in use. */
-    private final SwingWindowFactory windowFactory;
+    private final Provider<SwingWindowFactory> windowFactory;
     /** The status bar manager to register our status bar with. */
     private final StatusBarManager statusBarManager;
-    private final MenuBar menuBar;
+    private final Provider<MenuBar> menuBar;
     /** The status bar in use. */
-    private final SwingStatusBar statusBar;
+    private final Provider<SwingStatusBar> statusBar;
     /** The window manager to listen on for events. */
     private final WindowManager windowManager;
     private final CtrlTabWindowManager ctrlTabManager;
@@ -82,7 +82,7 @@ public class SwingManager {
     /** The provider to use to create new main frames. */
     private final Provider<MainFrame> mainFrameProvider;
     /** Swing window manager. */
-    private final SwingWindowManager swingWindowManager;
+    private final Provider<SwingWindowManager> swingWindowManager;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
 
@@ -110,12 +110,12 @@ public class SwingManager {
     @Inject
     public SwingManager(
             final DMDircEventQueue eventQueue,
-            final SwingWindowFactory windowFactory,
+            final Provider<SwingWindowFactory> windowFactory,
             final WindowManager windowManager,
             final StatusBarManager statusBarManager,
             final Provider<MainFrame> mainFrameProvider,
-            final MenuBar menuBar,
-            final SwingStatusBar statusBar,
+            final Provider<MenuBar> menuBar,
+            final Provider<SwingStatusBar> statusBar,
             final CtrlTabWindowManager ctrlTabManager,
             final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
@@ -125,7 +125,7 @@ public class SwingManager {
             final EventBus eventBus,
             final TreeFrameManagerProvider treeProvider,
             final ButtonBarProvider buttonProvider,
-            final SwingWindowManager swingWindowManager) {
+            final Provider<SwingWindowManager> swingWindowManager) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -150,16 +150,16 @@ public class SwingManager {
      */
     public void load() {
         this.mainFrame = mainFrameProvider.get();
-        this.mainFrame.setMenuBar(menuBar);
+        this.mainFrame.setMenuBar(menuBar.get());
         this.mainFrame.setWindowManager(ctrlTabManager);
-        this.mainFrame.setStatusBar(statusBar);
+        this.mainFrame.setStatusBar(statusBar.get());
         this.mainFrame.initComponents();
 
         installEventQueue();
         installKeyListener();
 
-        windowManager.addListenerAndSync(windowFactory);
-        statusBarManager.registerStatusBar(statusBar);
+        windowManager.addListenerAndSync(windowFactory.get());
+        statusBarManager.registerStatusBar(statusBar.get());
         eventBus.register(linkHandler);
     }
 
@@ -170,13 +170,13 @@ public class SwingManager {
         uninstallEventQueue();
         uninstallKeyListener();
 
-        for (final Window window : swingWindowManager.getTopLevelWindows()) {
+        for (final Window window : swingWindowManager.get().getTopLevelWindows()) {
             window.dispose();
         }
-        windowManager.removeListener(windowFactory);
-        windowFactory.dispose();
+        windowManager.removeListener(windowFactory.get());
+        windowFactory.get().dispose();
         mainFrame.dispose();
-        statusBarManager.unregisterStatusBar(statusBar);
+        statusBarManager.unregisterStatusBar(statusBar.get());
         eventBus.unregister(linkHandler);
     }
 

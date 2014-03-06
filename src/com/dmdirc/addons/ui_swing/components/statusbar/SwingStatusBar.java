@@ -65,8 +65,6 @@ public class SwingStatusBar extends JPanel implements StatusBar {
     /**
      * Creates a new instance of SwingStatusBar.
      *
-     * @param controller   Swing controller
-     * @param mainFrame    Main frame
      * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
      * @param errorLabel   The error label to add to the status bar.
