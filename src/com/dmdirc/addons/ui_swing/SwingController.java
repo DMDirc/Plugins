@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
 import com.dmdirc.addons.ui_swing.commands.PopInCommand;
@@ -34,12 +33,9 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -48,13 +44,9 @@ import com.dmdirc.updater.Version;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import net.miginfocom.layout.PlatformDefaults;
 
 import dagger.ObjectGraph;
 
@@ -65,12 +57,8 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
-    /** Global config manager. */
-    private final AggregateConfigProvider globalConfig;
     /** Addon config identity. */
     private final ConfigProvider addonIdentity;
-    /** Apple handler, deals with Mac specific code. */
-    private final Apple apple;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
     /** This plugin's settings domain. */
@@ -83,22 +71,17 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      *
      * @param pluginInfo      Plugin info
      * @param identityManager Identity Manager
-     * @param serverManager   Server manager to use for server information.
      * @param eventBus        The bus to publish and subscribe to events on.
      */
     public SwingController(
             final PluginInfo pluginInfo,
             final IdentityController identityManager,
-            final ServerManager serverManager,
             final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
         this.domain = pluginInfo.getDomain();
         this.eventBus = eventBus;
 
-        globalConfig = identityManager.getGlobalConfiguration();
         addonIdentity = identityManager.getAddonSettings();
-        apple = new Apple(globalConfig, serverManager, eventBus);
-        setAntiAlias();
     }
 
     @Override
@@ -123,8 +106,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                     "Swing UI can't be run in a headless environment");
         }
 
-        // Init the UI settings before we start any DI, as we might create frames etc.
-        initUISettings();
         swingManager.load();
 
         UIUtilities.invokeAndWait(new Runnable() {
@@ -251,58 +232,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Deprecated
     public MainFrame getMainFrame() {
         return swingManager.getMainFrame();
-    }
-
-    /**
-     * Make swing not use Anti Aliasing if the user doesn't want it.
-     */
-    private void setAntiAlias() {
-        // For this to work it *HAS* to be before anything else UI related.
-        final boolean aaSetting = globalConfig.getOptionBool("ui", "antialias");
-        System.setProperty("awt.useSystemAAFontSettings",
-                Boolean.toString(aaSetting));
-        System.setProperty("swing.aatext", Boolean.toString(aaSetting));
-    }
-
-    /**
-     * Initialises the global UI settings for the Swing UI.
-     */
-    private void initUISettings() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                // This will do nothing on non OS X Systems
-                if (Apple.isApple()) {
-                    apple.setUISettings();
-                    apple.setListener();
-                }
-
-                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
-                if (UIManager.getFont("TextField.font") == null) {
-                    UIManager.put("TextField.font", defaultFont);
-                }
-                if (UIManager.getFont("TextPane.font") == null) {
-                    UIManager.put("TextPane.font", defaultFont);
-                }
-
-                try {
-                    UIUtilities.initUISettings();
-                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                            globalConfig.getOption("ui", "lookandfeel")));
-                    UIUtilities.setUIFont(new Font(globalConfig.getOption("ui", "textPaneFontName"),
-                            Font.PLAIN, 12));
-                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
-                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
-                }
-
-                if ("Metal".equals(UIManager.getLookAndFeel().getName())
-                        || Apple.isAppleUI()) {
-                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
-                }
-            }
-        });
     }
 
 }

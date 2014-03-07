@@ -74,6 +74,8 @@ public class Apple implements InvocationHandler {
     private boolean clientOpened = false;
     /** The server manager to use to connect to URLs. */
     private final ServerManager serverManager;
+    /** Event bus. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of {@link Apple}.
@@ -92,7 +94,10 @@ public class Apple implements InvocationHandler {
             final EventBus eventBus) {
         this.configManager = configManager;
         this.serverManager = serverManager;
+        this.eventBus = eventBus;
+    }
 
+    public void load() {
         if (isApple()) {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD

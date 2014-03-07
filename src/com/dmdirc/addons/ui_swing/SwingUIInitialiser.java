@@ -1,0 +1,111 @@
+/*
+ * Copyright (c) 2006-2014 DMDirc Developers
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.dmdirc.addons.ui_swing;
+
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.Logger;
+
+import java.awt.Font;
+
+import javax.inject.Inject;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import net.miginfocom.layout.PlatformDefaults;
+
+/**
+ * Initialises swing and system UI settings.
+ */
+public class SwingUIInitialiser {
+
+    private final Apple apple;
+    private final AggregateConfigProvider globalConfig;
+
+    @Inject
+    public SwingUIInitialiser(final Apple apple,
+            @GlobalConfig final AggregateConfigProvider globalConfig) {
+        this.apple = apple;
+        this.globalConfig = globalConfig;
+    }
+
+    public void load() {
+        apple.load();
+        setAntiAlias();
+        initUISettings();
+    }
+
+    /**
+     * Make swing not use Anti Aliasing if the user doesn't want it.
+     */
+    private void setAntiAlias() {
+        // For this to work it *HAS* to be before anything else UI related.
+        final boolean aaSetting = globalConfig.getOptionBool("ui", "antialias");
+        System.setProperty("awt.useSystemAAFontSettings",
+                Boolean.toString(aaSetting));
+        System.setProperty("swing.aatext", Boolean.toString(aaSetting));
+    }
+
+    /**
+     * Initialises the global UI settings for the Swing UI.
+     */
+    private void initUISettings() {
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                // This will do nothing on non OS X Systems
+                if (Apple.isApple()) {
+                    apple.setUISettings();
+                    apple.setListener();
+                }
+
+                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
+                if (UIManager.getFont("TextField.font") == null) {
+                    UIManager.put("TextField.font", defaultFont);
+                }
+                if (UIManager.getFont("TextPane.font") == null) {
+                    UIManager.put("TextPane.font", defaultFont);
+                }
+
+                try {
+                    UIUtilities.initUISettings();
+                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
+                            globalConfig.getOption("ui", "lookandfeel")));
+                    UIUtilities.setUIFont(new Font(globalConfig.getOption("ui", "textPaneFontName"),
+                            Font.PLAIN, 12));
+                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
+                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
+                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
+                }
+
+                if ("Metal".equals(UIManager.getLookAndFeel().getName())
+                        || Apple.isAppleUI()) {
+                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
+                }
+            }
+        });
+    }
+
+}
