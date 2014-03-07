@@ -55,8 +55,8 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
     }
 
     public void load(final ErrorManager errorManager) {
-        setErrors(errorManager.getErrors());
         errorManager.addErrorListener(this);
+        setErrors(errorManager.getErrors());
         ready = true;
     }
 
