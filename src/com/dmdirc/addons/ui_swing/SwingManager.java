@@ -91,6 +91,8 @@ public class SwingManager {
     private final DialogProvider<ErrorListDialog> errorListDialogProvider;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
+    /** Swing UI initialiser. */
+    private final SwingUIInitialiser uiInitialiser;
 
     /**
      * Creates a new instance of {@link SwingManager}.
@@ -113,6 +115,7 @@ public class SwingManager {
      * @param buttonProvider          Provider to use for button-based frame managers.
      * @param swingWindowManager      Swing window manager
      * @param errorListDialogProvider Error list dialog provider
+     * @param uiInitialiser           Initialiser to set system/swing settings.
      */
     @Inject
     public SwingManager(
@@ -133,7 +136,8 @@ public class SwingManager {
             final TreeFrameManagerProvider treeProvider,
             final ButtonBarProvider buttonProvider,
             final Provider<SwingWindowManager> swingWindowManager,
-            final DialogProvider<ErrorListDialog> errorListDialogProvider) {
+            final DialogProvider<ErrorListDialog> errorListDialogProvider,
+            final SwingUIInitialiser uiInitialiser) {
         this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -152,12 +156,14 @@ public class SwingManager {
         this.buttonProvider = buttonProvider;
         this.swingWindowManager = swingWindowManager;
         this.errorListDialogProvider = errorListDialogProvider;
+        this.uiInitialiser = uiInitialiser;
     }
 
     /**
      * Handles loading of the UI.
      */
     public void load() {
+        uiInitialiser.load();
         this.mainFrame = mainFrameProvider.get();
         this.mainFrame.setMenuBar(menuBar.get());
         this.mainFrame.setWindowManager(ctrlTabManager);
