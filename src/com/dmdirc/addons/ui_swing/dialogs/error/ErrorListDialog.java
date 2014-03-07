@@ -257,6 +257,9 @@ public final class ErrorListDialog extends StandardDialog implements
      */
     @Override
     public void tableChanged(final TableModelEvent e) {
+        if (tableModel.getRowCount() == 0) {
+            return;
+        }
         switch (e.getType()) {
             case TableModelEvent.DELETE:
                 synchronized (selectedRow) {
