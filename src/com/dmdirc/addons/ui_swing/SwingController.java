@@ -30,9 +30,6 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.events.FeedbackNagEvent;
-import com.dmdirc.events.FirstRunEvent;
-import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
@@ -42,7 +39,6 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.updater.Version;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.GraphicsEnvironment;
 
@@ -116,11 +112,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             }
         });
 
-        addonIdentity.setOption("ui", "textPaneFontName",
-                UIManager.getFont("TextPane.font").getFamily());
-        addonIdentity.setOption("ui", "textPaneFontSize",
-                UIManager.getFont("TextPane.font").getSize());
-
         eventBus.register(this);
 
         super.onLoad();
@@ -139,39 +130,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         manager.getCategory("GUI").addSubCategory(
                 new SwingPreferencesModel(pluginInfo, domain, manager.getConfigManager(),
                         manager.getIdentity()).getSwingUICategory());
-    }
-
-    @Subscribe
-    public void showFirstRunWizard(final FirstRunEvent event) {
-        if (!event.isHandled()) {
-            swingManager.getFirstRunExecutor().showWizardAndWait();
-            event.setHandled(true);
-        }
-    }
-
-    @Subscribe
-    public void showURLDialog(final UnknownURLEvent event) {
-        if (!event.isHandled()) {
-            event.setHandled(true);
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
-                }
-            });
-        }
-    }
-
-    @Subscribe
-    public void showFeedbackNag(final FeedbackNagEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getFeedbackNagProvider().get();
-            }
-        });
     }
 
     /**
