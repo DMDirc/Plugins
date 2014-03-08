@@ -32,6 +32,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveWindowManager;
 import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
@@ -71,7 +72,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
  */
 public class MainFrame extends JFrame implements WindowListener,
         ConfigChangeListener, SwingWindowListener, FrameInfoListener,
-        NotificationListener {
+        NotificationListener, ActiveWindowManager {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
@@ -210,15 +211,6 @@ public class MainFrame extends JFrame implements WindowListener,
         } else {
             return frameManagerPanel.getHeight();
         }
-    }
-
-    /**
-     * Returns the window that is currently active.
-     *
-     * @return The active window
-     */
-    public TextFrame getActiveFrame() {
-        return activeFrame;
     }
 
     @Override
@@ -565,11 +557,12 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    /**
-     * Changes the visible frame.
-     *
-     * @param activeFrame The frame to be activated, or null to show none
-     */
+    @Override
+    public TextFrame getActiveFrame() {
+        return activeFrame;
+    }
+
+    @Override
     public void setActiveFrame(final TextFrame activeFrame) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -611,26 +604,12 @@ public class MainFrame extends JFrame implements WindowListener,
         });
     }
 
-    /**
-     * Registers a new selection listener with this frame. The listener will be notified whenever
-     * the currently selected frame is changed.
-     *
-     * @param listener The listener to be added
-     *
-     * @see #setActiveFrame(com.dmdirc.addons.ui_swing.components.frames.TextFrame)
-     * @see #getActiveFrame()
-     */
+    @Override
     public void addSelectionListener(final SelectionListener listener) {
         listeners.add(SelectionListener.class, listener);
     }
 
-    /**
-     * Removes a previously registered selection listener.
-     *
-     * @param listener The listener to be removed
-     *
-     * @see #addSelectionListener(com.dmdirc.addons.ui_swing.SelectionListener)
-     */
+    @Override
     public void removeSelectionListener(final SelectionListener listener) {
         listeners.remove(SelectionListener.class, listener);
     }
