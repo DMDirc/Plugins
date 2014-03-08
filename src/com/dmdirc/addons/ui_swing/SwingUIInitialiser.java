@@ -22,12 +22,17 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.ClientModule.AddonConfig;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
 import java.awt.Font;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 
 import javax.inject.Inject;
 import javax.swing.UIManager;
@@ -42,18 +47,34 @@ public class SwingUIInitialiser {
 
     private final Apple apple;
     private final AggregateConfigProvider globalConfig;
+    private final ConfigProvider addonConfig;
+    private final DialogKeyListener dialogKeyListener;
+    private final DMDircEventQueue eventQueue;
 
     @Inject
     public SwingUIInitialiser(final Apple apple,
-            @GlobalConfig final AggregateConfigProvider globalConfig) {
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @AddonConfig final ConfigProvider addonConfig,
+            final DialogKeyListener dialogKeyListener,
+            final DMDircEventQueue eventQueue) {
         this.apple = apple;
         this.globalConfig = globalConfig;
+        this.addonConfig = addonConfig;
+        this.dialogKeyListener = dialogKeyListener;
+        this.eventQueue = eventQueue;
     }
 
     public void load() {
         apple.load();
         setAntiAlias();
         initUISettings();
+        installEventQueue();
+        installKeyListener();
+    }
+
+    public void unload() {
+        uninstallEventQueue();
+        uninstallKeyListener();
     }
 
     /**
@@ -88,6 +109,10 @@ public class SwingUIInitialiser {
                 if (UIManager.getFont("TextPane.font") == null) {
                     UIManager.put("TextPane.font", defaultFont);
                 }
+                addonConfig.setOption("ui", "textPaneFontName",
+                        UIManager.getFont("TextPane.font").getFamily());
+                addonConfig.setOption("ui", "textPaneFontSize",
+                        UIManager.getFont("TextPane.font").getSize());
 
                 try {
                     UIUtilities.initUISettings();
@@ -106,6 +131,48 @@ public class SwingUIInitialiser {
                 }
             }
         });
+    }
+
+    /**
+     * Installs the dialog key listener.
+     */
+    private void installKeyListener() {
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                        .addKeyEventDispatcher(dialogKeyListener);
+            }
+        });
+    }
+
+    /**
+     * Removes the dialog key listener.
+     */
+    private void uninstallKeyListener() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .removeKeyEventDispatcher(dialogKeyListener);
+    }
+
+    /**
+     * Installs the DMDirc event queue.
+     */
+    private void installEventQueue() {
+        UIUtilities.invokeAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
+            }
+        });
+    }
+
+    /**
+     * Removes the DMDirc event queue.
+     */
+    private void uninstallEventQueue() {
+        eventQueue.pop();
     }
 
 }
