@@ -30,19 +30,12 @@ import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.events.FeedbackNagEvent;
-import com.dmdirc.events.FirstRunEvent;
-import com.dmdirc.events.UnknownURLEvent;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import com.dmdirc.updater.Version;
-
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.GraphicsEnvironment;
 
@@ -57,31 +50,22 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
     /** This plugin's plugin info object. */
     private final PluginInfo pluginInfo;
-    /** Addon config identity. */
-    private final ConfigProvider addonIdentity;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
     /** This plugin's settings domain. */
     private final String domain;
-    /** Event bus to subscribe to events with. */
-    private final EventBus eventBus;
 
     /**
      * Instantiates a new SwingController.
      *
      * @param pluginInfo      Plugin info
      * @param identityManager Identity Manager
-     * @param eventBus        The bus to publish and subscribe to events on.
      */
     public SwingController(
             final PluginInfo pluginInfo,
-            final IdentityController identityManager,
-            final EventBus eventBus) {
+            final IdentityController identityManager) {
         this.pluginInfo = pluginInfo;
         this.domain = pluginInfo.getDomain();
-        this.eventBus = eventBus;
-
-        addonIdentity = identityManager.getAddonSettings();
     }
 
     @Override
@@ -116,20 +100,12 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             }
         });
 
-        addonIdentity.setOption("ui", "textPaneFontName",
-                UIManager.getFont("TextPane.font").getFamily());
-        addonIdentity.setOption("ui", "textPaneFontSize",
-                UIManager.getFont("TextPane.font").getSize());
-
-        eventBus.register(this);
-
         super.onLoad();
     }
 
     @Override
     public void onUnload() {
         swingManager.unload();
-        eventBus.unregister(this);
 
         super.onUnload();
     }
@@ -139,39 +115,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         manager.getCategory("GUI").addSubCategory(
                 new SwingPreferencesModel(pluginInfo, domain, manager.getConfigManager(),
                         manager.getIdentity()).getSwingUICategory());
-    }
-
-    @Subscribe
-    public void showFirstRunWizard(final FirstRunEvent event) {
-        if (!event.isHandled()) {
-            swingManager.getFirstRunExecutor().showWizardAndWait();
-            event.setHandled(true);
-        }
-    }
-
-    @Subscribe
-    public void showURLDialog(final UnknownURLEvent event) {
-        if (!event.isHandled()) {
-            event.setHandled(true);
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    swingManager.getUrlDialogFactory().getURLDialog(event.getURI()).display();
-                }
-            });
-        }
-    }
-
-    @Subscribe
-    public void showFeedbackNag(final FeedbackNagEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                swingManager.getFeedbackNagProvider().get();
-            }
-        });
     }
 
     /**
