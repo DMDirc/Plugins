@@ -1,0 +1,145 @@
+---
+categories:
+  - name: &General Swing UI
+    description: These config options apply only to the swing UI.
+    parent: GUI
+    icon: category-gui
+    domain: ui
+    items:
+
+      - type: multichoice
+        key: lookandfeel
+        title: Look and feel
+        help: The Java look and feel to use
+        source: com.dmdirc.addons.ui_swing.config.LookAndFeelProvider
+        restart: true
+
+      - type: multichoice
+        key: framemanager
+        title: Window manager
+        help: Which window manager should be used?
+        source: com.dmdirc.addons.ui_swing.config.FrameManagerProvider
+        restart: true
+
+      - type: multichoice
+        key: framemanagerPosition
+        title: Window manager position
+        help: Where should the window manager be positioned?
+        values:
+          top: Top
+          bottom: Bottom
+          left: Left
+          right: Right
+        restart: true
+
+      - type: font
+        key: textPaneFontName
+        title: Textpane font
+        help: Font for the textpane
+        restart: true
+
+      - type: integer
+        key: textPaneFontSize
+        title: Textpane font size
+        help: Font size for the textpane
+        restart: true
+
+      - type: boolean
+        key: sortrootwindows
+        title: Sort root windows
+        help: Sort root windows in the frame managers?
+ 
+      - type: boolean
+        key: sortchildwindows
+        title: Sort child windows
+        help: Sort child windows in the frame managers?
+
+  - name: Nicklist
+    icon: nicklist
+    parent: *General
+    items:
+
+      - type: optional colour
+        domain: ui
+        key: nicklistbackgroundcolour
+        title: Nicklist background colour
+        help: Background colour to use for the nicklist
+
+      - type: optional colour
+        domain: ui
+        key: nicklistforegroundcolour
+        title: Nicklist foreground colour
+        help: Foreground colour to use for the nicklist
+
+      - type: optional colour
+        domain: ui
+        key: nicklistAltBackgroundColour
+        title: Alternate background colour
+        help: Background colour to use for every other nicklist entry
+
+      - type: boolean
+        domain: nicklist
+        key: sortByMode
+        title: Sort nicklist by user mode
+        help: Sort nicknames by the modes they have?
+
+      - type: boolean
+        domain: nicklist
+        key: sortByCase
+        title: Sort nicklist by case
+        help: Sort nicknames in a case-sensitive manner?
+
+  - name: Advanced
+    parent: *General
+    domain: $plugin
+    items:
+
+      - type: optional integer
+        domain: ui
+        key: frameBufferSize
+        title: Window buffer size
+        help: The maximum number of lines in a window buffer
+        validator:
+          type: numerical
+          min: 10
+
+      - type: boolean
+        key: mdiBarVisibility
+        title: MDI Bar Visibility
+        help: Controls the visibility of the MDI bar
+
+      - type: boolean
+        domain: ui
+        key: useOneTouchExpandable
+        title: Use one touch expandable split panes?
+        help: Use one touch expandable arrows for collapsing/expanding the split panes
+
+      - type: integer
+        key: windowMenuItems
+        title: Window menu item count
+        help: Number of items to show in the window menu
+
+      - type: integer
+        key: windowMenuScrollInterval
+        title: Window menu scroll interval
+        help: Number of milliseconds to pause when autoscrolling in the window menu
+
+      - type: boolean
+        key: shownicklist
+        title: Show nicklist?
+        help: Do you want the nicklist visible
+
+      - type: boolean
+        key: showfulltopic
+        title: Show full topic in topic bar?
+        help: Do you want to show the full topic in the topic bar or just first line?
+
+      - type: boolean
+        key: hideEmptyTopicBar
+        title: Hide empty topic bar?
+        help: Do you want to hide the topic bar when there is no topic
+
+      - type: boolean
+        key: textpanelinenotifications
+        title: New line notification
+        help: Do you want to be notified about new lines whilst scrolled up? 
