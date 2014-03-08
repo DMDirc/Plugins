@@ -75,8 +75,6 @@ public class DCCManager implements ActionListener {
 
     /** Our DCC Container window. */
     private PlaceholderContainer container;
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
     /** Config manager to read settings from. */
     private final AggregateConfigProvider config;
     /** The sink manager to use to despatch messages. */
@@ -133,7 +131,6 @@ public class DCCManager implements ActionListener {
         this.tabCompleterFactory = tabCompleterFactory;
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
-        this.pluginInfo = pluginInfo;
         this.urlBuilder = urlBuilder;
 
         windowFactory.registerImplementation(
