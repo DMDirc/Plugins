@@ -51,6 +51,7 @@ import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -136,6 +137,12 @@ public class SwingModule {
                         eventBus);
             }
         });
+    }
+
+    @Provides
+    @Singleton
+    public ActiveFrameManager getActiveFrameManager(final MainFrame mainFrame) {
+        return mainFrame;
     }
 
     @Provides

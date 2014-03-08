@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channellist;
 import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,11 +48,12 @@ public class ChannelListDialog extends StandardDialog implements ActionListener 
     private final JLabel total;
 
     @Inject
-    public ChannelListDialog(final MainFrame mainFrame) {
+    public ChannelListDialog(final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager) {
         super(mainFrame, ModalityType.MODELESS);
         setTitle("Channel List");
         total = new JLabel("No results.");
-        list = new ChannelListPanel((Server) mainFrame.getActiveFrame().getContainer()
+        list = new ChannelListPanel((Server) activeFrameManager.getActiveFrame().getContainer()
                 .getConnection(), total);
         layoutComponents();
         getCancelButton().setText("Close");

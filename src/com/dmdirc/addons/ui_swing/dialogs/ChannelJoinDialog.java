@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.annotations.factory.Factory;
@@ -37,30 +38,32 @@ public class ChannelJoinDialog extends StandardInputDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** The main frame that owns this dialog. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new dialog which prompts a user and then joins the channel they specify.
      *
      * @param mainFrame   Main frame
+     * @param activeFrameManager The active window manager
      * @param iconManager The icon manager to use for validating text fields.
      * @param title       Window title
      * @param message     Window message
      */
     public ChannelJoinDialog(
             final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
             @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
             @Unbound final String title,
             @Unbound final String message) {
         super(mainFrame, ModalityType.APPLICATION_MODAL, iconManager, title, message);
 
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
     }
 
     @Override
     public boolean save() {
-        mainFrame.getActiveFrame().getContainer().getConnection()
+        activeFrameManager.getActiveFrame().getContainer().getConnection()
                 .join(new ChannelJoinRequest(getText()));
         return true;
     }

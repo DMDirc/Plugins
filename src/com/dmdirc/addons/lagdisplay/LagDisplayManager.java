@@ -27,10 +27,10 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -54,9 +54,8 @@ import javax.inject.Singleton;
 @Singleton
 public class LagDisplayManager implements ActionListener, ConfigChangeListener, SelectionListener {
 
-    /** Frame to listen to selection events on. */
-    // TODO: Selection/focus management should be behind an interface
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** Status bar to add panels to. */
     private final SwingStatusBar statusBar;
     private final Provider<LagDisplayPanel> panelProvider;
@@ -79,12 +78,12 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
 
     @Inject
     public LagDisplayManager(
-            final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
             final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
             @PluginDomain(LagDisplayPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.statusBar = statusBar;
         this.panelProvider = panelProvider;
         this.domain = domain;
@@ -94,7 +93,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
     public void load() {
         panel = panelProvider.get();
         statusBar.addComponent(panel);
-        mainFrame.addSelectionListener(this);
+        activeFrameManager.addSelectionListener(this);
         globalConfig.addChangeListener(domain, this);
         readConfig();
         ActionManager.getActionManager().registerListener(this,
@@ -105,7 +104,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
 
     public void unload() {
         statusBar.removeComponent(panel);
-        mainFrame.removeSelectionListener(this);
+        activeFrameManager.removeSelectionListener(this);
         globalConfig.removeListener(this);
         ActionManager.getActionManager().unregisterListener(this);
         panel = null;
@@ -179,7 +178,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
             }
         }
 
-        final TextFrame activeFrame = mainFrame.getActiveFrame();
+        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer active = activeFrame == null ? null
                 : activeFrame.getContainer();
         final boolean isActive = active != null

@@ -25,11 +25,11 @@ package com.dmdirc.addons.windowstatus;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -49,8 +49,8 @@ import javax.inject.Inject;
  */
 public class WindowStatusManager implements ConfigChangeListener, SelectionListener {
 
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** Status bar we're adding to. */
     private final SwingStatusBar statusBar;
     /** Identity controller to read settings from. */
@@ -67,11 +67,12 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     private String nonePrefix;
 
     @Inject
-    public WindowStatusManager(final MainFrame mainFrame, final SwingStatusBar statusBar,
+    public WindowStatusManager(final ActiveFrameManager activeFrameManager,
+            final SwingStatusBar statusBar,
             final IdentityController identityController,
             @PluginDomain(WindowStatusPlugin.class) final String domain) {
         this.domain = domain;
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.statusBar = statusBar;
         this.identityController = identityController;
     }
@@ -88,7 +89,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
             }
         });
         statusBar.addComponent(panel);
-        mainFrame.addSelectionListener(this);
+        activeFrameManager.addSelectionListener(this);
         identityController.getGlobalConfiguration().addChangeListener(domain, this);
         updateCache();
     }
@@ -97,7 +98,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
      * Unloads the plugin.
      */
     public void onUnload() {
-        mainFrame.removeSelectionListener(this);
+        activeFrameManager.removeSelectionListener(this);
         statusBar.removeComponent(panel);
         panel = null;
     }
@@ -122,7 +123,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
 
     /** Update the window status using the current active window. */
     public void updateStatus() {
-        final TextFrame active = mainFrame.getActiveFrame();
+        final TextFrame active = activeFrameManager.getActiveFrame();
 
         if (active != null) {
             updateStatus(active.getContainer());

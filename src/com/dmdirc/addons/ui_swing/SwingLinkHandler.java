@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
@@ -33,7 +34,6 @@ import com.dmdirc.ui.core.util.URLHandler;
 import com.google.common.eventbus.Subscribe;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -43,16 +43,16 @@ import javax.inject.Singleton;
 public class SwingLinkHandler {
 
     private final URLHandler urlHandler;
-    private final Provider<MainFrame> mainFrame;
+    private final ActiveFrameManager activeFrameManager;
     private final SwingWindowFactory windowFactory;
 
     @Inject
     public SwingLinkHandler(
-            final Provider<MainFrame> mainFrame,
+            final ActiveFrameManager activeFrameManager,
             final URLHandler urlHandler,
             final SwingWindowFactory windowFactory) {
         this.urlHandler = urlHandler;
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.windowFactory = windowFactory;
     }
 
@@ -75,7 +75,7 @@ public class SwingLinkHandler {
         final FrameContainer container = event.getWindow().getContainer();
         final Connection connection = container.getConnection();
         if (connection != null) {
-            mainFrame.get().setActiveFrame(
+            activeFrameManager.setActiveFrame(
                     windowFactory.getSwingWindow(connection.getQuery(event.getTarget())));
         }
     }

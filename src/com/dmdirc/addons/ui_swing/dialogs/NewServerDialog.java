@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -81,8 +82,8 @@ public class NewServerDialog extends StandardDialog implements
     private final IconManager iconManager;
     /** Config. */
     private final AggregateConfigProvider config;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** checkbox. */
     private JCheckBox newServerWindowCheck;
     /** checkbox. */
@@ -106,6 +107,7 @@ public class NewServerDialog extends StandardDialog implements
      * Creates a new instance of the dialog.
      *
      * @param mainFrame             Main frame
+     * @param activeFrameManager    The active window manager
      * @param config                Config
      * @param iconManager           Icon manager
      * @param identityController    Identity controller
@@ -115,6 +117,7 @@ public class NewServerDialog extends StandardDialog implements
     @Inject
     public NewServerDialog(
             final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
             @GlobalConfig final AggregateConfigProvider config,
             @GlobalConfig final IconManager iconManager,
             final IdentityController identityController,
@@ -123,7 +126,7 @@ public class NewServerDialog extends StandardDialog implements
         super(mainFrame, ModalityType.MODELESS);
         this.identityController = identityController;
         this.serverManager = serverManager;
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.iconManager = iconManager;
         this.config = config;
         this.profileDialogProvider = profileDialogProvider;
@@ -155,7 +158,7 @@ public class NewServerDialog extends StandardDialog implements
 
         serverField.requestFocusInWindow();
 
-        if (serverManager.numServers() == 0 || mainFrame.getActiveFrame() == null) {
+        if (serverManager.numServers() == 0 || activeFrameManager.getActiveFrame() == null) {
             newServerWindowCheck.setSelected(true);
             newServerWindowCheck.setEnabled(false);
         } else {
@@ -275,7 +278,7 @@ public class NewServerDialog extends StandardDialog implements
             // Open in a new window?
             if (newServerWindowCheck.isSelected()
                     || serverManager.numServers() == 0
-                    || mainFrame.getActiveFrame() == null) {
+                    || activeFrameManager.getActiveFrame() == null) {
 
                 new LoggingSwingWorker<Void, Void>() {
                     @Override
@@ -285,7 +288,7 @@ public class NewServerDialog extends StandardDialog implements
                     }
                 }.executeInExecutor();
             } else {
-                final Connection connection = mainFrame.getActiveFrame().getContainer().
+                final Connection connection = activeFrameManager.getActiveFrame().getContainer().
                         getConnection();
 
                 new LoggingSwingWorker<Void, Void>() {

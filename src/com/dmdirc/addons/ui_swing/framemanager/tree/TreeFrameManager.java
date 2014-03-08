@@ -24,13 +24,13 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -51,7 +51,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -88,25 +87,25 @@ public class TreeFrameManager implements FrameManager,
     private final SwingWindowFactory windowFactory;
     /** Window manage. */
     private final WindowManager windowManager;
-    /** Provider to use to retrieve the current main frame. */
-    private final Provider<MainFrame> mainFrameProvider;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new instance of the TreeFrameManager.
      *
-     * @param windowManager     The window manager to use to read window state.
-     * @param globalConfig      The provider to read config settings from.
-     * @param colourManager     The colour manager to use to retrieve colours.
-     * @param mainFrameProvider The provider to use to retrieve the current main frame.
-     * @param windowFactory     The factory to use to retrieve swing windows.
-     * @param domain            The domain to read settings from.
+     * @param windowManager      The window manager to use to read window state.
+     * @param globalConfig       The provider to read config settings from.
+     * @param colourManager      The colour manager to use to retrieve colours.
+     * @param activeFrameManager The active window manager
+     * @param windowFactory      The factory to use to retrieve swing windows.
+     * @param domain             The domain to read settings from.
      */
     @Inject
     public TreeFrameManager(
             final WindowManager windowManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ColourManager colourManager,
-            final Provider<MainFrame> mainFrameProvider,
+            final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain) {
         this.windowFactory = windowFactory;
@@ -114,12 +113,13 @@ public class TreeFrameManager implements FrameManager,
         this.nodes = new HashMap<>();
         this.config = globalConfig;
         this.colourManager = colourManager;
+        this.activeFrameManager = activeFrameManager;
 
         UIUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, mainFrameProvider, globalConfig,
+                tree = new Tree(TreeFrameManager.this, model, activeFrameManager, globalConfig,
                         windowFactory, domain);
                 tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
                         TreeFrameManager.this));
@@ -132,7 +132,6 @@ public class TreeFrameManager implements FrameManager,
                 config.addChangeListener("ui", "foregroundcolour", TreeFrameManager.this);
             }
         });
-        this.mainFrameProvider = mainFrameProvider;
     }
 
     @Override
@@ -317,7 +316,7 @@ public class TreeFrameManager implements FrameManager,
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(mainFrameProvider, windowFactory, tree);
+                scroller = new TreeTreeScroller(activeFrameManager, windowFactory, tree);
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, window);
@@ -328,9 +327,8 @@ public class TreeFrameManager implements FrameManager,
                     }
                 }
 
-                final MainFrame mainFrame = mainFrameProvider.get();
-                if (mainFrame != null && mainFrame.getActiveFrame() != null) {
-                    selectionChanged(mainFrame.getActiveFrame());
+                if (activeFrameManager.getActiveFrame() != null) {
+                    selectionChanged(activeFrameManager.getActiveFrame());
                 }
             }
         });

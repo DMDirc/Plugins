@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,7 +30,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import javax.inject.Provider;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
@@ -44,23 +43,23 @@ public class ButtonPanel extends JPanel implements Scrollable,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The provider to get the main frame to set the active frame. */
-    private final Provider<MainFrame> mainFrameProvider;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** The ButtonBar that created this Panel. */
     private final ButtonBar buttonBar;
 
     /**
      * Constructor for ButtonPanel.
      *
-     * @param mainFrameProvider The provider to get the main frame to set the active frame.
-     * @param layout            Layout settings for this ButtonPanel
-     * @param buttonBar         the buttonBar that created this Panel
+     * @param activeFrameManager The active window manager
+     * @param layout             Layout settings for this ButtonPanel
+     * @param buttonBar          the buttonBar that created this Panel
      */
-    public ButtonPanel(final Provider<MainFrame> mainFrameProvider, final MigLayout layout,
+    public ButtonPanel(final ActiveFrameManager activeFrameManager, final MigLayout layout,
             final ButtonBar buttonBar) {
         super(layout);
 
-        this.mainFrameProvider = mainFrameProvider;
+        this.activeFrameManager = activeFrameManager;
         this.buttonBar = buttonBar;
     }
 
@@ -105,8 +104,8 @@ public class ButtonPanel extends JPanel implements Scrollable,
             newIndex = (selectedIndex + 1) % getComponentCount();
         }
 
-        mainFrameProvider.get().setActiveFrame(
-                ((FrameToggleButton) getComponent(newIndex)).getTextFrame());
+        activeFrameManager.setActiveFrame(((FrameToggleButton) getComponent(newIndex)).
+                getTextFrame());
     }
 
     /**

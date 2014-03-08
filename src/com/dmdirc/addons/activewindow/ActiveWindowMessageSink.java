@@ -23,8 +23,8 @@
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.messages.MessageSink;
 import com.dmdirc.messages.MessageSinkManager;
 
@@ -40,17 +40,17 @@ public class ActiveWindowMessageSink implements MessageSink {
 
     /** The pattern to use to match this sink. */
     private static final Pattern PATTERN = Pattern.compile("active");
-    /** The main frame to use to get the currently active frame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new ActiveWindowMessageSink for the specified mainframe.
      *
-     * @param mainFrame The mainframe to use to retrieve active windows
+     * @param activeFrameManager Active frame manager.
      */
     @Inject
-    public ActiveWindowMessageSink(final MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    public ActiveWindowMessageSink(final ActiveFrameManager activeFrameManager) {
+        this.activeFrameManager = activeFrameManager;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ActiveWindowMessageSink implements MessageSink {
     public void handleMessage(final MessageSinkManager despatcher,
             final WritableFrameContainer source, final String[] patternMatches,
             final Date date, final String messageType, final Object... args) {
-        final TextFrame frame = mainFrame.getActiveFrame();
+        final TextFrame frame = activeFrameManager.getActiveFrame();
         if (frame.getContainer() instanceof WritableFrameContainer) {
             frame.getContainer().addLine(messageType, date, args);
         }

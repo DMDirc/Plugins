@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
@@ -37,7 +37,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.inject.Provider;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -60,8 +59,8 @@ public class Tree extends JTree implements MouseMotionListener,
     private static final long serialVersionUID = 1;
     /** Tree frame manager. */
     private final TreeFrameManager manager;
-    /** The provider to use to retrieve the current main frame.. */
-    private final Provider<MainFrame> mainFrameProvider;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Drag selection enabled? */
@@ -78,7 +77,7 @@ public class Tree extends JTree implements MouseMotionListener,
      *
      * @param manager           Frame manager
      * @param model             tree model.
-     * @param mainFrameProvider The provider to use to retrieve the current main frame.
+     * @param activeFrameManager The active window manager
      * @param globalConfig      The config to read settings from.
      * @param domain            The domain to read settings from.
      * @param windowFactory     The factory to use to get swing windows.
@@ -86,7 +85,7 @@ public class Tree extends JTree implements MouseMotionListener,
     public Tree(
             final TreeFrameManager manager,
             final TreeModel model,
-            final Provider<MainFrame> mainFrameProvider,
+            final ActiveFrameManager activeFrameManager,
             final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
             final String domain) {
@@ -95,7 +94,7 @@ public class Tree extends JTree implements MouseMotionListener,
         this.manager = manager;
         this.config = globalConfig;
         this.windowFactory = windowFactory;
-        this.mainFrameProvider = mainFrameProvider;
+        this.activeFrameManager = activeFrameManager;
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -188,7 +187,7 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                mainFrameProvider.get().setActiveFrame(windowFactory.getSwingWindow(
+                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) new TreePath(node.getPath()).getLastPathComponent())
                         .getWindow()));
             }
@@ -228,7 +227,7 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                mainFrameProvider.get().setActiveFrame(windowFactory.getSwingWindow(
+                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow()));
             }
         }

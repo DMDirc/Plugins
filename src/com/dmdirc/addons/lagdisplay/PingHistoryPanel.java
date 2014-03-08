@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.util.collections.RollingList;
 
 import java.awt.Color;
@@ -41,11 +41,7 @@ import javax.swing.JPanel;
  */
 public class PingHistoryPanel extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The manager that this panel is for. */
     protected final LagDisplayManager manager;
@@ -57,19 +53,18 @@ public class PingHistoryPanel extends JPanel {
     /**
      * Creates a new history panel for the specified plugin.
      *
-     * @param manager   The manager that owns this panel
-     * @param mainFrame Swing main frame
+     * @param manager            The manager that owns this panel
+     * @param activeFrameManager Active frame manager.
      */
     public PingHistoryPanel(final LagDisplayManager manager,
-            final MainFrame mainFrame) {
-        super();
-
+            final ActiveFrameManager activeFrameManager) {
         setMinimumSize(new Dimension(50, 100));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         setOpaque(false);
 
         this.manager = manager;
-        history = manager.getHistory(mainFrame.getActiveFrame().getContainer().getConnection());
+        history = manager.getHistory(activeFrameManager.getActiveFrame().getContainer().
+                getConnection());
 
         for (Long value : history.getList()) {
             maximum = Math.max(value, maximum);
