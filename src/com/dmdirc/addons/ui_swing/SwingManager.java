@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
@@ -34,14 +33,16 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
+import com.dmdirc.events.FeedbackNagEvent;
+import com.dmdirc.events.FirstRunEvent;
+import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
-import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
 import java.awt.Window;
 
 import javax.inject.Inject;
@@ -55,8 +56,6 @@ import javax.swing.SwingUtilities;
 @Singleton
 public class SwingManager {
 
-    /** The event queue to use. */
-    private final DMDircEventQueue eventQueue;
     /** The window factory in use. */
     private final Provider<SwingWindowFactory> windowFactory;
     /** The status bar manager to register our status bar with. */
@@ -67,8 +66,6 @@ public class SwingManager {
     /** The window manager to listen on for events. */
     private final WindowManager windowManager;
     private final CtrlTabWindowManager ctrlTabManager;
-    /** The key listener that supports dialogs. */
-    private final DialogKeyListener dialogKeyListener;
     /** Provider of first run executors. */
     private final Provider<FirstRunWizardExecutor> firstRunExecutor;
     /** Provider of feedback nags. */
@@ -97,7 +94,6 @@ public class SwingManager {
     /**
      * Creates a new instance of {@link SwingManager}.
      *
-     * @param eventQueue              The event queue to use.
      * @param windowFactory           The window factory in use.
      * @param windowManager           The window manager to listen on for events.
      * @param statusBarManager        The status bar manager to register our status bar with.
@@ -105,7 +101,6 @@ public class SwingManager {
      * @param menuBar                 The menu bar to use for the main frame.
      * @param statusBar               The status bar to use in the main frame.
      * @param ctrlTabManager          The window manager that handles ctrl+tab behaviour.
-     * @param dialogKeyListener       The key listener that supports dialogs.
      * @param firstRunExecutor        A provider of first run executors.
      * @param feedbackNagProvider     Provider of feedback nags.
      * @param urlDialogFactory        Factory to use to create URL dialogs.
@@ -119,7 +114,6 @@ public class SwingManager {
      */
     @Inject
     public SwingManager(
-            final DMDircEventQueue eventQueue,
             final Provider<SwingWindowFactory> windowFactory,
             final WindowManager windowManager,
             final StatusBarManager statusBarManager,
@@ -127,7 +121,6 @@ public class SwingManager {
             final Provider<MenuBar> menuBar,
             final Provider<SwingStatusBar> statusBar,
             final CtrlTabWindowManager ctrlTabManager,
-            final DialogKeyListener dialogKeyListener,
             final Provider<FirstRunWizardExecutor> firstRunExecutor,
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
@@ -138,7 +131,6 @@ public class SwingManager {
             final Provider<SwingWindowManager> swingWindowManager,
             final DialogProvider<ErrorListDialog> errorListDialogProvider,
             final SwingUIInitialiser uiInitialiser) {
-        this.eventQueue = eventQueue;
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.menuBar = menuBar;
@@ -146,7 +138,6 @@ public class SwingManager {
         this.statusBarManager = statusBarManager;
         this.mainFrameProvider = mainFrameProvider;
         this.ctrlTabManager = ctrlTabManager;
-        this.dialogKeyListener = dialogKeyListener;
         this.firstRunExecutor = firstRunExecutor;
         this.feedbackNagProvider = feedbackNagProvider;
         this.urlDialogFactory = urlDialogFactory;
@@ -170,11 +161,9 @@ public class SwingManager {
         this.mainFrame.setStatusBar(statusBar.get());
         this.mainFrame.initComponents();
 
-        installEventQueue();
-        installKeyListener();
-
         windowManager.addListenerAndSync(windowFactory.get());
         statusBarManager.registerStatusBar(statusBar.get());
+        eventBus.register(this);
         eventBus.register(linkHandler);
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -189,9 +178,6 @@ public class SwingManager {
      * Handles unloading of the UI.
      */
     public void unload() {
-        uninstallEventQueue();
-        uninstallKeyListener();
-
         for (final Window window : swingWindowManager.get().getTopLevelWindows()) {
             window.dispose();
         }
@@ -207,35 +193,7 @@ public class SwingManager {
         mainFrame.dispose();
         statusBarManager.unregisterStatusBar(statusBar.get());
         eventBus.unregister(linkHandler);
-    }
-
-    /**
-     * Gets a first run wizard executor to use.
-     *
-     * @return A first run wizard executor.
-     */
-    public FirstRunWizardExecutor getFirstRunExecutor() {
-        return firstRunExecutor.get();
-    }
-
-    /**
-     * @return Feedback nag provider.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public Provider<FeedbackNag> getFeedbackNagProvider() {
-        return feedbackNagProvider;
-    }
-
-    /**
-     * @return URL dialog factory.
-     *
-     * @deprecated Should be injected.
-     */
-    @Deprecated
-    public URLDialogFactory getUrlDialogFactory() {
-        return urlDialogFactory;
+        uiInitialiser.unload();
     }
 
     /**
@@ -258,46 +216,37 @@ public class SwingManager {
         return buttonProvider;
     }
 
-    /**
-     * Installs the DMDirc event queue.
-     */
-    private void installEventQueue() {
-        UIUtilities.invokeAndWait(new Runnable() {
+    @Subscribe
+    public void showFirstRunWizard(final FirstRunEvent event) {
+        if (!event.isHandled()) {
+            firstRunExecutor.get().showWizardAndWait();
+            event.setHandled(true);
+        }
+    }
+
+    @Subscribe
+    public void showURLDialog(final UnknownURLEvent event) {
+        if (!event.isHandled()) {
+            event.setHandled(true);
+            UIUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    urlDialogFactory.getURLDialog(event.getURI()).display();
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void showFeedbackNag(final FeedbackNagEvent event) {
+        UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
+                feedbackNagProvider.get();
             }
         });
-    }
-
-    /**
-     * Removes the DMDirc event queue.
-     */
-    private void uninstallEventQueue() {
-        eventQueue.pop();
-    }
-
-    /**
-     * Installs the dialog key listener.
-     */
-    private void installKeyListener() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                        .addKeyEventDispatcher(dialogKeyListener);
-            }
-        });
-    }
-
-    /**
-     * Removes the dialog key listener.
-     */
-    private void uninstallKeyListener() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                .removeKeyEventDispatcher(dialogKeyListener);
     }
 
 }
