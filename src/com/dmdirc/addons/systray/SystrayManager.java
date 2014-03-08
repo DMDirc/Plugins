@@ -25,6 +25,7 @@ package com.dmdirc.addons.systray;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.events.ClientMinimisedEvent;
+import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
@@ -50,6 +51,8 @@ public class SystrayManager implements ActionListener, MouseListener {
 
     /** Main frame instance. */
     private final MainFrame mainFrame;
+    /** Lifecycle controller to quit the application. */
+    private final LifecycleController lifecycleController;
     /** This plugin's settings domain. */
     private final String domain;
     /** The config to read settings from. */
@@ -66,6 +69,7 @@ public class SystrayManager implements ActionListener, MouseListener {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SystrayPlugin.class) final String domain,
             final MainFrame mainFrame,
+            final LifecycleController lifecycleController,
             @GlobalConfig final IconManager iconManager,
             final EventBus eventBus) {
         this.globalConfig = globalConfig;
@@ -73,6 +77,7 @@ public class SystrayManager implements ActionListener, MouseListener {
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
         this.eventBus = eventBus;
+        this.lifecycleController = lifecycleController;
     }
 
     public void load() {
@@ -133,7 +138,7 @@ public class SystrayManager implements ActionListener, MouseListener {
                 mainFrame.setVisible(!mainFrame.isVisible());
                 break;
             case "Quit":
-                mainFrame.quit();
+                lifecycleController.quit();
                 break;
         }
     }
