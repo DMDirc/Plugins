@@ -120,7 +120,9 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Main split pane. */
     private SplitPane mainSplitPane;
     /** Are we quitting or closing? */
-    private boolean quitting = false;
+    private boolean quitting;
+    /** Have we initialised our settings and listeners? */
+    private boolean initDone;
 
     /**
      * Creates new form MainFrame.
@@ -152,38 +154,45 @@ public class MainFrame extends JFrame implements WindowListener,
         this.iconManager = iconManager;
         this.frameManagerProvider = frameManagerProvider;
         this.eventBus = eventBus;
-
-        focusOrder = new QueuedLinkedHashSet<>();
-        imageIcon = new ImageIcon(iconManager.getImage("icon"));
-        setIconImage(imageIcon.getImage());
-
-        CoreUIUtils.centreWindow(this);
-
-        addWindowListener(this);
-
-        showVersion = globalConfig.getOptionBool("ui", "showversion");
         version = globalConfig.getOption("version", "version");
-        globalConfig.addChangeListener("ui", "showversion", this);
-        globalConfig.addChangeListener("ui", "framemanager", this);
-        globalConfig.addChangeListener("ui", "framemanagerPosition", this);
-        globalConfig.addChangeListener("icon", "icon", this);
+        focusOrder = new QueuedLinkedHashSet<>();
+    }
 
-        addWindowFocusListener(new WindowFocusListener() {
+    @Override
+    public void setVisible(final boolean visible) {
+        if (!initDone) {
+            imageIcon = new ImageIcon(iconManager.getImage("icon"));
+            setIconImage(imageIcon.getImage());
 
-            @Override
-            public void windowGainedFocus(final WindowEvent e) {
-                eventBus.post(new ClientFocusGainedEvent());
-            }
+            CoreUIUtils.centreWindow(this);
 
-            @Override
-            public void windowLostFocus(final WindowEvent e) {
-                eventBus.post(new ClientFocusLostEvent());
-            }
-        });
+            addWindowListener(this);
 
-        windowFactory.addWindowListener(this);
+            showVersion = globalConfig.getOptionBool("ui", "showversion");
+            globalConfig.addChangeListener("ui", "showversion", this);
+            globalConfig.addChangeListener("ui", "framemanager", this);
+            globalConfig.addChangeListener("ui", "framemanagerPosition", this);
+            globalConfig.addChangeListener("icon", "icon", this);
 
-        setTitle(getTitlePrefix());
+            addWindowFocusListener(new WindowFocusListener() {
+
+                @Override
+                public void windowGainedFocus(final WindowEvent e) {
+                    eventBus.post(new ClientFocusGainedEvent());
+                }
+
+                @Override
+                public void windowLostFocus(final WindowEvent e) {
+                    eventBus.post(new ClientFocusLostEvent());
+                }
+            });
+
+            windowFactory.addWindowListener(this);
+
+            setTitle(getTitlePrefix());
+            initDone = true;
+        }
+        super.setVisible(visible);
     }
 
     public SwingStatusBar getStatusBar() {
