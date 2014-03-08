@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
@@ -71,14 +72,16 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     /**
      * Creates a new ctrl tab window manager.
      *
-     * @param globalConfig  The configuration to read settings from.
-     * @param windowFactory The window factory to use to create and listen for windows.
+     * @param globalConfig       The configuration to read settings from.
+     * @param windowFactory      The window factory to use to create and listen for windows.
      * @param mainFrame     The main frame that owns this window manager
+     * @param activeFrameManager Active frame manager.
      */
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
+            final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame) {
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
@@ -88,13 +91,13 @@ public class CtrlTabWindowManager implements SwingWindowListener,
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                mainFrame.setActiveFrame(windowFactory.getSwingWindow(
+                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
                         ((TreeViewNode) path.getLastPathComponent()).getWindow()));
             }
         };
 
         windowFactory.addWindowListener(this);
-        mainFrame.addSelectionListener(this);
+        activeFrameManager.addSelectionListener(this);
 
         mainFrame.getRootPane().getActionMap().put("prevFrameAction",
                 new PreviousFrameAction(treeScroller));

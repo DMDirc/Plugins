@@ -26,12 +26,13 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.interfaces.LifecycleController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,8 +53,10 @@ public class ServerMenu extends JMenu implements ActionListener,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
+    /** Lifecycle controller. */
+    private final LifecycleController lifecycleController;
     /** Menu items which can be enabled/disabled. */
     private JMenuItem ssd;
     private JMenuItem disconnect;
@@ -65,17 +68,20 @@ public class ServerMenu extends JMenu implements ActionListener,
     /**
      * Creates a new Server menu.
      *
-     * @param mainFrame         Parent main frame
-     * @param newServerProvider Provider to use to retrieve NSD instances.
-     * @param ssdProvider       Provider to get SSD instances
+     * @param activeFrameManager  Active frame manager.
+     * @param lifecycleController Lifecycle controller
+     * @param newServerProvider   Provider to use to retrieve NSD instances.
+     * @param ssdProvider         Provider to get SSD instances
      */
     @Inject
     public ServerMenu(
-            final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
+            final LifecycleController lifecycleController,
             final DialogProvider<NewServerDialog> newServerProvider,
             final KeyedDialogProvider<Server, ServerSettingsDialog> ssdProvider) {
         super("Server");
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
+        this.lifecycleController = lifecycleController;
         this.newServerProvider = newServerProvider;
         this.ssdProvider = ssdProvider;
 
@@ -127,21 +133,21 @@ public class ServerMenu extends JMenu implements ActionListener,
                 newServerProvider.displayOrRequestFocus();
                 break;
             case "Exit":
-                mainFrame.quit();
+                lifecycleController.quit();
                 break;
             case "ServerSettings":
                 ssdProvider.displayOrRequestFocus(
-                        (Server) mainFrame.getActiveFrame().getContainer().getConnection());
+                        (Server) activeFrameManager.getActiveFrame().getContainer().getConnection());
                 break;
             case "Disconnect":
-                mainFrame.getActiveFrame().getContainer().getConnection().disconnect();
+                activeFrameManager.getActiveFrame().getContainer().getConnection().disconnect();
                 break;
         }
     }
 
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final TextFrame activeFrame = mainFrame.getActiveFrame();
+        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer activeWindow = activeFrame == null ? null
                 : activeFrame.getContainer();
 

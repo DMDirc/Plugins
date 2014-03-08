@@ -35,6 +35,7 @@ import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
@@ -87,11 +88,7 @@ import net.miginfocom.swing.MigLayout;
 public abstract class TextFrame extends JPanel implements Window,
         ConfigChangeListener, TextPaneListener, FrameCloseListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
     protected final FrameContainer frameParent;
@@ -101,17 +98,15 @@ public abstract class TextFrame extends JPanel implements Window,
     private SwingSearchBar searchBar;
     /** Command parser for popup commands. */
     private final CommandParser commandParser;
-    /** Main frame to use to activate/deactivate windows. */
-    private final Provider<MainFrame> mainFrame;
+    /** Manager used to activate/deactivate windows. */
+    private final ActiveFrameManager activeFrameManager;
     /** Manager to use for building popups. */
     private final PopupManager popupManager;
     /** Bus to despatch events on. */
     private final EventBus eventBus;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
-    /**
-     * DesktopWindowFrame to use for this TextFrame if it is to be popped out of the client.
-     */
+    /** DesktopWindowFrame to use for this TextFrame if it is to be popped out of the client. */
     private DesktopWindowFrame popoutFrame;
     /** Desktop place holder object used if this frame is popped out. */
     private DesktopPlaceHolderFrame popoutPlaceholder;
@@ -129,7 +124,7 @@ public abstract class TextFrame extends JPanel implements Window,
             final FrameContainer owner,
             final CommandParser commandParser,
             final TextFrameDependencies deps) {
-        this.mainFrame = deps.mainFrame;
+        this.activeFrameManager = deps.activeFrameManager;
         this.popupManager = deps.popupManager;
         this.frameParent = owner;
         this.iconManager = deps.iconManager;
@@ -175,8 +170,8 @@ public abstract class TextFrame extends JPanel implements Window,
             popoutFrame = null;
         }
         // Call setActiveFrame again so the contents of the frame manager are updated.
-        if (equals(mainFrame.get().getActiveFrame())) {
-            mainFrame.get().setActiveFrame(this);
+        if (equals(activeFrameManager.getActiveFrame())) {
+            activeFrameManager.setActiveFrame(this);
         }
     }
 
@@ -544,6 +539,7 @@ public abstract class TextFrame extends JPanel implements Window,
         final PasteDialogFactory pasteDialog;
         final PluginManager pluginManager;
         final IconManager iconManager;
+        final ActiveFrameManager activeFrameManager;
 
         @Inject
         public TextFrameDependencies(
@@ -555,7 +551,8 @@ public abstract class TextFrame extends JPanel implements Window,
                 final PasteDialogFactory pasteDialog,
                 final PluginManager pluginManager,
                 @GlobalConfig final IconManager iconManager,
-                @GlobalConfig final AggregateConfigProvider globalConfig) {
+                @GlobalConfig final AggregateConfigProvider globalConfig,
+                final ActiveFrameManager activeFrameManager) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
@@ -565,6 +562,7 @@ public abstract class TextFrame extends JPanel implements Window,
             this.pasteDialog = pasteDialog;
             this.pluginManager = pluginManager;
             this.iconManager = iconManager;
+            this.activeFrameManager = activeFrameManager;
         }
 
     }

@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -61,15 +62,15 @@ public class SwingWindowFactory implements FrameListener {
     private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
     private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
-    /** The provider to get the main frame to focus frames. */
-    private final Provider<MainFrame> mainFrameProvider;
+    /** Active window manager. */
+    private final Provider<ActiveFrameManager> activeFrameManager;
     /** Our list of listeners. */
     private final ListenerList listeners = new ListenerList();
 
     /**
      * Creates a new window factory for the specified controller.
      *
-     * @param mainFrameProvider       The provider to get the main frame to focus frames.
+     * @param activeFrameManager      The provider for the active frame manager.
      * @param customFrameFactory      The factory to use to produce custom frames.
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
@@ -78,13 +79,13 @@ public class SwingWindowFactory implements FrameListener {
      */
     @Inject
     public SwingWindowFactory(
-            final Provider<MainFrame> mainFrameProvider,
+            final Provider<ActiveFrameManager> activeFrameManager,
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
             final GlobalCommandParser commandParser) {
-        this.mainFrameProvider = mainFrameProvider;
+        this.activeFrameManager = activeFrameManager;
 
         // TODO: Allow auto-factories to implement an interface and simplify this a bit.
         registerImplementation(
@@ -229,7 +230,7 @@ public class SwingWindowFactory implements FrameListener {
                 }
 
                 if (focus) {
-                    mainFrameProvider.get().setActiveFrame(childWindow);
+                    activeFrameManager.get().setActiveFrame(childWindow);
                 }
             }
         });

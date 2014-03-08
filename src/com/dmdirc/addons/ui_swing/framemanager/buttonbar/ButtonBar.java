@@ -25,13 +25,13 @@ package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -56,7 +56,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -107,8 +106,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
     private final WindowManager windowManager;
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
-    /** Provider to use to retrieve the current main frame. */
-    private final Provider<MainFrame> mainFrameProvider;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new instance of ButtonBar.
@@ -116,18 +115,18 @@ public final class ButtonBar implements FrameManager, ActionListener,
      * @param windowFactory     The factory to use to retrieve window information.
      * @param windowManager     The window manager to use to read window state.
      * @param globalConfig      Global configuration to read settings from.
-     * @param mainFrameProvider The provider to use to retrieve the current main frame.
+     * @param activeFrameManager The active window manager
      */
     @Inject
     public ButtonBar(
             final SwingWindowFactory windowFactory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
-            final Provider<MainFrame> mainFrameProvider) {
+            final ActiveFrameManager activeFrameManager) {
         this.windowFactory = windowFactory;
         this.globalConfig = globalConfig;
         this.windowManager = windowManager;
-        this.mainFrameProvider = mainFrameProvider;
+        this.activeFrameManager = activeFrameManager;
 
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
@@ -141,10 +140,10 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 globalConfig.getOption("ui", "framemanagerPosition"));
 
         if (position.isHorizontal()) {
-            buttonPanel = new ButtonPanel(mainFrameProvider,
+            buttonPanel = new ButtonPanel(activeFrameManager,
                     new MigLayout("ins rel, fill, flowx"), this);
         } else {
-            buttonPanel = new ButtonPanel(mainFrameProvider,
+            buttonPanel = new ButtonPanel(activeFrameManager,
                     new MigLayout("ins rel, fill, flowy"), this);
         }
         scrollPane.getViewport().addMouseWheelListener(buttonPanel);
@@ -195,7 +194,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
                         ? 150 : (parent.getWidth() / NUM_CELLS);
                 initButtons(windowManager.getRootWindows());
 
-                final TextFrame activeFrame = mainFrameProvider.get().getActiveFrame();
+                final TextFrame activeFrame = activeFrameManager.getActiveFrame();
                 if (activeFrame != null) {
                     selectionChanged(activeFrame);
                 }
@@ -371,7 +370,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             button.setSelected(true);
         }
 
-        mainFrameProvider.get().setActiveFrame(frame);
+        activeFrameManager.setActiveFrame(frame);
     }
 
     /**

@@ -24,8 +24,8 @@ package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.WritableFrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -48,26 +48,27 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("active",
             "active <command> - executes the command as though it had been "
             + "executed in the active window", CommandType.TYPE_GLOBAL);
-    /** Parent MainFrame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new active command.
      *
-     * @param controller The controller to use for command information.
-     * @param mainFrame  Parent MainFrame
+     * @param controller          The controller to use for command information.
+     * @param activeFrameManager The active window manager
      */
     @Inject
-    public ActiveCommand(final CommandController controller, final MainFrame mainFrame) {
+    public ActiveCommand(final CommandController controller,
+            final ActiveFrameManager activeFrameManager) {
         super(controller);
 
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
     }
 
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final TextFrame frame = mainFrame.getActiveFrame();
+        final TextFrame frame = activeFrameManager.getActiveFrame();
         if (frame.getContainer() instanceof WritableFrameContainer) {
             ((WritableFrameContainer) frame.getContainer()).getCommandParser()
                     .parseCommand(frame.getContainer(),

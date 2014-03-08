@@ -25,13 +25,13 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialogFactory;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,8 +58,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
     private final DialogProvider<ChannelListDialog> channelListDialogProvider;
     /** Channel join dialog factory. */
     private final ChannelJoinDialogFactory channelJoinDialogFactory;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** Menu items to be disabled/enabled. */
     private JMenuItem csd;
     private JMenuItem join;
@@ -68,19 +68,19 @@ public class ChannelMenu extends JMenu implements ActionListener,
     /**
      * Creates a new channel menu.
      *
-     * @param mainFrame                 Parent mainframe
+     * @param activeFrameManager        Active frame manager.
      * @param dialogProvider            Channel settings dialog provider
      * @param channelJoinDialogFactory  Channel join dialog factory
      * @param channelListDialogProvider Channel list dialog provider
      */
     @Inject
     public ChannelMenu(
-            final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
             final ChannelJoinDialogFactory channelJoinDialogFactory,
             final DialogProvider<ChannelListDialog> channelListDialogProvider) {
         super("Channel");
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.dialogProvider = dialogProvider;
         this.channelJoinDialogFactory = channelJoinDialogFactory;
         this.channelListDialogProvider = channelListDialogProvider;
@@ -124,7 +124,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
                         "Enter the name of the channel to join.").displayOrRequestFocus();
                 break;
             case "ChannelSettings":
-                final FrameContainer activeWindow = mainFrame.getActiveFrame().getContainer();
+                final FrameContainer activeWindow = activeFrameManager.getActiveFrame().
+                        getContainer();
                 if (activeWindow instanceof Channel) {
                     dialogProvider.displayOrRequestFocus(((Channel) activeWindow));
                 }
@@ -137,7 +138,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
 
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final TextFrame activeFrame = mainFrame.getActiveFrame();
+        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer activeWindow = activeFrame == null ? null
                 : activeFrame.getContainer();
 

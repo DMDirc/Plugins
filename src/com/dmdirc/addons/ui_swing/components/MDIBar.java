@@ -23,12 +23,12 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
@@ -61,8 +61,8 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     private static final int ICON_SIZE = 12;
     /** Button to close frames. */
     private final NoFocusButton closeButton;
-    /** Main frame component bieng shown in. */
-    private final MainFrame mainFrame;
+    /** Active frame manager. */
+    private final ActiveFrameManager activeFrameManager;
     /** Config manager to get settings from. */
     private final AggregateConfigProvider config;
     /** Option domain. */
@@ -73,11 +73,11 @@ public class MDIBar extends JPanel implements SwingWindowListener,
     /**
      * Instantiates a new MDI bar.
      *
-     * @param globalConfig  The config to read settings from.
-     * @param iconManager   The manager to use to retrieve icons.
-     * @param domain        The domain to read settings from under.
-     * @param windowFactory The window factory to use to create and listen for windows.
-     * @param mainFrame     Main frame instance
+     * @param globalConfig       The config to read settings from.
+     * @param iconManager        The manager to use to retrieve icons.
+     * @param domain             The domain to read settings from under.
+     * @param windowFactory      The window factory to use to create and listen for windows.
+     * @param activeFrameManager Active frame manager.
      */
     @Inject
     public MDIBar(
@@ -85,10 +85,10 @@ public class MDIBar extends JPanel implements SwingWindowListener,
             @GlobalConfig final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
             final SwingWindowFactory windowFactory,
-            final MainFrame mainFrame) {
+            final ActiveFrameManager activeFrameManager) {
         super();
 
-        this.mainFrame = mainFrame;
+        this.activeFrameManager = activeFrameManager;
         this.config = globalConfig;
         this.configDomain = domain;
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
@@ -101,7 +101,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
 
         windowFactory.addWindowListener(this);
 
-        mainFrame.addSelectionListener(this);
+        activeFrameManager.addSelectionListener(this);
         closeButton.addActionListener(this);
         config.addChangeListener(configDomain, "mdiBarVisibility", this);
 
@@ -121,7 +121,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
             @Override
             public void run() {
                 setVisible(visibility);
-                setEnabled(mainFrame.getActiveFrame() != null);
+                setEnabled(activeFrameManager.getActiveFrame() != null);
             }
         });
     }
@@ -143,11 +143,11 @@ public class MDIBar extends JPanel implements SwingWindowListener,
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (mainFrame.getActiveFrame() == null) {
+        if (activeFrameManager.getActiveFrame() == null) {
             return;
         }
         if (closeButton.equals(e.getSource())) {
-            mainFrame.getActiveFrame().getContainer().close();
+            activeFrameManager.getActiveFrame().getContainer().close();
         }
     }
 
