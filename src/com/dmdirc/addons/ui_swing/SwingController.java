@@ -513,7 +513,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
                 pluginInfo, "Advanced", "");
 
         advanced.addSetting(new PreferencesSetting(
-                PreferencesType.OPTIONALINTEGER,
+                PreferencesType.INTEGER,
                 new OptionalValidator(new NumericalValidator(10, -1)),
                 "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a "
