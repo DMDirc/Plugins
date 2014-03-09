@@ -58,8 +58,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     private JTextField level;
     /** Report Status field. */
     private JTextField reportStatus;
-    /** Error status field. */
-    private JTextField errorStatus;
     /** Details field. */
     private JTextArea details;
     /** Details scrollpane. */
@@ -103,7 +101,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         date = new JTextField();
         level = new JTextField();
         reportStatus = new JTextField();
-        errorStatus = new JTextField();
         details = new JTextArea();
         scrollPane = new JScrollPane(details);
 
@@ -111,7 +108,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         date.setEditable(false);
         level.setEditable(false);
         reportStatus.setEditable(false);
-        errorStatus.setEditable(false);
         details.setEditable(false);
         details.setRows(5);
         details.setWrapStyleWord(true);
@@ -130,7 +126,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                     date.setText("");
                     level.setText("");
                     reportStatus.setText("");
-                    errorStatus.setText("");
 
                     return;
                 }
@@ -139,7 +134,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                 date.setText(error.occurrencesString());
                 level.setText(error.getLevel().toString());
                 reportStatus.setText(error.getReportStatus().toString());
-                errorStatus.setText(error.getFixedStatus().toString());
 
                 details.append(error.getMessage() + '\n');
                 final String[] trace = error.getTrace();
@@ -176,9 +170,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         add(new JLabel("Report status: "));
         add(reportStatus);
 
-        add(new JLabel("Error status: "));
-        add(errorStatus);
-
         add(new JLabel("Details: "));
         add(scrollPane, "grow, push");
     }
@@ -197,7 +188,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     public void errorStatusChanged(final ProgramError error) {
         if (this.error != null && this.error.equals(error)) {
             reportStatus.setText(error.getReportStatus().toString());
-            errorStatus.setText(error.getFixedStatus().toString());
             date.setText(this.error.occurrencesString());
         }
     }
