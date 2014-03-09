@@ -94,7 +94,7 @@ categories:
     domain: $plugin
     items:
 
-      - type: optional integer
+      - type: integer
         domain: ui
         key: frameBufferSize
         title: Window buffer size

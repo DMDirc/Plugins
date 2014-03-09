@@ -30,7 +30,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NumericalValidator;
-import com.dmdirc.util.validators.OptionalValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -146,8 +145,7 @@ public class SwingPreferencesModel {
                 pluginInfo, "Advanced", "");
 
         advanced.addSetting(new PreferencesSetting(
-                PreferencesType.OPTIONALINTEGER,
-                new OptionalValidator(new NumericalValidator(10, -1)),
+                PreferencesType.INTEGER, new NumericalValidator(10, -1),
                 "ui", "frameBufferSize",
                 "Window buffer size", "The maximum number of lines in a "
                 + "window buffer", globalConfig, globalIdentity));
