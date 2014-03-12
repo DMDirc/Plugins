@@ -20,7 +20,7 @@
 
         <!-- Main - ui_swing -->
         <dependency org="com.google.guava" name="guava" rev="15.+" conf="build->default" />
-        <dependency org="com.dmdirc" name="annotations" rev="[0.6,)" conf="main->default" />
+        <dependency org="com.dmdirc" name="annotations" rev="[0.6.1,)" conf="main->default" />
         <dependency org="com.miglayout" name="miglayout-swing" rev="4.+" conf="main->default" />
         <dependency org="org.swinglabs" name="jxlayer" rev="3.+" conf="main->default" />
         <dependency org="com.greboid.libraries" name="locksupport" rev="latest.release" conf="main->default" />
