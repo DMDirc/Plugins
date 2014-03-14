@@ -26,10 +26,16 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.util.concurrent.Callable;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 import dagger.ObjectGraph;
 
@@ -77,20 +83,48 @@ public class NowPlayingPlugin extends BaseCommandPlugin {
 
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
-        final ConfigPanel configPanel = UIUtilities.invokeAndWait(
-                new Callable<ConfigPanel>() {
-                    @Override
-                    public ConfigPanel call() {
-                        return new ConfigPanel(nowplayingmanager, manager.getConfigManager(),
-                                manager.getIdentity(), domain,
-                                nowplayingmanager.getSettings());
-                    }
-                });
+        final PreferencesInterface configPanel;
+        if (nowplayingmanager == null) {
+            configPanel = UIUtilities.invokeAndWait(
+                    new Callable<LoadPluginPanel>() {
+
+                        @Override
+                        public LoadPluginPanel call() {
+                            return new LoadPluginPanel();
+                        }
+                    });
+        } else {
+            configPanel = UIUtilities.invokeAndWait(
+                    new Callable<ConfigPanel>() {
+
+                        @Override
+                        public ConfigPanel call() {
+                            return new ConfigPanel(nowplayingmanager, manager.getConfigManager(),
+                                    manager.getIdentity(), domain,
+                                    nowplayingmanager.getSettings());
+                        }
+                    });
+        }
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "Now Playing",
                 "", "category-nowplaying", configPanel);
         manager.getCategory("Plugins").addSubCategory(category);
+    }
+
+    private class LoadPluginPanel extends JPanel implements PreferencesInterface {
+
+        private static final long serialVersionUID = 1L;
+
+        private LoadPluginPanel() {
+            super(new MigLayout("fill"));
+            add(new JLabel("Please load the plugin to change these settings."));
+        }
+
+        @Override
+        public void save() {
+        }
+
     }
 
 }
