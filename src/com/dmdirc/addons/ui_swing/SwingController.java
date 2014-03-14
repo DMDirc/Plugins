@@ -377,6 +377,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         setObjectGraph(graph.plus(new SwingModule(this, pluginInfo.getDomain())));
         getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
+        if (swingManager == null) {
+            throw new IllegalStateException("Swing manager failed to load.");
+        }
 
         registerCommand(ServerSettings.class, ServerSettings.INFO);
         registerCommand(ChannelSettings.class, ChannelSettings.INFO);
