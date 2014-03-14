@@ -624,6 +624,9 @@ public class MainFrame extends JFrame implements WindowListener,
 
     @Override
     public void windowDeleted(final TextFrame parent, final TextFrame window) {
+        if (window == null) {
+            return; //Deleting a window that doesnt exist will just cause problems, stop
+        }
         focusOrder.remove(window);
         if (activeFrame.equals(window)) {
             activeFrame = null;
