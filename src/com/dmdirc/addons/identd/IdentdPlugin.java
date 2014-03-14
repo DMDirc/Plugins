@@ -65,13 +65,13 @@ public class IdentdPlugin extends BasePlugin {
     @Override
     public void onUnload() {
         super.onUnload();
-        identdManager.onLoad();
+        identdManager.onUnload();
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        identdManager.onUnload();
+        identdManager.onLoad();
     }
 
     @Override
