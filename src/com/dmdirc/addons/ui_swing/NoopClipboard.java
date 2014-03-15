@@ -20,47 +20,45 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing;
 
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 
-import javax.swing.AbstractAction;
+import javax.inject.Inject;
 
 /**
- * Nickname copy action.
+ * System clipboard implementation that noops all operations.  This is used when no system clipboard
+ * can be found.
  */
-public final class NicknameCopyAction extends AbstractAction {
+public class NoopClipboard extends Clipboard {
 
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
-    /** Clipboard to copy from. */
-    private final Clipboard clipboard;
-    /** Nickname to be copied. */
-    private final String nickname;
-
-    /**
-     * Instantiates a new nickname copy action.
-     *
-     * @param clipboard Clipboard to copy from
-     * @param nickname  Nickname to be copied
-     */
-    public NicknameCopyAction(final Clipboard clipboard, final String nickname) {
-        super("Copy Nickname");
-
-        this.clipboard = clipboard;
-        this.nickname = nickname;
+    @Inject
+    public NoopClipboard() {
+        super("Noop Clipboard");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        clipboard.setContents(new StringSelection(nickname), null);
+    public Transferable getContents(final Object requestor) {
+        return null;
+    }
+
+    @Override
+    public void setContents(final Transferable contents, final ClipboardOwner owner) {
+        //NOOP
+    }
+
+    @Override
+    public boolean isDataFlavorAvailable(final DataFlavor flavor) {
+        return false;
+    }
+
+    @Override
+    public Object getData(DataFlavor flavor) {
+        return new UnsupportedFlavorException(flavor);
     }
 
 }

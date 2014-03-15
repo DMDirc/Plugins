@@ -48,6 +48,8 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.ServiceManager;
 
+import java.awt.datatransfer.Clipboard;
+
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
@@ -147,13 +149,14 @@ public class DialogModule {
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final Clipboard clipboard) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager,
-                        compFactory, key, parentWindow);
+                        compFactory, key, parentWindow, clipboard);
             }
         };
     }

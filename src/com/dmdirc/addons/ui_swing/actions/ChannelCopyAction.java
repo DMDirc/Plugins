@@ -22,30 +22,34 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 /**
- * channel copy action.
+ * Channel copy action.
  */
 public final class ChannelCopyAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
     /** channel to be copied. */
     private final String channel;
 
     /**
      * Instantiates a new channel copy action.
      *
+     * @param clipboard Clipboard to copy from
      * @param channel channel to be copied
      */
-    public ChannelCopyAction(final String channel) {
+    public ChannelCopyAction(final Clipboard clipboard, final String channel) {
         super("Copy channel");
 
+        this.clipboard = clipboard;
         this.channel = channel;
     }
 
@@ -56,10 +60,7 @@ public final class ChannelCopyAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(channel), null);
-        }
+        clipboard.setContents(new StringSelection(channel), null);
     }
 
 }

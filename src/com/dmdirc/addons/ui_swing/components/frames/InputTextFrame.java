@@ -45,6 +45,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
@@ -91,6 +92,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private final PluginManager pluginManager;
     /** Paste dialog factory. */
     private final PasteDialogFactory pasteDialogFactory;
+    /** Clipboard to use for copying and pasting. */
+    private final Clipboard clipboard;
 
     /**
      * Creates a new instance of InputFrame.
@@ -110,6 +113,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         this.mainFrame = deps.mainFrame;
         this.pluginManager = deps.pluginManager;
         this.pasteDialogFactory = deps.pasteDialog;
+        this.clipboard = deps.clipboard;
 
         initComponents(inputFieldProvider);
 
@@ -180,7 +184,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         inputFieldPopup.add(new CutAction(getInputField().getTextField()));
         inputFieldPopup.add(new CopyAction(getInputField().getTextField()));
-        inputFieldPopup.add(new InputTextFramePasteAction(this));
+        inputFieldPopup.add(new InputTextFramePasteAction(clipboard, this));
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
@@ -195,7 +199,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         UIUtilities.addUndoManager(getInputField().getTextField());
 
         getInputField().getActionMap().put("paste",
-                new InputTextFramePasteAction(this));
+                new InputTextFramePasteAction(clipboard, this));
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
                 "shift INSERT"), "paste");
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
@@ -307,12 +311,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** Checks and pastes text. */
     public void doPaste() {
-        if (Toolkit.getDefaultToolkit().getSystemClipboard() == null) {
-            return;
-        }
         try {
-            if (!Toolkit.getDefaultToolkit().getSystemClipboard().
-                    isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+            if (!clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 return;
             }
         } catch (final IllegalStateException ex) {
