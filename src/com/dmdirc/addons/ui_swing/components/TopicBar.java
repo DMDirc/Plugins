@@ -45,6 +45,7 @@ import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Color;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -91,6 +92,8 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     private final int topicLengthMax;
     /** The config domain to read settings from. */
     private final String domain;
+    /** Clipboard to copy and paste from. */
+    private final Clipboard clipboard;
     /** Empty Attribute set. */
     private SimpleAttributeSet as;
     /** Foreground Colour. */
@@ -109,14 +112,15 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     /**
      * Creates a new instance of {@link TopicBar}.
      *
-     * @param parentWindow    The window that ultimately contains this topic bar.
-     * @param globalConfig    The config provider to read settings from.
-     * @param domain          The domain that settings are stored in.
-     * @param colourManager   The colour manager to use for colour input.
-     * @param pluginManager   The plugin manager to use for plugin information.
-     * @param channel         The channel that this topic bar is for.
-     * @param window          The window this topic bar is for.
-     * @param iconManager     The icon manager to use for this bar's icons.
+     * @param parentWindow  The window that ultimately contains this topic bar.
+     * @param globalConfig  The config provider to read settings from.
+     * @param domain        The domain that settings are stored in.
+     * @param colourManager The colour manager to use for colour input.
+     * @param pluginManager The plugin manager to use for plugin information.
+     * @param clipboard     The clipboard to copy and paste from
+     * @param channel       The channel that this topic bar is for.
+     * @param window        The window this topic bar is for.
+     * @param iconManager   The icon manager to use for this bar's icons.
      */
     public TopicBar(
             final MainFrame parentWindow,
@@ -124,6 +128,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final ColourManager colourManager,
             final PluginManager pluginManager,
+            final Clipboard clipboard,
             @Unbound final Channel channel,
             @Unbound final ChannelFrame window,
             @Unbound final IconManager iconManager) {
@@ -131,6 +136,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         this.domain = domain;
         this.colourManager = colourManager;
         this.window = window;
+        this.clipboard = clipboard;
         topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
         topicLengthMax = channel.getMaxTopicLength();
         updateOptions();
@@ -140,7 +146,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 new NewlinesDocumentFilter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new ReplacePasteAction("(\r\n|\n|\r)", " "));
+                new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton<>("edit",
                 iconManager.getIcon("edit-inactive"),
                 iconManager.getIcon("edit"));

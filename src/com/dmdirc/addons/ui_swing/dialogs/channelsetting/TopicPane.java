@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,11 +39,7 @@ import net.miginfocom.swing.MigLayout;
 /** Topic panel. */
 public class TopicPane extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Parent channel. */
     private final Channel channel;
@@ -50,6 +47,8 @@ public class TopicPane extends JPanel implements ActionListener {
     private final InputWindow channelWindow;
     /** Parent dialog. */
     private final ChannelSettingsDialog parent;
+    /** Clipboard to copy and paste with. */
+    private final Clipboard clipboard;
     /** Topic history panel. */
     private TopicHistoryPane topicHistoryPane;
     /** Topic display pane. */
@@ -63,16 +62,18 @@ public class TopicPane extends JPanel implements ActionListener {
      * @param serviceManager Service manager
      * @param parent         Parent dialog
      * @param channelWindow  Channel window
+     * @param clipboard      Clipboard to copy and paste with
      */
     public TopicPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow) {
+            final InputWindow channelWindow, final Clipboard clipboard) {
         super();
 
         this.setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
         this.channelWindow = channelWindow;
+        this.clipboard = clipboard;
 
         update(iconManager, serviceManager);
     }
@@ -94,7 +95,7 @@ public class TopicPane extends JPanel implements ActionListener {
     private void initTopicsPanel(final IconManager iconManager,
             final ServiceManager serviceManager) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
-                channelWindow);
+                channelWindow, clipboard);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

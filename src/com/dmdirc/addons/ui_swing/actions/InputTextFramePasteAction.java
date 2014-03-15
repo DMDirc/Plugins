@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.actions;
 
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 
@@ -37,17 +37,21 @@ public final class InputTextFramePasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to paste from. */
+    private final Clipboard clipboard;
     /** Text component to be acted upon. */
     private final InputTextFrame inputFrame;
 
     /**
      * Instantiates a new paste action.
      *
+     * @param clipboard Clipboard to paste from
      * @param inputFrame Component to be acted upon
      */
-    public InputTextFramePasteAction(final InputTextFrame inputFrame) {
+    public InputTextFramePasteAction(final Clipboard clipboard, final InputTextFrame inputFrame) {
         super("Paste");
 
+        this.clipboard = clipboard;
         this.inputFrame = inputFrame;
     }
 
@@ -64,12 +68,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
     @Override
     public boolean isEnabled() {
         try {
-            if (Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
-                return Toolkit.getDefaultToolkit().getSystemClipboard().
-                        isDataFlavorAvailable(DataFlavor.stringFlavor);
-            } else {
-                return false;
-            }
+            return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
         } catch (IllegalStateException ex) {
             return false;
         }

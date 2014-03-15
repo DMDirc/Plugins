@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.actions;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
@@ -41,6 +41,8 @@ public final class ReplacePasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to handle pasting. */
+    private final Clipboard clipboard;
     /** Regex to match for replacement. */
     private final String replacementRegex;
     /** Replacement string. */
@@ -49,13 +51,15 @@ public final class ReplacePasteAction extends AbstractAction {
     /**
      * Creates a new instance of regex replacement paste action.
      *
+     * @param clipboard Clipboard to handle pasting
      * @param replacementRegex  Regex to match for replacement
      * @param replacementString Replacement string
      */
-    public ReplacePasteAction(final String replacementRegex,
+    public ReplacePasteAction(final Clipboard clipboard, final String replacementRegex,
             final String replacementString) {
         super("NoSpacesPasteAction");
 
+        this.clipboard = clipboard;
         this.replacementRegex = replacementRegex;
         this.replacementString = replacementString;
     }
@@ -67,12 +71,8 @@ public final class ReplacePasteAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (Toolkit.getDefaultToolkit().getSystemClipboard() == null) {
-            return;
-        }
         if (!(e.getSource() instanceof JTextComponent)
-                || !Toolkit.getDefaultToolkit().getSystemClipboard().
-                isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+                || !clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
             return;
         }
 
@@ -80,8 +80,8 @@ public final class ReplacePasteAction extends AbstractAction {
             //Get clipboard clipboard contents
             //Replace spaces with nothing
             //Replace the current selection with the contents of the clipboard
-            ((JTextComponent) e.getSource()).replaceSelection(((String) Toolkit.getDefaultToolkit()
-                    .getSystemClipboard().getData(DataFlavor.stringFlavor))
+            ((JTextComponent) e.getSource()).replaceSelection(
+                    ((String) clipboard.getData(DataFlavor.stringFlavor))
                     .replaceAll(replacementRegex, replacementString));
         } catch (IOException ex) {
             Logger.userError(ErrorLevel.LOW, "Unable to get clipboard "

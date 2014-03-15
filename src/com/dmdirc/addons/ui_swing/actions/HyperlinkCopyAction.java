@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 
@@ -33,23 +33,23 @@ import javax.swing.AbstractAction;
  */
 public final class HyperlinkCopyAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
     /** hyperlink to be copied. */
     private final String hyperlink;
 
     /**
      * Instantiates a new hyperlink copy action.
      *
+     * @param clipboard Clipboard to copy from
      * @param hyperlink hyperlink to be copied
      */
-    public HyperlinkCopyAction(final String hyperlink) {
+    public HyperlinkCopyAction(final Clipboard clipboard, final String hyperlink) {
         super("Copy hyperlink");
 
+        this.clipboard = clipboard;
         this.hyperlink = hyperlink;
     }
 
@@ -60,10 +60,7 @@ public final class HyperlinkCopyAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(hyperlink), null);
-        }
+        clipboard.setContents(new StringSelection(hyperlink), null);
     }
 
 }
