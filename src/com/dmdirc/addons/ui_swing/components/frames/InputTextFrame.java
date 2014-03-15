@@ -307,6 +307,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     /** Checks and pastes text. */
     public void doPaste() {
+        if (Toolkit.getDefaultToolkit().getSystemClipboard() == null) {
+            return;
+        }
         try {
             if (!Toolkit.getDefaultToolkit().getSystemClipboard().
                     isDataFlavorAvailable(DataFlavor.stringFlavor)) {

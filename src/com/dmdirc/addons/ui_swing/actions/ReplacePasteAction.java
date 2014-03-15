@@ -39,11 +39,7 @@ import javax.swing.text.JTextComponent;
  */
 public final class ReplacePasteAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Regex to match for replacement. */
     private final String replacementRegex;
@@ -71,6 +67,9 @@ public final class ReplacePasteAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
+        if (Toolkit.getDefaultToolkit().getSystemClipboard() == null) {
+            return;
+        }
         if (!(e.getSource() instanceof JTextComponent)
                 || !Toolkit.getDefaultToolkit().getSystemClipboard().
                 isDataFlavorAvailable(DataFlavor.stringFlavor)) {

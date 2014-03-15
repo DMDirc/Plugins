@@ -35,11 +35,7 @@ import javax.swing.AbstractAction;
  */
 public final class InputTextFramePasteAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Text component to be acted upon. */
     private final InputTextFrame inputFrame;
@@ -68,8 +64,12 @@ public final class InputTextFramePasteAction extends AbstractAction {
     @Override
     public boolean isEnabled() {
         try {
-            return Toolkit.getDefaultToolkit().getSystemClipboard().
-                    isDataFlavorAvailable(DataFlavor.stringFlavor);
+            if (Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
+                return Toolkit.getDefaultToolkit().getSystemClipboard().
+                        isDataFlavorAvailable(DataFlavor.stringFlavor);
+            } else {
+                return false;
+            }
         } catch (IllegalStateException ex) {
             return false;
         }

@@ -33,11 +33,7 @@ import javax.swing.AbstractAction;
  */
 public final class ChannelCopyAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** channel to be copied. */
     private final String channel;
@@ -60,8 +56,10 @@ public final class ChannelCopyAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                new StringSelection(channel), null);
+        if (Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                    new StringSelection(channel), null);
+        }
     }
 
 }

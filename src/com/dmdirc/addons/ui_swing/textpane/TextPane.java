@@ -426,10 +426,10 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param copyControlCharacters Should we copy control codes, or strip them?
      */
     public void copy(final boolean copyControlCharacters) {
-        if (getSelectedText() != null && !getSelectedText().isEmpty()) {
+        if (getSelectedText() != null && !getSelectedText().isEmpty()
+                && Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(getSelectedText(
-                                    copyControlCharacters)), null);
+                    new StringSelection(getSelectedText(copyControlCharacters)), null);
         }
     }
 
