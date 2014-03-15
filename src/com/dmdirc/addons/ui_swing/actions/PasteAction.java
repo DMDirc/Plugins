@@ -35,11 +35,7 @@ import javax.swing.text.JTextComponent;
  */
 public final class PasteAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Text component to be acted upon. */
     private final JTextComponent comp;
@@ -67,7 +63,8 @@ public final class PasteAction extends AbstractAction {
 
     @Override
     public boolean isEnabled() {
-        if (comp.isEditable() && comp.isEnabled()) {
+        if (comp.isEditable() && comp.isEnabled() && Toolkit.getDefaultToolkit().
+                getSystemClipboard() != null) {
             final Transferable contents = Toolkit.getDefaultToolkit().
                     getSystemClipboard().getContents(this);
             return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
