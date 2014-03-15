@@ -34,6 +34,7 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Point;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -54,10 +55,13 @@ public class DMDircEventQueue extends EventQueue {
 
     /** Event bus to despatch events to. */
     private final EventBus eventBus;
+    /** Clipboard to copy and paste from. */
+    private final Clipboard clipboard;
 
     @Inject
-    public DMDircEventQueue(final EventBus eventBus) {
+    public DMDircEventQueue(final EventBus eventBus, final Clipboard clipboard) {
         this.eventBus = eventBus;
+        this.clipboard = clipboard;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class DMDircEventQueue extends EventQueue {
         final JPopupMenu menu = new JPopupMenu();
         menu.add(new CutAction(tc));
         menu.add(new CopyAction(tc));
-        menu.add(new PasteAction(tc));
+        menu.add(new PasteAction(clipboard, tc));
 
         final Point pt = SwingUtilities.convertPoint(me.getComponent(),
                 me.getPoint(), tc);

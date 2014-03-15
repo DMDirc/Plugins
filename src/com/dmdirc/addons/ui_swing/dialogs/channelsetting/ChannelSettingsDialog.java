@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -79,6 +80,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final PreferencesManager preferencesManager;
     /** Preferences setting component factory. */
     private final PrefsComponentFactory compFactory;
+    /** Clipboard to copy and paste from. */
+    private final Clipboard clipboard;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -91,6 +94,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param compFactory        Preferences setting component factory
      * @param channel            The channel object that we're editing settings for
      * @param parentWindow       Parent window
+     * @param clipboard          Clipboard to copy and paste from
      */
     public ChannelSettingsDialog(
             final IdentityFactory identityFactory,
@@ -100,7 +104,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final Channel channel,
-            final MainFrame parentWindow) {
+            final MainFrame parentWindow,
+            final Clipboard clipboard) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -108,6 +113,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.preferencesManager = checkNotNull(preferencesManager);
         this.compFactory = checkNotNull(compFactory);
         this.channel = checkNotNull(channel);
+        this.clipboard = clipboard;
 
         this.identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
                 channel.getChannelInfo().getName());
@@ -148,7 +154,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /** Initialises the Topic tab. */
     private void initTopicTab() {
         topicModesPane = new TopicPane(channel, channel.getIconManager(), serviceManager,
-                this, channelWindow);
+                this, channelWindow, clipboard);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 

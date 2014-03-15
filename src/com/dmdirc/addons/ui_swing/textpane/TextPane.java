@@ -38,7 +38,7 @@ import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -85,6 +85,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final BackgroundPainter backgroundPainter;
     /** The domain to read configuration from. */
     private final String configDomain;
+    /** Clipboard to handle copy and paste cations. */
+    private final Clipboard clipboard;
     /** Last seen line. */
     private int lastSeenLine = 0;
     /** Show new line notifications. */
@@ -95,15 +97,17 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      *
      * @param configDomain The domain to read configuration from.
      * @param urlBuilder   The builder to use to construct URLs for resources.
+     * @param clipboard     The clipboard to handle copy and paste actions
      * @param frame        Parent Frame
      */
     public TextPane(
             @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String configDomain,
-            final URLBuilder urlBuilder,
+            final URLBuilder urlBuilder, final Clipboard clipboard,
             @Unbound final TextFrame frame) {
         super();
         this.frame = frame;
         this.configDomain = configDomain;
+        this.clipboard = clipboard;
 
         setUI(new TextPaneUI());
         document = frame.getContainer().getDocument();
@@ -426,10 +430,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param copyControlCharacters Should we copy control codes, or strip them?
      */
     public void copy(final boolean copyControlCharacters) {
-        if (getSelectedText() != null && !getSelectedText().isEmpty()
-                && Toolkit.getDefaultToolkit().getSystemClipboard() != null) {
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(getSelectedText(copyControlCharacters)), null);
+        if (getSelectedText() != null && !getSelectedText().isEmpty()) {
+            clipboard.setContents(new StringSelection(getSelectedText(copyControlCharacters)), null);
         }
     }
 

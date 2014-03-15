@@ -29,6 +29,7 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.NoopClipboard;
 import com.dmdirc.addons.ui_swing.QuitWorker;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingManager;
@@ -66,6 +67,8 @@ import com.dmdirc.util.URLBuilder;
 
 import com.google.common.eventbus.EventBus;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.util.concurrent.Callable;
 
 import javax.inject.Provider;
@@ -109,6 +112,16 @@ public class SwingModule {
     @Provides
     public SwingController getController() {
         return controller;
+    }
+
+    @Provides
+    @Singleton
+    public Clipboard getClipboard() {
+        if (Toolkit.getDefaultToolkit().getSystemClipboard() == null) {
+            return new NoopClipboard();
+        } else {
+            return Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
     }
 
     @Provides

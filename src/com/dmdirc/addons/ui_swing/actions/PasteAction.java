@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -37,17 +37,21 @@ public final class PasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to paste with. */
+    private final Clipboard clipboard;
     /** Text component to be acted upon. */
     private final JTextComponent comp;
 
     /**
      * Instantiates a new paste action.
      *
-     * @param comp Component to be acted upon
+     * @param clipboard Clipboard to paste with
+     * @param comp      Component to be acted upon
      */
-    public PasteAction(final JTextComponent comp) {
+    public PasteAction(final Clipboard clipboard, final JTextComponent comp) {
         super("Paste");
 
+        this.clipboard = clipboard;
         this.comp = comp;
     }
 
@@ -63,10 +67,8 @@ public final class PasteAction extends AbstractAction {
 
     @Override
     public boolean isEnabled() {
-        if (comp.isEditable() && comp.isEnabled() && Toolkit.getDefaultToolkit().
-                getSystemClipboard() != null) {
-            final Transferable contents = Toolkit.getDefaultToolkit().
-                    getSystemClipboard().getContents(this);
+        if (comp.isEditable() && comp.isEnabled()) {
+            final Transferable contents = clipboard.getContents(this);
             return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
         } else {
             return false;

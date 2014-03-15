@@ -66,6 +66,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.google.common.eventbus.EventBus;
 
 import java.awt.Point;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -104,6 +105,8 @@ public abstract class TextFrame extends JPanel implements Window,
     private final PopupManager popupManager;
     /** Bus to despatch events on. */
     private final EventBus eventBus;
+    /** Clipboard to copy and paste from. */
+    private final Clipboard clipboard;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /** DesktopWindowFrame to use for this TextFrame if it is to be popped out of the client. */
@@ -130,6 +133,7 @@ public abstract class TextFrame extends JPanel implements Window,
         this.iconManager = deps.iconManager;
         this.eventBus = deps.eventBus;
         this.commandParser = commandParser;
+        this.clipboard = deps.clipboard;
 
         final AggregateConfigProvider config = owner.getConfigManager();
 
@@ -370,7 +374,7 @@ public abstract class TextFrame extends JPanel implements Window,
         switch (type.getType()) {
             case CHANNEL:
                 popupMenu = getPopupMenu(getChannelPopupType(), arguments);
-                popupMenu.add(new ChannelCopyAction(type.getValue()));
+                popupMenu.add(new ChannelCopyAction(clipboard, type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
                 }
@@ -378,7 +382,7 @@ public abstract class TextFrame extends JPanel implements Window,
                 break;
             case HYPERLINK:
                 popupMenu = getPopupMenu(getHyperlinkPopupType(), arguments);
-                popupMenu.add(new HyperlinkCopyAction(type.getValue()));
+                popupMenu.add(new HyperlinkCopyAction(clipboard, type.getValue()));
                 if (popupMenu.getComponentCount() > 1) {
                     popupMenu.addSeparator();
                 }
@@ -390,7 +394,7 @@ public abstract class TextFrame extends JPanel implements Window,
                     popupMenu.addSeparator();
                 }
 
-                popupMenu.add(new NicknameCopyAction(type.getValue()));
+                popupMenu.add(new NicknameCopyAction(clipboard, type.getValue()));
                 break;
             default:
                 popupMenu = getPopupMenu(null, arguments);
@@ -540,6 +544,7 @@ public abstract class TextFrame extends JPanel implements Window,
         final PluginManager pluginManager;
         final IconManager iconManager;
         final ActiveFrameManager activeFrameManager;
+        final Clipboard clipboard;
 
         @Inject
         public TextFrameDependencies(
@@ -552,7 +557,8 @@ public abstract class TextFrame extends JPanel implements Window,
                 final PluginManager pluginManager,
                 @GlobalConfig final IconManager iconManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,
-                final ActiveFrameManager activeFrameManager) {
+                final ActiveFrameManager activeFrameManager,
+                final Clipboard clipboard) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
@@ -563,6 +569,7 @@ public abstract class TextFrame extends JPanel implements Window,
             this.pluginManager = pluginManager;
             this.iconManager = iconManager;
             this.activeFrameManager = activeFrameManager;
+            this.clipboard = clipboard;
         }
 
     }

@@ -36,6 +36,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 
@@ -63,6 +64,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private final InputWindow channelWindow;
     /** the maximum length allowed for a topic. */
     private final int topicLengthMax;
+    /** Clipboard to copy and paste from. */
+    private final Clipboard clipboard;
     /** label showing the number of characters left in a topic. */
     private JLabel topicLengthLabel;
     /** Topic text entry text area. */
@@ -79,12 +82,12 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * @param serviceManager Service manager
      * @param parent         Parent channel settings dialog
      * @param channelWindow  Channel window
+     * @param clipboard      Clipboard to copy and paste
      */
     public TopicDisplayPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow) {
-        super();
-
+            final InputWindow channelWindow, final Clipboard clipboard) {
+        this.clipboard = clipboard;
         this.channel = channel;
         this.parent = parent;
         topicLengthMax = channel.getConnection().getParser().getMaxTopicLength();
@@ -115,7 +118,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         handler.setTabCompleter(channel.getTabCompleter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new ReplacePasteAction("(\r\n|\n|\r)", " "));
+                new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
                 0), new TopicEnterAction(parent));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
