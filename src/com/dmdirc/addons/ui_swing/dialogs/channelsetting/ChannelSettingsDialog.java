@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
@@ -82,6 +83,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final PrefsComponentFactory compFactory;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
+    /** The controller to use to retrieve command information. */
+    private final CommandController commandController;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -95,6 +98,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param channel            The channel object that we're editing settings for
      * @param parentWindow       Parent window
      * @param clipboard          Clipboard to copy and paste from
+     * @param commandController  The controller to use to retrieve command information.
      */
     public ChannelSettingsDialog(
             final IdentityFactory identityFactory,
@@ -105,7 +109,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final PrefsComponentFactory compFactory,
             final Channel channel,
             final MainFrame parentWindow,
-            final Clipboard clipboard) {
+            final Clipboard clipboard,
+            final CommandController commandController) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -114,6 +119,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.compFactory = checkNotNull(compFactory);
         this.channel = checkNotNull(channel);
         this.clipboard = clipboard;
+        this.commandController = checkNotNull(commandController);
 
         this.identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
                 channel.getChannelInfo().getName());
@@ -153,7 +159,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the Topic tab. */
     private void initTopicTab() {
-        topicModesPane = new TopicPane(channel, channel.getIconManager(), serviceManager,
+        topicModesPane = new TopicPane(channel, channel.getIconManager(),
+                commandController, serviceManager,
                 this, channelWindow, clipboard);
         tabbedPane.addTab("Topic", topicModesPane);
     }

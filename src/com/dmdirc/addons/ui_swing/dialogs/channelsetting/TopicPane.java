@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
@@ -59,12 +60,14 @@ public class TopicPane extends JPanel implements ActionListener {
      *
      * @param channel        Parent channel
      * @param iconManager    Icon manager
+     * @param commandController The controller to use to retrieve command information.
      * @param serviceManager Service manager
      * @param parent         Parent dialog
      * @param channelWindow  Channel window
      * @param clipboard      Clipboard to copy and paste with
      */
     public TopicPane(final Channel channel, final IconManager iconManager,
+            final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard) {
         super();
@@ -75,15 +78,10 @@ public class TopicPane extends JPanel implements ActionListener {
         this.channelWindow = channelWindow;
         this.clipboard = clipboard;
 
-        update(iconManager, serviceManager);
-    }
-
-    /** Updates the panel. */
-    private void update(final IconManager iconManager, final ServiceManager serviceManager) {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel(iconManager, serviceManager);
+        initTopicsPanel(iconManager, serviceManager, commandController);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -91,11 +89,12 @@ public class TopicPane extends JPanel implements ActionListener {
         setVisible(true);
     }
 
-    /** Initialises the topic panel. */
-    private void initTopicsPanel(final IconManager iconManager,
-            final ServiceManager serviceManager) {
+    private void initTopicsPanel(
+            final IconManager iconManager,
+            final ServiceManager serviceManager,
+            final CommandController commandController) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
-                channelWindow, clipboard);
+                channelWindow, clipboard, commandController);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

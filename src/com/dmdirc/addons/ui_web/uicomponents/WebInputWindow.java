@@ -50,9 +50,11 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         this.commandparser = parent.getCommandParser();
         this.controller = controller;
         this.inputHandler = new WebInputHandler(controller.getPluginManager(),
-                new WebInputField(), commandparser, getContainer());
+                new WebInputField(), controller.getCommandController(),
+                commandparser, getContainer(), controller.getEventBus());
     }
 
+    @Override
     public WritableFrameContainer getContainer() {
         return container;
     }
@@ -66,7 +68,8 @@ public class WebInputWindow extends WebWindow implements InputWindow {
         if (!inputHandlers.containsKey(client)) {
             final WebInputHandler ih = new WebInputHandler(
                     controller.getPluginManager(), new WebInputField(client),
-                    commandparser, getContainer());
+                    controller.getCommandController(),
+                    commandparser, getContainer(), controller.getEventBus());
             ih.setTabCompleter(inputHandler.getTabCompleter());
             inputHandlers.put(client, ih);
         }
