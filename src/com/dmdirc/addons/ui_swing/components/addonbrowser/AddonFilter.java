@@ -79,12 +79,9 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
                 || (!unverifiedBox.isSelected() && !info.isVerified())
                 || (!installedBox.isSelected() && info.isInstalled())
                 || (!notinstalledBox.isSelected() && !info.isInstalled())
-                || (!pluginsBox.isSelected() && info.getType()
-                == AddonType.TYPE_PLUGIN)
-                || (!themesBox.isSelected() && info.getType()
-                == AddonType.TYPE_THEME)
-                || (!actionsBox.isSelected() && info.getType()
-                == AddonType.TYPE_ACTION_PACK)
+                || (!pluginsBox.isSelected() && info.getType() == AddonType.TYPE_PLUGIN)
+                || (!themesBox.isSelected() && info.getType() == AddonType.TYPE_THEME)
+                || (!actionsBox.isSelected() && info.getType() == AddonType.TYPE_ACTION_PACK)
                 || (!searchBox.getText().isEmpty()
                 && !info.matches(searchBox.getText())));
     }
