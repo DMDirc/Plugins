@@ -43,11 +43,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ParamModePanel extends JPanel implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The checkbox used in this mode panel. */
     private final JCheckBox checkBox;

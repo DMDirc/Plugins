@@ -44,11 +44,7 @@ import net.miginfocom.swing.MigLayout;
 public class NickColourInputDialog extends StandardDialog
         implements ActionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Whether or not this is a new entry (as opposed to editing an old one). */
     private boolean isnew;

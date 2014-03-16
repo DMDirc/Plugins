@@ -46,11 +46,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ThemePanel extends AddonPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Manager to retrieve themes from. */
     private final ThemeManager themeManager;

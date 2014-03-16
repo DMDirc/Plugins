@@ -33,11 +33,7 @@ import javax.swing.border.EtchedBorder;
  */
 class SidelessEtchedBorder extends EtchedBorder {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Side to not paint. */
     private final Side side;
@@ -49,7 +45,7 @@ class SidelessEtchedBorder extends EtchedBorder {
 
         /** Top border. */
         TOP,
-        /** Right hand bortder. */
+        /** Right hand border. */
         RIGHT,
         /** Bottom border. */
         BOTTOM,

@@ -51,11 +51,7 @@ import net.miginfocom.swing.MigLayout;
 public class MDIBar extends JPanel implements SwingWindowListener,
         SelectionListener, ActionListener, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = -8028057596226636245L;
     /** Icon size for the close button. */
     private static final int ICON_SIZE = 12;

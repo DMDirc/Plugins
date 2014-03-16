@@ -40,11 +40,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class CreditsPanel extends JPanel implements HyperlinkListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** HTML label we're using. */
     private TextLabel about;

@@ -35,11 +35,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public final class AliasTableModel extends AbstractTableModel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 3;
     /** Data list. */
     private List<Alias> aliases;

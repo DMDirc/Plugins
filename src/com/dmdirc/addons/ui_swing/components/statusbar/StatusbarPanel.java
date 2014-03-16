@@ -49,11 +49,7 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
 
     /** The label we use to show information. */
     protected final T label;
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** The popup window we're using to show extra info. */
     private StatusbarPopupWindow dialog;
