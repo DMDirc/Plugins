@@ -60,11 +60,7 @@ import net.miginfocom.swing.MigLayout;
 public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Factory to use to create editor dialogs. */
     private final ActionEditorDialogFactory editorDialogFactory;
@@ -142,11 +138,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
         scrollPane = new JScrollPane();
         model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.getActions());
         table = new PackingTable(model, scrollPane, false) {
-            /**
-             * A version number for this class. It should be changed whenever the class structure is
-             * changed (or anything else that would prevent serialized objects being unserialized
-             * with the new class).
-             */
+            /** A version number for this class. */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
             private final ActionTypeTableCellRenderer typeRenderer

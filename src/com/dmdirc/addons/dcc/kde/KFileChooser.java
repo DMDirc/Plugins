@@ -49,11 +49,7 @@ import javax.swing.JFileChooser;
  */
 public class KFileChooser extends JFileChooser {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 200806141;
     /** The plugin that this file chooser is for. */
     private final DCCManager plugin;

@@ -38,11 +38,7 @@ import javax.swing.JPanel;
  */
 public class InvitePopup extends StatusbarPopupWindow {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The connection to show invites for. */
     private final Connection connection;

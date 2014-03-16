@@ -39,11 +39,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class AboutPanel extends JPanel implements HyperlinkListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The URL Handler to use to handle clicked links. */
     private final URLHandler urlHandler;

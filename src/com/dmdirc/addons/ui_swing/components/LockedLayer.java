@@ -74,11 +74,7 @@ import org.jdesktop.jxlayer.plaf.effect.LayerEffect;
  */
 public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T> {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Are we locked. */
     private boolean locked;

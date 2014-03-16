@@ -33,11 +33,7 @@ import javax.swing.AbstractAction;
  */
 public class PreviousFrameAction extends AbstractAction {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Tree scroller used to go up and down the frame manager. */
     private final TreeScroller manager;

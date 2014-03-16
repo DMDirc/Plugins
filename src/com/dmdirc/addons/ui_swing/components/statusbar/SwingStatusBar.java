@@ -43,11 +43,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 /** Status bar, shows message and info on the GUI. */
 public class SwingStatusBar extends JPanel implements StatusBar {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** Mig layout component restraints. */
     private final String componentConstraints;

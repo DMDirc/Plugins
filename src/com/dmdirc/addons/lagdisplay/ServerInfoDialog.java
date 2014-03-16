@@ -43,11 +43,7 @@ import javax.swing.JSeparator;
 @Factory(inject = true, singleton = true)
 public class ServerInfoDialog extends StatusbarPopupWindow {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 3;
     /** The lag display manager. */
     protected final LagDisplayManager manager;

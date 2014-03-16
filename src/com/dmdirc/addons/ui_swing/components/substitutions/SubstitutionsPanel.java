@@ -42,11 +42,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public abstract class SubstitutionsPanel<T> extends JPanel {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Substitions list. */
     protected List<SubstitutionLabel> substitutions;

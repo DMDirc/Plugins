@@ -32,11 +32,7 @@ import javax.swing.border.EtchedBorder;
  */
 public class EtchedLineBorder extends EtchedBorder {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Border side. */
     private final BorderSide side;

@@ -65,11 +65,7 @@ import org.jdesktop.jxlayer.JXLayer;
 public final class TextPane extends JComponent implements MouseWheelListener,
         AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** Scrollbar model. */
     private final BoundedRangeModel scrollModel;

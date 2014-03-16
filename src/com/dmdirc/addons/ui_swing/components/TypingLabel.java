@@ -37,11 +37,7 @@ import javax.swing.JLabel;
 public class TypingLabel extends JLabel implements ConfigChangeListener,
         FrameComponentChangeListener, FrameCloseListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** typingindicator string for compiler optimisation. */
     private static final String CONFIG_KEY = "typingindicator";

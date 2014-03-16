@@ -44,11 +44,7 @@ import net.miginfocom.swing.MigLayout;
 public class Info extends JPanel implements HyperlinkListener,
         ServerListListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Info pane. */
     private final TextLabel infoLabel;

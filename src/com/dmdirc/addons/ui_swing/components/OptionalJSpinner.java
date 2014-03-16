@@ -43,11 +43,7 @@ import net.miginfocom.swing.MigLayout;
 public class OptionalJSpinner extends JPanel implements ActionListener,
         ChangeListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = -2867331420063503447L;
     /** Composite spinner. */
     private final JSpinner spinner;

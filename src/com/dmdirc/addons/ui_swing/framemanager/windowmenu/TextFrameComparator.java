@@ -34,11 +34,7 @@ import java.util.Comparator;
 public class TextFrameComparator implements Comparator<TextFrame>,
         Serializable {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Comparator to proxy compares to. */
     private final FrameContainerComparator comparator = new FrameContainerComparator();

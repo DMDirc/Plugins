@@ -57,11 +57,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         StatusBarComponent, InviteListener, ActionListener,
         java.awt.event.ActionListener, SelectionListener {
 
-    /**
-     * A version number for this class. It should be changed whenever the class structure is changed
-     * (or anything else that would prevent serialized objects being unserialized with the new
-     * class).
-     */
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Invite popup menu. */
     private final JPopupMenu menu;
