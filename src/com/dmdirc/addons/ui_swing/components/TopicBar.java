@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -109,14 +110,15 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     /**
      * Creates a new instance of {@link TopicBar}.
      *
-     * @param parentWindow    The window that ultimately contains this topic bar.
-     * @param globalConfig    The config provider to read settings from.
-     * @param domain          The domain that settings are stored in.
-     * @param colourManager   The colour manager to use for colour input.
-     * @param pluginManager   The plugin manager to use for plugin information.
-     * @param channel         The channel that this topic bar is for.
-     * @param window          The window this topic bar is for.
-     * @param iconManager     The icon manager to use for this bar's icons.
+     * @param parentWindow      The window that ultimately contains this topic bar.
+     * @param globalConfig      The config provider to read settings from.
+     * @param domain            The domain that settings are stored in.
+     * @param colourManager     The colour manager to use for colour input.
+     * @param pluginManager     The plugin manager to use for plugin information.
+     * @param commandController The controller to use for command information.
+     * @param channel           The channel that this topic bar is for.
+     * @param window            The window this topic bar is for.
+     * @param iconManager       The icon manager to use for this bar's icons.
      */
     public TopicBar(
             final MainFrame parentWindow,
@@ -124,6 +126,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final ColourManager colourManager,
             final PluginManager pluginManager,
+            final CommandController commandController,
             @Unbound final Channel channel,
             @Unbound final ChannelFrame window,
             @Unbound final IconManager iconManager) {
@@ -149,7 +152,8 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 iconManager.getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(
-                pluginManager, topicText, channel.getCommandParser(), channel);
+                pluginManager, topicText, commandController, channel.getCommandParser(),
+                channel, channel.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 
