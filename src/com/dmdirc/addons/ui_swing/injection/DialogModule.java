@@ -43,6 +43,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -150,13 +151,14 @@ public class DialogModule {
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final MainFrame parentWindow,
-            final Clipboard clipboard) {
+            final Clipboard clipboard,
+            final CommandController commandController) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager,
-                        compFactory, key, parentWindow, clipboard);
+                        compFactory, key, parentWindow, clipboard, commandController);
             }
         };
     }

@@ -24,12 +24,15 @@ package com.dmdirc.addons.ui_web;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
+
+import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -52,12 +55,18 @@ public class WebInterfaceUI implements UIController {
     private final DynamicRequestHandler handler;
     /** The plugin manager used to find other plugins. */
     private final PluginManager pluginManager;
+    /** The controller to use to retrieve command information. */
+    private final CommandController commandController;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
      *
      * @param domain               The domain to retrieve config settings from
      * @param identityController   The controller to read/write settings with.
+     * @param commandController    The controller to use to retrieve command information.
+     * @param eventBus             The bus to despatch events on.
      * @param serverManager        The manager to use to find and create servers
      * @param pluginManager        The manager to use to find other plugins
      * @param coreWindowManager    Window management
@@ -68,6 +77,8 @@ public class WebInterfaceUI implements UIController {
     public WebInterfaceUI(
             @PluginDomain(WebInterfacePlugin.class) final String domain,
             final IdentityController identityController,
+            final CommandController commandController,
+            final EventBus eventBus,
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final WindowManager coreWindowManager,
@@ -76,6 +87,8 @@ public class WebInterfaceUI implements UIController {
         super();
 
         this.pluginManager = pluginManager;
+        this.commandController = commandController;
+        this.eventBus = eventBus;
 
         final SecurityHandler sh = new SecurityHandler();
         final Constraint constraint = new Constraint();
@@ -122,6 +135,14 @@ public class WebInterfaceUI implements UIController {
 
     public PluginManager getPluginManager() {
         return pluginManager;
+    }
+
+    public CommandController getCommandController() {
+        return commandController;
+    }
+
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     /**

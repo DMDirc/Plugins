@@ -29,11 +29,14 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -78,21 +81,29 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     private final PluginManager pluginManager;
     /** Config to read settings from. */
     private final AggregateConfigProvider config;
+    /** The controller to use to retrieve command information. */
+    private final CommandController commandController;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of PreferencesDialog.
      *
-     * @param iconManager   Icon manager to retrieve icons with
-     * @param config        Config to read settings from
-     * @param pluginManager to retrieve tab completers with
-     * @param newParent     The frame that owns this dialog
-     * @param text          text to show in the paste dialog
-     * @param parentWindow  Parent window
+     * @param iconManager       Icon manager to retrieve icons with
+     * @param config            Config to read settings from
+     * @param pluginManager     to retrieve tab completers with
+     * @param commandController The controller to use to retrieve command information.
+     * @param eventBus          The bus to despatch events on.
+     * @param newParent         The frame that owns this dialog
+     * @param text              text to show in the paste dialog
+     * @param parentWindow      Parent window
      */
     public PasteDialog(
             @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider config,
             final PluginManager pluginManager,
+            final CommandController commandController,
+            final EventBus eventBus,
             @Unbound final InputTextFrame newParent,
             @Unbound final String text,
             @Unbound final Window parentWindow) {
@@ -103,6 +114,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         this.iconManager = iconManager;
         this.config = config;
         this.pluginManager = pluginManager;
+        this.commandController = commandController;
+        this.eventBus = eventBus;
 
         initComponents(text);
         initListeners();
@@ -142,8 +155,9 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         textField.setColumns(50);
         textField.setRows(10);
 
-        new SwingInputHandler(pluginManager, textField, parent.getContainer().getCommandParser(),
-                parent.getContainer()).setTypes(false, false, true, false);
+        new SwingInputHandler(pluginManager, textField, commandController,
+                parent.getContainer().getCommandParser(),
+                parent.getContainer(), eventBus).setTypes(false, false, true, false);
 
         scrollPane.setViewportView(textField);
         scrollPane.setVisible(false);

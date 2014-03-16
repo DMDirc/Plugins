@@ -55,6 +55,7 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -545,6 +546,7 @@ public abstract class TextFrame extends JPanel implements Window,
         final IconManager iconManager;
         final ActiveFrameManager activeFrameManager;
         final Clipboard clipboard;
+        final CommandController commandController;
 
         @Inject
         public TextFrameDependencies(
@@ -558,7 +560,8 @@ public abstract class TextFrame extends JPanel implements Window,
                 @GlobalConfig final IconManager iconManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,
                 final ActiveFrameManager activeFrameManager,
-                final Clipboard clipboard) {
+                final Clipboard clipboard,
+                final CommandController commandController) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainFrame = mainFrame;
@@ -570,6 +573,7 @@ public abstract class TextFrame extends JPanel implements Window,
             this.iconManager = iconManager;
             this.activeFrameManager = activeFrameManager;
             this.clipboard = clipboard;
+            this.commandController = commandController;
         }
 
     }

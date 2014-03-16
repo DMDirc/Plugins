@@ -24,10 +24,13 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
+
+import com.google.common.eventbus.EventBus;
 
 /**
  * An input handler for the web ui.
@@ -36,10 +39,12 @@ public class WebInputHandler extends InputHandler {
 
     public WebInputHandler(
             final ServiceManager serviceManager,
-            final InputField thisTarget,
-            final CommandParser thisCommandParser,
-            final WritableFrameContainer thisParentWindow) {
-        super(serviceManager, thisTarget, thisCommandParser, thisParentWindow);
+            final InputField target,
+            final CommandController commandController,
+            final CommandParser commandParser,
+            final WritableFrameContainer parentWindow,
+            final EventBus eventBus) {
+        super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
     }
 
     public InputField getTarget() {
