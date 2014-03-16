@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
@@ -41,6 +42,8 @@ import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.messages.ColourManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -91,6 +94,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private final PluginManager pluginManager;
     /** Paste dialog factory. */
     private final PasteDialogFactory pasteDialogFactory;
+    /** The controller to use to retrieve command information. */
+    private final CommandController commandController;
+    /** The bus to despatch input events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of InputFrame.
@@ -110,6 +117,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         this.mainFrame = deps.mainFrame;
         this.pluginManager = deps.pluginManager;
         this.pasteDialogFactory = deps.pasteDialog;
+        this.commandController = deps.commandController;
+        this.eventBus = deps.eventBus;
 
         initComponents(inputFieldProvider);
 
@@ -152,8 +161,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      */
     private void initComponents(final Provider<SwingInputField> inputFieldProvider) {
         inputField = inputFieldProvider.get();
-        inputHandler = new SwingInputHandler(pluginManager, inputField,
-                getContainer().getCommandParser(), getContainer());
+        inputHandler = new SwingInputHandler(pluginManager, inputField, commandController,
+                getContainer().getCommandParser(), getContainer(), eventBus);
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
                 getTabCompleter());

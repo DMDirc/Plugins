@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.actions.TopicEnterAction;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
@@ -74,15 +75,20 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * Creates a new topic display panel. This panel shows an editable version of the current topic
      * along with relating meta data and validates the length of the new input.
      *
-     * @param channel        Associated channel
-     * @param iconManager    Icon manager
-     * @param serviceManager Service manager
-     * @param parent         Parent channel settings dialog
-     * @param channelWindow  Channel window
+     * @param channel           Associated channel
+     * @param iconManager       Icon manager
+     * @param serviceManager    Service manager
+     * @param parent            Parent channel settings dialog
+     * @param channelWindow     Channel window
+     * @param commandController The controller to use to retrieve command information.
      */
-    public TopicDisplayPane(final Channel channel, final IconManager iconManager,
-            final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow) {
+    public TopicDisplayPane(
+            final Channel channel,
+            final IconManager iconManager,
+            final ServiceManager serviceManager,
+            final ChannelSettingsDialog parent,
+            final InputWindow channelWindow,
+            final CommandController commandController) {
         super();
 
         this.channel = channel;
@@ -90,16 +96,18 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicLengthMax = channel.getConnection().getParser().getMaxTopicLength();
         this.channelWindow = channelWindow;
 
-        initComponents(iconManager, channel.getConfigManager(), serviceManager);
+        initComponents(iconManager, channel.getConfigManager(), serviceManager, commandController);
         addListeners();
         layoutComponents();
 
         setTopic(channel.getCurrentTopic());
     }
 
-    /** Initialises the components. */
-    private void initComponents(final IconManager iconManager,
-            final AggregateConfigProvider config, final ServiceManager serviceManager) {
+    private void initComponents(
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
+            final ServiceManager serviceManager,
+            final CommandController commandController) {
         topicLengthLabel = new JLabel();
         topicText = new TextAreaInputField(iconManager, config, 100, 4);
         topicWho = new TextLabel();
@@ -110,7 +118,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setRows(5);
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
-                channel.getCommandParser(), channelWindow.getContainer());
+                commandController, channel.getCommandParser(), channelWindow.getContainer(),
+                channel.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

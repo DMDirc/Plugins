@@ -27,11 +27,14 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -51,17 +54,21 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
     /**
      * Creates a new instance of InputHandler. Adds listeners to the target that we need to operate.
      *
-     * @param serviceManager Manager to use to look up tab completion services.
-     * @param target         The text field this input handler is dealing with.
-     * @param commandParser  The command parser to use for this text field.
-     * @param parentWindow   The window that owns this input handler
+     * @param serviceManager    Manager to use to look up tab completion services.
+     * @param target            The text field this input handler is dealing with.
+     * @param commandController The controller to use to retrieve command information.
+     * @param commandParser     The command parser to use for this text field.
+     * @param parentWindow      The window that owns this input handler
+     * @param eventBus          The event bus to use to despatch input events.
      */
     public SwingInputHandler(
             final ServiceManager serviceManager,
             final InputField target,
+            final CommandController commandController,
             final CommandParser commandParser,
-            final WritableFrameContainer parentWindow) {
-        super(serviceManager, target, commandParser, parentWindow);
+            final WritableFrameContainer parentWindow,
+            final EventBus eventBus) {
+        super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
     }
 
     @Override
