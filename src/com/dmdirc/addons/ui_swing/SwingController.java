@@ -101,7 +101,9 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
     @Override
     public void onUnload() {
-        swingManager.unload();
+        if (swingManager != null) {
+            swingManager.unload();
+        }
 
         super.onUnload();
     }
