@@ -228,6 +228,12 @@ public class ProfileManagerDialogLinker {
                 editNickname.setEnabled(model.isManipulateNicknameAllowed());
             }
         });
+        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                editNickname.setEnabled(model.isManipulateNicknameAllowed());
+            }
+        });
         editNickname.setEnabled(model.isManipulateNicknameAllowed());
     }
 
@@ -257,6 +263,12 @@ public class ProfileManagerDialogLinker {
             }
         });
         model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
+            }
+        });
+        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
