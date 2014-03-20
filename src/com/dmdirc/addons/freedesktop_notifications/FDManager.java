@@ -34,13 +34,13 @@ import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 
+import com.google.common.base.Strings;
+import com.google.common.html.HtmlEscapers;
+
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.apache.commons.lang.StringEscapeUtils;
 
 @Singleton
 public class FDManager implements ConfigChangeListener {
@@ -59,8 +59,6 @@ public class FDManager implements ConfigChangeListener {
     private String icon;
     /** Escape HTML. */
     private boolean escapehtml;
-    /** Strict escape. */
-    private boolean strictescape;
     /** Strip codes. */
     private boolean stripcodes;
 
@@ -89,28 +87,23 @@ public class FDManager implements ConfigChangeListener {
             return false;
         }
 
-        final ArrayList<String> args = new ArrayList<>();
-
-        args.add("/usr/bin/env");
-        args.add("python");
-        args.add(filesHelper.getFilesDirString() + "notify.py");
-        args.add("-a");
-        args.add("DMDirc");
-        args.add("-i");
-        args.add(icon);
-        args.add("-t");
-        args.add(Integer.toString(timeout * 1000));
-        args.add("-s");
-
-        if (title != null && !title.isEmpty()) {
-            args.add(prepareString(title));
-        } else {
-            args.add("Notification from DMDirc");
-        }
-        args.add(prepareString(message));
+        final String[] args = {
+            "/usr/bin/env",
+            "python",
+            filesHelper.getFilesDirString() + "notify.py",
+            "-a",
+            "DMDirc",
+            "-i",
+            icon,
+            "-t",
+            Integer.toString(timeout * 1000),
+            "-s",
+            Strings.isNullOrEmpty(title) ? "Notification from DMDirc" : prepareString(title),
+            prepareString(message)
+        };
 
         try {
-            final Process myProcess = Runtime.getRuntime().exec(args.toArray(new String[]{}));
+            final Process myProcess = Runtime.getRuntime().exec(args);
             final StringBuffer data = new StringBuffer();
             new StreamReader(myProcess.getErrorStream()).start();
             new StreamReader(myProcess.getInputStream(), data).start();
@@ -138,15 +131,8 @@ public class FDManager implements ConfigChangeListener {
             output = Styliser.stipControlCodes(output);
         }
         if (escapehtml) {
-            if (strictescape) {
-                output = StringEscapeUtils.escapeHtml(output);
-            } else {
-                output = output.replace("&", "&amp;");
-                output = output.replace("<", "&lt;");
-                output = output.replace(">", "&gt;");
-            }
+            output = HtmlEscapers.htmlEscaper().escape(output);
         }
-
         return output;
     }
 
@@ -154,7 +140,6 @@ public class FDManager implements ConfigChangeListener {
         timeout = config.getOptionInt(domain, "general.timeout");
         icon = config.getOption(domain, "general.icon");
         escapehtml = config.getOptionBool(domain, "advanced.escapehtml");
-        strictescape = config.getOptionBool(domain, "advanced.strictescape");
         stripcodes = config.getOptionBool(domain, "advanced.stripcodes");
     }
 
