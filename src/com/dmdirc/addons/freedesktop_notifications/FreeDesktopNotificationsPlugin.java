@@ -105,10 +105,6 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin {
                 "Some Implementations randomly parse HTML, escape it before showing?",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.strictescape", "Strict Escape HTML",
-                "Strictly escape HTML or just the basic characters? (&, < and >)",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 pluginInfo.getDomain(), "advanced.stripcodes", "Strip Control Codes",
                 "Strip IRC Control codes from messages?",
                 manager.getConfigManager(), manager.getIdentity()));
