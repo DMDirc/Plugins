@@ -45,6 +45,8 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
+import com.google.common.base.Optional;
+
 import java.awt.Color;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -113,16 +115,16 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     /**
      * Creates a new instance of {@link TopicBar}.
      *
-     * @param parentWindow  The window that ultimately contains this topic bar.
-     * @param globalConfig  The config provider to read settings from.
-     * @param domain        The domain that settings are stored in.
-     * @param colourManager The colour manager to use for colour input.
-     * @param pluginManager The plugin manager to use for plugin information.
-     * @param clipboard     The clipboard to copy and paste from
+     * @param parentWindow      The window that ultimately contains this topic bar.
+     * @param globalConfig      The config provider to read settings from.
+     * @param domain            The domain that settings are stored in.
+     * @param colourManager     The colour manager to use for colour input.
+     * @param pluginManager     The plugin manager to use for plugin information.
+     * @param clipboard         The clipboard to copy and paste from
      * @param commandController The controller to use for command information.
-     * @param channel       The channel that this topic bar is for.
-     * @param window        The window this topic bar is for.
-     * @param iconManager   The icon manager to use for this bar's icons.
+     * @param channel           The channel that this topic bar is for.
+     * @param window            The window this topic bar is for.
+     * @param iconManager       The icon manager to use for this bar's icons.
      */
     public TopicBar(
             final MainFrame parentWindow,
@@ -217,7 +219,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         topicText.setEditable(false);
         topicCancel.setVisible(false);
         setColours();
-        topicChanged(channel, channel.getCurrentTopic());
+        validateTopic();
+
+        final Optional<Topic> topic = channel.getCurrentTopic();
+        if (topic.isPresent()) {
+            topicChanged(channel, topic.get());
+        }
     }
 
     @Override
@@ -230,14 +237,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                     return;
                 }
                 topicText.setText("");
-                if (channel.getCurrentTopic() != null) {
-                    channel.getStyliser().addStyledString(
-                            (StyledDocument) topicText.getDocument(),
-                            new String[]{Styliser.CODE_HEXCOLOUR
-                                + UIUtilities.getHex(foregroundColour)
-                                + channel.getCurrentTopic().getTopic(),},
-                            as);
-                }
+                channel.getStyliser().addStyledString(
+                        (StyledDocument) topicText.getDocument(),
+                        new String[]{Styliser.CODE_HEXCOLOUR
+                            + UIUtilities.getHex(foregroundColour)
+                            + topic.getTopic(),},
+                        as);
                 topicText.setCaretPosition(0);
                 validateTopic();
                 setVisible(false);
@@ -279,18 +284,18 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * Commits a topic edit to the parent channel.
      */
     private void commitTopicEdit() {
-        if ((channel.getCurrentTopic() == null
-                && !topicText.getText().isEmpty())
-                || (channel.getCurrentTopic() != null
-                && !channel.getCurrentTopic().getTopic()
-                .equals(topicText.getText()))) {
+        final Optional<Topic> oldTopic = channel.getCurrentTopic();
+        if ((!oldTopic.isPresent() && !topicText.getText().isEmpty())
+                || (oldTopic.isPresent() && !oldTopic.get().getTopic().equals(topicText.getText()))) {
             channel.setTopic(topicText.getText());
         }
+
+        final Optional<Topic> newTopic = channel.getCurrentTopic();
         window.getInputField().requestFocusInWindow();
-        if (channel.getCurrentTopic() == null) {
-            topicText.setText("");
+        if (newTopic.isPresent()) {
+            topicText.setText(newTopic.get().getTopic());
         } else {
-            topicText.setText(channel.getCurrentTopic().getTopic());
+            topicText.setText("");
         }
         topicText.setFocusable(false);
         topicText.setEditable(false);
@@ -303,8 +308,9 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     private void setupTopicEdit() {
         topicText.setVisible(false);
         topicText.setText("");
-        if (channel.getCurrentTopic() != null) {
-            topicText.setText(channel.getCurrentTopic().getTopic());
+        final Optional<Topic> topic = channel.getCurrentTopic();
+        if (topic.isPresent()) {
+            topicText.setText(topic.get().getTopic());
         }
         applyAttributes();
         topicText.setCaretPosition(0);

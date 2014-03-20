@@ -29,6 +29,8 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.base.Optional;
+
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,13 +60,13 @@ public class TopicPane extends JPanel implements ActionListener {
     /**
      * Creates a new instance of TopicModesPane.
      *
-     * @param channel        Parent channel
-     * @param iconManager    Icon manager
+     * @param channel           Parent channel
+     * @param iconManager       Icon manager
      * @param commandController The controller to use to retrieve command information.
-     * @param serviceManager Service manager
-     * @param parent         Parent dialog
-     * @param channelWindow  Channel window
-     * @param clipboard      Clipboard to copy and paste with
+     * @param serviceManager    Service manager
+     * @param parent            Parent dialog
+     * @param channelWindow     Channel window
+     * @param clipboard         Clipboard to copy and paste with
      */
     public TopicPane(final Channel channel, final IconManager iconManager,
             final CommandController commandController,
@@ -122,7 +124,7 @@ public class TopicPane extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e != null && e.getSource() == topicHistoryPane) {
-            topicDisplayPane.setTopic(topicHistoryPane.getSelectedTopic());
+            topicDisplayPane.setTopic(Optional.of(topicHistoryPane.getSelectedTopic()));
         }
     }
 

@@ -36,6 +36,8 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.base.Optional;
+
 import java.awt.Color;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
@@ -78,12 +80,12 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * Creates a new topic display panel. This panel shows an editable version of the current topic
      * along with relating meta data and validates the length of the new input.
      *
-     * @param channel        Associated channel
-     * @param iconManager    Icon manager
-     * @param serviceManager Service manager
-     * @param parent         Parent channel settings dialog
-     * @param channelWindow  Channel window
-     * @param clipboard      Clipboard to copy and paste
+     * @param channel           Associated channel
+     * @param iconManager       Icon manager
+     * @param serviceManager    Service manager
+     * @param parent            Parent channel settings dialog
+     * @param channelWindow     Channel window
+     * @param clipboard         Clipboard to copy and paste
      * @param commandController The controller to use to retrieve command information.
      */
     public TopicDisplayPane(final Channel channel, final IconManager iconManager,
@@ -150,15 +152,15 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     /**
      * Sets the topic for this display panel.
      *
-     * @param topic New topic or null
+     * @param topic New topic
      */
-    public void setTopic(final Topic topic) {
-        if (topic == null) {
-            topicWho.setText("No topic set.");
+    public void setTopic(final Optional<Topic> topic) {
+        if (topic.isPresent()) {
+            topicWho.setText("Topic set by " + topic.get().getClient()
+                    + "<br> on " + new Date(1000 * topic.get().getTime()));
+            topicText.setText(topic.get().getTopic());
         } else {
-            topicWho.setText("Topic set by " + topic.getClient()
-                    + "<br> on " + new Date(1000 * topic.getTime()));
-            topicText.setText(topic.getTopic());
+            topicWho.setText("No topic set.");
         }
     }
 
