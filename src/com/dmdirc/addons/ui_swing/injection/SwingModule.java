@@ -192,9 +192,10 @@ public class SwingModule {
             @GlobalConfig final AggregateConfigProvider configManager,
             @UserConfig final ConfigProvider identity,
             final ActionManager actionManager,
-            final PluginManager pluginManager) {
+            final PluginManager pluginManager,
+            final EventBus eventBus) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
-                configManager, identity, actionManager, pluginManager);
+                configManager, identity, pluginManager, eventBus);
     }
 
     @Provides
