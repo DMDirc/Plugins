@@ -130,13 +130,15 @@ public class DialogModule {
     @Provides
     @Singleton
     public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider(
+            final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final MainFrame parentWindow) {
         return new KeyedDialogProvider<Server, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Server key) {
-                return new ServerSettingsDialog(compFactory, performWrapper, key, parentWindow);
+                return new ServerSettingsDialog(preferencesManager, compFactory, performWrapper,
+                        key, parentWindow);
             }
         };
     }

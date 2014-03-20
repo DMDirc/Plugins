@@ -64,26 +64,30 @@ public class Settings extends JPanel implements ServerListListener {
     private final PrefsComponentFactory componentFactory;
     /** Factory to use to produce identities. */
     private final IdentityFactory identityFactory;
+    /** Preferences Manager to retrieve settings from. */
+    private final PreferencesManager preferencesManager;
 
     /**
      * Instantiates a new settings panel.
      *
-     * @param model            Backing model
-     * @param iconManager      Manager to use to retrieve icons.
-     * @param componentFactory Factory to use to produce preference components.
-     * @param identityFactory  Factory to use to produce identities.
+     * @param model              Backing model
+     * @param iconManager        Manager to use to retrieve icons.
+     * @param componentFactory   Factory to use to produce preference components.
+     * @param identityFactory    Factory to use to produce identities.
+     * @param preferencesManager Preferences Manager to retrieve settings from.
      */
     @Inject
     public Settings(
             final ServerListModel model,
             @GlobalConfig final IconManager iconManager,
             final PrefsComponentFactory componentFactory,
-            final IdentityFactory identityFactory) {
-        super();
+            final IdentityFactory identityFactory,
+            final PreferencesManager preferencesManager) {
         this.model = model;
         this.iconManager = iconManager;
         this.componentFactory = componentFactory;
         this.identityFactory = identityFactory;
+        this.preferencesManager = preferencesManager;
         addListeners();
         border = UIManager.getBorder("TitledBorder.border");
         setBorder(BorderFactory.createTitledBorder(border, "Network Settings"));
@@ -167,8 +171,7 @@ public class Settings extends JPanel implements ServerListListener {
      */
     private void addSettings(final SettingsPanel settingsPanel,
             final AggregateConfigProvider manager, final ConfigProvider identity) {
-        settingsPanel.addOption(PreferencesManager.getPreferencesManager()
-                .getServerSettings(manager, identity));
+        settingsPanel.addOption(preferencesManager.getServerSettings(manager, identity));
     }
 
 }
