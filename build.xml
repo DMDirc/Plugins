@@ -159,10 +159,6 @@ version:
             <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/sun/jna/platform/win32/**"/>
             <zipfileset src="${plugins.lib}/main/locksupport.jar" includes="com/greboid/**"/>
         </jar>
-
-        <jar destfile="${plugins.dist}/freedesktop_notifications.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/commons-lang.jar" includes="org/apache/**" excludes="**/*.html"/>
-        </jar>
     </target>
 
     <target name="clean">
