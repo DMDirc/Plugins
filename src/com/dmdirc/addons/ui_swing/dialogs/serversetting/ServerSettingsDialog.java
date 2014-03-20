@@ -56,6 +56,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     private final Server server;
     /** Perform wrapper for the perform panel. */
     private final PerformWrapper performWrapper;
+    /** Preferences manager to retrieve settings from. */
+    private final PreferencesManager preferencesManager;
     /** User modes panel. */
     private UserModesPane modesPanel;
     /** Ignore list panel. */
@@ -70,12 +72,14 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /**
      * Creates a new instance of ServerSettingsDialog.
      *
+     * @param preferencesManager Preferences manager to retrieve settings from
      * @param compFactory    Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
      * @param server         The server object that we're editing settings for
      * @param parentWindow   Parent window
      */
     public ServerSettingsDialog(
+            final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Server server,
@@ -83,6 +87,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         super(parentWindow, ModalityType.MODELESS);
         this.server = server;
         this.performWrapper = performWrapper;
+        this.preferencesManager = preferencesManager;
 
         setTitle("Server settings");
         setResizable(false);
@@ -145,8 +150,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
     /** Adds the settings to the panel. */
     private void addSettings() {
-        settingsPanel.addOption(PreferencesManager.getPreferencesManager()
-                .getServerSettings(server.getConfigManager(), server.getServerIdentity()));
+        settingsPanel.addOption(preferencesManager.getServerSettings(server.getConfigManager(),
+                server.getServerIdentity()));
     }
 
     /** Initialises listeners for this dialog. */
