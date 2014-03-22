@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.messages.Formatter;
@@ -34,10 +34,10 @@ import java.util.Date;
 /**
  * Implements a fake input window, which sends echoed text to the specified chat window instead.
  */
-public class FakeWriteableFrameContainer extends WritableFrameContainer {
+public class FakeWriteableFrameContainer extends FrameContainer {
 
     /** The target for this window. */
-    private final WritableFrameContainer target;
+    private final FrameContainer target;
 
     /**
      * Creates a new instance of FakeInputWindow.
@@ -47,13 +47,13 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
      * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
-            final WritableFrameContainer target,
+            final FrameContainer target,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder) {
         super(target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), target.getCommandParser(),
+                target.getConfigManager(), urlBuilder, target.getCommandParser(),
                 target.getTabCompleter(), messageSinkManager,
-                urlBuilder, Collections.<String>emptyList());
+                Collections.<String>emptyList());
         this.target = target;
     }
 

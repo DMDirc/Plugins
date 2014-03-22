@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -35,7 +35,7 @@ import java.util.Collection;
 /**
  * This class links DCC objects to a window.
  */
-public abstract class DCCFrameContainer extends WritableFrameContainer {
+public abstract class DCCFrameContainer extends FrameContainer {
 
     /** The Window we're using. */
     private boolean windowClosing = false;
@@ -61,9 +61,9 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
             final Collection<String> components) {
-        super(icon, title, title, configManager, parser,
+        super(icon, title, title, configManager, urlBuilder, parser,
                 tabCompleterFactory.getTabCompleter(configManager),
-                messageSinkManager, urlBuilder,
+                messageSinkManager,
                 components);
     }
 

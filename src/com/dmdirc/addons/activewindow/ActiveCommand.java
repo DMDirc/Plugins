@@ -23,7 +23,6 @@
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.commandparser.BaseCommandInfo;
@@ -69,10 +68,9 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final TextFrame frame = activeFrameManager.getActiveFrame();
-        if (frame.getContainer() instanceof WritableFrameContainer) {
-            ((WritableFrameContainer) frame.getContainer()).getCommandParser()
-                    .parseCommand(frame.getContainer(),
-                            args.getArgumentsAsString());
+        if (frame.getContainer().isWritable()) {
+            frame.getContainer().getCommandParser().parseCommand(frame.getContainer(),
+                    args.getArgumentsAsString());
         }
     }
 

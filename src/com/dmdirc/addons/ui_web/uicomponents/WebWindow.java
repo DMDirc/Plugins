@@ -83,6 +83,7 @@ public class WebWindow implements Window, IRCDocumentListener,
         return id;
     }
 
+    @Override
     public FrameContainer getContainer() {
         return container;
     }

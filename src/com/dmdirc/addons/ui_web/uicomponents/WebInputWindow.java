@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.Client;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.commandparser.parsers.CommandParser;
@@ -37,26 +37,19 @@ import java.util.Map;
  */
 public class WebInputWindow extends WebWindow implements InputWindow {
 
-    private final WritableFrameContainer container;
     private final CommandParser commandparser;
     private final WebInputHandler inputHandler;
     private final Map<Client, WebInputHandler> inputHandlers = new HashMap<>();
     private final WebInterfaceUI controller;
 
     public WebInputWindow(final WebInterfaceUI controller,
-            final WritableFrameContainer parent, final String id) {
+            final FrameContainer parent, final String id) {
         super(controller, parent, id);
-        this.container = parent;
         this.commandparser = parent.getCommandParser();
         this.controller = controller;
         this.inputHandler = new WebInputHandler(controller.getPluginManager(),
                 new WebInputField(), controller.getCommandController(),
-                commandparser, getContainer(), controller.getEventBus());
-    }
-
-    @Override
-    public WritableFrameContainer getContainer() {
-        return container;
+                commandparser, parent, controller.getEventBus());
     }
 
     @Override

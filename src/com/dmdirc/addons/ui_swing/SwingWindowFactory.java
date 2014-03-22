@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
@@ -104,8 +103,7 @@ public class SwingWindowFactory implements FrameListener {
                 new WindowProvider() {
                     @Override
                     public TextFrame getWindow(final FrameContainer container) {
-                        return customInputFrameFactory.getCustomInputFrame(
-                                (WritableFrameContainer) container);
+                        return customInputFrameFactory.getCustomInputFrame(container);
                     }
                 });
         registerImplementation(

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.tabcompletion_bash;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterResult;
@@ -42,7 +42,7 @@ public class BashStyle implements TabCompletionStyle {
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
     /** The input window that we use. */
-    protected final WritableFrameContainer window;
+    protected final FrameContainer window;
 
     /**
      * Creates a new Bash-style tab completer.
@@ -50,7 +50,7 @@ public class BashStyle implements TabCompletionStyle {
      * @param completer The tab completer this style is for
      * @param window    The window this tab style is for
      */
-    public BashStyle(final TabCompleter completer, final WritableFrameContainer window) {
+    public BashStyle(final TabCompleter completer, final FrameContainer window) {
         this.tabCompleter = completer;
         this.window = window;
     }

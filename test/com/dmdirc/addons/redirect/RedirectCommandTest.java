@@ -24,7 +24,6 @@ package com.dmdirc.addons.redirect;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
@@ -44,7 +43,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RedirectCommandTest {
@@ -52,7 +55,7 @@ public class RedirectCommandTest {
     @Mock private MessageTarget target;
     @Mock private InputWindow inputWindow;
     @Mock private CommandController commandController;
-    @Mock private WritableFrameContainer frameContainer;
+    @Mock private FrameContainer frameContainer;
     @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandParser commandParser;
     @Mock private MessageSinkManager messageSinkManager;
