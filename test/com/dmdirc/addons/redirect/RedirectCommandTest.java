@@ -24,7 +24,6 @@ package com.dmdirc.addons.redirect;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
@@ -34,6 +33,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
 import org.junit.Before;
@@ -44,7 +44,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RedirectCommandTest {
@@ -52,9 +56,10 @@ public class RedirectCommandTest {
     @Mock private MessageTarget target;
     @Mock private InputWindow inputWindow;
     @Mock private CommandController commandController;
-    @Mock private WritableFrameContainer frameContainer;
+    @Mock private FrameContainer frameContainer;
     @Mock private AggregateConfigProvider configProvider;
     @Mock private CommandParser commandParser;
+    @Mock private TabCompleter tabCompleter;
     @Mock private MessageSinkManager messageSinkManager;
     @Mock private WindowManager windowManager;
     @Mock private URLBuilder urlBuilder;
@@ -66,6 +71,7 @@ public class RedirectCommandTest {
         when(inputWindow.getContainer()).thenReturn(frameContainer);
         when(target.getConfigManager()).thenReturn(configProvider);
         when(target.getCommandParser()).thenReturn(commandParser);
+        when(target.getTabCompleter()).thenReturn(tabCompleter);
         when(configProvider.hasOptionString("formatter", "commandOutput")).thenReturn(true);
         when(configProvider.getOption("formatter", "commandOutput")).thenReturn("%1$s");
         doAnswer(new Answer<Void>() {

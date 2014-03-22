@@ -24,7 +24,6 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -83,12 +82,12 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final WritableFrameContainer target = ((ChatCommandContext) context).getChat();
-        if (args.getArguments().length > 0 && args.getArguments()[0]
-                .equalsIgnoreCase("--sources")) {
+        final FrameContainer target = ((ChatCommandContext) context).getChat();
+        if (args.getArguments().length > 0
+                && args.getArguments()[0].equalsIgnoreCase("--sources")) {
             doSourceList(origin, args.isSilent(), args.getArgumentsAsString(1));
-        } else if (args.getArguments().length > 0 && args.getArguments()[0]
-                .equalsIgnoreCase("--source")) {
+        } else if (args.getArguments().length > 0
+                && args.getArguments()[0].equalsIgnoreCase("--source")) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
                 final MediaSource source = manager.getSource(sourceName);

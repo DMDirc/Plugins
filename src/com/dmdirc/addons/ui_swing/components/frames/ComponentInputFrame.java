@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
@@ -61,7 +60,7 @@ public class ComponentInputFrame extends InputTextFrame {
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final URLBuilder urlBuilder,
-            final WritableFrameContainer owner) {
+            final FrameContainer owner) {
         super(deps, inputFieldProvider, owner);
         this.controller = deps.controller;
         this.urlBuilder = urlBuilder;

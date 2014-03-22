@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
@@ -42,7 +42,7 @@ public class WebInputHandler extends InputHandler {
             final InputField target,
             final CommandController commandController,
             final CommandParser commandParser,
-            final WritableFrameContainer parentWindow,
+            final FrameContainer parentWindow,
             final EventBus eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
     }

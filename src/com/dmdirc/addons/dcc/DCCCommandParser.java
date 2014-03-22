@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -57,7 +56,7 @@ public class DCCCommandParser extends GlobalCommandParser {
      */
     @Override
     protected void handleNonCommand(final FrameContainer origin, final String line) {
-        ((WritableFrameContainer) origin).sendLine(line);
+        origin.sendLine(line);
     }
 
     @Override
