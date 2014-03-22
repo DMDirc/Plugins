@@ -27,7 +27,6 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
-import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
@@ -38,8 +37,6 @@ import java.util.Collection;
  */
 public abstract class DCCFrameContainer extends WritableFrameContainer {
 
-    /** The factory to use to create tab completers. */
-    private final TabCompleterFactory tabCompleterFactory;
     /** The Window we're using. */
     private boolean windowClosing = false;
 
@@ -64,9 +61,10 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
             final Collection<String> components) {
-        super(icon, title, title, configManager, parser, messageSinkManager, urlBuilder,
+        super(icon, title, title, configManager, parser,
+                tabCompleterFactory.getTabCompleter(configManager),
+                messageSinkManager, urlBuilder,
                 components);
-        this.tabCompleterFactory = tabCompleterFactory;
     }
 
     @Override
@@ -77,11 +75,6 @@ public abstract class DCCFrameContainer extends WritableFrameContainer {
     @Override
     public Connection getConnection() { //NOPMD - server will always be null
         return null;
-    }
-
-    @Override
-    public TabCompleter getTabCompleter() {
-        return tabCompleterFactory.getTabCompleter(getConfigManager());
     }
 
     /**
