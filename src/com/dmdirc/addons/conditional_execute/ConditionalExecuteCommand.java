@@ -23,7 +23,6 @@
 package com.dmdirc.addons.conditional_execute;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -237,9 +236,8 @@ public class ConditionalExecuteCommand extends Command {
                         "You can't run commands and manipulate the namespace at the same time, ignored.");
             } else {
                 // Command to run!
-                if (namespace.canRun(inverse) && origin instanceof WritableFrameContainer) {
-                    ((WritableFrameContainer) origin).getCommandParser().parseCommand(origin, args.
-                            getArgumentsAsString(i++));
+                if (namespace.canRun(inverse) && origin.isWritable()) {
+                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i++));
                 }
                 return;
             }

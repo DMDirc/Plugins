@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
@@ -112,7 +112,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     public InputTextFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
-            final WritableFrameContainer owner) {
+            final FrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
         this.config = owner.getConfigManager();
@@ -168,8 +168,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputHandler = new SwingInputHandler(pluginManager, inputField, commandController,
                 getContainer().getCommandParser(), getContainer(), eventBus);
         inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(((WritableFrameContainer) frameParent).
-                getTabCompleter());
+        inputHandler.setTabCompleter(frameParent.getTabCompleter());
 
         getInputField().addMouseListener(this);
 
@@ -213,18 +212,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 "shift INSERT"), "paste");
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
                 "ctrl V"), "paste");
-    }
-
-    /**
-     * Returns the container associated with this frame.
-     *
-     * @return This frame's container.
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public WritableFrameContainer getContainer() {
-        return (WritableFrameContainer) super.
-                getContainer();
     }
 
     /**

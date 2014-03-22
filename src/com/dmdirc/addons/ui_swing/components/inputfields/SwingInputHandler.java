@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.WritableFrameContainer;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -66,7 +66,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final InputField target,
             final CommandController commandController,
             final CommandParser commandParser,
-            final WritableFrameContainer parentWindow,
+            final FrameContainer parentWindow,
             final EventBus eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
     }

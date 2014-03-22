@@ -23,7 +23,6 @@
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
@@ -70,7 +69,6 @@ public class Time extends DebugCommand implements IntelligentCommand {
      * Facilitates timing of a command.
      *
      * @param origin The origin of the command
-     * @param window The window to be passed on to the timed command, if any
      * @param args   The arguments that were passed to the command
      */
     private void doTime(final FrameContainer origin,
@@ -80,11 +78,9 @@ public class Time extends DebugCommand implements IntelligentCommand {
             return;
         }
 
-        if (origin instanceof WritableFrameContainer) {
-            final WritableFrameContainer container = (WritableFrameContainer) origin;
+        if (origin.isWritable()) {
             final long start = System.currentTimeMillis();
-            container.getCommandParser().parseCommand(origin,
-                    args.getArgumentsAsString(0));
+            origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(0));
             final long end = System.currentTimeMillis();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     "Command executed in " + (end - start) + " milliseconds.");
