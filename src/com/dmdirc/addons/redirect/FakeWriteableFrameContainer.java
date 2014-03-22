@@ -26,7 +26,6 @@ import com.dmdirc.MessageTarget;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
-import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLBuilder;
 
@@ -53,7 +52,8 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder) {
         super(target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), target.getCommandParser(), messageSinkManager,
+                target.getConfigManager(), target.getCommandParser(),
+                target.getTabCompleter(), messageSinkManager,
                 urlBuilder, Collections.<String>emptyList());
         this.target = target;
     }
@@ -91,11 +91,6 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
     @Override
     public void addLine(final String line, final Date timestamp) {
         addLine(line);
-    }
-
-    @Override
-    public TabCompleter getTabCompleter() {
-        return target.getTabCompleter();
     }
 
     @Override
