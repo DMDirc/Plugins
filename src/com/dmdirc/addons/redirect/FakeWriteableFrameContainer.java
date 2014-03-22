@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.MessageTarget;
 import com.dmdirc.WritableFrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
@@ -38,7 +37,7 @@ import java.util.Date;
 public class FakeWriteableFrameContainer extends WritableFrameContainer {
 
     /** The target for this window. */
-    private final MessageTarget target;
+    private final WritableFrameContainer target;
 
     /**
      * Creates a new instance of FakeInputWindow.
@@ -48,7 +47,7 @@ public class FakeWriteableFrameContainer extends WritableFrameContainer {
      * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
-            final MessageTarget target,
+            final WritableFrameContainer target,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder) {
         super(target.getIcon(), target.getName(), target.getTitle(),
