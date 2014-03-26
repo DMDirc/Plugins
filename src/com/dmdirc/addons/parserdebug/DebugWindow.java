@@ -23,7 +23,6 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
@@ -41,8 +40,8 @@ public class DebugWindow extends FrameContainer {
     protected final DebugInfoListener listener;
     /** The parser this window is debugging. */
     protected Parser parser;
-    /** The server we're operating on. */
-    protected final Server server;
+    /** The connection we're operating on. */
+    protected final Connection connection;
 
     /**
      * Creates a new instance of DebugWindow.
@@ -50,20 +49,20 @@ public class DebugWindow extends FrameContainer {
      * @param listener   The debug listener for this window
      * @param title      The title of this window
      * @param parser     The parser this plugin is debugging
-     * @param server     The Server window this is a child of
+     * @param connection The connection this window is associated with.
      * @param urlBuilder The URL builder to use when finding icons.
      */
     public DebugWindow(
             final DebugInfoListener listener,
             final String title,
             final Parser parser,
-            final Server server,
+            final Connection connection,
             final URLBuilder urlBuilder) {
-        super("raw", "Parser Debug", title, server.getConfigManager(), urlBuilder,
-                Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+        super("raw", "Parser Debug", title, connection.getWindowModel().getConfigManager(),
+                urlBuilder, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;
-        this.server = server;
+        this.connection = connection;
     }
 
     /**
@@ -73,7 +72,7 @@ public class DebugWindow extends FrameContainer {
      */
     @Override
     public Connection getConnection() {
-        return server;
+        return connection;
     }
 
     /**

@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.Server;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
@@ -44,6 +43,7 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -129,14 +129,14 @@ public class DialogModule {
 
     @Provides
     @Singleton
-    public KeyedDialogProvider<Server, ServerSettingsDialog> getServerSettingsDialogProvider(
+    public KeyedDialogProvider<Connection, ServerSettingsDialog> getServerSettingsDialogProvider(
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final MainFrame parentWindow) {
-        return new KeyedDialogProvider<Server, ServerSettingsDialog>() {
+        return new KeyedDialogProvider<Connection, ServerSettingsDialog>() {
             @Override
-            protected ServerSettingsDialog getInstance(final Server key) {
+            protected ServerSettingsDialog getInstance(final Connection key) {
                 return new ServerSettingsDialog(preferencesManager, compFactory, performWrapper,
                         key, parentWindow);
             }

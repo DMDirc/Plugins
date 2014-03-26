@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -33,6 +32,7 @@ import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
@@ -52,8 +52,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** Parent server. */
-    private final Server server;
+    /** Parent connection. */
+    private final Connection connection;
     /** Perform wrapper for the perform panel. */
     private final PerformWrapper performWrapper;
     /** Preferences manager to retrieve settings from. */
@@ -75,24 +75,24 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      * @param preferencesManager Preferences manager to retrieve settings from
      * @param compFactory    Preferences setting component factory
      * @param performWrapper Wrapper for the perform tab.
-     * @param server         The server object that we're editing settings for
+     * @param connection         The server object that we're editing settings for
      * @param parentWindow   Parent window
      */
     public ServerSettingsDialog(
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
-            final Server server,
+            final Connection connection,
             final MainFrame parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
-        this.server = server;
+        this.connection = connection;
         this.performWrapper = performWrapper;
         this.preferencesManager = preferencesManager;
 
         setTitle("Server settings");
         setResizable(false);
 
-        initComponents(parentWindow, server.getConfigManager(), compFactory);
+        initComponents(parentWindow, connection.getWindowModel().getConfigManager(), compFactory);
         initListeners();
     }
 
@@ -111,13 +111,15 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(server);
+        modesPanel = new UserModesPane(connection);
 
-        ignoreList = new IgnoreListPanel(server.getIconManager(), server, parentWindow);
+        ignoreList = new IgnoreListPanel(connection.getWindowModel().getIconManager(),
+                connection, parentWindow);
 
-        performPanel = new PerformTab(server.getIconManager(), config, performWrapper, server);
+        performPanel = new PerformTab(connection.getWindowModel().getIconManager(), config,
+                performWrapper, connection);
 
-        settingsPanel = new SettingsPanel(server.getIconManager(), compFactory,
+        settingsPanel = new SettingsPanel(connection.getWindowModel().getIconManager(), compFactory,
                 "These settings are specific to this network, any settings specified here will "
                 + "overwrite global settings");
 
@@ -144,14 +146,15 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         add(getLeftButton(), "split 2, right");
         add(getRightButton(), "right");
 
-        tabbedPane.setSelectedIndex(server.getConfigManager().
+        tabbedPane.setSelectedIndex(connection.getWindowModel().getConfigManager().
                 getOptionInt("dialogstate", "serversettingsdialog"));
     }
 
     /** Adds the settings to the panel. */
     private void addSettings() {
-        settingsPanel.addOption(preferencesManager.getServerSettings(server.getConfigManager(),
-                server.getServerIdentity()));
+        settingsPanel.addOption(preferencesManager.getServerSettings(
+                connection.getWindowModel().getConfigManager(),
+                connection.getServerIdentity()));
     }
 
     /** Initialises listeners for this dialog. */
@@ -162,7 +165,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
     /** Saves the settings from this dialog. */
     public void saveSettings() {
-        if (server.getState() != ServerState.CONNECTED) {
+        if (connection.getState() != ServerState.CONNECTED) {
             new StandardQuestionDialog(getOwner(),
                     ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have "
@@ -192,7 +195,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         performPanel.savePerforms();
         ignoreList.saveList();
 
-        final ConfigProvider identity = server.getNetworkIdentity();
+        final ConfigProvider identity = connection.getNetworkIdentity();
         identity.setOption("dialogstate", "serversettingsdialog",
                 String.valueOf(tabbedPane.getSelectedIndex()));
 

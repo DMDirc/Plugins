@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
@@ -65,13 +64,13 @@ public final class ServerFrame extends InputTextFrame implements
     /** Icon manager. */
     private final IconManager iconManager;
     /** Dialog provider to close SSD. */
-    private final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider;
+    private final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider;
     /** popup menu item. */
     private JMenuItem settingsMI;
     /** The SSL certificate dialog we're displaying for this server, if any. */
     private SSLCertificateDialog sslDialog = null;
     /** Server instance. */
-    private final Server server;
+    private final Connection connection;
 
     /**
      * Creates a new ServerFrame.
@@ -84,13 +83,13 @@ public final class ServerFrame extends InputTextFrame implements
     public ServerFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
-            final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider,
-            @Unbound final Server owner) {
-        super(deps, inputFieldProvider, owner);
+            final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
+            @Unbound final Connection owner) {
+        super(deps, inputFieldProvider, owner.getWindowModel());
         this.mainFrame = deps.mainFrame;
         this.iconManager = deps.iconManager;
         this.dialogProvider = dialogProvider;
-        this.server = owner;
+        this.connection = owner;
         initComponents();
 
         owner.addCertificateProblemListener(this);
@@ -117,7 +116,7 @@ public final class ServerFrame extends InputTextFrame implements
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
-            dialogProvider.displayOrRequestFocus(server);
+            dialogProvider.displayOrRequestFocus(connection);
         }
     }
 
@@ -174,7 +173,7 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        dialogProvider.dispose(server);
+        dialogProvider.dispose(connection);
         super.windowClosing(window);
     }
 

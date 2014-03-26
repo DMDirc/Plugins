@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
-import com.dmdirc.Server;
+import com.dmdirc.interfaces.Connection;
 
 /** User mode panel. */
 public final class UserModesPane extends ModesPane {
@@ -30,29 +30,30 @@ public final class UserModesPane extends ModesPane {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Parent server. */
-    private final Server server;
+    private final Connection connection;
 
     /**
      * Creates a new instance of UserModesPane.
      *
-     * @param server Parent server
+     * @param connection Parent server
      */
-    public UserModesPane(final Server server) {
-        super(server.getConfigManager(), server.getIconManager());
+    public UserModesPane(final Connection connection) {
+        super(connection.getWindowModel().getConfigManager(),
+                connection.getWindowModel().getIconManager());
 
-        this.server = server;
+        this.connection = connection;
         initModesPanel();
     }
 
     @Override
     public boolean hasModeValue(final String mode) {
-        return server.getConfigManager().hasOptionString("server",
+        return connection.getWindowModel().getConfigManager().hasOptionString("server",
                 "umode" + mode);
     }
 
     @Override
     public String getModeValue(final String mode) {
-        return server.getConfigManager().getOption("server", "umode" + mode);
+        return connection.getWindowModel().getConfigManager().getOption("server", "umode" + mode);
     }
 
     @Override
@@ -67,12 +68,12 @@ public final class UserModesPane extends ModesPane {
 
     @Override
     public String getAvailableBooleanModes() {
-        return server.getParser().getUserModes();
+        return connection.getParser().getUserModes();
     }
 
     @Override
     public String getOurBooleanModes() {
-        return server.getParser().getLocalClient().getModes();
+        return connection.getParser().getLocalClient().getModes();
     }
 
     @Override
@@ -88,12 +89,12 @@ public final class UserModesPane extends ModesPane {
     @Override
     public void alterMode(final boolean add, final String mode,
             final String parameter) {
-        server.getParser().getLocalClient().alterMode(add, mode.toCharArray()[0]);
+        connection.getParser().getLocalClient().alterMode(add, mode.toCharArray()[0]);
     }
 
     @Override
     public void flushModes() {
-        server.getParser().getLocalClient().flushModes();
+        connection.getParser().getLocalClient().flushModes();
     }
 
 }

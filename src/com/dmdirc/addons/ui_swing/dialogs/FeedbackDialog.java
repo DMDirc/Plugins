@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.SendWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.ClientInfo;
 
@@ -200,27 +200,25 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
         final StringBuilder serverInfo = new StringBuilder();
         final StringBuilder dmdircInfo = new StringBuilder();
         if (serverCheckbox.isSelected()) {
-            for (Server server : serverManager.getServers()) {
-                if (server.getState().isDisconnected()) {
+            for (Connection connection : serverManager.getServers()) {
+                if (connection.getState().isDisconnected()) {
                     continue;
                 }
-                serverInfo.append("Server name: ").append(server.getName())
-                        .append("\n");
-                serverInfo.append("Actual name: ").append(server.getParser()
+                serverInfo.append("Actual name: ").append(connection.getParser()
                         .getServerName()).append("\n");
-                serverInfo.append("Network: ").append(server.getNetwork())
+                serverInfo.append("Network: ").append(connection.getNetwork())
                         .append("\n");
-                serverInfo.append("IRCd: ").append(server.getParser()
+                serverInfo.append("IRCd: ").append(connection.getParser()
                         .getServerSoftware()).append(" - ");
-                serverInfo.append(server.getParser().getServerSoftwareType())
+                serverInfo.append(connection.getParser().getServerSoftwareType())
                         .append("\n");
-                serverInfo.append("Modes: ").append(server.getParser()
+                serverInfo.append("Modes: ").append(connection.getParser()
                         .getBooleanChannelModes()).append(" ");
-                serverInfo.append(server.getParser().getListChannelModes())
+                serverInfo.append(connection.getParser().getListChannelModes())
                         .append(" ");
-                serverInfo.append(server.getParser().getParameterChannelModes())
+                serverInfo.append(connection.getParser().getParameterChannelModes())
                         .append(" ");
-                serverInfo.append(server.getParser().
+                serverInfo.append(connection.getParser().
                         getDoubleParameterChannelModes());
             }
         }

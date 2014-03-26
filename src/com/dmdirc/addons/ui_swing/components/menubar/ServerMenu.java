@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
 
 import java.awt.event.ActionEvent;
@@ -63,7 +63,7 @@ public class ServerMenu extends JMenu implements ActionListener,
     /** Provider to use to retrieve NSD instances. */
     private final DialogProvider<NewServerDialog> newServerProvider;
     /** Provider for server settings dialogs. */
-    private final KeyedDialogProvider<Server, ServerSettingsDialog> ssdProvider;
+    private final KeyedDialogProvider<Connection, ServerSettingsDialog> ssdProvider;
 
     /**
      * Creates a new Server menu.
@@ -78,7 +78,7 @@ public class ServerMenu extends JMenu implements ActionListener,
             final ActiveFrameManager activeFrameManager,
             final LifecycleController lifecycleController,
             final DialogProvider<NewServerDialog> newServerProvider,
-            final KeyedDialogProvider<Server, ServerSettingsDialog> ssdProvider) {
+            final KeyedDialogProvider<Connection, ServerSettingsDialog> ssdProvider) {
         super("Server");
         this.activeFrameManager = activeFrameManager;
         this.lifecycleController = lifecycleController;
@@ -137,7 +137,7 @@ public class ServerMenu extends JMenu implements ActionListener,
                 break;
             case "ServerSettings":
                 ssdProvider.displayOrRequestFocus(
-                        (Server) activeFrameManager.getActiveFrame().getContainer().getConnection());
+                        activeFrameManager.getActiveFrame().getContainer().getConnection());
                 break;
             case "Disconnect":
                 activeFrameManager.getActiveFrame().getContainer().getConnection().disconnect();

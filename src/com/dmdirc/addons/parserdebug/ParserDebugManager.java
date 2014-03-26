@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.Server;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
@@ -90,16 +89,16 @@ public class ParserDebugManager implements ActionListener, DebugInfoListener {
      * Adds a parser to this manager, adding any required call backs.
      *
      * @param parser Parser to add
-     * @param server The server associated with the parser
+     * @param connection The connection associated with the parser
      *
      * @return Whether we added the parser without error
      */
-    public boolean addParser(final Parser parser, final Server server) {
+    public boolean addParser(final Parser parser, final Connection connection) {
         try {
             parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
-                    server, urlBuilder);
-            windowManager.addWindow(server, window);
+                    connection, urlBuilder);
+            windowManager.addWindow(connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
             window.addLine("======================", true);
             window.addLine("Started Monitoring: " + parser, true);
