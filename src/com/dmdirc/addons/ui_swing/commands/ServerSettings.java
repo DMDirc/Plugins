@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.BaseCommandInfo;
@@ -35,6 +34,7 @@ import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import javax.inject.Inject;
@@ -49,7 +49,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("serversettings",
             "serversettings - opens the server settings window", CommandType.TYPE_SERVER);
     /** The dialog provider used to show the settings dialog. */
-    private final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider;
+    private final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider;
 
     /**
      * Creates a new instance of the {@link ServerSettings} command.
@@ -60,7 +60,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     @Inject
     public ServerSettings(
             final CommandController commandController,
-            final KeyedDialogProvider<Server, ServerSettingsDialog> dialogProvider) {
+            final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider) {
         super(commandController);
         this.dialogProvider = dialogProvider;
     }
@@ -68,7 +68,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        dialogProvider.displayOrRequestFocus((Server) context.getSource().getConnection());
+        dialogProvider.displayOrRequestFocus(context.getSource().getConnection());
     }
 
     @Override

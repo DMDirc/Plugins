@@ -67,8 +67,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private final JMenuItem accept;
     /** Main frame. */
     private final MainFrame mainFrame;
-    /** Active server. */
-    private Server activeServer;
+    /** Active connection. */
+    private Connection activeConnection;
 
     /**
      * Instantiates a new invite label.
@@ -97,8 +97,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Server server : serverManager.getServers()) {
-            server.addInviteListener(this);
+        for (final Connection connection : serverManager.getServers()) {
+            connection.addInviteListener(this);
         }
 
         mainFrame.addSelectionListener(this);
@@ -114,7 +114,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(this, activeServer, mainFrame);
+        return new InvitePopup(this, activeConnection, mainFrame);
     }
 
     /**
@@ -123,7 +123,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     private void popuplateMenu() {
         menu.removeAll();
 
-        final Collection<Invite> invites = activeServer.getInvites();
+        final Collection<Invite> invites = activeConnection.getInvites();
         for (final Invite invite : invites) {
             menu.add(new JMenuItem(new InviteAction(invite)));
         }
@@ -140,7 +140,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
 
             @Override
             public void run() {
-                if (activeServer == null || activeServer.getInvites().isEmpty()) {
+                if (activeConnection == null || activeConnection.getInvites().isEmpty()) {
                     setVisible(false);
                     closeDialog();
                 } else {
@@ -198,17 +198,17 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "acceptAll":
-                activeServer.acceptInvites();
+                activeConnection.acceptInvites();
                 break;
             case "dismissAll":
-                activeServer.removeInvites();
+                activeConnection.removeInvites();
                 break;
         }
     }
 
     @Override
     public void selectionChanged(final TextFrame window) {
-        activeServer = window == null ? null : (Server) window.getContainer().getConnection();
+        activeConnection = window == null ? null : window.getContainer().getConnection();
         update();
     }
 

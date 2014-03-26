@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channellist;
 
-import com.dmdirc.Server;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.lists.GroupListManager;
 
 import javax.swing.JLabel;
@@ -47,11 +47,11 @@ public class ChannelListPanel extends JPanel {
     /**
      * Creates a new panel to perform a group list search on a server.
      *
-     * @param server Server on which to perform search
+     * @param connection Server on which to perform search
      * @param total  Label to update with total
      */
-    public ChannelListPanel(final Server server, final JLabel total) {
-        manager = new GroupListManager(server);
+    public ChannelListPanel(final Connection connection, final JLabel total) {
+        manager = new GroupListManager(connection);
         searchTerms = new SearchTermsPanel(manager);
         results = new ResultsPanel(manager, total);
         layoutComponents();

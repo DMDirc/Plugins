@@ -44,7 +44,6 @@ import static org.mockito.Mockito.when;
 public class IdentClientTest {
 
     @Mock private AggregateConfigProvider acp;
-    @Mock private IdentdPlugin plugin;
     @Mock private ServerManager sm;
     @Mock private Server server;
     @Mock private IRCParser parser;

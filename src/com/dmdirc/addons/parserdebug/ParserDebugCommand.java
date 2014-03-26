@@ -23,7 +23,6 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -89,7 +88,7 @@ public final class ParserDebugCommand extends Command {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Removing callback failed");
             }
         } else {
-            if (parserDebugManager.addParser(parser, (Server) origin.getConnection())) {
+            if (parserDebugManager.addParser(parser, origin.getConnection())) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
             } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Adding callback failed");
