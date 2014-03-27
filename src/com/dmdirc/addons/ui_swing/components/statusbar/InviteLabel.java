@@ -152,12 +152,12 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     }
 
     @Override
-    public void inviteReceived(final Server server, final Invite invite) {
+    public void inviteReceived(final Connection connection, final Invite invite) {
         update();
     }
 
     @Override
-    public void inviteExpired(final Server server, final Invite invite) {
+    public void inviteExpired(final Connection connection, final Invite invite) {
         update();
     }
 
