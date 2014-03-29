@@ -22,49 +22,11 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.interfaces.actions.ActionMetaType;
+import com.dmdirc.events.DMDircEvent;
 
 /**
- * Session Lock action meta-types.
+ * Fire when the windows session is locked.
  */
-public enum SessionLockActionMetaType implements ActionMetaType {
-
-    /** Session Event. */
-    SESSION_EVENT(new String[]{});
-    /** The names of the arguments for this meta type. */
-    private String[] argNames;
-    /** The classes of the arguments for this meta type. */
-    private Class[] argTypes;
-
-    /**
-     * Creates a new instance of this meta-type.
-     *
-     * @param argNames The names of the meta-type's arguments
-     * @param argTypes The types of the meta-type's arguments
-     */
-    SessionLockActionMetaType(final String[] argNames, final Class... argTypes) {
-        this.argNames = argNames;
-        this.argTypes = argTypes;
-    }
-
-    @Override
-    public String getGroup() {
-        return "Session events";
-    }
-
-    @Override
-    public int getArity() {
-        return argNames.length;
-    }
-
-    @Override
-    public Class[] getArgTypes() {
-        return argTypes;
-    }
-
-    @Override
-    public String[] getArgNames() {
-        return argNames;
-    }
+public class SessionLockEvent extends DMDircEvent {
 
 }
