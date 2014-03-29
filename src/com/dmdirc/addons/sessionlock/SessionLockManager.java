@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.actions.ActionManager;
+import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -31,27 +31,20 @@ import com.greboid.lock.LockListener;
 
 public class SessionLockManager implements LockListener {
 
-    /** Action manager. */
-    private final ActionManager actionManager;
-    /** Have we registered our actions? */
-    private static boolean registered;
+    /** Event bus to post events on. */
+    private final EventBus eventBus;
     /** Lock Adapter to detect session events. */
     private LockAdapter lockAdapter;
 
     @Inject
-    public SessionLockManager(final ActionManager actionManager) {
-        this.actionManager = actionManager;
+    public SessionLockManager(final EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     /**
      * Loads the manager, registering action types and the lock adapter.
      */
     public void load() {
-        if (!registered) {
-            actionManager.registerTypes(SessionLockActionType.values());
-            registered = true;
-        }
-
         lockAdapter = new LockAdapter();
         lockAdapter.addLockListener(this);
     }
@@ -66,12 +59,12 @@ public class SessionLockManager implements LockListener {
 
     @Override
     public void locked() {
-        actionManager.triggerEvent(SessionLockActionType.SESSION_LOCK, null);
+        eventBus.post(new SessionLockEvent());
     }
 
     @Override
     public void unlocked() {
-        actionManager.triggerEvent(SessionLockActionType.SESSION_UNLOCK, null);
+        eventBus.post(new SessionUnlockEvent());
     }
 
 }
