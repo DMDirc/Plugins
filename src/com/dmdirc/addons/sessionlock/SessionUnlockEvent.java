@@ -22,38 +22,11 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.interfaces.actions.ActionMetaType;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.DMDircEvent;
 
 /**
- * Session lock action types.
+ * Fired when the windows session is unlocked.
  */
-public enum SessionLockActionType implements ActionType {
-
-    /** Indicates the session is locked. */
-    SESSION_LOCK("Session locked"),
-    /** Indicated the session is unlocked. */
-    SESSION_UNLOCK("Session unlocked");
-    /** Type name. */
-    private final String name;
-
-    /**
-     * Creates a new instance of this action type.
-     *
-     * @param name Name
-     */
-    SessionLockActionType(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public ActionMetaType getType() {
-        return SessionLockActionMetaType.SESSION_EVENT;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
+public class SessionUnlockEvent extends DMDircEvent {
 
 }
