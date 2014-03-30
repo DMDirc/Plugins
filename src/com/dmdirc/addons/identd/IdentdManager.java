@@ -23,20 +23,22 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ServerConnectErrorEvent;
+import com.dmdirc.events.ServerConnectedEvent;
+import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class IdentdManager implements ActionListener {
+public class IdentdManager {
 
     /** List of all the connections that need ident replies. */
     private final List<Connection> connections;
@@ -46,18 +48,18 @@ public class IdentdManager implements ActionListener {
     private final String domain;
     /** Ident server. */
     private final IdentdServer server;
-    /** Action controller to register action listeners with. */
-    private final ActionController actionController;
+    /** Event bus to subscribe to events on. */
+    private final EventBus eventBus;
 
     @Inject
     public IdentdManager(@GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain,
-            final IdentdServer server, final ActionController actionController) {
+            final IdentdServer server, final EventBus eventBus) {
         connections = new ArrayList<>();
         this.config = config;
         this.domain = domain;
         this.server = server;
-        this.actionController = actionController;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -65,10 +67,7 @@ public class IdentdManager implements ActionListener {
      */
     public void onLoad() {
         // Add action hooks
-        actionController.registerListener(this,
-                CoreActionType.SERVER_CONNECTED,
-                CoreActionType.SERVER_CONNECTING,
-                CoreActionType.SERVER_CONNECTERROR);
+        eventBus.register(this);
 
         if (config.getOptionBool(domain, "advanced.alwaysOn")) {
             server.startServer();
@@ -79,38 +78,39 @@ public class IdentdManager implements ActionListener {
      * Called when this plugin is unloaded.
      */
     public void onUnload() {
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
         server.stopServer();
         connections.clear();
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.SERVER_CONNECTING) {
-            synchronized (connections) {
+    @Subscribe
+    public void handleServerConnecting(final ServerConnectingEvent event) {
+        synchronized (connections) {
                 if (connections.isEmpty()) {
                     server.startServer();
                 }
-                connections.add((Connection) arguments[0]);
+                connections.add(event.getConnection());
             }
-        } else if (type == CoreActionType.SERVER_CONNECTED
-                || type == CoreActionType.SERVER_CONNECTERROR) {
-            synchronized (connections) {
-                connections.remove((Connection) arguments[0]);
+    }
+
+    @Subscribe
+    public void handleServerConnected(final ServerConnectedEvent event) {
+        handleServerRemoved(event.getConnection());
+    }
+
+    @Subscribe
+    public void handleServerConnectError(final ServerConnectErrorEvent event) {
+        handleServerRemoved(event.getConnection());
+    }
+
+    private void handleServerRemoved(final Connection connection) {
+        synchronized (connections) {
+                connections.remove(connection);
 
                 if (connections.isEmpty() && !config.getOptionBool(domain, "advanced.alwaysOn")) {
                     server.stopServer();
                 }
             }
-        }
     }
 
 }
