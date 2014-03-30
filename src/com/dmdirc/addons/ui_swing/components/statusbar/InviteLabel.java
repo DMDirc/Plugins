@@ -25,20 +25,23 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Invite;
 import com.dmdirc.ServerManager;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ServerConnectErrorEvent;
+import com.dmdirc.events.ServerConnectedEvent;
+import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteListener;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 
@@ -52,9 +55,8 @@ import javax.swing.JSeparator;
 /**
  * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
-public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
-        StatusBarComponent, InviteListener, ActionListener,
-        java.awt.event.ActionListener, SelectionListener {
+public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBarComponent,
+        InviteListener, ActionListener, SelectionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -72,12 +74,14 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
     /**
      * Instantiates a new invite label.
      *
+     * @param eventBus      The event bus to subscribe to events on
      * @param iconManager   The manager to retrieve the invite icon from.
      * @param serverManager The manager to use to iterate servers.
      * @param mainFrame     Main frame
      */
     @Inject
     public InviteLabel(
+            final EventBus eventBus,
             @GlobalConfig final IconManager iconManager,
             final ServerManager serverManager,
             final MainFrame mainFrame) {
@@ -101,12 +105,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         }
 
         mainFrame.addSelectionListener(this);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.SERVER_CONNECTED);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.SERVER_DISCONNECTED);
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.SERVER_CONNECTERROR);
+        eventBus.register(this);
 
         update();
     }
@@ -160,18 +159,23 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements
         update();
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.SERVER_CONNECTED) {
-            if (arguments[0] instanceof Connection) {
-                ((Connection) arguments[0]).addInviteListener(this);
-            }
-        } else {
-            if (arguments[0] instanceof Connection) {
-                ((Connection) arguments[0]).removeInviteListener(this);
-            }
-        }
+    @Subscribe
+    public void handleServerConnected(final ServerConnectedEvent event) {
+        event.getConnection().addInviteListener(this);
+    }
+
+    @Subscribe
+    public void handleServerDisconnected(final ServerDisconnectedEvent event) {
+        handleServerRemoved(event.getConnection());
+    }
+
+    @Subscribe
+    public void handleServerConnectError(final ServerConnectErrorEvent event) {
+        handleServerRemoved(event.getConnection());
+    }
+
+    private void handleServerRemoved(final Connection connection) {
+        connection.removeInviteListener(this);
     }
 
     /**
