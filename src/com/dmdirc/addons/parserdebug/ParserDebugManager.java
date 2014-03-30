@@ -22,16 +22,16 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.parser.common.CallbackNotFoundException;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.URLBuilder;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -39,24 +39,25 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class ParserDebugManager implements ActionListener, DebugInfoListener {
+public class ParserDebugManager implements DebugInfoListener {
 
+    /** Event bus to subscribe to events on. */
+    private final EventBus eventBus;
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers;
-    /** Action controller. */
-    private final ActionController actionController;
     /** URL Builder. */
     private final URLBuilder urlBuilder;
     /** Window manager. */
     private final WindowManager windowManager;
 
     @Inject
-    public ParserDebugManager(final ActionController actionController,
+    public ParserDebugManager(
             final URLBuilder urlBuilder,
-            final WindowManager windowManager) {
-        this.actionController = actionController;
+            final WindowManager windowManager,
+            final EventBus eventBus) {
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
+        this.eventBus = eventBus;
         registeredParsers = new HashMap<>();
     }
 
@@ -64,14 +65,14 @@ public class ParserDebugManager implements ActionListener, DebugInfoListener {
      * Adds action listener.
      */
     public void addActionListener() {
-        actionController.registerListener(this, CoreActionType.SERVER_DISCONNECTED);
+        eventBus.register(this);
     }
 
     /**
      * Remove action listener.
      */
     public void removeActionListener() {
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
     }
 
     /**
@@ -145,15 +146,12 @@ public class ParserDebugManager implements ActionListener, DebugInfoListener {
         }
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.SERVER_DISCONNECTED) {
-            final Parser parser = ((Connection) arguments[0]).getParser();
+    @Subscribe
+    public void handleServerDisconnected(final ServerDisconnectedEvent event) {
+            final Parser parser = event.getConnection().getParser();
             if (registeredParsers.containsKey(parser)) {
                 removeParser(parser, false);
             }
-        }
     }
 
     @Override
