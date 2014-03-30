@@ -24,6 +24,7 @@ package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
@@ -31,6 +32,7 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.ConnectionNumericEvent;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -38,6 +40,9 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.collections.RollingList;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -54,6 +59,8 @@ import javax.inject.Singleton;
 @Singleton
 public class LagDisplayManager implements ActionListener, ConfigChangeListener, SelectionListener {
 
+    /** Event bus to receive events on. */
+    private final EventBus eventBus;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** Status bar to add panels to. */
@@ -78,11 +85,13 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
 
     @Inject
     public LagDisplayManager(
+            final EventBus eventBus,
             final ActiveFrameManager activeFrameManager,
             final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
             @PluginDomain(LagDisplayPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
+        this.eventBus = eventBus;
         this.activeFrameManager = activeFrameManager;
         this.statusBar = statusBar;
         this.panelProvider = panelProvider;
@@ -99,7 +108,8 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         ActionManager.getActionManager().registerListener(this,
                 CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
                 CoreActionType.SERVER_DISCONNECTED,
-                CoreActionType.SERVER_PINGSENT, CoreActionType.SERVER_NUMERIC);
+                CoreActionType.SERVER_PINGSENT);
+        eventBus.register(this);
     }
 
     public void unload() {
@@ -164,6 +174,37 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         panel.refreshDialog();
     }
 
+    @Subscribe
+    public void handleServerNumeric(final ConnectionNumericEvent event) {
+        if (event.getNumeric() != 421) {
+            return;
+        }
+        boolean useAlternate = ((Server) event.getConnection()).getConfigManager()
+                .getOptionBool(domain, "usealternate");
+        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
+        final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
+        final boolean isActive = active != null && event.getConnection().equals(active.
+                getConnection());
+        final String[] args = event.getArgs();
+        if (useAlternate && args[3].startsWith("LAGCHECK_")) {
+            try {
+                final long sent = Long.parseLong(args[3].substring(9));
+                final Long duration = new Date().getTime() - sent;
+                final String value = formatTime(duration);
+                pings.put(event.getConnection(), value);
+                getHistory(event.getConnection()).add(duration);
+                if (isActive) {
+                    panel.getComponent().setText(value);
+                }
+            } catch (NumberFormatException ex) {
+                pings.remove(event.getConnection());
+            }
+            event.setDisplayFormat("");
+
+            panel.refreshDialog();
+        }
+    }
+
     @Override
     public void processEvent(final ActionType type, final StringBuffer format,
             final Object... arguments) {
@@ -216,29 +257,6 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         } else if (useAlternate && type.equals(CoreActionType.SERVER_PINGSENT)) {
             ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().
                     getTime());
-        } else if (useAlternate && type.equals(CoreActionType.SERVER_NUMERIC)
-                && ((Integer) arguments[1]) == 421
-                && ((String[]) arguments[2])[3].startsWith("LAGCHECK_")) {
-            try {
-                final long sent = Long.parseLong(((String[]) arguments[2])[3].substring(9));
-                final Long duration = new Date().getTime() - sent;
-                final String value = formatTime(duration);
-
-                pings.put((Connection) arguments[0], value);
-                getHistory(((Connection) arguments[0])).add(duration);
-
-                if (isActive) {
-                    panel.getComponent().setText(value);
-                }
-            } catch (NumberFormatException ex) {
-                pings.remove(arguments[0]);
-            }
-
-            if (format != null) {
-                format.delete(0, format.length());
-            }
-
-            panel.refreshDialog();
         }
     }
 
