@@ -35,7 +35,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
  * Provider for {@link StandardDialog} based windows that correspond to some key.
  * <p>
  * This provider will cache instances that are created until the windows are closed. Once a window
- * has been closed, the next call to {@link #get()} or {@link #displayOrRequestFocus()} will result
+ * has been closed, the next call to {@link #get} or {@link #displayOrRequestFocus} will result
  * in a new instance being created.
  * <p>
  * Dialogs with different keys may be open simultaneously, and are treated independently.
