@@ -79,7 +79,6 @@ public class CategoryPanel extends JPanel {
      *
      * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
-     * @param parent      Parent window
      */
     @Inject
     public CategoryPanel(
@@ -92,7 +91,6 @@ public class CategoryPanel extends JPanel {
      * Instantiates a new category panel.
      *
      * @param factory     Prefs component factory instance
-     * @param parent      Parent window
      * @param iconManager Icon manager
      * @param category    Initial category
      */

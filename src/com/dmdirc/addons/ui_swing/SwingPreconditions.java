@@ -38,7 +38,7 @@ public final class SwingPreconditions {
     /**
      * Checks that the method is called on the Swing EDT.
      *
-     * @throw IllegalStateException if the method is called from another thread.
+     * @throws IllegalStateException if the method is called from another thread.
      */
     public static void checkOnEDT() {
         Preconditions.checkState(SwingUtilities.isEventDispatchThread(),
@@ -48,7 +48,7 @@ public final class SwingPreconditions {
     /**
      * Checks that the method is NOT called on the Swing EDT.
      *
-     * @throw IllegalStateException if the method is called from the EDT.
+     * @throws IllegalStateException if the method is called from the EDT.
      */
     public static void checkNotOnEDT() {
         Preconditions.checkState(!SwingUtilities.isEventDispatchThread(),

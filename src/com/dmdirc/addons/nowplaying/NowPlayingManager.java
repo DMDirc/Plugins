@@ -96,7 +96,11 @@ public class NowPlayingManager implements ActionListener {
         actionController.unregisterListener(this);
     }
 
-    /** Loads the plugins settings. */
+    /**
+     * Loads the plugins settings.
+     *
+     * @return A list of sources to be used by the plugin.
+     */
     public List<String> getSettings() {
         if (globalConfig.hasOptionString(domain, "sourceOrder")) {
             return globalConfig.getOptionList(domain, "sourceOrder");

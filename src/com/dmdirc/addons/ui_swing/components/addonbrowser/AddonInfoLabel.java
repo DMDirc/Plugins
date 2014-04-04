@@ -52,9 +52,9 @@ public class AddonInfoLabel extends JPanel {
     /**
      * Creates a new addon info label to describe the specified addon info.
      *
-     * @param addonInfo     Addon to describe
-     * @param parentWindow  Parent window
-     * @param workerFactory
+     * @param addonInfo     Addon to describe.
+     * @param parentWindow  Parent window.
+     * @param workerFactory Factory to use to create install workers.
      */
     public AddonInfoLabel(
             final AddonInfo addonInfo,
