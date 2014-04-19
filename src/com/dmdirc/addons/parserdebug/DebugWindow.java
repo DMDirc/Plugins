@@ -29,6 +29,8 @@ import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Arrays;
 
 /**
@@ -51,15 +53,17 @@ public class DebugWindow extends FrameContainer {
      * @param parser     The parser this plugin is debugging
      * @param connection The connection this window is associated with.
      * @param urlBuilder The URL builder to use when finding icons.
+     * @param eventBus   The bus to despatch events on.
      */
     public DebugWindow(
             final DebugInfoListener listener,
             final String title,
             final Parser parser,
             final Connection connection,
-            final URLBuilder urlBuilder) {
+            final URLBuilder urlBuilder,
+            final EventBus eventBus) {
         super("raw", "Parser Debug", title, connection.getWindowModel().getConfigManager(),
-                urlBuilder, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+                urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;
         this.connection = connection;

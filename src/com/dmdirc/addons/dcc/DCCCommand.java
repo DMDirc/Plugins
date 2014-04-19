@@ -49,6 +49,8 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.File;
 import java.util.concurrent.Callable;
 
@@ -77,6 +79,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final TabCompleterFactory tabCompleterFactory;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -88,6 +92,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param windowManager       Window management
      * @param tabCompleterFactory The factory to use for tab completers.
      * @param urlBuilder          The URL builder to use when finding icons.
+     * @param eventBus            The bus to despatch events on.
      */
     @Inject
     public DCCCommand(
@@ -97,7 +102,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
-            final URLBuilder urlBuilder) {
+            final URLBuilder urlBuilder,
+            final EventBus eventBus) {
         super(controller);
         this.mainFrame = mainFrame;
         myPlugin = plugin;
@@ -105,6 +111,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         this.windowManager = windowManager;
         this.tabCompleterFactory = tabCompleterFactory;
         this.urlBuilder = urlBuilder;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -169,7 +176,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(chat, origin.getConfigManager(),
                     getController(), "*Chat: " + target, myNickname, target, tabCompleterFactory,
-                    messageSinkManager, urlBuilder);
+                    messageSinkManager, urlBuilder, eventBus);
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
@@ -247,7 +254,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     final Parser parser = connection.getParser();
                     final TransferContainer container = new TransferContainer(myPlugin, send,
                             origin.getConfigManager(), "Send: " + target,
-                            target, connection, urlBuilder);
+                            target, connection, urlBuilder, eventBus);
                     windowManager.addWindow(myPlugin.getContainer(), container);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + selectedFile.getName() + "\" "
@@ -260,7 +267,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     if (myPlugin.listen(send)) {
                         final TransferContainer container = new TransferContainer(myPlugin, send,
                                 origin.getConfigManager(), "*Send: "
-                                + target, target, connection, urlBuilder);
+                                + target, target, connection, urlBuilder, eventBus);
                         windowManager.addWindow(myPlugin.getContainer(), container);
                         parser.sendCTCP(target, "DCC", "SEND \""
                                 + selectedFile.getName() + "\" "

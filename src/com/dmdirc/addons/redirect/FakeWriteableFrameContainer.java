@@ -28,6 +28,8 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Collections;
 import java.util.Date;
 
@@ -44,15 +46,17 @@ public class FakeWriteableFrameContainer extends FrameContainer {
      *
      * @param target             The message target that output gets sent to
      * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param eventBus           The bus to despatch events on.
      * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
             final FrameContainer target,
             final MessageSinkManager messageSinkManager,
+            final EventBus eventBus,
             final URLBuilder urlBuilder) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), urlBuilder, target.getCommandParser(),
-                target.getTabCompleter(), messageSinkManager,
+                target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;
     }

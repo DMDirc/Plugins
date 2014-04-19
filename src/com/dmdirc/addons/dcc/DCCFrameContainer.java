@@ -30,6 +30,8 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Collection;
 
 /**
@@ -50,6 +52,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param messageSinkManager  The sink manager to use to despatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
      * @param urlBuilder          The URL builder to use when finding icons.
+     * @param eventBus            The bus to despatch events on.
      * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(
@@ -60,10 +63,12 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
+            final EventBus eventBus,
             final Collection<String> components) {
         super(icon, title, title, configManager, urlBuilder, parser,
                 tabCompleterFactory.getTabCompleter(configManager),
                 messageSinkManager,
+                eventBus,
                 components);
     }
 

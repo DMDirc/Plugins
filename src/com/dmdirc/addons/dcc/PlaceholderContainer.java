@@ -29,6 +29,8 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
 
@@ -49,13 +51,15 @@ public class PlaceholderContainer extends FrameContainer {
      * @param config     Config manager
      * @param mainFrame  Frame that will own new dialogs.
      * @param urlBuilder The URL builder to use when finding icons.
+     * @param eventBus   The bus to despatch events on.
      */
     public PlaceholderContainer(
             final DCCManager plugin,
             final AggregateConfigProvider config,
             final MainFrame mainFrame,
-            final URLBuilder urlBuilder) {
-        super("dcc", "DCCs", "DCCs", config, urlBuilder,
+            final URLBuilder urlBuilder,
+            final EventBus eventBus) {
+        super("dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.mainFrame = mainFrame;

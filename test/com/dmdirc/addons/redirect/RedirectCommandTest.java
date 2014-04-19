@@ -36,6 +36,8 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,6 +65,7 @@ public class RedirectCommandTest {
     @Mock private MessageSinkManager messageSinkManager;
     @Mock private WindowManager windowManager;
     @Mock private URLBuilder urlBuilder;
+    @Mock private EventBus eventBus;
 
     @Before
     public void setup() {
@@ -89,7 +92,7 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand(commandController, messageSinkManager,
-                urlBuilder);
+                urlBuilder, eventBus);
 
         command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
                 new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));

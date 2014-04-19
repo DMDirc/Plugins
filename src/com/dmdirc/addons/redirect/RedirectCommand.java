@@ -36,6 +36,8 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 /**
@@ -53,6 +55,8 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     private final MessageSinkManager messageSinkManager;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -60,15 +64,18 @@ public class RedirectCommand extends Command implements IntelligentCommand {
      * @param controller         The controller to use for command information.
      * @param messageSinkManager The sink manager to use to despatch messages.
      * @param urlBuilder         The URL builder to use when finding icons.
+     * @param eventBus           The bus to despatch events on.
      */
     @Inject
     public RedirectCommand(
             final CommandController controller,
             final MessageSinkManager messageSinkManager,
-            final URLBuilder urlBuilder) {
+            final URLBuilder urlBuilder,
+            final EventBus eventBus) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
         this.urlBuilder = urlBuilder;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target, messageSinkManager, urlBuilder), args.getArgumentsAsString());
+                target, messageSinkManager, eventBus, urlBuilder), args.getArgumentsAsString());
     }
 
     @Override
