@@ -8,6 +8,8 @@
     <property name="plugins.build.metadata" location="${plugins.build}/metadata"/>
     <property name="plugins.dist" location="dist"/>
     <property name="plugins.lib" location="lib"/>
+    <property name="plugins.source.level" value="1.7"/>
+    <property name="plugins.target.level" value="1.7"/>
 
     <import file="build-ivy.xml" />
     <import file="build-tests.xml"/>
@@ -53,7 +55,9 @@
     <target name="compile" depends="-init-compile">
        <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
               classpathref="plugins.classpath" includeantruntime="false"
-              debug="true" deprecation="true">
+              debug="true" deprecation="true"
+              source="${plugins.source.level}"
+              target="${plugins.target.level}">
            <compilerarg value="-Xlint:all"/>
            <compilerarg value="-Xmaxwarns"/>
            <compilerarg value="1000"/>
