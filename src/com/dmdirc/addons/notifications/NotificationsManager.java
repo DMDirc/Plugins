@@ -24,22 +24,23 @@ package com.dmdirc.addons.notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.PluginLoadedEvent;
+import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class NotificationsManager implements ActionListener {
+public class NotificationsManager {
 
     /** The notification methods that we know of. */
     private final List<String> methods = new ArrayList<>();
@@ -51,23 +52,26 @@ public class NotificationsManager implements ActionListener {
     private final AggregateConfigProvider globalConfig;
     /** Plugin manager. */
     private final PluginManager pluginManager;
+    /** Event bus to listen for events on. */
+    private final EventBus eventBus;
 
     @Inject
     public NotificationsManager(
             @PluginDomain(NotificationsPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userSettings,
+            final EventBus eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.pluginManager = pluginManager;
+        this.eventBus = eventBus;
     }
 
     public void onLoad() {
         methods.clear();
         loadSettings();
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.PLUGIN_LOADED, CoreActionType.PLUGIN_UNLOADED);
+        eventBus.register(this);
         for (PluginInfo target : pluginManager.getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
@@ -77,7 +81,17 @@ public class NotificationsManager implements ActionListener {
 
     public void onUnload() {
         methods.clear();
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
+    }
+
+    @Subscribe
+    public void handlePluginLoaded(final PluginLoadedEvent event) {
+        addPlugin(event.getPlugin());
+    }
+
+    @Subscribe
+    public void handlePluginUnloaded(final PluginUnloadedEvent event) {
+        removePlugin(event.getPlugin());
     }
 
     /** Loads the plugins settings. */
@@ -86,16 +100,6 @@ public class NotificationsManager implements ActionListener {
             order = globalConfig.getOptionList(domain, "methodOrder");
         } else {
             order = new ArrayList<>();
-        }
-    }
-
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.PLUGIN_LOADED) {
-            addPlugin((PluginInfo) arguments[0]);
-        } else if (type == CoreActionType.PLUGIN_UNLOADED) {
-            removePlugin((PluginInfo) arguments[0]);
         }
     }
 

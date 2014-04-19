@@ -24,10 +24,9 @@ package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.actions.CoreActionType;
+import com.dmdirc.events.PluginLoadedEvent;
+import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.Plugin;
@@ -35,13 +34,16 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class NowPlayingManager implements ActionListener {
+public class NowPlayingManager {
 
     /** Plugin manager to get plugins from. */
     private final PluginManager pluginManager;
@@ -49,6 +51,8 @@ public class NowPlayingManager implements ActionListener {
     private final ActionController actionController;
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
+    /** Event bus to subscribe to events on. */
+    private final EventBus eventBus;
     /** This plugin's settings domain. */
     private final String domain;
     /** The sources that we know of. */
@@ -62,6 +66,7 @@ public class NowPlayingManager implements ActionListener {
     public NowPlayingManager(
             final PluginManager pluginManager,
             final ActionController actionController,
+            final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain) {
@@ -69,6 +74,7 @@ public class NowPlayingManager implements ActionListener {
         this.actionController = actionController;
         this.globalConfig = globalConfig;
         this.domain = domain;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -78,8 +84,7 @@ public class NowPlayingManager implements ActionListener {
         sources.clear();
         managers.clear();
         order = getSettings();
-        actionController.registerListener(this, CoreActionType.PLUGIN_LOADED,
-                CoreActionType.PLUGIN_UNLOADED);
+        eventBus.register(this);
         for (PluginInfo target : pluginManager.getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
@@ -93,7 +98,17 @@ public class NowPlayingManager implements ActionListener {
     public void onUnload() {
         sources.clear();
         managers.clear();
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
+    }
+
+    @Subscribe
+    public void handlePluginLoaded(final PluginLoadedEvent event) {
+        addPlugin(event.getPlugin());
+    }
+
+    @Subscribe
+    public void handlePluginUnloaded(final PluginUnloadedEvent event) {
+        removePlugin(event.getPlugin());
     }
 
     /**
@@ -280,16 +295,6 @@ public class NowPlayingManager implements ActionListener {
         }
 
         return res;
-    }
-
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type == CoreActionType.PLUGIN_LOADED) {
-            addPlugin((PluginInfo) arguments[0]);
-        } else if (type == CoreActionType.PLUGIN_UNLOADED) {
-            removePlugin((PluginInfo) arguments[0]);
-        }
     }
 
 }
