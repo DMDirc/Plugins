@@ -24,18 +24,18 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.PluginRefreshEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +48,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * Lists known plugins, enabling the end user to enable/disable these as well as download new ones.
  */
-public class PluginPanel extends AddonPanel implements ActionListener {
+public class PluginPanel extends AddonPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -64,6 +64,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
     /**
      * Creates a new instance of PluginPanel.
      *
+     * @param eventBus      Event bus to subscribe to events on
      * @param parentWindow  Parent window
      * @param pluginManager Manager to retrieve plugins from.
      * @param workerFactory Factory to use to create data workers.
@@ -73,6 +74,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
      */
     @Inject
     public PluginPanel(
+            final EventBus eventBus,
             final MainFrame parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,
@@ -84,8 +86,7 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         this.iconManager = iconManager;
         this.updateManager = updateManager;
         this.userConfig = userConfig;
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.PLUGIN_REFRESH);
+        eventBus.register(this);
         pluginManager.refreshPlugins();
     }
 
@@ -130,9 +131,8 @@ public class PluginPanel extends AddonPanel implements ActionListener {
         return table;
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
+    @Subscribe
+    public void handlePluginRefresh(final PluginRefreshEvent event) {
         populateList(addonList);
     }
 
