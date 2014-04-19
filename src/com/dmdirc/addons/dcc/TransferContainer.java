@@ -34,6 +34,8 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Desktop;
 import java.io.File;
 import java.util.Arrays;
@@ -68,8 +70,8 @@ public class TransferContainer extends FrameContainer implements
     /** Connection the send was initiated on. */
     private Connection connection = null;
     /** Show open button. */
-    private boolean showOpen = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(
-            Desktop.Action.OPEN);
+    private final boolean showOpen = Desktop.isDesktopSupported()
+            && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -81,13 +83,15 @@ public class TransferContainer extends FrameContainer implements
      * @param targetNick Nickname of target
      * @param connection The connection that the send was that initiated on
      * @param urlBuilder The URL builder to use when finding icons.
+     * @param eventBus   The bus to despatch events on.
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
-            final String targetNick, final Connection connection, final URLBuilder urlBuilder) {
+            final String targetNick, final Connection connection,
+            final URLBuilder urlBuilder, final EventBus eventBus) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, config, urlBuilder,
+                title, title, config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

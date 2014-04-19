@@ -55,6 +55,8 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -91,6 +93,8 @@ public class DCCManager implements ActionListener {
     private final String domain;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
+    /** The bus to despatch events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of this plugin.
@@ -106,6 +110,7 @@ public class DCCManager implements ActionListener {
      * @param windowFactory         The window factory to register the DCC implementations with.
      * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
      * @param urlBuilder            The URL builder to use when finding icons.
+     * @param eventBus              The bus to despatch events on.
      * @param commandParser         The command parser to use for DCC windows.
      * @param baseDirectory         The directory to create a downloads directory within.
      */
@@ -122,6 +127,7 @@ public class DCCManager implements ActionListener {
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
             final URLBuilder urlBuilder,
+            final EventBus eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainFrame = mainFrame;
@@ -132,6 +138,7 @@ public class DCCManager implements ActionListener {
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
         this.urlBuilder = urlBuilder;
+        this.eventBus = eventBus;
 
         windowFactory.registerImplementation(
                 new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
@@ -221,7 +228,7 @@ public class DCCManager implements ActionListener {
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
                     TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "*Receive: " + nickname, nickname, null, urlBuilder);
+                            config, "*Receive: " + nickname, nickname, null, urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     send.setToken(token);
                     if (resume) {
@@ -247,7 +254,7 @@ public class DCCManager implements ActionListener {
                     }
                 } else {
                     TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "Receive: " + nickname, nickname, null, urlBuilder);
+                            config, "Receive: " + nickname, nickname, null, urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
@@ -431,7 +438,7 @@ public class DCCManager implements ActionListener {
                     .getLocalClient().getNickname();
             final DCCFrameContainer f = new ChatContainer(chat, config, commandController,
                     "Chat: " + nickname, myNickname, nickname, tabCompleterFactory,
-                    messageSinkManager, urlBuilder);
+                    messageSinkManager, urlBuilder, eventBus);
             windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());
@@ -678,7 +685,7 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, mainFrame, urlBuilder);
+        container = new PlaceholderContainer(this, config, mainFrame, urlBuilder, eventBus);
         windowManager.addWindow(container);
     }
 

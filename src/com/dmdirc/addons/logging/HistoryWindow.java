@@ -28,6 +28,8 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Arrays;
 
 /**
@@ -42,6 +44,7 @@ public class HistoryWindow extends FrameContainer {
      * @param reader     The reader to use to get the history
      * @param parent     The window this history window was opened from
      * @param urlBuilder The URL builder to use when finding icons.
+     * @param eventBus   The bus to despatch events on.
      * @param numLines   The number of lines to show
      */
     public HistoryWindow(
@@ -49,8 +52,9 @@ public class HistoryWindow extends FrameContainer {
             final ReverseFileReader reader,
             final FrameContainer parent,
             final URLBuilder urlBuilder,
+            final EventBus eventBus,
             final int numLines) {
-        super("raw", title, title, parent.getConfigManager(), urlBuilder,
+        super("raw", title, title, parent.getConfigManager(), urlBuilder, eventBus,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(

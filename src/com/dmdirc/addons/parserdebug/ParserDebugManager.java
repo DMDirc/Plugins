@@ -98,7 +98,7 @@ public class ParserDebugManager implements DebugInfoListener {
         try {
             parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
-                    connection, urlBuilder);
+                    connection, urlBuilder, eventBus);
             windowManager.addWindow(connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
             window.addLine("======================", true);

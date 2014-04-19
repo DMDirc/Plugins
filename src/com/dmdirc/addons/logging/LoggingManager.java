@@ -825,7 +825,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         }
 
         final HistoryWindow window = new HistoryWindow("History", reader, target, urlBuilder,
-                historyLines);
+                eventBus, historyLines);
         windowManager.addWindow(target, window);
 
         return true;
