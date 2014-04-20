@@ -24,15 +24,16 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +70,7 @@ public class ThemePanel extends AddonPanel {
      */
     @Inject
     public ThemePanel(
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final ThemeManager themeManager,
             final DataLoaderWorkerFactory workerFactory,
             @GlobalConfig final IconManager iconManager,

@@ -24,15 +24,17 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.wrappers.Profile;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.ui.IconManager;
+
+import java.awt.Window;
 
 import javax.inject.Inject;
 import javax.swing.Box;
@@ -87,7 +89,7 @@ public class ProfileManagerDialog extends StandardDialog {
      */
     @Inject
     public ProfileManagerDialog(
-            final MainFrame mainFrame,
+            @MainWindow final Window mainFrame,
             final IdentityFactory identityFactory,
             final IdentityController identityController,
             @GlobalConfig final IconManager iconManager) {

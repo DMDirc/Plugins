@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -31,12 +30,14 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -87,7 +88,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /**
      * Creates a new instance of SwingPreferencesDialog.
      *
-     * @param mainFrame             Main frame to parent dialogs on.
+     * @param parentWindow          Main window to parent dialogs on.
      * @param iconManager           Icon manager used to retrieve images
      * @param restartDialogProvider The provider to use for restart dialogs.
      * @param dialogModelProvider   The provider to use to get a dialog model.
@@ -95,11 +96,12 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      */
     @Inject
     public SwingPreferencesDialog(
-            final MainFrame mainFrame, @GlobalConfig final IconManager iconManager,
+            @MainWindow final Window parentWindow,
+            @GlobalConfig final IconManager iconManager,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider) {
-        super(mainFrame, ModalityType.MODELESS);
+        super(parentWindow, ModalityType.MODELESS);
 
         this.iconManager = iconManager;
         this.restartDialogProvider = restartDialogProvider;

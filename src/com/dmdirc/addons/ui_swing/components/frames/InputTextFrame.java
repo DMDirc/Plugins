@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
@@ -48,6 +47,7 @@ import com.google.common.eventbus.EventBus;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -90,7 +90,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /** Typing indicator label. */
     private TypingLabel typingLabel;
     /** Main frame. */
-    private final Provider<MainFrame> mainFrame;
+    private final Provider<Window> parentWindow;
     /** Plugin Manager. */
     private final PluginManager pluginManager;
     /** Paste dialog factory. */
@@ -117,7 +117,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         this.config = owner.getConfigManager();
         this.colourManager = new ColourManager(config);
-        this.mainFrame = deps.mainFrame;
+        this.parentWindow = deps.mainWindow;
         this.pluginManager = deps.pluginManager;
         this.pasteDialogFactory = deps.pasteDialog;
         this.clipboard = deps.clipboard;
@@ -354,7 +354,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             if (pasteTrigger != null && getContainer().getNumLines(text)
                     > pasteTrigger) {
                 //show the multi line paste dialog
-                pasteDialogFactory.getPasteDialog(this, text, mainFrame.get()).
+                pasteDialogFactory.getPasteDialog(this, text, parentWindow.get()).
                         displayOrRequestFocus();
             } else {
                 //send the lines

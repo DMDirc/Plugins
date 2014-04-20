@@ -24,9 +24,9 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.PluginRefreshEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
@@ -37,6 +37,7 @@ import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +76,7 @@ public class PluginPanel extends AddonPanel {
     @Inject
     public PluginPanel(
             final EventBus eventBus,
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,
             @GlobalConfig final IconManager iconManager,

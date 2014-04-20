@@ -23,14 +23,15 @@
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -78,13 +79,14 @@ public final class ErrorListDialog extends StandardDialog implements
     /**
      * Creates a new instance of ErrorListDialog.
      *
-     * @param mainFrame   The parent window.
+     * @param parentWindow The parent window.
      * @param iconManager The manager to use to load icons.
      */
     @Inject
-    public ErrorListDialog(final MainFrame mainFrame,
+    public ErrorListDialog(
+            @MainWindow final Window parentWindow,
             @GlobalConfig final IconManager iconManager) {
-        super(mainFrame, ModalityType.MODELESS);
+        super(parentWindow, ModalityType.MODELESS);
 
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));

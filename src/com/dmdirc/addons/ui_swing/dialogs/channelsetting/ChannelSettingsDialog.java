@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -37,6 +36,7 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -108,7 +108,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final Channel channel,
-            final MainFrame parentWindow,
+            final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController) {
         super(parentWindow, ModalityType.MODELESS);

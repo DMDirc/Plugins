@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -40,6 +40,7 @@ import com.dmdirc.updater.manager.UpdateManagerStatus;
 import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
     @Inject
     public SwingUpdaterDialog(
             final CachingUpdateManager updateManager,
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider) {
         super(parentWindow, ModalityType.MODELESS);
 

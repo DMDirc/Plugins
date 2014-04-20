@@ -26,9 +26,9 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.CorePluginExtractor;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
@@ -43,6 +43,7 @@ import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
      */
     @Inject
     public SwingFirstRunWizard(
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             @UserConfig final ConfigProvider config,
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor,
