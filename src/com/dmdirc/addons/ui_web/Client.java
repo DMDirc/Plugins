@@ -62,7 +62,7 @@ public class Client {
         while (!queued.isEmpty()) {
             final Window window = queued.remove(0);
             final Window parent = controller.getWindowManager()
-                    .getWindow(window.getContainer().getParent());
+                    .getWindow(window.getContainer().getParent().orNull());
 
             if (parent == null) {
                 events.add(new Event("newwindow", window));

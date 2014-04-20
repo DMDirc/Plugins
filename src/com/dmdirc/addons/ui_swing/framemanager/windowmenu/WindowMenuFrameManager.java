@@ -36,6 +36,8 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.base.Optional;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -267,13 +269,9 @@ public class WindowMenuFrameManager extends JMenu implements
     }
 
     private JMenu getParentMenu(final FrameContainer window) {
-        final FrameContainer parent = window.getParent();
+        final Optional<FrameContainer> parent = window.getParent();
 
-        if (parent == null) {
-            return this;
-        } else {
-            return menus.get(parent);
-        }
+        return parent.isPresent() ? menus.get(parent.get()) : this;
     }
 
     private void replaceItemWithMenu(final JMenu parentMenu,
