@@ -27,6 +27,9 @@ import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.ui.Colour;
+
+import com.google.common.base.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -59,8 +62,14 @@ public class Notify extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                "Current notification colour is: " + origin.getNotification());
+        final Optional<Colour> colour = origin.getNotification();
+        if (colour.isPresent()) {
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "Current notification colour is: " + colour.get());
+        } else {
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    "No current notification colour");
+        }
     }
 
 }

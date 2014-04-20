@@ -436,7 +436,8 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
             @Override
             public void run() {
-                notificationSet(window, window.getNotification());
+                // TODO: Should this colour be configurable?
+                notificationSet(window, window.getNotification().or(Colour.BLACK));
             }
         });
     }
