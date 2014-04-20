@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -33,6 +32,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -46,6 +46,7 @@ import com.dmdirc.util.validators.PortValidator;
 import com.dmdirc.util.validators.ServerNameValidator;
 
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -106,7 +107,7 @@ public class NewServerDialog extends StandardDialog implements
     /**
      * Creates a new instance of the dialog.
      *
-     * @param mainFrame             Main frame
+     * @param mainWindow            Main window to use as a parent.
      * @param activeFrameManager    The active window manager
      * @param config                Config
      * @param iconManager           Icon manager
@@ -116,14 +117,14 @@ public class NewServerDialog extends StandardDialog implements
      */
     @Inject
     public NewServerDialog(
-            final MainFrame mainFrame,
+            @MainWindow final Window mainWindow,
             final ActiveFrameManager activeFrameManager,
             @GlobalConfig final AggregateConfigProvider config,
             @GlobalConfig final IconManager iconManager,
             final IdentityController identityController,
             final ServerManager serverManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
-        super(mainFrame, ModalityType.MODELESS);
+        super(mainWindow, ModalityType.MODELESS);
         this.identityController = identityController;
         this.serverManager = serverManager;
         this.activeFrameManager = activeFrameManager;

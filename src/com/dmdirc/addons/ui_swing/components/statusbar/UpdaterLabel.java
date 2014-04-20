@@ -23,11 +23,11 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
@@ -35,6 +35,7 @@ import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;
 import com.dmdirc.updater.manager.UpdateManagerStatus;
 
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 
 import javax.inject.Inject;
@@ -51,8 +52,8 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     private static final long serialVersionUID = 1;
     /** The manager to use to retrieve icons. */
     private final IconManager iconManager;
-    /** The frame that owns this label. */
-    private final MainFrame mainFrame;
+    /** The parent that will own any popup windows. */
+    private final Window parentWindow;
     /** The update manager to use to retrieve information. */
     private final CachingUpdateManager updateManager;
     /** Provider of updater dialogs. */
@@ -64,7 +65,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
      * Instantiates a new updater label, handles showing updates on the status bar.
      *
      * @param iconManager           The manager to use to retrieve icons.
-     * @param mainFrame             The frame that owns this label.
+     * @param parentWindow          The parent that will own any popup windows.
      * @param updateManager         The manager to use to retrieve information.
      * @param updaterDialogProvider Provider of updater dialogs.
      * @param restartDialogProvider Provider of restart dialogs.
@@ -72,14 +73,14 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
     @Inject
     public UpdaterLabel(
             @GlobalConfig final IconManager iconManager,
-            final MainFrame mainFrame,
+            @MainWindow final Window parentWindow,
             final CachingUpdateManager updateManager,
             final DialogProvider<SwingUpdaterDialog> updaterDialogProvider,
             @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider) {
         super(new JLabel());
 
         this.iconManager = iconManager;
-        this.mainFrame = mainFrame;
+        this.parentWindow = parentWindow;
         this.updateManager = updateManager;
         this.updaterDialogProvider = updaterDialogProvider;
         this.restartDialogProvider = restartDialogProvider;
@@ -109,7 +110,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new UpdaterPopup(updateManager, this, mainFrame);
+        return new UpdaterPopup(updateManager, this, parentWindow);
     }
 
     @Override

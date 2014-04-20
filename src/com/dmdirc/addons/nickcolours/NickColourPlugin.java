@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -35,6 +34,7 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
+import java.awt.Window;
 import java.util.concurrent.Callable;
 
 import dagger.ObjectGraph;
@@ -46,8 +46,8 @@ public class NickColourPlugin extends BasePlugin {
 
     /** Plugin info. */
     private final PluginInfo pluginInfo;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Main window that will own any dialogs. */
+    private final Window mainWindow;
     /** Icon manager. */
     private final IconManager iconManager;
     /** Colour manager. */
@@ -58,7 +58,7 @@ public class NickColourPlugin extends BasePlugin {
     public NickColourPlugin(final PluginInfo pluginInfo, final SwingController controller,
             final IconManager iconManager, final ColourManager colourManager) {
         this.pluginInfo = pluginInfo;
-        this.mainFrame = controller.getMainFrame();
+        this.mainWindow = controller.getMainFrame();
         this.iconManager = iconManager;
         this.colourManager = colourManager;
     }
@@ -95,7 +95,7 @@ public class NickColourPlugin extends BasePlugin {
 
                             @Override
                             public NickColourPanel call() {
-                                return new NickColourPanel(mainFrame, iconManager, colourManager,
+                                return new NickColourPanel(mainWindow, iconManager, colourManager,
                                         manager.getIdentity(), manager.getConfigManager(),
                                         pluginInfo.getDomain());
                             }

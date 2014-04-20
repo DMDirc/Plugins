@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Topic;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
@@ -33,6 +32,7 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -48,6 +48,7 @@ import com.dmdirc.util.annotations.factory.Unbound;
 import com.google.common.base.Optional;
 
 import java.awt.Color;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -127,7 +128,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param iconManager       The icon manager to use for this bar's icons.
      */
     public TopicBar(
-            final MainFrame parentWindow,
+            @SuppressWarnings("qualifiers") @MainWindow final Window parentWindow,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
             @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
             final ColourManager colourManager,

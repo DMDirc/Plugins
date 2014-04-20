@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
@@ -82,20 +82,20 @@ public class SwingInputField extends JComponent implements InputField,
     /**
      * Instantiates a new swing input field.
      *
-     * @param parentWindow  Parent window
+     * @param mainWindow    Main window, to use as a parent for dialogs.
      * @param globalConfig  The configuration to read settings from.
      * @param iconManager   The icon manager to use for icons.
      * @param colourManager The colour manager to use.
      */
     @Inject
     public SwingInputField(
-            final MainFrame parentWindow,
+            @MainWindow final Window mainWindow,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @GlobalConfig final IconManager iconManager,
             final ColourManager colourManager) {
         super();
 
-        this.parentWindow = parentWindow;
+        this.parentWindow = mainWindow;
         this.globalConfig = globalConfig;
         this.iconManager = iconManager;
         this.colourManager = colourManager;

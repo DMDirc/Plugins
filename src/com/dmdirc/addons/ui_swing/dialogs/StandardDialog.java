@@ -26,7 +26,6 @@ import com.dmdirc.ui.CoreUIUtils;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -53,10 +52,10 @@ public class StandardDialog extends JDialog {
     /**
      * Creates a new instance of StandardDialog.
      *
-     * @param owner The frame that owns this dialog
+     * @param owner The window that owns this dialog
      * @param modal Whether to display modally or not
      */
-    public StandardDialog(final Frame owner, final boolean modal) {
+    public StandardDialog(final Window owner, final boolean modal) {
         this(owner, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
     }
 

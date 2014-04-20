@@ -40,6 +40,7 @@ import com.dmdirc.ui.IconManager;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -66,8 +67,8 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
     private final JMenuItem dismiss;
     /** Accept invites menu item. */
     private final JMenuItem accept;
-    /** Main frame. */
-    private final MainFrame mainFrame;
+    /** Parent window that will own popup windows. */
+    private final Window parentWindow;
     /** Active connection. */
     private Connection activeConnection;
 
@@ -87,7 +88,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
             final MainFrame mainFrame) {
         super(new JLabel());
 
-        this.mainFrame = mainFrame;
+        this.parentWindow = mainFrame;
 
         setBorder(BorderFactory.createEtchedBorder());
         label.setIcon(iconManager.getIcon("invite"));
@@ -112,7 +113,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new InvitePopup(this, activeConnection, mainFrame);
+        return new InvitePopup(this, activeConnection, parentWindow);
     }
 
     /**

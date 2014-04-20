@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -32,6 +31,7 @@ import com.dmdirc.util.URLBuilder;
 import com.google.common.eventbus.EventBus;
 
 import java.awt.Dialog.ModalityType;
+import java.awt.Window;
 import java.util.Arrays;
 
 /**
@@ -41,28 +41,28 @@ public class PlaceholderContainer extends FrameContainer {
 
     /** The plugin which owns this placeholder. */
     private final DCCManager plugin;
-    /** Frame that will own new dialogs. */
-    private final MainFrame mainFrame;
+    /** Window that will own new dialogs. */
+    private final Window parentWindow;
 
     /**
      * Creates a placeholder DCC frame.
      *
-     * @param plugin     The plugin which owns this placeholder
-     * @param config     Config manager
-     * @param mainFrame  Frame that will own new dialogs.
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to despatch events on.
+     * @param plugin       The plugin which owns this placeholder
+     * @param config       Config manager
+     * @param parentWindow Window that will parent new dialogs.
+     * @param urlBuilder   The URL builder to use when finding icons.
+     * @param eventBus     The bus to despatch events on.
      */
     public PlaceholderContainer(
             final DCCManager plugin,
             final AggregateConfigProvider config,
-            final MainFrame mainFrame,
+            final Window parentWindow,
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
         super("dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
-        this.mainFrame = mainFrame;
+        this.parentWindow = parentWindow;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PlaceholderContainer extends FrameContainer {
         }
 
         if (dccs > 0) {
-            new StandardQuestionDialog(mainFrame, ModalityType.MODELESS,
+            new StandardQuestionDialog(parentWindow, ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
                     + "to terminate, are you sure you want to do this?") {

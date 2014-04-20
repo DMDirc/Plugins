@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.ColourManager;
 
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +39,8 @@ import java.util.concurrent.Callable;
  */
 public class OsdManager {
 
-    /** The window the OSD will be associated with. */
-    private final MainFrame mainFrame;
+    /** The frame the OSD will be associated with. */
+    private final Window mainFrame;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
     /** The Plugin that owns this OSD Manager. */
@@ -54,7 +54,7 @@ public class OsdManager {
     /** This plugin's settings domain. */
     private final String domain;
 
-    public OsdManager(final MainFrame mainFrame, final IdentityController identityController,
+    public OsdManager(final Window mainFrame, final IdentityController identityController,
             final OsdPlugin plugin, final ColourManager colourManager,
             final PluginInfo pluginInfo) {
         this.mainFrame = mainFrame;

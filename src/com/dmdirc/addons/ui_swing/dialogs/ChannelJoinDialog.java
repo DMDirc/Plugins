@@ -23,12 +23,14 @@
 package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
+
+import java.awt.Window;
 
 /**
  * A dialog to prompt the user for a channel and then join that channel.
@@ -44,19 +46,19 @@ public class ChannelJoinDialog extends StandardInputDialog {
     /**
      * Creates a new dialog which prompts a user and then joins the channel they specify.
      *
-     * @param mainFrame   Main frame
+     * @param mainWindow         Main window to use as a parent.
      * @param activeFrameManager The active window manager
-     * @param iconManager The icon manager to use for validating text fields.
-     * @param title       Window title
-     * @param message     Window message
+     * @param iconManager        The icon manager to use for validating text fields.
+     * @param title              Window title
+     * @param message            Window message
      */
     public ChannelJoinDialog(
-            final MainFrame mainFrame,
+            @SuppressWarnings("qualifiers") @MainWindow final Window mainWindow,
             final ActiveFrameManager activeFrameManager,
             @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
             @Unbound final String title,
             @Unbound final String message) {
-        super(mainFrame, ModalityType.APPLICATION_MODAL, iconManager, title, message);
+        super(mainWindow, ModalityType.APPLICATION_MODAL, iconManager, title, message);
 
         this.activeFrameManager = activeFrameManager;
     }

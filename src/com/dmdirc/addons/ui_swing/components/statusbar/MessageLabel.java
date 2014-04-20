@@ -23,13 +23,14 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
 
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
@@ -82,7 +83,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     public MessageLabel(
             @GlobalConfig final AggregateConfigProvider config,
             @GlobalConfig final IconManager iconManager,
-            final MainFrame parentWindow) {
+            @MainWindow final Window parentWindow) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
         this.iconManager = iconManager;
         queue = new ConcurrentLinkedQueue<>();
