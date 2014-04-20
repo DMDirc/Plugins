@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.Colour;
@@ -30,6 +29,7 @@ import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -75,7 +75,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
     /**
      * Creates a new instance of OsdWindow.
      *
-     * @param mainFrame          The window to associate with.
+     * @param mainWindow         The frame that parents this window.
      * @param identityController The controller to read/write settings with.
      * @param colourManager      The manager to use to parse colours.
      * @param timeout            Timeout period for the window. Set to -1 to use value from config
@@ -88,12 +88,12 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
      * @param domain             This plugin's settings domain
      */
     public OsdWindow(
-            final MainFrame mainFrame,
+            final Window mainWindow,
             final IdentityController identityController,
             final OsdManager osdManager, final ColourManager colourManager,
             final int timeout, final String text, final boolean config, final int x,
             final int y, final String domain) {
-        super(mainFrame, false);
+        super(mainWindow, ModalityType.MODELESS);
 
         this.colourManager = colourManager;
         this.config = config;

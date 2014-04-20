@@ -23,15 +23,16 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
 import com.dmdirc.ui.IconManager;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -60,8 +61,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     private static final long serialVersionUID = 2;
     /** non error state image icon. */
     private final Icon defaultIcon;
-    /** Status controller. */
-    private final MainFrame mainFrame;
+    /** Parent window that will own popups. */
+    private final Window parentWindow;
     /** Swing status bar. */
     private final Provider<SwingStatusBar> statusBar;
     /** The manager to use to retrieve icons. */
@@ -83,19 +84,19 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      * Creates a new ErrorPanel for the specified status bar.
      *
      * @param iconManager             The manager to use to retrieve icons.
-     * @param mainFrame               Main frame
+     * @param parentWindow            Main frame
      * @param statusBar               Status bar
      * @param errorListDialogProvider Error list dialog provider.
      */
     @Inject
     public ErrorPanel(
             @GlobalConfig final IconManager iconManager,
-            final MainFrame mainFrame,
+            @MainWindow final Window parentWindow,
             final Provider<SwingStatusBar> statusBar,
             final DialogProvider<ErrorListDialog> errorListDialogProvider) {
         super(new JLabel());
 
-        this.mainFrame = mainFrame;
+        this.parentWindow = parentWindow;
         this.statusBar = statusBar;
         this.iconManager = iconManager;
         this.errorListDialogProvider = errorListDialogProvider;
@@ -116,7 +117,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(iconManager, this, mainFrame);
+        return new ErrorPopup(iconManager, this, parentWindow);
     }
 
     /** Clears the error. */

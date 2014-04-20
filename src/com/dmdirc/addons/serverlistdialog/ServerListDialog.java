@@ -25,14 +25,15 @@ package com.dmdirc.addons.serverlistdialog;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.LockedLayer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 
+import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,7 +86,7 @@ public class ServerListDialog extends StandardDialog implements
      * @param urlHandler         The URL Handler to use to handle clicked links
      * @param performWrapper     The wrapper to use for the perform tab
      * @param serverListModel    The model to use for the dialog.
-     * @param mainFrame          The main frame that owns the dialog.
+     * @param parentWindow       The window that owns this dialog.
      * @param settingsPanel      The panel to use for settings.
      * @param identityController Controller to use to get profiles.
      */
@@ -96,10 +97,10 @@ public class ServerListDialog extends StandardDialog implements
             final URLHandler urlHandler,
             final PerformWrapper performWrapper,
             final ServerListModel serverListModel,
-            final MainFrame mainFrame,
+            @MainWindow final Window parentWindow,
             final Settings settingsPanel,
             final IdentityController identityController) {
-        super(mainFrame, ModalityType.MODELESS);
+        super(parentWindow, ModalityType.MODELESS);
 
         setTitle("Server List");
         model = serverListModel;

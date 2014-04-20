@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -41,6 +40,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 
+import java.awt.Frame;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,8 +71,8 @@ public class OsdPlugin extends BaseCommandPlugin implements
     private final IdentityController identityController;
     /** The manager to use to parse colours. */
     private final ColourManager colourManager;
-    /** The window that the OSDs will be associated with. */
-    private final MainFrame mainFrame;
+    /** The frame that the OSDs will be associated with. */
+    private final Frame mainFrame;
     /** This plugin's settings domain. */
     private final String domain;
 

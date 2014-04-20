@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.dialogs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.SendWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.Connection;
@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.ClientInfo;
 
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -88,7 +89,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
      */
     @Inject
     public FeedbackDialog(
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final ServerManager serverManager,
             @GlobalConfig final AggregateConfigProvider config,
             @Directory(DirectoryType.BASE) final String baseDirectory) {

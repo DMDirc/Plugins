@@ -29,8 +29,8 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -51,6 +51,7 @@ import com.dmdirc.util.URLBuilder;
 
 import com.google.common.eventbus.EventBus;
 
+import java.awt.Window;
 import java.io.File;
 import java.util.concurrent.Callable;
 
@@ -69,8 +70,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
             CommandType.TYPE_SERVER);
     /** My Plugin. */
     private final DCCManager myPlugin;
-    /** Main frame instance used as the parent for dialogs. */
-    private final MainFrame mainFrame;
+    /** Main window used as the parent for dialogs. */
+    private final Window mainWindow;
     /** Window management. */
     private final WindowManager windowManager;
     /** The sink manager to use to despatch messages. */
@@ -86,7 +87,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * Creates a new instance of DCCCommand.
      *
      * @param controller          The controller to use for command information.
-     * @param mainFrame           mainFrame instance to use
+     * @param mainWindow          The main client window, to use as a parent for dialogs.
      * @param plugin              The DCC Plugin that this command belongs to
      * @param messageSinkManager  The sink manager to use to despatch messages.
      * @param windowManager       Window management
@@ -97,7 +98,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     @Inject
     public DCCCommand(
             final CommandController controller,
-            final MainFrame mainFrame,
+            @MainWindow final Window mainWindow,
             final DCCManager plugin,
             final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
@@ -105,7 +106,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
         super(controller);
-        this.mainFrame = mainFrame;
+        this.mainWindow = mainWindow;
         myPlugin = plugin;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
@@ -328,7 +329,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             jc.setDialogTitle("Send file to " + target + " - DMDirc ");
             jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jc.setMultiSelectionEnabled(false);
-            return jc.showOpenDialog(mainFrame);
+            return jc.showOpenDialog(mainWindow);
         }
     }
 
