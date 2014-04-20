@@ -238,12 +238,13 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                     return;
                 }
                 topicText.setText("");
+                if (topic != null) {
                 channel.getStyliser().addStyledString(
                         (StyledDocument) topicText.getDocument(),
                         new String[]{Styliser.CODE_HEXCOLOUR
                             + UIUtilities.getHex(foregroundColour)
-                            + topic.getTopic(),},
-                        as);
+                                + topic.getTopic(),}, as);
+                }
                 topicText.setCaretPosition(0);
                 validateTopic();
                 setVisible(false);
