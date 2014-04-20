@@ -54,7 +54,7 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final MessageSinkManager messageSinkManager,
             final EventBus eventBus,
             final URLBuilder urlBuilder) {
-        super(target.getIcon(), target.getName(), target.getTitle(),
+        super(target, target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), urlBuilder, target.getCommandParser(),
                 target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());

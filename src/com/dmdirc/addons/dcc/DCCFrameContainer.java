@@ -34,6 +34,8 @@ import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
 
+import javax.annotation.Nullable;
+
 /**
  * This class links DCC objects to a window.
  */
@@ -45,6 +47,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
     /**
      * Creates a new instance of DCCFrame.
      *
+     * @param parent              The parent of this frame container, if any.
      * @param title               The title of this window
      * @param icon                The icon to use
      * @param configManager       Config manager
@@ -56,6 +59,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(
+            @Nullable final FrameContainer parent,
             final String title,
             final String icon,
             final AggregateConfigProvider configManager,
@@ -65,7 +69,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final URLBuilder urlBuilder,
             final EventBus eventBus,
             final Collection<String> components) {
-        super(icon, title, title, configManager, urlBuilder, parser,
+        super(parent, icon, title, title, configManager, urlBuilder, parser,
                 tabCompleterFactory.getTabCompleter(configManager),
                 messageSinkManager,
                 eventBus,

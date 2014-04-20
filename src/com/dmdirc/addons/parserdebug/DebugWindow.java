@@ -62,7 +62,8 @@ public class DebugWindow extends FrameContainer {
             final Connection connection,
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
-        super("raw", "Parser Debug", title, connection.getWindowModel().getConfigManager(),
+        super(connection.getWindowModel(), "raw", "Parser Debug", title,
+                connection.getWindowModel().getConfigManager(),
                 urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;

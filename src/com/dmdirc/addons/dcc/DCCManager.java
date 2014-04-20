@@ -437,9 +437,18 @@ public class DCCManager implements ActionListener {
             }
             final String myNickname = ((Connection) arguments[0]).getParser()
                     .getLocalClient().getNickname();
-            final DCCFrameContainer f = new ChatContainer(chat, config, commandController,
-                    "Chat: " + nickname, myNickname, nickname, tabCompleterFactory,
-                    messageSinkManager, urlBuilder, eventBus);
+            final DCCFrameContainer f = new ChatContainer(
+                    getContainer(),
+                    chat,
+                    config,
+                    commandController,
+                    "Chat: " + nickname,
+                    myNickname,
+                    nickname,
+                    tabCompleterFactory,
+                    messageSinkManager,
+                    urlBuilder,
+                    eventBus);
             windowManager.addWindow(getContainer(), f);
             f.addLine("DCCChatStarting", nickname, chat.getHost(),
                     chat.getPort());

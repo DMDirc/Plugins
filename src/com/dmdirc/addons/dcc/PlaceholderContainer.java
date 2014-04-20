@@ -59,7 +59,7 @@ public class PlaceholderContainer extends FrameContainer {
             final Window parentWindow,
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
-        super("dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
+        super(null, "dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;
