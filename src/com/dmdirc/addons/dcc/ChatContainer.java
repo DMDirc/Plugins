@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.dcc.actions.DCCActions;
 import com.dmdirc.addons.dcc.io.DCCChat;
@@ -35,6 +36,8 @@ import com.dmdirc.util.URLBuilder;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Arrays;
+
+import javax.annotation.Nullable;
 
 /**
  * This class links DCC Chat objects to a window.
@@ -51,6 +54,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
      *
+     * @param parent              The parent of this frame container, if any.
      * @param dcc                 The DCCChat object this window wraps around
      * @param configManager       Config manager
      * @param commandController   The controller to use in the command parser.
@@ -63,6 +67,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param eventBus            The bus to despatch events on.
      */
     public ChatContainer(
+            @Nullable final FrameContainer parent,
             final DCCChat dcc,
             final AggregateConfigProvider configManager,
             final CommandController commandController,
@@ -73,7 +78,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
-        super(title, "dcc-chat-inactive", configManager,
+        super(parent, title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager, commandController),
                 messageSinkManager,
                 tabCompleterFactory,

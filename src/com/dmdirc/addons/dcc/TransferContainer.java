@@ -89,7 +89,7 @@ public class TransferContainer extends FrameContainer implements
             final AggregateConfigProvider config, final String title,
             final String targetNick, final Connection connection,
             final URLBuilder urlBuilder, final EventBus eventBus) {
-        super(dcc.getType() == DCCTransfer.TransferType.SEND
+        super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));

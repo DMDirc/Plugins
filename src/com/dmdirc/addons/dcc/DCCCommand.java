@@ -175,9 +175,18 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final String target, final boolean isSilent) {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
-            final ChatContainer window = new ChatContainer(chat, origin.getConfigManager(),
-                    getController(), "*Chat: " + target, myNickname, target, tabCompleterFactory,
-                    messageSinkManager, urlBuilder, eventBus);
+            final ChatContainer window = new ChatContainer(
+                    myPlugin.getContainer(),
+                    chat,
+                    origin.getConfigManager(),
+                    getController(),
+                    "*Chat: " + target,
+                    myNickname,
+                    target,
+                    tabCompleterFactory,
+                    messageSinkManager,
+                    urlBuilder,
+                    eventBus);
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());

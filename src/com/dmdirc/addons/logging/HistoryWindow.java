@@ -54,7 +54,7 @@ public class HistoryWindow extends FrameContainer {
             final URLBuilder urlBuilder,
             final EventBus eventBus,
             final int numLines) {
-        super("raw", title, title, parent.getConfigManager(), urlBuilder, eventBus,
+        super(parent, "raw", title, title, parent.getConfigManager(), urlBuilder, eventBus,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(
