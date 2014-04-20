@@ -27,7 +27,6 @@ import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
@@ -39,11 +38,16 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ActionCreatedEvent;
+import com.dmdirc.events.ActionDeletedEvent;
+import com.dmdirc.events.ActionUpdatedEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,8 +73,7 @@ import net.miginfocom.swing.MigLayout;
  * Allows the user to manage actions.
  */
 public class ActionsManagerDialog extends StandardDialog implements
-        ActionListener, com.dmdirc.interfaces.ActionListener,
-        ListSelectionListener {
+        ActionListener, ListSelectionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -82,6 +85,8 @@ public class ActionsManagerDialog extends StandardDialog implements
     private final AtomicBoolean saving = new AtomicBoolean(false);
     /** Duplicate action group validator. */
     private final ValidatorChain<String> validator;
+    /** Event bus to post events to and subscribe to events on. */
+    private final EventBus eventbus;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -110,6 +115,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     /**
      * Creates a new instance of ActionsManagerDialog.
      *
+     * @param eventBus          Event bus to post events to and subscribe to events on.
      * @param apple             Apple instance
      * @param parentWindow      Parent window
      * @param config            Config to save dialog state to
@@ -119,6 +125,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     @Inject
     public ActionsManagerDialog(
+            final EventBus eventBus,
             final Apple apple,
             final MainFrame parentWindow,
             @UserConfig final ConfigProvider config,
@@ -127,6 +134,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             final ActionsGroupPanelFactory groupPanelFactory) {
         super(Apple.isAppleUI() ? new AppleJFrame(apple, parentWindow)
                 : parentWindow, ModalityType.MODELESS);
+        this.eventbus = eventBus;
         this.config = config;
         this.compFactory = compFactory;
         this.iconManager = iconManager;
@@ -198,9 +206,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         edit.addActionListener(this);
         delete.addActionListener(this);
         groups.getSelectionModel().addListSelectionListener(this);
-        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_CREATED);
-        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_UPDATED);
-        ActionManager.getActionManager().registerListener(this, CoreActionType.ACTION_DELETED);
+        eventbus.register(this);
     }
 
     /**
@@ -427,22 +433,26 @@ public class ActionsManagerDialog extends StandardDialog implements
         }
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (groups.getSelectedValue() == null) {
-            return;
+    @Subscribe
+    public void handleActionCreated(final ActionCreatedEvent event) {
+        handleActionCreatedOrUpdated(event.getAction());
+    }
+
+    @Subscribe
+    public void handleActionUpdated(final ActionUpdatedEvent event) {
+        handleActionCreatedOrUpdated(event.getAction());
+    }
+
+    private void handleActionCreatedOrUpdated(final Action action) {
+        if (action.getGroup().equals(groups.getSelectedValue().getName())) {
+            actions.actionChanged(action);
         }
-        if (type.equals(CoreActionType.ACTION_CREATED) || type.equals(
-                CoreActionType.ACTION_UPDATED)) {
-            final Action action = (Action) arguments[0];
-            if (action.getGroup().equals(groups.getSelectedValue().getName())) {
-                actions.actionChanged(action);
-            }
-        } else {
-            if (arguments[0].equals(groups.getSelectedValue().getName())) {
-                actions.actionDeleted((String) arguments[1]);
-            }
+    }
+
+    @Subscribe
+    public void handleActionDeleted(final ActionDeletedEvent event) {
+        if (event.getGroup().getName().equals(groups.getSelectedValue().getName())) {
+            actions.actionDeleted(event.getName());
         }
     }
 
