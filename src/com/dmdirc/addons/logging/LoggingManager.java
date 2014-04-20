@@ -28,14 +28,12 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.events.BaseQueryActionEvent;
+import com.dmdirc.events.BaseQueryMessageEvent;
 import com.dmdirc.events.ChannelClosedEvent;
 import com.dmdirc.events.ChannelOpenedEvent;
-import com.dmdirc.events.QueryActionEvent;
 import com.dmdirc.events.QueryClosedEvent;
-import com.dmdirc.events.QueryMessageEvent;
 import com.dmdirc.events.QueryOpenedEvent;
-import com.dmdirc.events.QuerySelfActionEvent;
-import com.dmdirc.events.QuerySelfMessageEvent;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
@@ -251,28 +249,14 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
     }
 
     @Subscribe
-    public void handleQuerySelfAction(final QuerySelfActionEvent event) {
+    public void handleQueryActions(final BaseQueryActionEvent event) {
         final ClientInfo client = event.getClient();
         final String filename = getLogFile(client);
         appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
     }
 
     @Subscribe
-    public void handleQueryAction(final QueryActionEvent event) {
-        final ClientInfo client = event.getClient();
-        final String filename = getLogFile(client);
-        appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
-    }
-
-    @Subscribe
-    public void handleQuerySelfMessage(final QuerySelfMessageEvent event) {
-        final ClientInfo client = event.getClient();
-        final String filename = getLogFile(client);
-        appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
-    }
-
-    @Subscribe
-    public void handleQueryMessage(final QueryMessageEvent event) {
+    public void handleQueryMessages(final BaseQueryMessageEvent event) {
         final ClientInfo client = event.getClient();
         final String filename = getLogFile(client);
         appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
