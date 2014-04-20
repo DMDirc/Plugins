@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -200,7 +201,7 @@ public class SwingWindowFactory implements FrameListener {
      *
      * @return A relevant window or null
      */
-    public TextFrame getSwingWindow(final FrameContainer window) {
+    public TextFrame getSwingWindow(@Nullable final FrameContainer window) {
         return windows.get(window);
     }
 

@@ -29,6 +29,8 @@ import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.ui.messages.Styliser;
 
+import com.google.common.base.Optional;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,9 +119,9 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
     public void selectionChanged(final TextFrame window) {
         if (frame.equals(window.getContainer())) {
             setFont(getFont().deriveFont(Font.BOLD));
-            final FrameContainer parentWindow = window.getContainer().getParent();
-            if (parentWindow != null) {
-                manager.parentSelection(parentWindow);
+            final Optional<FrameContainer> parentWindow = window.getContainer().getParent();
+            if (parentWindow.isPresent()) {
+                manager.parentSelection(parentWindow.get());
             }
         } else {
             setFont(getFont().deriveFont(Font.PLAIN));

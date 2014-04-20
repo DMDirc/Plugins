@@ -28,6 +28,7 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Arrays;
@@ -64,7 +65,8 @@ public class HistoryWindow extends FrameContainer {
 
     @Override
     public Connection getConnection() {
-        return getParent() == null ? null : getParent().getConnection();
+        final Optional<FrameContainer> parent = getParent();
+        return parent.isPresent() ? parent.get().getConnection() : null;
     }
 
 }

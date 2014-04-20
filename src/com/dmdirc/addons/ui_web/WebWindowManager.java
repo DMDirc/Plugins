@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 /**
  * Manages WebUI windows.
  */
@@ -96,7 +98,7 @@ public class WebWindowManager implements FrameListener {
      *
      * @return The corresponding web window, or null if there is none
      */
-    public WebWindow getWindow(final FrameContainer container) {
+    public WebWindow getWindow(@Nullable final FrameContainer container) {
         return windows.get(container);
     }
 

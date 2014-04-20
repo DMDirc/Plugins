@@ -35,6 +35,8 @@ import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.Styliser;
 
+import com.google.common.base.Optional;
+
 import java.awt.Color;
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator;
@@ -70,12 +72,13 @@ public class WebWindow implements Window, IRCDocumentListener,
         parent.addFrameInfoListener(this);
         parent.addCloseListener(this);
 
-        if (parent.getParent() == null) {
-            handler.addEvent(new Event("newwindow", this));
-        } else {
+        final Optional<FrameContainer> grandParent = parent.getParent();
+        if (grandParent.isPresent()) {
             handler.addEvent(new Event("newchildwindow",
                     new Object[]{controller.getWindowManager().getWindow(
-                                parent.getParent()), this}));
+                                grandParent.get()), this}));
+        } else {
+            handler.addEvent(new Event("newwindow", this));
         }
     }
 
