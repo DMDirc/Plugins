@@ -241,7 +241,8 @@ public class TreeFrameManager implements FrameManager,
                 window.addFrameInfoListener(TreeFrameManager.this);
                 window.addNotificationListener(TreeFrameManager.this);
 
-                node.getLabel().notificationSet(window, window.getNotification());
+                // TODO: Should this colour be configurable?
+                node.getLabel().notificationSet(window, window.getNotification().or(Colour.BLACK));
                 node.getLabel().iconChanged(window, window.getIcon());
             }
         });
