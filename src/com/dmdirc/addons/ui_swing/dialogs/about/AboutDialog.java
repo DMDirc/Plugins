@@ -22,9 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -62,7 +63,7 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
      */
     @Inject
     public AboutDialog(
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final InfoPanel infoPanel,
             final CreditsPanel creditsPanel,
             final LicencesPanel licensesPanel,

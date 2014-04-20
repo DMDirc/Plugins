@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.ServerState;
 import com.dmdirc.actions.wrappers.PerformWrapper;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
@@ -36,6 +35,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -73,17 +73,17 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      * Creates a new instance of ServerSettingsDialog.
      *
      * @param preferencesManager Preferences manager to retrieve settings from
-     * @param compFactory    Preferences setting component factory
-     * @param performWrapper Wrapper for the perform tab.
+     * @param compFactory        Preferences setting component factory
+     * @param performWrapper     Wrapper for the perform tab.
      * @param connection         The server object that we're editing settings for
-     * @param parentWindow   Parent window
+     * @param parentWindow       Parent window
      */
     public ServerSettingsDialog(
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Connection connection,
-            final MainFrame parentWindow) {
+            final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
         this.connection = connection;
         this.performWrapper = performWrapper;
@@ -104,7 +104,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
      * @param compFactory  Preferences setting component factory
      */
     private void initComponents(
-            final MainFrame parentWindow,
+            final Window parentWindow,
             final AggregateConfigProvider config,
             final PrefsComponentFactory compFactory) {
         orderButtons(new JButton(), new JButton());

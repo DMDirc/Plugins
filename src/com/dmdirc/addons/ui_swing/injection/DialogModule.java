@@ -49,6 +49,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.ServiceManager;
 
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 
 import javax.inject.Provider;
@@ -133,7 +134,7 @@ public class DialogModule {
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
-            final MainFrame parentWindow) {
+            @MainWindow final Window parentWindow) {
         return new KeyedDialogProvider<Connection, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Connection key) {
@@ -152,7 +153,7 @@ public class DialogModule {
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {

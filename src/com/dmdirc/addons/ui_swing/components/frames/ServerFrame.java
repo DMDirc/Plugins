@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
@@ -38,6 +37,7 @@ import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.cert.CertificateException;
@@ -59,8 +59,8 @@ public final class ServerFrame extends InputTextFrame implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
-    /** Main frame. */
-    private final Provider<MainFrame> mainFrame;
+    /** Main window provider. */
+    private final Provider<Window> mainWindow;
     /** Icon manager. */
     private final IconManager iconManager;
     /** Dialog provider to close SSD. */
@@ -86,7 +86,7 @@ public final class ServerFrame extends InputTextFrame implements
             final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
             @Unbound final Connection owner) {
         super(deps, inputFieldProvider, owner.getWindowModel());
-        this.mainFrame = deps.mainFrame;
+        this.mainWindow = deps.mainWindow;
         this.iconManager = deps.iconManager;
         this.dialogProvider = dialogProvider;
         this.connection = owner;
@@ -159,7 +159,7 @@ public final class ServerFrame extends InputTextFrame implements
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(iconManager, mainFrame.get(),
+        sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
                 new SSLCertificateDialogModel(chain, problems, certificateManager));
         sslDialog.display();
     }

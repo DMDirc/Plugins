@@ -24,10 +24,10 @@ package com.dmdirc.addons.ui_swing.dialogs.url;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -73,7 +73,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
             @Unbound final URI url,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider global,
             @SuppressWarnings("qualifiers") @UserConfig final ConfigProvider config,
-            final MainFrame parentWindow,
+            @SuppressWarnings("qualifiers") @MainWindow final Window parentWindow,
             final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
 

@@ -30,15 +30,16 @@ import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.actions.CoreActionComparison;
 import com.dmdirc.actions.wrappers.Alias;
 import com.dmdirc.actions.wrappers.AliasWrapper;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class AliasManagerDialog extends StandardDialog implements ActionListener
      */
     @Inject
     public AliasManagerDialog(
-            final MainFrame parentWindow,
+            @MainWindow final Window parentWindow,
             final ActionSubstitutorFactory substitutorFactory,
             final AliasWrapper aliasWrapper,
             final ActionFactory actionFactory,

@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
@@ -35,6 +34,7 @@ import com.dmdirc.addons.ui_swing.actions.NicknameCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
@@ -59,7 +59,6 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -67,6 +66,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.google.common.eventbus.EventBus;
 
 import java.awt.Point;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -87,7 +87,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Implements a generic (internal) frame.
  */
-public abstract class TextFrame extends JPanel implements Window,
+public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.ui.Window,
         ConfigChangeListener, TextPaneListener, FrameCloseListener {
 
     /** A version number for this class. */
@@ -537,7 +537,7 @@ public abstract class TextFrame extends JPanel implements Window,
 
         final TextPaneFactory textPaneFactory;
         final SwingController controller;
-        final Provider<MainFrame> mainFrame;
+        final Provider<Window> mainWindow;
         final PopupManager popupManager;
         final EventBus eventBus;
         final AggregateConfigProvider globalConfig;
@@ -552,7 +552,7 @@ public abstract class TextFrame extends JPanel implements Window,
         public TextFrameDependencies(
                 final TextPaneFactory textPaneFactory,
                 final SwingController controller,
-                final Provider<MainFrame> mainFrame,
+                @MainWindow final Provider<Window> mainWindow,
                 final PopupManager popupManager,
                 final EventBus eventBus,
                 final PasteDialogFactory pasteDialog,
@@ -564,7 +564,7 @@ public abstract class TextFrame extends JPanel implements Window,
                 final CommandController commandController) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
-            this.mainFrame = mainFrame;
+            this.mainWindow = mainWindow;
             this.popupManager = popupManager;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
