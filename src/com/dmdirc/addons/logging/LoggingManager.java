@@ -30,6 +30,12 @@ import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.ChannelClosedEvent;
 import com.dmdirc.events.ChannelOpenedEvent;
+import com.dmdirc.events.QueryActionEvent;
+import com.dmdirc.events.QueryClosedEvent;
+import com.dmdirc.events.QueryMessageEvent;
+import com.dmdirc.events.QueryOpenedEvent;
+import com.dmdirc.events.QuerySelfActionEvent;
+import com.dmdirc.events.QuerySelfMessageEvent;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
@@ -167,11 +173,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
                 CoreActionType.CHANNEL_NICKCHANGE,
                 CoreActionType.CHANNEL_MODECHANGE,
                 CoreActionType.QUERY_OPENED,
-                CoreActionType.QUERY_CLOSED,
-                CoreActionType.QUERY_MESSAGE,
-                CoreActionType.QUERY_SELF_MESSAGE,
-                CoreActionType.QUERY_ACTION,
-                CoreActionType.QUERY_SELF_ACTION);
+                CoreActionType.QUERY_CLOSED);
 
         // Close idle files every hour.
         idleFileTimer = new Timer("LoggingPlugin Timer");
@@ -224,73 +226,58 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         }
     }
 
-    /**
-     * Log a query-related event.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
-    protected void handleQueryEvent(final CoreActionType type, final StringBuffer format,
-            final Object... arguments) {
-        final Query query = (Query) arguments[0];
-        if (query.getConnection() == null) {
-            Logger.appError(ErrorLevel.MEDIUM, "Query object has no server (" + type.toString()
-                    + ")", new Exception("Query object has no server (" + type.toString() + ")"));
-            return;
-        }
-
-        final Parser parser = query.getConnection().getParser();
-        ClientInfo client;
-
-        if (parser == null) {
-            // Without a parser object, we might not be able to find the file to log this to.
-            if (networkfolders) {
-                // We *wont* be able to, so rather than logging to an incorrect file we just won't log.
-                return;
-            }
-            client = null;
-        } else {
-            client = parser.getClient(query.getHost());
-        }
-
+    @Subscribe
+    public void handleQueryOpened(final QueryOpenedEvent event) {
+        final Parser parser = event.getQuery().getConnection().getParser();
+        final ClientInfo client = parser.getClient(event.getQuery().getHost());
         final String filename = getLogFile(client);
-
-        switch (type) {
-            case QUERY_OPENED:
-                if (autobackbuffer) {
-                    showBackBuffer(query, filename);
-                }
-
-                appendLine(filename, "*** Query opened at: %s", OPENED_AT_FORMAT.format(new Date()));
-                appendLine(filename, "*** Query with User: %s", query.getHost());
-                appendLine(filename, "");
-                break;
-            case QUERY_CLOSED:
-                appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
-                if (openFiles.containsKey(filename)) {
-                    StreamUtils.close(openFiles.get(filename).writer);
-                    openFiles.remove(filename);
-                }
-                break;
-            case QUERY_MESSAGE:
-            case QUERY_SELF_MESSAGE:
-            case QUERY_ACTION:
-            case QUERY_SELF_ACTION:
-                final boolean isME = (type == CoreActionType.QUERY_SELF_MESSAGE || type
-                        == CoreActionType.QUERY_SELF_ACTION);
-                final String overrideNick = isME ? getDisplayName(parser.getLocalClient()) : "";
-
-                if (type == CoreActionType.QUERY_MESSAGE || type
-                        == CoreActionType.QUERY_SELF_MESSAGE) {
-                    appendLine(filename, "<%s> %s", getDisplayName(client, overrideNick),
-                            arguments[2]);
-                } else {
-                    appendLine(filename, "* %s %s", getDisplayName(client, overrideNick),
-                            arguments[2]);
-                }
-                break;
+        if (autobackbuffer) {
+            showBackBuffer(event.getQuery(), filename);
         }
+
+        appendLine(filename, "*** Query opened at: %s", OPENED_AT_FORMAT.format(new Date()));
+        appendLine(filename, "*** Query with User: %s", event.getQuery().getHost());
+        appendLine(filename, "");
+    }
+
+    @Subscribe
+    public void handleQueryClosed(final QueryClosedEvent event) {
+        final Parser parser = event.getQuery().getConnection().getParser();
+        final ClientInfo client = parser.getClient(event.getQuery().getHost());
+        final String filename = getLogFile(client);
+        appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+        if (openFiles.containsKey(filename)) {
+            StreamUtils.close(openFiles.get(filename).writer);
+            openFiles.remove(filename);
+        }
+    }
+
+    @Subscribe
+    public void handleQuerySelfAction(final QuerySelfActionEvent event) {
+        final ClientInfo client = event.getClient();
+        final String filename = getLogFile(client);
+        appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
+    }
+
+    @Subscribe
+    public void handleQueryAction(final QueryActionEvent event) {
+        final ClientInfo client = event.getClient();
+        final String filename = getLogFile(client);
+        appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
+    }
+
+    @Subscribe
+    public void handleQuerySelfMessage(final QuerySelfMessageEvent event) {
+        final ClientInfo client = event.getClient();
+        final String filename = getLogFile(client);
+        appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
+    }
+
+    @Subscribe
+    public void handleQueryMessage(final QueryMessageEvent event) {
+        final ClientInfo client = event.getClient();
+        final String filename = getLogFile(client);
+        appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
     }
 
     /**
@@ -400,33 +387,7 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             final Object... arguments) {
         if (type instanceof CoreActionType) {
             final CoreActionType thisType = (CoreActionType) type;
-
-            switch (thisType) {
-                case CHANNEL_MESSAGE:
-                case CHANNEL_SELF_MESSAGE:
-                case CHANNEL_ACTION:
-                case CHANNEL_SELF_ACTION:
-                case CHANNEL_GOTTOPIC:
-                case CHANNEL_TOPICCHANGE:
-                case CHANNEL_JOIN:
-                case CHANNEL_PART:
-                case CHANNEL_QUIT:
-                case CHANNEL_KICK:
-                case CHANNEL_NICKCHANGE:
-                case CHANNEL_MODECHANGE:
-                    handleChannelEvent(thisType, format, arguments);
-                    break;
-                case QUERY_OPENED:
-                case QUERY_CLOSED:
-                case QUERY_MESSAGE:
-                case QUERY_SELF_MESSAGE:
-                case QUERY_ACTION:
-                case QUERY_SELF_ACTION:
-                    handleQueryEvent(thisType, format, arguments);
-                    break;
-                default:
-                    break;
-            }
+            handleChannelEvent(thisType, format, arguments);
         }
     }
 
