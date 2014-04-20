@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -64,7 +64,7 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param owner         The window that owns this dialog.
+     * @param parentWindow  The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
      * @param iconManager   The icon manager to use for the dialog icon.
      * @param panel         The panel that's opening this dialog
@@ -75,13 +75,13 @@ public class NickColourInputDialog extends StandardDialog
      * @param nickcolour    The nicklist colour that's currently set
      */
     public NickColourInputDialog(
-            final MainFrame owner,
+            final Window parentWindow,
             final ColourManager colourManager,
             final IconManager iconManager,
             final NickColourPanel panel, final int row,
             final String nickname, final String network,
             final String textcolour, final String nickcolour) {
-        super(owner, false);
+        super(parentWindow, false);
 
         this.panel = panel;
         this.row = row;
@@ -99,17 +99,17 @@ public class NickColourInputDialog extends StandardDialog
     /**
      * Creates a new instance of NickColourInputDialog.
      *
-     * @param owner         The window that owns this dialog.
+     * @param parentWindow  The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
      * @param iconManager   The icon manager to use for the dialog icon.
      * @param panel         The panel that's opening this dialog
      */
     public NickColourInputDialog(
-            final MainFrame owner,
+            final Window parentWindow,
             final ColourManager colourManager,
             final IconManager iconManager,
             final NickColourPanel panel) {
-        this(owner, colourManager, iconManager, panel, -1, "", "", "", "");
+        this(parentWindow, colourManager, iconManager, panel, -1, "", "", "", "");
 
         isnew = true;
     }

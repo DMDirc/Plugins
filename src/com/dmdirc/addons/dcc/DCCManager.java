@@ -31,10 +31,10 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
@@ -57,6 +57,7 @@ import com.dmdirc.util.URLBuilder;
 
 import com.google.common.eventbus.EventBus;
 
+import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -87,8 +88,8 @@ public class DCCManager implements ActionListener {
     private final CommandController commandController;
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
-    /** The main frame that will own any new windows. */
-    private final MainFrame mainFrame;
+    /** The client's main window that will parent any new windows. */
+    private final Window mainWindow;
     /** The configuration domain to use. */
     private final String domain;
     /** The URL builder to use when finding icons. */
@@ -99,7 +100,7 @@ public class DCCManager implements ActionListener {
     /**
      * Creates a new instance of this plugin.
      *
-     * @param mainFrame             The main frame that will own any new windows.
+     * @param mainWindow            The window that will parent any new dialogs.
      * @param pluginInfo            This plugin's plugin info
      * @param identityController    The Identity controller that provides the current config
      * @param globalConfig          The configuration to read settings from.
@@ -116,7 +117,7 @@ public class DCCManager implements ActionListener {
      */
     @Inject
     public DCCManager(
-            final MainFrame mainFrame,
+            @MainWindow final Window mainWindow,
             final PluginInfo pluginInfo,
             final IdentityController identityController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
@@ -130,7 +131,7 @@ public class DCCManager implements ActionListener {
             final EventBus eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
-        this.mainFrame = mainFrame;
+        this.mainWindow = mainWindow;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         this.commandController = commandController;
@@ -290,7 +291,7 @@ public class DCCManager implements ActionListener {
                 return false;
             } else {
                 JOptionPane.showMessageDialog(
-                        mainFrame,
+                        mainWindow,
                         "This file has already "
                         + "been completed, or is longer than the file you are "
                         + "receiving.\nPlease choose a different file.",
@@ -316,7 +317,7 @@ public class DCCManager implements ActionListener {
                 return true;
             } else {
                 final int result = JOptionPane.showConfirmDialog(
-                        mainFrame, "This file exists already"
+                        mainWindow, "This file exists already"
                         + ", do you want to resume an exisiting download?",
                         "Resume Download?", JOptionPane.YES_NO_OPTION);
                 return (result == JOptionPane.YES_OPTION);
@@ -343,7 +344,7 @@ public class DCCManager implements ActionListener {
         jc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jc.setMultiSelectionEnabled(false);
         jc.setSelectedFile(new File(send.getFileName()));
-        return jc.showSaveDialog(mainFrame);
+        return jc.showSaveDialog(mainWindow);
     }
 
     @Override
@@ -685,7 +686,7 @@ public class DCCManager implements ActionListener {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, mainFrame, urlBuilder, eventBus);
+        container = new PlaceholderContainer(this, config, mainWindow, urlBuilder, eventBus);
         windowManager.addWindow(container);
     }
 

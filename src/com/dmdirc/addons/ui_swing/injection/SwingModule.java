@@ -67,7 +67,9 @@ import com.dmdirc.util.URLBuilder;
 
 import com.google.common.eventbus.EventBus;
 
+import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.util.concurrent.Callable;
 
@@ -150,6 +152,20 @@ public class SwingModule {
                         eventBus);
             }
         });
+    }
+
+    @Provides
+    @MainWindow
+    @Singleton
+    public Window getMainWindow(final MainFrame mainFrame) {
+        return mainFrame;
+    }
+
+    @Provides
+    @MainWindow
+    @Singleton
+    public Frame getMainWindowAsFrame(final MainFrame mainFrame) {
+        return mainFrame;
     }
 
     @Provides

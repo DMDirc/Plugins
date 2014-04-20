@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -30,6 +29,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -65,8 +65,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final JButton editButton;
     /** Delete button. */
     private final JButton deleteButton;
-    /** Main frame instance to parent dialogs on. */
-    private final MainFrame mainFrame;
+    /** Parent window that will own any new dialogs. */
+    private final Window parentWindow;
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
     /** Colour manage to use to parse colours. */
@@ -79,18 +79,18 @@ public class NickColourPanel extends JPanel implements ActionListener,
     /**
      * Creates a new instance of NickColourPanel.
      *
-     * @param mainFrame     Main frame to parent dialogs on
-     * @param iconManager   Icon manager to load icons from
+     * @param parentWindow  Parent window that will own any new dialogs.
+     * @param iconManager   Icon manager to load icons from.
      * @param colourManager The colour manager to use to parse colours.
      * @param userSettings  The provider to write user settings to.
      * @param config        The config provider to read settings from.
      * @param domain        The plugin's config domain
      */
     public NickColourPanel(
-            final MainFrame mainFrame, final IconManager iconManager,
+            final Window parentWindow, final IconManager iconManager,
             final ColourManager colourManager, final ConfigProvider userSettings,
             final AggregateConfigProvider config, final String domain) {
-        this.mainFrame = mainFrame;
+        this.parentWindow = parentWindow;
         this.iconManager = iconManager;
         this.colourManager = colourManager;
         this.configIdentity = userSettings;
@@ -156,7 +156,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final int row = table.getSelectedRow();
         switch (e.getActionCommand()) {
             case "Add":
-                new NickColourInputDialog(mainFrame, colourManager, iconManager, this);
+                new NickColourInputDialog(parentWindow, colourManager, iconManager, this);
                 break;
             case "Edit":
                 final DefaultTableModel model = ((DefaultTableModel) table.getModel());
@@ -170,7 +170,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 if (nickcolour == null) {
                     nickcolour = "";
                 }
-                new NickColourInputDialog(mainFrame, colourManager, iconManager, this,
+                new NickColourInputDialog(parentWindow, colourManager, iconManager, this,
                         row, nickname, network, textcolour, nickcolour);
                 break;
             case "Delete":
