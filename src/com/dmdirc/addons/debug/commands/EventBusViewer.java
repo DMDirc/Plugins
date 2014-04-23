@@ -138,7 +138,7 @@ public class EventBusViewer extends DebugCommand {
                     .append(event.getClass().getSimpleName())
                     .append(Styliser.CODE_BOLD);
 
-            for (Method method : event.getClass().getDeclaredMethods()) {
+            for (Method method : event.getClass().getMethods()) {
                 if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
                     try {
                         output.append(' ')
