@@ -26,6 +26,7 @@ import com.dmdirc.ClientModule;
 import com.dmdirc.addons.debug.commands.Benchmark;
 import com.dmdirc.addons.debug.commands.ColourSpam;
 import com.dmdirc.addons.debug.commands.ConfigInfo;
+import com.dmdirc.addons.debug.commands.EventBusViewer;
 import com.dmdirc.addons.debug.commands.FakeError;
 import com.dmdirc.addons.debug.commands.FakeUpdates;
 import com.dmdirc.addons.debug.commands.FirstRun;
@@ -144,6 +145,11 @@ public class DebugModule {
 
     @Provides(type = Provides.Type.SET)
     public DebugCommand getCommand(final Time command) {
+        return command;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public DebugCommand getCommand(final EventBusViewer command) {
         return command;
     }
 
