@@ -27,6 +27,8 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
+import com.google.common.eventbus.EventBus;
+
 /**
  * DCC CommandParser.
  */
@@ -40,11 +42,13 @@ public class DCCCommandParser extends GlobalCommandParser {
      *
      * @param configManager     Config manager
      * @param commandController The controller to load commands and command info from.
+     * @param eventBus          Event bus to post events on
      */
     public DCCCommandParser(
             final AggregateConfigProvider configManager,
-            final CommandController commandController) {
-        super(configManager, commandController);
+            final CommandController commandController,
+            final EventBus eventBus) {
+        super(configManager, commandController, eventBus);
     }
 
     /**

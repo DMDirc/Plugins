@@ -26,6 +26,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +49,8 @@ public class TimerManager {
     private final CommandController commandController;
     /** Action controller. */
     private final ActionController actionController;
+    /** Event bus to post events on . */
+    private final EventBus eventBus;
     /** Have we registered our types already? */
     private static boolean registered;
     /** The timer to use for scheduling. */
@@ -54,9 +58,11 @@ public class TimerManager {
 
     @Inject
     public TimerManager(final CommandController commandController,
-            final ActionController actionController) {
+            final ActionController actionController,
+            final EventBus eventBus) {
         this.commandController = commandController;
         this.actionController = actionController;
+        this.eventBus = eventBus;
     }
 
     public void load() {
@@ -99,7 +105,7 @@ public class TimerManager {
         synchronized (this) {
             final int timerKey = findFreeKey();
             timerList.put(timerKey, new TimedCommand(this, commandController, timerKey,
-                    repetitions, interval, command, origin));
+                    repetitions, interval, command, origin, eventBus));
         }
     }
 
