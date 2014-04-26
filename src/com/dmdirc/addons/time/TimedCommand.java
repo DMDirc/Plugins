@@ -27,6 +27,8 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,6 +51,8 @@ public class TimedCommand extends TimerTask {
     private final TimerManager manager;
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
+    /** Event bus to post events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of TimedCommand.
@@ -60,6 +64,7 @@ public class TimedCommand extends TimerTask {
      * @param delay             The number of seconds between each execution
      * @param command           The command to be executed
      * @param origin            The frame container to use for the execution
+     * @param eventBus          The Event bus to post events on
      */
     public TimedCommand(
             final TimerManager manager,
@@ -68,13 +73,15 @@ public class TimedCommand extends TimerTask {
             final int repetitions,
             final int delay,
             final String command,
-            final FrameContainer origin) {
+            final FrameContainer origin,
+            final EventBus eventBus) {
         this.commandController = commandController;
         this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;
         this.origin = origin;
         this.manager = manager;
+        this.eventBus = eventBus;
 
         timer = new Timer("Timed Command Timer");
         timer.schedule(this, delay * 1000L, delay * 1000L);
@@ -101,7 +108,7 @@ public class TimedCommand extends TimerTask {
     public void run() {
         CommandParser parser;
         if (origin == null) {
-            parser = new GlobalCommandParser(origin.getConfigManager(), commandController);
+            parser = new GlobalCommandParser(origin.getConfigManager(), commandController, eventBus);
         } else {
             parser = origin.getCommandParser();
         }
