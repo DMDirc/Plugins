@@ -22,14 +22,11 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.Channel;
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
+import com.dmdirc.events.ChannelGotnamesEvent;
+import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -39,6 +36,9 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +51,16 @@ import javax.inject.Singleton;
  * Provides various features related to nickname colouring.
  */
 @Singleton
-public class NickColourManager implements ActionListener, ConfigChangeListener {
+public class NickColourManager implements ConfigChangeListener {
 
+    /** Manager to parse colours with. */
+    private final ColourManager colourManager;
+    /** Config to read settings from. */
+    private final AggregateConfigProvider globalConfig;
+    /** Plugin's setting domain. */
+    private final String domain;
+    /** Event bus to subscribe to events on . */
+    private final EventBus eventBus;
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
@@ -61,38 +69,33 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
     private boolean userandomcolour;
     private boolean settext;
     private boolean setnicklist;
-    /** Manager to parse colours with. */
-    private final ColourManager colourManager;
-    /** Config to read settings from. */
-    private final AggregateConfigProvider globalConfig;
-    /** Plugin's setting domain. */
-    private final String domain;
 
     @Inject
     public NickColourManager(final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            @UserConfig final ConfigProvider userConfig) {
+            @UserConfig final ConfigProvider userConfig,
+            final EventBus eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
+        this.eventBus = eventBus;
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type.equals(CoreActionType.CHANNEL_GOTNAMES)) {
-            final ChannelInfo chanInfo = ((Channel) arguments[0]).getChannelInfo();
-            final String network = ((Channel) arguments[0]).getConnection().getNetwork();
+    @Subscribe
+    public void handleChannelNames(final ChannelGotnamesEvent event) {
+        final ChannelInfo chanInfo = event.getChannel().getChannelInfo();
+        final String network = event.getChannel().getConnection().getNetwork();
 
-            for (ChannelClientInfo client : chanInfo.getChannelClients()) {
-                colourClient(network, client);
-            }
-        } else if (type.equals(CoreActionType.CHANNEL_JOIN)) {
-            final String network = ((Channel) arguments[0]).getConnection().getNetwork();
-
-            colourClient(network, (ChannelClientInfo) arguments[1]);
+        for (ChannelClientInfo client : chanInfo.getChannelClients()) {
+            colourClient(network, client);
         }
+    }
+
+    @Subscribe
+    public void handleChannelJoin(final ChannelJoinEvent event) {
+        final String network = event.getChannel().getConnection().getNetwork();
+        colourClient(network, event.getClient());
     }
 
     /**
@@ -241,15 +244,14 @@ public class NickColourManager implements ActionListener, ConfigChangeListener {
      */
     public void onLoad() {
         setCachedSettings();
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.CHANNEL_GOTNAMES, CoreActionType.CHANNEL_JOIN);
+        eventBus.register(this);
     }
 
     /**
      * Unloads this plugin.
      */
     public void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
     }
 
     /**
