@@ -23,8 +23,8 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.events.DccChatRequestSentEvent;
+import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
@@ -190,12 +190,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
-            ActionManager.getActionManager().triggerEvent(
-                    DCCActions.DCC_CHAT_REQUEST_SENT, null, connection, target);
-            sendLine(origin, isSilent, "DCCChatStarting", target,
-                    chat.getHost(), chat.getPort());
-            window.addLine("DCCChatStarting", target, chat.getHost(),
-                    chat.getPort());
+            eventBus.post(new DccChatRequestSentEvent(connection, target));
+            sendLine(origin, isSilent, "DCCChatStarting", target, chat.getHost(), chat.getPort());
+            window.addLine("DCCChatStarting", target, chat.getHost(), chat.getPort());
         } else {
             sendLine(origin, isSilent, "DCCChatError",
                     "Unable to start chat with " + target
@@ -249,9 +246,8 @@ public class DCCCommand extends Command implements IntelligentCommand {
                         myPlugin.getDomain(), "send.forceturbo"));
                 send.setType(DCCTransfer.TransferType.SEND);
 
-                ActionManager.getActionManager().triggerEvent(
-                        DCCActions.DCC_SEND_REQUEST_SENT,
-                        null, connection, target, selectedFile);
+                eventBus.post(new DccSendRequestEvent(connection, target, selectedFile.
+                        getAbsolutePath()));
 
                 sendLine(origin, isSilent, FORMAT_OUTPUT,
                         "Starting DCC Send with: " + target);
