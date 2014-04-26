@@ -24,8 +24,9 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.events.DccSendDatatransferedEvent;
+import com.dmdirc.addons.dcc.events.DccSendSocketclosedEvent;
+import com.dmdirc.addons.dcc.events.DccSendSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.interfaces.Connection;
@@ -72,6 +73,8 @@ public class TransferContainer extends FrameContainer implements
     /** Show open button. */
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
+    /** Event bus to post events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -107,6 +110,7 @@ public class TransferContainer extends FrameContainer implements
         dcc.addHandler(this);
 
         otherNickname = targetNick;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -168,8 +172,7 @@ public class TransferContainer extends FrameContainer implements
             setTitle(title.toString());
         }
 
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_SEND_DATATRANSFERED, null, this, bytes);
+        eventBus.post(new DccSendDatatransferedEvent(this, bytes));
     }
 
     /**
@@ -262,8 +265,7 @@ public class TransferContainer extends FrameContainer implements
      */
     @Override
     public void socketClosed(final DCCTransfer dcc) {
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_SEND_SOCKETCLOSED, null, this);
+        eventBus.post(new DccSendSocketclosedEvent(this));
         if (!windowClosing) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
@@ -284,8 +286,7 @@ public class TransferContainer extends FrameContainer implements
      */
     @Override
     public void socketOpened(final DCCTransfer dcc) {
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_SEND_SOCKETOPENED, null, this);
+        eventBus.post(new DccSendSocketopenedEvent(this));
         timeStarted = System.currentTimeMillis();
         setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-active" : "dcc-receive-active");

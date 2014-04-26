@@ -23,9 +23,13 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.events.DccChatMessageEvent;
+import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
+import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
+import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.events.DisplayableEvent;
+import com.dmdirc.events.EventUtils;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
@@ -50,6 +54,8 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     private final String nickname;
     /** Other Nickname. */
     private final String otherNickname;
+    /** Event bus to post events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
@@ -91,6 +97,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         dcc.setHandler(this);
         nickname = nick;
         otherNickname = targetNick;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -105,31 +112,27 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     @Override
     public void sendLine(final String line) {
         if (dccChat.isWriteable()) {
-            final StringBuffer buff = new StringBuffer("DCCChatSelfMessage");
-            ActionManager.getActionManager().triggerEvent(
-                    DCCActions.DCC_CHAT_SELFMESSAGE, buff, this, line);
-            addLine(buff, nickname, line);
+            final DisplayableEvent event = new DccChatSelfmessageEvent(this, line);
+            final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatSelfMessage");
+            addLine(format, nickname, line);
             dccChat.sendLine(line);
         } else {
-            final StringBuffer buff = new StringBuffer("DCCChatError");
-            addLine(buff, "Socket is closed.", line);
+            addLine("DCCChatError", "Socket is closed.", line);
         }
     }
 
     @Override
     public void handleChatMessage(final DCCChat dcc, final String message) {
-        final StringBuffer buff = new StringBuffer("DCCChatMessage");
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_CHAT_MESSAGE, buff, this, otherNickname, message);
-        addLine(buff, otherNickname, message);
+        final DisplayableEvent event = new DccChatMessageEvent(this, otherNickname, message);
+        final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatMessage");
+        addLine(format, otherNickname, message);
     }
 
     @Override
     public void socketClosed(final DCCChat dcc) {
-        final StringBuffer buff = new StringBuffer("DCCChatInfo");
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_CHAT_SOCKETCLOSED, buff, this);
-        addLine(buff, "Socket closed");
+        final DisplayableEvent event = new DccChatSocketclosedEvent(this);
+        final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatInfo");
+        addLine(format, "Socket closed");
         if (!isWindowClosing()) {
             setIcon("dcc-chat-inactive");
         }
@@ -137,10 +140,9 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
 
     @Override
     public void socketOpened(final DCCChat dcc) {
-        final StringBuffer buff = new StringBuffer("DCCChatInfo");
-        ActionManager.getActionManager().triggerEvent(
-                DCCActions.DCC_CHAT_SOCKETOPENED, buff, this);
-        addLine(buff, "Socket opened");
+        final DisplayableEvent event = new DccChatSocketopenedEvent(this);
+        final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatInfo");
+        addLine(format, "Socket opened");
         setIcon("dcc-chat-active");
     }
 
