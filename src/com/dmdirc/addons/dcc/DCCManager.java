@@ -24,9 +24,9 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.CoreActionType;
-import com.dmdirc.addons.dcc.actions.DCCActions;
+import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
+import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
@@ -454,9 +454,7 @@ public class DCCManager implements ActionListener {
                     chat.getPort());
             chat.connect();
         } else {
-            ActionManager.getActionManager().triggerEvent(
-                    DCCActions.DCC_CHAT_REQUEST, null, arguments[0],
-                    nickname);
+            eventBus.post(new DccChatRequestEvent((Connection) arguments[0], nickname));
             askQuestion("User " + nickname + " on "
                     + ((Connection) arguments[0]).getAddress()
                     + " would like to start a DCC Chat with you.\n\n"
@@ -547,9 +545,8 @@ public class DCCManager implements ActionListener {
             if (!token.isEmpty() && !port.equals("0")) {
                 // This is a reverse DCC Send that we no longer care about.
             } else {
-                ActionManager.getActionManager().triggerEvent(
-                        DCCActions.DCC_SEND_REQUEST, null,
-                        arguments[0], nickname, filename);
+                eventBus.post(
+                        new DccSendRequestEvent((Connection) arguments[0], nickname, filename));
                 askQuestion("User " + nickname + " on "
                         + ((Connection) arguments[0]).getAddress()
                         + " would like to send you a file over DCC.\n\nFile: "
@@ -720,16 +717,14 @@ public class DCCManager implements ActionListener {
             }
         }
 
-        ActionManager.getActionManager().registerTypes(DCCActions.values());
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.SERVER_CTCP);
+        eventBus.register(this);
     }
 
     /**
      * Called when this plugin is Unloaded.
      */
     public synchronized void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
         if (container != null) {
             container.close();
         }
