@@ -79,7 +79,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final URLBuilder urlBuilder,
             final EventBus eventBus) {
         super(parent, title, "dcc-chat-inactive", configManager,
-                new DCCCommandParser(configManager, commandController),
+                new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,
                 tabCompleterFactory,
                 urlBuilder,
