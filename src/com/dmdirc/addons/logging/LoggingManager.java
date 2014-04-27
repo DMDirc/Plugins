@@ -26,18 +26,25 @@ import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.events.BaseChannelActionEvent;
+import com.dmdirc.events.BaseChannelMessageEvent;
 import com.dmdirc.events.BaseQueryActionEvent;
 import com.dmdirc.events.BaseQueryMessageEvent;
 import com.dmdirc.events.ChannelClosedEvent;
+import com.dmdirc.events.ChannelGottopicEvent;
+import com.dmdirc.events.ChannelJoinEvent;
+import com.dmdirc.events.ChannelKickEvent;
+import com.dmdirc.events.ChannelModechangeEvent;
+import com.dmdirc.events.ChannelNickchangeEvent;
 import com.dmdirc.events.ChannelOpenedEvent;
+import com.dmdirc.events.ChannelPartEvent;
+import com.dmdirc.events.ChannelQuitEvent;
+import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -84,15 +91,13 @@ import javax.inject.Singleton;
  * Manages logging activities.
  */
 @Singleton
-public class LoggingManager implements ActionListener, ConfigChangeListener {
+public class LoggingManager implements ConfigChangeListener {
 
     /** Date format used for "File Opened At" log. */
     private static final DateFormat OPENED_AT_FORMAT = new SimpleDateFormat(
             "EEEE MMMM dd, yyyy - HH:mm:ss");
     /** This plugin's plugin info. */
     private final String domain;
-    /** The action controller to use. */
-    private final ActionController actionController;
     /** Global config. */
     private final AggregateConfigProvider config;
     /** The manager to add history windows to. */
@@ -132,7 +137,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             final EventBus eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
         this.domain = domain;
-        this.actionController = actionController;
         this.config = globalConfig;
         this.windowManager = windowManager;
         this.urlBuilder = urlBuilder;
@@ -157,20 +161,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
 
         config.addChangeListener(domain, this);
 
-        actionController.registerListener(this,
-                CoreActionType.CHANNEL_MESSAGE,
-                CoreActionType.CHANNEL_SELF_MESSAGE,
-                CoreActionType.CHANNEL_ACTION,
-                CoreActionType.CHANNEL_SELF_ACTION,
-                CoreActionType.CHANNEL_GOTTOPIC,
-                CoreActionType.CHANNEL_TOPICCHANGE,
-                CoreActionType.CHANNEL_JOIN,
-                CoreActionType.CHANNEL_PART,
-                CoreActionType.CHANNEL_QUIT,
-                CoreActionType.CHANNEL_KICK,
-                CoreActionType.CHANNEL_NICKCHANGE,
-                CoreActionType.CHANNEL_MODECHANGE);
-
         // Close idle files every hour.
         idleFileTimer = new Timer("LoggingPlugin Timer");
         idleFileTimer.schedule(new TimerTask() {
@@ -189,8 +179,6 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
             idleFileTimer.cancel();
             idleFileTimer.purge();
         }
-
-        actionController.unregisterListener(this);
 
         synchronized (openFiles) {
             for (OpenFile file : openFiles.values()) {
@@ -262,114 +250,109 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
     }
 
-    /**
-     * Log a channel-related event.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
-    protected void handleChannelEvent(final CoreActionType type, final StringBuffer format,
-            final Object... arguments) {
-        final Channel chan = ((Channel) arguments[0]);
-        final ChannelInfo channel = chan.getChannelInfo();
-        final String filename = getLogFile(channel);
+    @Subscribe
+    public void handleChannelMessage(final BaseChannelMessageEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        appendLine(filename, "<%s> %s", getDisplayName(event.getClient()), event.getMessage());
+    }
 
-        final ChannelClientInfo channelClient = (arguments.length > 1
-                && arguments[1] instanceof ChannelClientInfo) ? (ChannelClientInfo) arguments[1]
-                : null;
-        final ClientInfo client = channelClient == null ? null : channelClient.getClient();
+    @Subscribe
+    public void handleChannelAction(final BaseChannelActionEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        appendLine(filename, "* %s %s", getDisplayName(event.getClient()), event.getMessage());
+    }
 
-        final String message = (arguments.length > 2 && arguments[2] instanceof String)
-                ? (String) arguments[2] : null;
+    @Subscribe
+    public void handleChannelGotTopic(final ChannelGottopicEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final ChannelInfo channel = event.getChannel().getChannelInfo();
+        final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-        switch (type) {
-            case CHANNEL_MESSAGE:
-            case CHANNEL_SELF_MESSAGE:
-            case CHANNEL_ACTION:
-            case CHANNEL_SELF_ACTION:
-                if (type == CoreActionType.CHANNEL_MESSAGE || type
-                        == CoreActionType.CHANNEL_SELF_MESSAGE) {
-                    appendLine(filename, "<%s> %s", getDisplayName(client), message);
-                } else {
-                    appendLine(filename, "* %s %s", getDisplayName(client), message);
-                }
-                break;
-            case CHANNEL_GOTTOPIC:
-                final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-                final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        appendLine(filename, "*** Topic is: %s", channel.getTopic());
+        appendLine(filename, "*** Set at: %s on %s by %s", timeFormat.format(1000 * channel.
+                getTopicTime()), dateFormat.format(1000 * channel.getTopicTime()), channel.
+                getTopicSetter());
+    }
 
-                appendLine(filename, "*** Topic is: %s", channel.getTopic());
-                appendLine(filename, "*** Set at: %s on %s by %s", timeFormat.format(1000 * channel.
-                        getTopicTime()), dateFormat.format(1000 * channel.getTopicTime()), channel.
-                        getTopicSetter());
-                break;
-            case CHANNEL_TOPICCHANGE:
-                appendLine(filename, "*** %s Changed the topic to: %s",
-                        getDisplayName(channelClient), message);
-                break;
-            case CHANNEL_JOIN:
-                appendLine(filename, "*** %s (%s) joined the channel", getDisplayName(channelClient),
-                        client.toString());
-                break;
-            case CHANNEL_PART:
-                if (message.isEmpty()) {
-                    appendLine(filename, "*** %s (%s) left the channel", getDisplayName(
-                            channelClient), client.toString());
-                } else {
-                    appendLine(filename, "*** %s (%s) left the channel (%s)", getDisplayName(
-                            channelClient), client.toString(), message);
-                }
-                break;
-            case CHANNEL_QUIT:
-                if (message.isEmpty()) {
-                    appendLine(filename, "*** %s (%s) Quit IRC", getDisplayName(channelClient),
-                            client.toString());
-                } else {
-                    appendLine(filename, "*** %s (%s) Quit IRC (%s)", getDisplayName(channelClient),
-                            client.toString(), message);
-                }
-                break;
-            case CHANNEL_KICK:
-                final String kickReason = (String) arguments[3];
-                final ChannelClientInfo kickedClient = (ChannelClientInfo) arguments[2];
+    @Subscribe
+    public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final ChannelClientInfo channelClient = event.getClient();
+        appendLine(filename, "*** %s Changed the topic to: %s",
+                getDisplayName(channelClient), event.getTopic());
+    }
 
-                if (kickReason.isEmpty()) {
-                    appendLine(filename, "*** %s was kicked by %s", getDisplayName(kickedClient),
-                            getDisplayName(channelClient));
-                } else {
-                    appendLine(filename, "*** %s was kicked by %s (%s)",
-                            getDisplayName(kickedClient), getDisplayName(channelClient), kickReason);
-                }
-                break;
-            case CHANNEL_NICKCHANGE:
-                appendLine(filename, "*** %s is now %s", getDisplayName(channelClient, message),
-                        getDisplayName(channelClient));
-                break;
-            case CHANNEL_MODECHANGE:
-                if (channelClient.getClient().getNickname().isEmpty()) {
-                    appendLine(filename, "*** Channel modes are: %s", message);
-                } else {
-                    appendLine(filename, "*** %s set modes: %s", getDisplayName(channelClient),
-                            message);
-                }
-                break;
+    @Subscribe
+    public void handleChannelJoin(final ChannelJoinEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final ChannelClientInfo channelClient = event.getClient();
+        final ClientInfo client = channelClient.getClient();
+        appendLine(filename, "*** %s (%s) joined the channel",
+                getDisplayName(channelClient), client.toString());
+    }
+
+    @Subscribe
+    public void handleChannelPart(final ChannelPartEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String message = event.getMessage();
+        final ChannelClientInfo channelClient = event.getClient();
+        final ClientInfo client = channelClient.getClient();
+        if (message.isEmpty()) {
+            appendLine(filename, "*** %s (%s) left the channel",
+                    getDisplayName(channelClient), client.toString());
+        } else {
+            appendLine(filename, "*** %s (%s) left the channel (%s)",
+                    getDisplayName(channelClient), client.toString(), message);
         }
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param arguments The arguments for the event
-     */
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        if (type instanceof CoreActionType) {
-            final CoreActionType thisType = (CoreActionType) type;
-            handleChannelEvent(thisType, format, arguments);
+    @Subscribe
+    public void handleChannelQuit(final ChannelQuitEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String reason = event.getMessage();
+        final ChannelClientInfo channelClient = event.getClient();
+        final ClientInfo client = channelClient.getClient();
+        if (reason.isEmpty()) {
+            appendLine(filename, "*** %s (%s) Quit IRC",
+                    getDisplayName(channelClient), client.toString());
+        } else {
+            appendLine(filename, "*** %s (%s) Quit IRC (%s)",
+                    getDisplayName(channelClient), client.toString(), reason);
+        }
+    }
+
+    @Subscribe
+    public void handleChannelKick(final ChannelKickEvent event) {
+        final ChannelClientInfo victim = event.getVictim();
+        final ChannelClientInfo perpetrator = event.getClient();
+        final String reason = event.getReason();
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+
+        if (reason.isEmpty()) {
+            appendLine(filename, "*** %s was kicked by %s",
+                    getDisplayName(victim), getDisplayName(perpetrator));
+        } else {
+            appendLine(filename, "*** %s was kicked by %s (%s)",
+                    getDisplayName(victim), getDisplayName(perpetrator), reason);
+        }
+    }
+
+    @Subscribe
+    public void handleNickChange(final ChannelNickchangeEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        appendLine(filename, "*** %s is now %s", getDisplayName(event.getClient(),
+                event.getOldNick()), getDisplayName(event.getClient()));
+    }
+
+    @Subscribe
+    public void handleModeChange(final ChannelModechangeEvent event) {
+        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        if (event.getClient().getClient().getNickname().isEmpty()) {
+            appendLine(filename, "*** Channel modes are: %s", event.getModes());
+        } else {
+            appendLine(filename, "*** %s set modes: %s",
+                    getDisplayName(event.getClient()), event.getModes());
         }
     }
 
@@ -545,41 +528,70 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
     /**
      * Get the name of the log file for a specific object.
      *
-     * @param obj Object to get name for
+     * @param channel Channel to get the name for
      *
      * @return the name of the log file to use for this object.
      */
-    protected String getLogFile(final Object obj) {
-        final StringBuffer directory = new StringBuffer();
+    protected String getLogFile(final ChannelInfo channel) {
+        final StringBuffer directory = getLogDirectory();
         final StringBuffer file = new StringBuffer();
-        String md5String = "";
-
-        directory.append(directoryProvider.get());
-        if (directory.charAt(directory.length() - 1) != File.separatorChar) {
-            directory.append(File.separatorChar);
+        if (channel.getParser() != null) {
+            addNetworkDir(directory, file, channel.getParser().getNetworkName());
         }
+        file.append(sanitise(channel.getName().toLowerCase()));
+        return getPath(directory, file, channel.getName());
+    }
 
-        if (obj == null) {
+    /**
+     * Get the name of the log file for a specific object.
+     *
+     * @param client Client to get the name for
+     *
+     * @return the name of the log file to use for this object.
+     */
+    protected String getLogFile(final ClientInfo client) {
+        final StringBuffer directory = getLogDirectory();
+        final StringBuffer file = new StringBuffer();
+        if (client.getParser() != null) {
+            addNetworkDir(directory, file, client.getParser().getNetworkName());
+        }
+        file.append(sanitise(client.getNickname().toLowerCase()));
+        return getPath(directory, file, client.getNickname());
+    }
+
+    /**
+     * Get the name of the log file for a specific object.
+     *
+     * @param object Object to get name for
+     *
+     * @return the name of the log file to use for this object.
+     */
+    protected String getLogFile(final Object object) {
+        final StringBuffer directory = getLogDirectory();
+        final StringBuffer file = new StringBuffer();
+        String md5String;
+        if (object == null) {
             file.append("null.log");
-        } else if (obj instanceof ChannelInfo) {
-            final ChannelInfo channel = (ChannelInfo) obj;
-            if (channel.getParser() != null) {
-                addNetworkDir(directory, file, channel.getParser().getNetworkName());
-            }
-            file.append(sanitise(channel.getName().toLowerCase()));
-            md5String = channel.getName();
-        } else if (obj instanceof ClientInfo) {
-            final ClientInfo client = (ClientInfo) obj;
-            if (client.getParser() != null) {
-                addNetworkDir(directory, file, client.getParser().getNetworkName());
-            }
-            file.append(sanitise(client.getNickname().toLowerCase()));
-            md5String = client.getNickname();
+            md5String = "";
         } else {
-            file.append(sanitise(obj.toString().toLowerCase()));
-            md5String = obj.toString();
+            file.append(sanitise(object.toString().toLowerCase()));
+            md5String = object.toString();
         }
+        return getPath(directory, file, md5String);
+    }
 
+    /**
+     * Gets the path for the given file and directory. Only intended to be used from getLogFile
+     * methods.
+     *
+     * @param directory Log file directory
+     * @param file      Log file path
+     * @param md5String Log file object MD5 hash
+     *
+     * @return Name of the log file
+     */
+    protected String getPath(final StringBuffer directory, final StringBuffer file,
+            final String md5String) {
         if (usedate) {
             final String dateFormat = usedateformat;
             final String dateDir = new SimpleDateFormat(dateFormat).format(new Date());
@@ -601,6 +613,22 @@ public class LoggingManager implements ActionListener, ConfigChangeListener {
         file.append(".log");
 
         return directory.toString() + file.toString();
+    }
+
+    /**
+     * Sanitises the log file directory.
+     *
+     * @param directory String buffer to use for result
+     *
+     * @return Log directory
+     */
+    private StringBuffer getLogDirectory() {
+        final StringBuffer directory = new StringBuffer();
+        directory.append(directoryProvider.get());
+        if (directory.charAt(directory.length() - 1) != File.separatorChar) {
+            directory.append(File.separatorChar);
+        }
+        return directory;
     }
 
     /**
