@@ -26,17 +26,16 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.ServerDisconnectedEvent;
+import com.dmdirc.events.ServerGotpingEvent;
+import com.dmdirc.events.ServerNopingEvent;
 import com.dmdirc.events.ServerNumericEvent;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ServerPingsentEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
@@ -58,7 +57,7 @@ import javax.inject.Singleton;
  * Manages the lifecycle of the lag display plugin.
  */
 @Singleton
-public class LagDisplayManager implements ActionListener, ConfigChangeListener, SelectionListener {
+public class LagDisplayManager implements ConfigChangeListener, SelectionListener {
 
     /** Event bus to receive events on. */
     private final EventBus eventBus;
@@ -106,9 +105,6 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         activeFrameManager.addSelectionListener(this);
         globalConfig.addChangeListener(domain, this);
         readConfig();
-        ActionManager.getActionManager().registerListener(this,
-                CoreActionType.SERVER_GOTPING, CoreActionType.SERVER_NOPING,
-                CoreActionType.SERVER_PINGSENT);
         eventBus.register(this);
     }
 
@@ -116,7 +112,7 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
         statusBar.removeComponent(panel);
         activeFrameManager.removeSelectionListener(this);
         globalConfig.removeListener(this);
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
         panel = null;
     }
 
@@ -219,52 +215,56 @@ public class LagDisplayManager implements ActionListener, ConfigChangeListener, 
             panel.refreshDialog();
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        boolean useAlternate = false;
-
-        for (Object obj : arguments) {
-            if (obj instanceof FrameContainer
-                    && ((FrameContainer) obj).getConfigManager() != null) {
-                useAlternate = ((FrameContainer) obj).getConfigManager()
-                        .getOptionBool(domain, "usealternate");
-                break;
-            }
+    @Subscribe
+    public void handleServerGotPing(final ServerGotpingEvent event) {
+        if (event.getConnection().getWindowModel().getConfigManager().
+                getOptionBool(domain, "usealternate")) {
+            return;
         }
-
         final TextFrame activeFrame = activeFrameManager.getActiveFrame();
-        final FrameContainer active = activeFrame == null ? null
-                : activeFrame.getContainer();
-        final boolean isActive = active != null
-                && arguments[0] instanceof Connection
-                && ((Connection) arguments[0]).equals(active.getConnection());
+        final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
+        final boolean isActive = active != null && event.getConnection().equals(active.
+                getConnection());
+        final String value = formatTime(event.getPing());
 
-        if (!useAlternate && type.equals(CoreActionType.SERVER_GOTPING)) {
-            final String value = formatTime(arguments[1]);
+        getHistory(event.getConnection()).add(event.getPing());
+        pings.put((event.getConnection()), value);
 
-            getHistory(((Connection) arguments[0])).add((Long) arguments[1]);
-            pings.put(((Connection) arguments[0]), value);
-
-            if (isActive) {
-                panel.getComponent().setText(value);
-            }
-
-            panel.refreshDialog();
-        } else if (!useAlternate && type.equals(CoreActionType.SERVER_NOPING)) {
-            final String value = formatTime(arguments[1]) + "+";
-
-            pings.put(((Connection) arguments[0]), value);
-
-            if (isActive) {
-                panel.getComponent().setText(value);
-            }
-
-            panel.refreshDialog();
-        } else if (useAlternate && type.equals(CoreActionType.SERVER_PINGSENT)) {
-            ((Connection) arguments[0]).getParser().sendRawMessage("LAGCHECK_" + new Date().
-                    getTime());
+        if (isActive) {
+            panel.getComponent().setText(value);
         }
+
+        panel.refreshDialog();
+    }
+
+    @Subscribe
+    public void handleServerNoPing(final ServerNopingEvent event) {
+        if (event.getConnection().getWindowModel().getConfigManager().
+                getOptionBool(domain, "usealternate")) {
+            return;
+        }
+        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
+        final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
+        final boolean isActive = active != null && event.getConnection().equals(active.
+                getConnection());
+        final String value = formatTime(event.getPing()) + "+";
+
+        pings.put(event.getConnection(), value);
+
+        if (isActive) {
+            panel.getComponent().setText(value);
+        }
+
+        panel.refreshDialog();
+    }
+
+    @Subscribe
+    public void HandleServerPingSent(final ServerPingsentEvent event) {
+        if (!event.getConnection().getWindowModel().getConfigManager().
+                getOptionBool(domain, "usealternate")) {
+            return;
+        }
+        event.getConnection().getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
     }
 
     /**
