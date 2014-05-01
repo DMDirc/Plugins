@@ -24,8 +24,6 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
@@ -39,10 +37,9 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
-import com.dmdirc.interfaces.ActionListener;
+import com.dmdirc.events.ServerCtcpEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -57,6 +54,7 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Window;
 import java.io.File;
@@ -75,7 +73,7 @@ import javax.swing.JOptionPane;
  * This plugin adds DCC to DMDirc.
  */
 @Singleton
-public class DCCManager implements ActionListener {
+public class DCCManager {
 
     /** Our DCC Container window. */
     private PlaceholderContainer container;
@@ -321,12 +319,6 @@ public class DCCManager implements ActionListener {
         return jc.showSaveDialog(mainWindow);
     }
 
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        handleProcessEvent(type, format, false, arguments);
-    }
-
     /**
      * Make the given DCC start listening. This will either call dcc.listen() or
      * dcc.listen(startPort, endPort) depending on config.
@@ -336,14 +328,12 @@ public class DCCManager implements ActionListener {
      * @return True if Socket was opened.
      */
     protected boolean listen(final DCC dcc) {
-        final boolean usePortRange = config.getOptionBool(getDomain(),
-                "firewall.ports.usePortRange");
+        final boolean usePortRange = config.
+                getOptionBool(getDomain(), "firewall.ports.usePortRange");
         try {
             if (usePortRange) {
-                final int startPort = config.getOptionInt(getDomain(),
-                        "firewall.ports.startPort");
-                final int endPort = config.getOptionInt(getDomain(),
-                        "firewall.ports.endPort");
+                final int startPort = config.getOptionInt(getDomain(), "firewall.ports.startPort");
+                final int endPort = config.getOptionInt(getDomain(), "firewall.ports.endPort");
                 dcc.listen(startPort, endPort);
             } else {
                 dcc.listen();
@@ -354,56 +344,52 @@ public class DCCManager implements ActionListener {
         }
     }
 
-    /**
-     * Process an event of the specified type.
-     *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
-     * @param dontAsk   Don't ask any questions, assume yes.
-     * @param arguments The arguments for the event
-     */
-    public void handleProcessEvent(final ActionType type,
-            final StringBuffer format, final boolean dontAsk,
-            final Object... arguments) {
-        if (config.getOptionBool(getDomain(), "receive.autoaccept") && !dontAsk) {
-            handleProcessEvent(type, format, true, arguments);
+    @Subscribe
+    public void handleServerCtctpEvent(final ServerCtcpEvent event) {
+        final boolean autoAccept = config.getOptionBool(getDomain(), "receive.autoaccept");
+        final String[] ctcpData = event.getContent().split(" ");
+        if (!"DCC".equalsIgnoreCase(event.getType())) {
             return;
         }
-
-        if (type == CoreActionType.SERVER_CTCP) {
-            final String[] ctcpData = ((String) arguments[3]).split(" ");
-            if ("DCC".equalsIgnoreCase((String) arguments[2])) {
-                if ("chat".equalsIgnoreCase(ctcpData[0])
-                        && ctcpData.length > 3) {
-                    handleChat(dontAsk, ctcpData, arguments);
-                } else if ("send".equalsIgnoreCase(ctcpData[0])
-                        && ctcpData.length > 3) {
-                    handleSend(dontAsk, ctcpData, arguments);
-                } else if (("resume".equalsIgnoreCase(ctcpData[0])
-                        || "accept".equalsIgnoreCase(ctcpData[0]))
-                        && ctcpData.length > 2) {
-                    handleReceive(ctcpData, arguments);
+        switch (event.getType().toLowerCase()) {
+            case "dcc":
+                if (ctcpData.length > 3) {
+                    handleChat(autoAccept, ctcpData, event.getClient(), event.getConnection());
                 }
-            }
+                break;
+            case "send":
+                if (ctcpData.length > 3) {
+                    handleSend(autoAccept, ctcpData, event.getClient(), event.getConnection());
+                }
+                break;
+            case "resume":
+            //Fallthrough
+            case "accept":
+                if (ctcpData.length > 2) {
+                    handleReceive(ctcpData, event.getClient(), event.getConnection());
+                }
+                break;
+            default:
+                break;
         }
     }
 
     /**
      * Handles a DCC chat request.
      *
-     * @param dontAsk   Don't ask any questions, assume yes.
-     * @param ctcpData  CTCP data bits
-     * @param arguments The arguments for the event
+     * @param dontAsk    Don't ask any questions, assume yes.
+     * @param ctcpData   CTCP data bits
+     * @param client     Client receiving DCC
+     * @param connection Connection DCC received on
      */
     private void handleChat(final boolean dontAsk, final String[] ctcpData,
-            final Object... arguments) {
-        final String nickname = ((ClientInfo) arguments[1]).getNickname();
+            final ClientInfo client, final Connection connection) {
+        final String nickname = client.getNickname();
         if (dontAsk) {
-            handleDCCChat(((Connection) arguments[0]).getParser(), nickname, ctcpData);
+            handleDCCChat(connection.getParser(), nickname, ctcpData);
         } else {
-            eventBus.post(new DccChatRequestEvent((Connection) arguments[0], nickname));
-            new ChatRequestDialog(mainWindow, this, (Connection) arguments[0], nickname, ctcpData)
-                    .display();
+            eventBus.post(new DccChatRequestEvent(connection, nickname));
+            new ChatRequestDialog(mainWindow, this, connection, nickname, ctcpData).display();
         }
     }
 
@@ -439,13 +425,14 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC send request.
      *
-     * @param dontAsk   Don't ask any questions, assume yes.
-     * @param ctcpData  CTCP data bits
-     * @param arguments The arguments for the event
+     * @param dontAsk    Don't ask any questions, assume yes.
+     * @param ctcpData   CTCP data bits
+     * @param client     Client that received the DCC
+     * @param connection Connection the DCC was received on
      */
-    private void handleSend(final boolean dontAsk, final String[] ctcpData,
-            final Object... arguments) {
-        final String nickname = ((ClientInfo) arguments[1]).getNickname();
+    private void handleSend(final boolean dontAsk, final String[] ctcpData, final ClientInfo client,
+            final Connection connection) {
+        final String nickname = client.getNickname();
         final String filename;
         String tmpFilename;
         // Clients tend to put files with spaces in the name in ""
@@ -459,8 +446,7 @@ public class DCCManager implements ActionListener {
                     bit = bit.substring(1);
                 }
                 if (bit.endsWith("\"")) {
-                    filenameBits.append(" ")
-                            .append(bit.substring(0, bit.length() - 1));
+                    filenameBits.append(" ").append(bit.substring(0, bit.length() - 1));
                     break;
                 } else {
                     filenameBits.append(" ").append(bit);
@@ -514,10 +500,9 @@ public class DCCManager implements ActionListener {
             if (!token.isEmpty() && !port.equals("0")) {
                 // This is a reverse DCC Send that we no longer care about.
             } else {
-                eventBus.post(
-                        new DccSendRequestEvent((Connection) arguments[0], nickname, filename));
+                eventBus.post(new DccSendRequestEvent(connection, nickname, filename));
                 new SendRequestDialog(mainWindow, this, token, ipLong, portInt, filename, size,
-                        nickname, (Connection) arguments[0]).display();
+                        nickname, connection).display();
             }
         }
     }
@@ -545,11 +530,12 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC chat request.
      *
-     * @param ctcpData  CTCP data bits
-     * @param arguments The arguments for the event
+     * @param ctcpData   CTCP data bits
+     * @param client     Client receiving the DCC
+     * @param connection Connection the DCC was received on
      */
-    private void handleReceive(final String[] ctcpData,
-            final Object... arguments) {
+    private void handleReceive(final String[] ctcpData, final ClientInfo client,
+            final Connection connection) {
         final String filename;
         // Clients tend to put files with spaces in the name in ""
         final StringBuilder filenameBits = new StringBuilder();
@@ -594,8 +580,8 @@ public class DCCManager implements ActionListener {
                         && (!token.equals(send.getToken()))) {
                     continue;
                 }
-                final Parser parser = ((Connection) arguments[0]).getParser();
-                final String nick = ((ClientInfo) arguments[1]).getNickname();
+                final Parser parser = connection.getParser();
+                final String nick = client.getNickname();
                 if (ctcpData[0].equalsIgnoreCase("resume")) {
                     parser.sendCTCP(nick, "DCC", "ACCEPT " + ((quoted) ? "\""
                             + filename + "\"" : filename) + " " + port + " "
@@ -682,14 +668,14 @@ public class DCCManager implements ActionListener {
             }
         }
 
-        ActionManager.getActionManager().registerListener(this, CoreActionType.SERVER_CTCP);
+        eventBus.register(this);
     }
 
     /**
      * Called when this plugin is Unloaded.
      */
     public synchronized void onUnload() {
-        ActionManager.getActionManager().unregisterListener(this);
+        eventBus.unregister(this);
         if (container != null) {
             container.close();
         }
