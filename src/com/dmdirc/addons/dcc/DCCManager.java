@@ -169,33 +169,6 @@ public class DCCManager implements ActionListener {
     }
 
     /**
-     * Ask a question, if the answer is the answer required, then recall handleProcessEvent.
-     *
-     * @param question      Question to ask
-     * @param title         Title of question dialog
-     * @param desiredAnswer Answer required
-     * @param type          Actiontype to pass back
-     * @param format        StringBuffer to pass back
-     * @param arguments     arguments to pass back
-     */
-    public void askQuestion(final String question, final String title,
-            final int desiredAnswer, final ActionType type,
-            final StringBuffer format, final Object... arguments) {
-        // New thread to ask the question in to stop us locking the UI
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                final int result = JOptionPane.showConfirmDialog(null, question,
-                        title, JOptionPane.YES_NO_OPTION);
-                if (result == desiredAnswer) {
-                    handleProcessEvent(type, format, true, arguments);
-                }
-            }
-        }, "QuestionThread: " + title).start();
-    }
-
-    /**
      * Ask the location to save a file, then start the download.
      *
      * @param nickname Person this dcc is from.
@@ -402,10 +375,10 @@ public class DCCManager implements ActionListener {
             if ("DCC".equalsIgnoreCase((String) arguments[2])) {
                 if ("chat".equalsIgnoreCase(ctcpData[0])
                         && ctcpData.length > 3) {
-                    handleChat(type, format, dontAsk, ctcpData, arguments);
+                    handleChat(dontAsk, ctcpData, arguments);
                 } else if ("send".equalsIgnoreCase(ctcpData[0])
                         && ctcpData.length > 3) {
-                    handleSend(type, format, dontAsk, ctcpData, arguments);
+                    handleSend(dontAsk, ctcpData, arguments);
                 } else if (("resume".equalsIgnoreCase(ctcpData[0])
                         || "accept".equalsIgnoreCase(ctcpData[0]))
                         && ctcpData.length > 2) {
@@ -418,64 +391,59 @@ public class DCCManager implements ActionListener {
     /**
      * Handles a DCC chat request.
      *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
      * @param dontAsk   Don't ask any questions, assume yes.
      * @param ctcpData  CTCP data bits
      * @param arguments The arguments for the event
      */
-    private void handleChat(final ActionType type, final StringBuffer format,
-            final boolean dontAsk, final String[] ctcpData,
+    private void handleChat(final boolean dontAsk, final String[] ctcpData,
             final Object... arguments) {
         final String nickname = ((ClientInfo) arguments[1]).getNickname();
         if (dontAsk) {
-            final DCCChat chat = new DCCChat();
-            try {
-                chat.setAddress(Long.parseLong(ctcpData[2]),
-                        Integer.parseInt(ctcpData[3]));
-            } catch (NumberFormatException nfe) {
-                return;
-            }
-            final String myNickname = ((Connection) arguments[0]).getParser()
-                    .getLocalClient().getNickname();
-            final DCCFrameContainer f = new ChatContainer(
-                    getContainer(),
-                    chat,
-                    config,
-                    commandController,
-                    "Chat: " + nickname,
-                    myNickname,
-                    nickname,
-                    tabCompleterFactory,
-                    messageSinkManager,
-                    urlBuilder,
-                    eventBus);
-            windowManager.addWindow(getContainer(), f);
-            f.addLine("DCCChatStarting", nickname, chat.getHost(),
-                    chat.getPort());
-            chat.connect();
+            handleDCCChat(((Connection) arguments[0]).getParser(), nickname, ctcpData);
         } else {
             eventBus.post(new DccChatRequestEvent((Connection) arguments[0], nickname));
-            askQuestion("User " + nickname + " on "
-                    + ((Connection) arguments[0]).getAddress()
-                    + " would like to start a DCC Chat with you.\n\n"
-                    + "Do you want to continue?",
-                    "DCC Chat Request", JOptionPane.YES_OPTION,
-                    type, format, arguments);
+            new ChatRequestDialog(mainWindow, this, (Connection) arguments[0], nickname, ctcpData)
+                    .display();
         }
+    }
+
+    void handleDCCChat(final Parser parser, final String nickname, final String[] ctcpData) {
+        long ipAddress;
+        int port;
+        try {
+            ipAddress = Long.parseLong(ctcpData[2]);
+            port = Integer.parseInt(ctcpData[3]);
+        } catch (NumberFormatException nfe) {
+            return;
+        }
+        final DCCChat chat = new DCCChat();
+        chat.setAddress(ipAddress, port);
+        final String myNickname = parser.getLocalClient().getNickname();
+        final DCCFrameContainer f = new ChatContainer(
+                getContainer(),
+                chat,
+                config,
+                commandController,
+                "Chat: " + nickname,
+                myNickname,
+                nickname,
+                tabCompleterFactory,
+                messageSinkManager,
+                urlBuilder,
+                eventBus);
+        windowManager.addWindow(getContainer(), f);
+        f.addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());
+        chat.connect();
     }
 
     /**
      * Handles a DCC send request.
      *
-     * @param type      The type of the event to process
-     * @param format    Format of messages that are about to be sent. (May be null)
      * @param dontAsk   Don't ask any questions, assume yes.
      * @param ctcpData  CTCP data bits
      * @param arguments The arguments for the event
      */
-    private void handleSend(final ActionType type, final StringBuffer format,
-            final boolean dontAsk, final String[] ctcpData,
+    private void handleSend(final boolean dontAsk, final String[] ctcpData,
             final Object... arguments) {
         final String nickname = ((ClientInfo) arguments[1]).getNickname();
         final String filename;
@@ -530,51 +498,52 @@ public class DCCManager implements ActionListener {
                 && !ctcpData[i + 1].equals("T")) ? ctcpData[++i] : "";
 
         // Ignore incorrect ports, or non-numeric IP/Port
+        long ipLong;
+        int portInt;
         try {
-            final int portInt = Integer.parseInt(port);
+            portInt = Integer.parseInt(port);
             if (portInt > 65535 || portInt < 0) {
                 return;
             }
-            Long.parseLong(ip);
+            ipLong = Long.parseLong(ip);
         } catch (NumberFormatException nfe) {
             return;
         }
 
-        DCCTransfer send = DCCTransfer.findByToken(token);
-
-        if (send == null && !dontAsk) {
+        if (DCCTransfer.findByToken(token) == null && !dontAsk) {
             if (!token.isEmpty() && !port.equals("0")) {
                 // This is a reverse DCC Send that we no longer care about.
             } else {
                 eventBus.post(
                         new DccSendRequestEvent((Connection) arguments[0], nickname, filename));
-                askQuestion("User " + nickname + " on "
-                        + ((Connection) arguments[0]).getAddress()
-                        + " would like to send you a file over DCC.\n\nFile: "
-                        + filename + "\n\nDo you want to continue?",
-                        "DCC Send Request", JOptionPane.YES_OPTION, type,
-                        format, arguments);
+                new SendRequestDialog(mainWindow, token, ipLong, portInt, filename, size, nickname,
+                        (Connection) arguments[0]).display();
             }
+        }
+    }
+
+    void handleDCCSend(final String token, final long ip, final int port, final String filename,
+            final long size, final String nickname, final Parser parser) {
+        DCCTransfer send = DCCTransfer.findByToken(token);
+        final boolean newSend = send == null;
+        if (newSend) {
+            send = new DCCTransfer(config.getOptionInt(getDomain(),
+                    "send.blocksize"));
+            send.setTurbo(config.getOptionBool(getDomain(), "send.forceturbo"));
         } else {
-            final boolean newSend = send == null;
-            if (newSend) {
-                send = new DCCTransfer(config.getOptionInt(getDomain(),
-                        "send.blocksize"));
-                send.setTurbo(config.getOptionBool(getDomain(), "send.forceturbo"));
-            }
-            try {
-                send.setAddress(Long.parseLong(ip), Integer.parseInt(port));
-            } catch (NumberFormatException nfe) {
-                return;
-            }
-            if (newSend) {
-                send.setFileName(filename);
-                send.setFileSize(size);
-                saveFile(nickname, send, ((Connection) arguments[0]).getParser(),
-                        "0".equals(port), token);
-            } else {
-                send.connect();
-            }
+            return;
+        }
+        try {
+            send.setAddress(ip, port);
+        } catch (NumberFormatException nfe) {
+            return;
+        }
+        if (newSend) {
+            send.setFileName(filename);
+            send.setFileSize(size);
+            saveFile(nickname, send, parser, port == 0, token);
+        } else {
+            send.connect();
         }
     }
 
