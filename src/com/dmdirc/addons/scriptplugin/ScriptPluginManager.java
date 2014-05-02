@@ -22,46 +22,53 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.actions.CoreActionType;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.PluginLoadedEvent;
+import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.ActionListener;
-import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 
-public class ScriptPluginManager implements ActionListener {
+public class ScriptPluginManager {
 
+    private final EventBus eventBus;
     private final ActionController actionController;
     private final String scriptDir;
     private final ScriptManager scriptManager;
     private final TypedProperties globalVariables;
 
     @Inject
-    public ScriptPluginManager(final ActionController actionController,
+    public ScriptPluginManager(final EventBus eventBus,
+            final ActionController actionController,
             @Directory(ScriptModule.SCRIPTS) final String scriptDir,
             final ScriptManager scriptManager,
             final ScriptEngineManager scriptEngineManager) {
         this.actionController = actionController;
         this.scriptDir = scriptDir;
         this.scriptManager = scriptManager;
+        this.eventBus = eventBus;
         globalVariables = (TypedProperties) scriptEngineManager.get("globalVariables");
     }
 
     public void onLoad() {
         // Register the plugin_loaded action initially, this will be called
         // after this method finishes for us to register the rest.
-        actionController.registerListener(this, CoreActionType.PLUGIN_LOADED);
+        eventBus.register(this);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
@@ -81,7 +88,7 @@ public class ScriptPluginManager implements ActionListener {
     }
 
     public void onUnLoad() {
-        actionController.unregisterListener(this);
+        eventBus.unregister(this);
 
         final File savedVariables = new File(scriptDir + "storedVariables");
         try (FileOutputStream fos = new FileOutputStream(savedVariables)) {
@@ -92,27 +99,22 @@ public class ScriptPluginManager implements ActionListener {
         }
     }
 
-    /**
-     * Register all the action types. This will unregister all the actions first.
-     */
-    private void registerAll() {
-        actionController.unregisterListener(this);
-        for (Map.Entry<String, List<ActionType>> entry
-                : actionController.getGroupedTypes().entrySet()) {
-            final List<ActionType> types = entry.getValue();
-            actionController.registerListener(this, types.toArray(new ActionType[types.size()]));
+    @Subscribe
+    public void handlePluginLoadEvent(final DMDircEvent event) throws ReflectiveOperationException {
+        if (event instanceof PluginLoadedEvent || event instanceof PluginUnloadedEvent) {
+            return;
         }
-    }
-
-    @Override
-    public void processEvent(final ActionType type, final StringBuffer format,
-            final Object... arguments) {
-        // Plugins may to register/unregister action types, so lets reregister all
-        // the action types, except Plugin loaded and plugin unloaded.
-        if (type.equals(CoreActionType.PLUGIN_LOADED) || type.equals(CoreActionType.PLUGIN_UNLOADED)) {
-            registerAll();
+        final String name = event.getClass().getSimpleName()
+                .replaceAll("Event$", "")
+                .replaceAll("(.)([A-Z])", "$1_$2")
+                .toUpperCase();
+        final List<Object> arguments = new ArrayList<>();
+        for (Method method : event.getClass().getMethods()) {
+            if ((method.getName().startsWith("get") && method.getParameterCount() == 0)
+                    && !method.getName().equals("getDisplayFormat")) {
+                arguments.add(method.invoke(event));
+            }
         }
-        scriptManager.callFunctionAll("action_" + type.toString().toLowerCase(), arguments);
+        scriptManager.callFunctionAll("action_" + name, arguments.toArray());
     }
-
 }
