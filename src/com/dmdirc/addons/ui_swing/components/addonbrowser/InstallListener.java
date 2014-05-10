@@ -62,7 +62,7 @@ public class InstallListener implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         final InstallerWindow installer = new InstallerWindow(parentWindow, info);
         installer.display(parentWindow);
-        workerFactory.getInstallWorker(info, installer).executeInExecutor();
+        workerFactory.getInstallWorker(info, installer).execute();
     }
 
 }

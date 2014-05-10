@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.addons.ui_swing.SwingWorkerExecutor;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 
@@ -50,13 +49,6 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
         } catch (ExecutionException ex) {
             Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
         }
-    }
-
-    /**
-     * Execute this swing worker in the swing worker executor.
-     */
-    public void executeInExecutor() {
-        SwingWorkerExecutor.queue(this);
     }
 
 }

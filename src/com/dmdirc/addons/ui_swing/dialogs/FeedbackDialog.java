@@ -235,7 +235,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
         }
         new SendWorker(this, config, name.getText().trim(), email.getText().trim(),
                 feedback.getText().trim(), serverInfo.toString().trim(),
-                dmdircInfo.toString().trim()).executeInExecutor();
+                dmdircInfo.toString().trim()).execute();
     }
 
     /** Validates the input. */

@@ -215,7 +215,7 @@ public class CategoryPanel extends JPanel {
             });
 
             worker = new PrefsCategoryLoader(factory, this, category);
-            worker.executeInExecutor();
+            worker.execute();
         } else {
             categoryLoaded(category);
         }

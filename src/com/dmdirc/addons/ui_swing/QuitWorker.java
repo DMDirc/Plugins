@@ -84,12 +84,4 @@ public class QuitWorker extends SwingWorker<Void, Void> {
         super.done();
         mainFrame.dispose();
     }
-
-    /**
-     * Execute this swing worker in the swing worker executor.
-     */
-    public void executeInExecutor() {
-        SwingWorkerExecutor.queue(this);
-    }
-
 }
