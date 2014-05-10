@@ -65,8 +65,7 @@ public class CategoryLabel extends JLabel {
         this.parentList = parentList;
 
         setText(category.getTitle());
-        new IconLoader(iconManager, this, category.getIcon())
-                .executeInExecutor();
+        new IconLoader(iconManager, this, category.getIcon()).execute();
 
         int level = 0;
         PreferencesCategory temp = category;

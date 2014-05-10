@@ -190,7 +190,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
      * @param download Download new addon feed?
      */
     public final void loadData(final boolean download) {
-        loaderFactory.getDataLoaderWorker(list, download, this, scrollPane).executeInExecutor();
+        loaderFactory.getDataLoaderWorker(list, download, this, scrollPane).execute();
     }
 
     /**

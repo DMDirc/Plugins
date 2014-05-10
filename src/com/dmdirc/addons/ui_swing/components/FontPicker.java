@@ -72,7 +72,7 @@ public class FontPicker extends JComboBox<Object> {
                     Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
                 }
             }
-        }.executeInExecutor();
+        }.execute();
     }
 
     /**

@@ -124,7 +124,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         if (value == null || value.isEmpty()) {
             backgroundImage = null;
         } else {
-            new ImageLoader(urlBuilder.getUrl(value), this).executeInExecutor();
+            new ImageLoader(urlBuilder.getUrl(value), this).execute();
         }
     }
 

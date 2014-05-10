@@ -519,7 +519,7 @@ public class MainFrame extends JFrame implements WindowListener,
         this.exitCode = exitCode;
         quitting = true;
 
-        quitWorker.get().executeInExecutor();
+        quitWorker.get().execute();
     }
 
     @Override

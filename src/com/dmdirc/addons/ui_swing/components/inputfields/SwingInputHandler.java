@@ -163,7 +163,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     protected void done() {
                         localTarget.setEditable(true);
                     }
-                }.executeInExecutor();
+                }.execute();
             }
         });
         localTarget.getActionMap().put("insert-shift-tab",
@@ -186,7 +186,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                             protected void done() {
                                 localTarget.setEditable(true);
                             }
-                        }.executeInExecutor();
+                        }.execute();
                     }
                 });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -239,7 +239,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                                     enterPressed(line);
                                     return null;
                                 }
-                            }.executeInExecutor();
+                            }.execute();
                         }
                     }
                 });

@@ -146,7 +146,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
                     }
                 });
             }
-        }.executeInExecutor();
+        }.execute();
     }
 
     /** Lays out the dialog. */

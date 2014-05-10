@@ -199,7 +199,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
                     }
                     return null;
                 }
-            }.executeInExecutor();
+            }.execute();
 
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 restartDialogProvider.displayOrRequestFocus();

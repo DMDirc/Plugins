@@ -287,7 +287,7 @@ public class NewServerDialog extends StandardDialog implements
                         serverManager.connectToAddress(address, profile);
                         return null;
                     }
-                }.executeInExecutor();
+                }.execute();
             } else {
                 final Connection connection = activeFrameManager.getActiveFrame().getContainer().
                         getConnection();
@@ -303,7 +303,7 @@ public class NewServerDialog extends StandardDialog implements
                         }
                         return null;
                     }
-                }.executeInExecutor();
+                }.execute();
             }
         } catch (URISyntaxException ex) {
             Logger.userError(ErrorLevel.MEDIUM, "Unable to create URI", ex);
