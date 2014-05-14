@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableList;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeListenerProxy;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -504,7 +505,11 @@ public class ProfileManagerModel {
     public void save() {
         for (Profile profile : profiles) {
             if (profile.isDeleted()) {
-                profile.delete();
+                try {
+                    profile.delete();
+                } catch (IOException ex) {
+                    // TODO: handle somehow
+                }
             } else {
                 profile.save();
             }
