@@ -110,7 +110,7 @@ public class ScriptPluginManager {
                 .toUpperCase();
         final List<Object> arguments = new ArrayList<>();
         for (Method method : event.getClass().getMethods()) {
-            if ((method.getName().startsWith("get") && method.getParameterCount() == 0)
+            if ((method.getName().startsWith("get") && method.getParameterTypes().length == 0)
                     && !method.getName().equals("getDisplayFormat")) {
                 arguments.add(method.invoke(event));
             }
