@@ -27,6 +27,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -740,9 +741,11 @@ public class ProfileManagerModelTest {
 
     /**
      * Test method save of class ProfileManagerModel
+     *
+     * @throws IOException
      */
     @Test
-    public void save() {
+    public void save() throws IOException {
         final Profile first = mock(Profile.class);
         final Profile second = mock(Profile.class);
         when(first.isDeleted()).thenReturn(false);
