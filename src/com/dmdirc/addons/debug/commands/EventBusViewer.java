@@ -139,7 +139,7 @@ public class EventBusViewer extends DebugCommand {
                     .append(Styliser.CODE_BOLD);
 
             for (Method method : event.getClass().getMethods()) {
-                if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
+                if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
                     try {
                         output.append(' ')
                                 .append(Styliser.CODE_UNDERLINE)
