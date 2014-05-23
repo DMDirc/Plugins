@@ -143,14 +143,8 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Extracts the core actions. */
     public void extractCoreActions() {
         //Copy actions
-        final Map<String, byte[]> resources;
-        try {
-            resources = ResourceManager.getResourceManager().
-                    getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
-        } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Failed to extract actions", ex);
-            return;
-        }
+        final Map<String, byte[]> resources = ResourceManager.getResourceManager().
+                getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
                 final String resourceName = actionsDirectory + resource.getKey()
