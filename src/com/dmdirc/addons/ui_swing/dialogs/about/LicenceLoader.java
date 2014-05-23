@@ -112,11 +112,8 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     private void addCoreLicences(final ResourceManager rm) {
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode("DMDirc");
         final Map<String, InputStream> licences = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        try {
-            licences.putAll(rm.getResourcesStartingWithAsInputStreams("com/dmdirc/licences/"));
-        } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to load licences.", ex);
-        }
+        licences.putAll(rm.getResourcesStartingWithAsInputStreams(
+                "com/dmdirc/licences/"));
         addLicensesToNode(licences, root);
     }
 
