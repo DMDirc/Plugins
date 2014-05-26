@@ -60,6 +60,7 @@ public class AliasManagerDialog extends StandardDialog {
         this.model = new AliasManagerModel(dialogModel);
         controller = new AliasManagerController(this, model);
         linker = new AliasManagerLinker(controller, model, this);
+        setTitle("Alias Manager");
         final JTable aliasList = new JTable();
         final JTextField command = new JTextField();
         final JSpinner argumentsNumber = new JSpinner();
