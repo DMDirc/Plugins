@@ -94,6 +94,7 @@ public class ProfileManagerDialog extends StandardDialog {
             final IdentityController identityController,
             @GlobalConfig final IconManager iconManager) {
         super(mainFrame, ModalityType.MODELESS);
+        setTitle("Profile Manager");
         this.model = new ProfileManagerModel(identityController, identityFactory);
         this.controller = new ProfileManagerController(this, model, identityFactory);
         realname = new ValidatableJTextField(iconManager);
