@@ -41,12 +41,15 @@ import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.commandparser.aliases.AliasManager;
+import com.dmdirc.commandparser.aliases.CoreAliasDialogModel;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.plugins.ServiceManager;
 
 import java.awt.Window;
@@ -80,6 +83,11 @@ public class DialogModule {
     }
 
     @Provides
+    public AliasDialogModel getAliasDialogModel(final AliasManager aliasManager) {
+        return new CoreAliasDialogModel(aliasManager);
+    }
+
+    @Provides
     @Singleton
     public DialogProvider<NewServerDialog> getNewServerDialogProvider(
             final Provider<NewServerDialog> provider) {
@@ -104,6 +112,13 @@ public class DialogModule {
     @Singleton
     public DialogProvider<AliasManagerDialog> getAliasManagerDialogProvider(
             final Provider<AliasManagerDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<com.dmdirc.addons.ui_swing.dialogs.newaliases.AliasManagerDialog> getNewAliasManagerDialogProvider(
+            final Provider<com.dmdirc.addons.ui_swing.dialogs.newaliases.AliasManagerDialog> provider) {
         return new DialogProvider<>(provider);
     }
 
