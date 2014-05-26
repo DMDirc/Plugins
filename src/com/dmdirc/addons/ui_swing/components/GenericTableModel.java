@@ -107,6 +107,18 @@ public class GenericTableModel<T> extends AbstractTableModel {
     }
 
     /**
+     * Returns the value at the specified row.
+     *
+     * @param rowIndex Index to retrieve
+     *
+     * @return Value at the specified row
+     */
+    public T getValue(final int rowIndex) {
+        Preconditions.checkElementIndex(rowIndex, values.size());
+        return values.get(rowIndex);
+    }
+
+    /**
      * Sets the name of the header for a specific column.
      *
      * @param column Column index
