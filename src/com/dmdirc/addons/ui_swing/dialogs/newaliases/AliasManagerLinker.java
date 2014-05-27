@@ -160,6 +160,7 @@ public class AliasManagerLinker {
                     command.setText(selectedAlias.get().getName());
                 } else {
                     command.setText("");
+                    command.setValidation(new ValidationResponse());
                 }
             }
         });
@@ -169,7 +170,7 @@ public class AliasManagerLinker {
                 final ValidatorChain<String> chain = ValidatorChain.<String>builder()
                         .addValidator(new CommandNameValidator(commandController.getCommandChar()))
                         .addValidator(new FileNameValidator())
-                        .addValidator(new AliasNameValidator(model, model.getSelectedAlias().get()))
+                        .addValidator(new AliasNameValidator(model, model.getSelectedAlias()))
                         .build();
                 final ValidationResponse validation = chain.validate(command.getText());
                 command.setValidation(validation);
