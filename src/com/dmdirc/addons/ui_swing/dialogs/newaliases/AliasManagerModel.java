@@ -67,22 +67,26 @@ public class AliasManagerModel {
 
     public void addAlias(final String name, final int minArguments, final String substitution) {
         model.addAlias(name, minArguments, substitution);
-        pcs.firePropertyChange("addAlias", "", name);
+        pcs.firePropertyChange("addAlias", null, model.getAlias(name).get());
     }
 
     public void editAlias(final String name, final int minArguments, final String substitution) {
-        model.editAlias(null, minArguments, null);
-        pcs.firePropertyChange("editAlias", name, name);
+        final Alias oldAlias = model.getAlias(name).get();
+        model.editAlias(name, minArguments, substitution);
+        pcs.firePropertyChange("editAlias", oldAlias, model.getAlias(name).get());
     }
 
     public void renameAlias(final String oldName, final String newName) {
+        final Alias oldAlias = model.getAlias(oldName).get();
         model.renameAlias(oldName, newName);
-        pcs.firePropertyChange("renameAlias", oldName, newName);
+        model.setSelectedAlias(model.getAlias(newName));
+        pcs.firePropertyChange("renameAlias", oldAlias, model.getAlias(newName).get());
     }
 
     public void removeAlias(final String name) {
+        final Alias oldAlias = model.getAlias(name).get();
         model.removeAlias(name);
-        pcs.firePropertyChange("deleteAlias", name, "");
+        pcs.firePropertyChange("deleteAlias", oldAlias, null);
     }
 
     public void setSelectedAlias(final Optional<Alias> alias) {
