@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.newaliases;
 
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
+import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.commandparser.validators.CommandNameValidator;
@@ -40,12 +41,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -82,7 +84,18 @@ public class AliasManagerLinker {
                 Alias.class, "getName", "getMinArguments", "getSubstitution");
         commandModel.setHeaderNames("Name", "Minimum Arguments", "Substitution");
         commandList.setModel(commandModel);
-        commandList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        commandList.setSelectionModel(new VetoableListSelectionModel());
+        ((VetoableListSelectionModel) commandList.getSelectionModel()).addVetoableSelectionListener(
+                new VetoableChangeListener() {
+
+                    @Override
+                    public void vetoableChange(final PropertyChangeEvent evt) throws
+                            PropertyVetoException {
+                        if (evt.getNewValue() == Integer.valueOf(-1)) {
+                            throw new PropertyVetoException("Blank selection not allowed", evt);
+                        }
+                    }
+                });
         commandList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
@@ -101,54 +114,57 @@ public class AliasManagerLinker {
                 for (Alias alias : model.getAliases()) {
                     commandModel.addValue(alias);
                 }
+                if (commandModel.getRowCount() > 0) {
+                    commandList.getSelectionModel().setLeadSelectionIndex(0);
+                }
             }
         });
         model.addPropertyChangeListener("editAlias", new PropertyChangeListener() {
 
-                    @Override
-                    public void propertyChange(final PropertyChangeEvent evt) {
-                        if (evt.getNewValue() != null) {
-                            final Alias oldAlias = (Alias) evt.getOldValue();
-                            final Alias newAlias = (Alias) evt.getNewValue();
-                            final int oldIndex = commandModel.getIndex(oldAlias);
-                            commandModel.replaceValueAt(newAlias, oldIndex);
-                        }
-                    }
-                });
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                if (evt.getNewValue() != null) {
+                    final Alias oldAlias = (Alias) evt.getOldValue();
+                    final Alias newAlias = (Alias) evt.getNewValue();
+                    final int oldIndex = commandModel.getIndex(oldAlias);
+                    commandModel.replaceValueAt(newAlias, oldIndex);
+                }
+            }
+        });
         model.addPropertyChangeListener("renameAlias", new PropertyChangeListener() {
 
-                    @Override
-                    public void propertyChange(final PropertyChangeEvent evt) {
-                        if (evt.getNewValue() != null) {
-                            final Alias oldAlias = (Alias) evt.getOldValue();
-                            final Alias newAlias = (Alias) evt.getNewValue();
-                            final int oldIndex = commandModel.getIndex(oldAlias);
-                            commandModel.replaceValueAt(newAlias, oldIndex);
-                        }
-                    }
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                if (evt.getNewValue() != null) {
+                    final Alias oldAlias = (Alias) evt.getOldValue();
+                    final Alias newAlias = (Alias) evt.getNewValue();
+                    final int oldIndex = commandModel.getIndex(oldAlias);
+                    commandModel.replaceValueAt(newAlias, oldIndex);
+                }
+            }
         });
         model.addPropertyChangeListener("deleteAlias", new PropertyChangeListener() {
 
-                    @Override
-                    public void propertyChange(final PropertyChangeEvent evt) {
-                        if (evt.getOldValue() != null) {
-                            commandModel.removeValue((Alias) evt.getOldValue());
-                        }
-                    }
+            @Override
+            public void propertyChange(final PropertyChangeEvent evt) {
+                if (evt.getOldValue() != null) {
+                    commandModel.removeValue((Alias) evt.getOldValue());
+                }
+            }
         });
         model.addPropertyChangeListener("addAlias", new PropertyChangeListener() {
 
-                    @Override
+            @Override
             public void propertyChange(final PropertyChangeEvent evt) {
-                        if (evt.getNewValue() != null) {
-                            final Alias alias = (Alias) evt.getNewValue();
-                            commandModel.addValue(alias);
-                            commandList.getSelectionModel().setSelectionInterval(
-                                    commandModel.getIndex(alias), commandModel.getIndex(alias));
-                        }
-                    }
-        });
+                if (evt.getNewValue() != null) {
+                    final Alias alias = (Alias) evt.getNewValue();
+                    commandModel.addValue(alias);
+                    commandList.getSelectionModel().setSelectionInterval(
+                            commandModel.getIndex(alias), commandModel.getIndex(alias));
                 }
+            }
+        });
+    }
 
     public void bindCommand(final ValidatableJTextField command) {
         command.setEnabled(false);
