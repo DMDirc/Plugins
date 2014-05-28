@@ -105,47 +105,50 @@ public class AliasManagerLinker {
         });
         model.addPropertyChangeListener("editAlias", new PropertyChangeListener() {
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    final Alias oldAlias = (Alias) evt.getOldValue();
-                    final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.getIndex(oldAlias);
-                    commandModel.replaceValueAt(newAlias, oldIndex);
-                }
-            }
-        });
+                    @Override
+                    public void propertyChange(final PropertyChangeEvent evt) {
+                        if (evt.getNewValue() != null) {
+                            final Alias oldAlias = (Alias) evt.getOldValue();
+                            final Alias newAlias = (Alias) evt.getNewValue();
+                            final int oldIndex = commandModel.getIndex(oldAlias);
+                            commandModel.replaceValueAt(newAlias, oldIndex);
+                        }
+                    }
+                });
         model.addPropertyChangeListener("renameAlias", new PropertyChangeListener() {
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    final Alias oldAlias = (Alias) evt.getOldValue();
-                    final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.getIndex(oldAlias);
-                    commandModel.replaceValueAt(newAlias, oldIndex);
-                }
-            }
+                    @Override
+                    public void propertyChange(final PropertyChangeEvent evt) {
+                        if (evt.getNewValue() != null) {
+                            final Alias oldAlias = (Alias) evt.getOldValue();
+                            final Alias newAlias = (Alias) evt.getNewValue();
+                            final int oldIndex = commandModel.getIndex(oldAlias);
+                            commandModel.replaceValueAt(newAlias, oldIndex);
+                        }
+                    }
         });
         model.addPropertyChangeListener("deleteAlias", new PropertyChangeListener() {
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getOldValue() != null) {
-                    commandModel.removeValue((Alias) evt.getOldValue());
-                }
-            }
+                    @Override
+                    public void propertyChange(final PropertyChangeEvent evt) {
+                        if (evt.getOldValue() != null) {
+                            commandModel.removeValue((Alias) evt.getOldValue());
+                        }
+                    }
         });
         model.addPropertyChangeListener("addAlias", new PropertyChangeListener() {
 
-            @Override
+                    @Override
             public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    commandModel.addValue((Alias) evt.getNewValue());
-                }
-            }
+                        if (evt.getNewValue() != null) {
+                            final Alias alias = (Alias) evt.getNewValue();
+                            commandModel.addValue(alias);
+                            commandList.getSelectionModel().setSelectionInterval(
+                                    commandModel.getIndex(alias), commandModel.getIndex(alias));
+                        }
+                    }
         });
-    }
+                }
 
     public void bindCommand(final ValidatableJTextField command) {
         command.setEnabled(false);
@@ -292,8 +295,8 @@ public class AliasManagerLinker {
                         return true;
                             }
 
-                            @Override
-                            public void cancelled() {
+                    @Override
+                    public void cancelled() {
                             }
                         }.display();
             }
