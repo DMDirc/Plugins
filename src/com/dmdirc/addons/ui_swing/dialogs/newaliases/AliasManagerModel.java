@@ -86,6 +86,9 @@ public class AliasManagerModel {
     public void removeAlias(final String name) {
         final Alias oldAlias = model.getAlias(name).get();
         model.removeAlias(name);
+        if (getSelectedAlias().get().equals(oldAlias)) {
+            setSelectedAlias(Optional.<Alias>absent());
+        }
         pcs.firePropertyChange("deleteAlias", oldAlias, null);
     }
 
