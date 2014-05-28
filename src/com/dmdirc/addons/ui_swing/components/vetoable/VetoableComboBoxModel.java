@@ -75,13 +75,14 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
     /**
      * Fires a vetoable selection change event.
      *
+     * @param oldValue Old value
      * @param newValue New value
      *
      * @return true iif the event is to be vetoed
      */
-    protected boolean fireVetoableSelectionChange(final Object newValue) {
+    protected boolean fireVetoableSelectionChange(final Object oldValue, final Object newValue) {
         boolean result = true;
-        final VetoableChangeEvent event = new VetoableChangeEvent(this, newValue);
+        final VetoableChangeEvent event = new VetoableChangeEvent(this, oldValue, newValue);
         for (VetoableComboBoxSelectionListener listener : listeners.get(
                 VetoableComboBoxSelectionListener.class)) {
             result &= listener.selectionChanged(event);
@@ -94,7 +95,7 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
         final Object oldItem = getSelectedItem();
 
         super.setSelectedItem(anObject);
-        if (!fireVetoableSelectionChange(anObject)) {
+        if (!fireVetoableSelectionChange(oldItem, anObject)) {
             super.setSelectedItem(oldItem);
         }
     }

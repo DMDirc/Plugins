@@ -31,6 +31,8 @@ public class VetoableChangeEvent extends ChangeEvent {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Old value. */
+    private final Object oldValue;
     /** New value. */
     private final Object newValue;
 
@@ -38,15 +40,26 @@ public class VetoableChangeEvent extends ChangeEvent {
      * Creates a new vetoable change event.
      *
      * @param source   Event source
+     * @param oldValue Old value
      * @param newValue New value
      */
-    public VetoableChangeEvent(final Object source, final Object newValue) {
+    public VetoableChangeEvent(final Object source, final Object oldValue, final Object newValue) {
         super(source);
+        this.oldValue = oldValue;
         this.newValue = newValue;
     }
 
     /**
-     * Returns the new value for the event,
+     * Returns the old value for the event.
+     *
+     * @return Old value
+     */
+    public Object getOldValue() {
+        return oldValue;
+    }
+
+    /**
+     * Returns the new value for the event.
      *
      * @return New value
      */
