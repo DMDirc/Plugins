@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
+import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.ui.IconManager;
@@ -34,6 +35,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -76,8 +79,18 @@ public class ProfileManagerDialogLinker {
      */
     public void bindProfileList(final JList<Profile> list) {
         list.setModel(new DefaultListModel<Profile>());
-        list.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        final VetoableListSelectionModel listModel = new VetoableListSelectionModel();
+        list.setSelectionModel(listModel);
+        listModel.addVetoableSelectionListener(new VetoableChangeListener() {
+
+            @Override
+            public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
+                if (!model.isChangeProfileAllowed()) {
+                    throw new PropertyVetoException("", evt);
+                }
+            }
+        });
+        listModel.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
                 model.setSelectedProfile(list.getSelectedValue());

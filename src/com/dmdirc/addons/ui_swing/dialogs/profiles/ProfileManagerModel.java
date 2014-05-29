@@ -424,6 +424,18 @@ public class ProfileManagerModel {
     }
 
     /**
+     * Is it possible to change profile?
+     *
+     * @return true if all validators for the selected profile pass
+     */
+    public boolean isChangeProfileAllowed() {
+        return !isNameValid().isFailure()
+                && !isNicknamesValid().isFailure()
+                && !isIdentValid().isFailure()
+                && !isRealnameValid().isFailure();
+    }
+
+    /**
      * Is it possible to save and close the dialog?
      *
      * @return true if all other validators pass and there is at least one profile
