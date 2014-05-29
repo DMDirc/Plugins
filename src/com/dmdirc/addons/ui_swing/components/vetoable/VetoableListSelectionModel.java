@@ -74,15 +74,14 @@ public class VetoableListSelectionModel implements ListSelectionModel {
      * @return true iif the event is to be vetoed
      */
     protected boolean fireVetoableSelectionChange(final PropertyChangeEvent event) {
-        boolean result = false;
         for (VetoableChangeListener listener : listeners.get(VetoableChangeListener.class)) {
             try {
                 listener.vetoableChange(event);
             } catch (PropertyVetoException ex) {
-                result &= true;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     @Override
