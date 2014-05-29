@@ -165,6 +165,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param columnIndex This is ignored
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
         Preconditions.checkElementIndex(rowIndex, values.size(), "Row index must exist");
         Preconditions.checkElementIndex(columnIndex, getters.length, "Column index must exist");

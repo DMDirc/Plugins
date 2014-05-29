@@ -91,7 +91,7 @@ public class AliasManagerLinker {
                     @Override
                     public void vetoableChange(final PropertyChangeEvent evt) throws
                             PropertyVetoException {
-                        if (evt.getNewValue() == Integer.valueOf(-1)) {
+                        if ((Integer) evt.getNewValue() == -1) {
                             throw new PropertyVetoException("Blank selection not allowed", evt);
                         }
                     }
@@ -304,6 +304,8 @@ public class AliasManagerLinker {
                         .build();
                 new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
                         "Add Alias", "Enter the alias name", chain) {
+
+                            private static final long serialVersionUID = 3;
 
                     @Override
                     public boolean save() {
