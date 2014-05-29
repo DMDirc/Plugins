@@ -506,6 +506,26 @@ public class ProfileManagerModelTest {
         assertTrue(instance.isManipulateNicknameAllowed());
     }
 
+    @Test
+    public void testIsChangeProfileAllowed() {
+        final Profile profile = new Profile("New Profile", null);
+        profile.setName("*");
+        profile.setRealname("");
+        profile.setIdent("*");
+        ProfileManagerModel instance = createModel();
+        assertTrue(instance.isChangeProfileAllowed());
+        instance.setProfiles(Arrays.asList(new Profile[]{profile,}));
+        assertFalse(instance.isChangeProfileAllowed());
+        profile.setName("profile");
+        assertFalse(instance.isChangeProfileAllowed());
+        profile.addNickname("nickname");
+        assertFalse(instance.isChangeProfileAllowed());
+        profile.setRealname("realname");
+        assertFalse(instance.isChangeProfileAllowed());
+        profile.setIdent("ident");
+        assertTrue(instance.isChangeProfileAllowed());
+    }
+
     /**
      * Test of isOKAllowed method, of class ProfileManagerModel.
      */
