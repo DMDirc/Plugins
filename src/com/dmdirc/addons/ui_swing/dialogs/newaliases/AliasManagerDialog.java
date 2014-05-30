@@ -62,9 +62,9 @@ public class AliasManagerDialog extends StandardDialog {
             @GlobalConfig final IconManager iconManager,
             final CommandController commandController) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
-        this.model = new AliasManagerModel(dialogModel);
+        this.model = new AliasManagerModel(dialogModel, commandController);
         controller = new AliasManagerController(this, model);
-        linker = new AliasManagerLinker(controller, model, this, iconManager, commandController);
+        linker = new AliasManagerLinker(controller, model, this, iconManager);
         setTitle("Alias Manager");
         final JTable aliasList = new JTable();
         final ValidatableJTextField command = new ValidatableJTextField(iconManager);
