@@ -23,7 +23,12 @@
 package com.dmdirc.addons.ui_swing.dialogs.newaliases;
 
 import com.dmdirc.commandparser.aliases.Alias;
+import com.dmdirc.commandparser.validators.CommandNameValidator;
+import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
+import com.dmdirc.util.validators.FileNameValidator;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.ValidatorChain;
 
 import com.google.common.base.Optional;
 
@@ -41,9 +46,16 @@ public class AliasManagerModel {
     private final PropertyChangeSupport pcs;
     /** Core alias dialog mode. */
     private final AliasDialogModel model;
+    /** Command controller, to retrieve command character. */
+    private final CommandController commandController;
+    private String aliasName;
+    private int minArgs;
+    private String substitution;
 
-    public AliasManagerModel(final AliasDialogModel model) {
+    public AliasManagerModel(final AliasDialogModel model,
+            final CommandController commandController) {
         this.model = model;
+        this.commandController = commandController;
         pcs = new PropertyChangeSupport(this);
     }
 
@@ -94,7 +106,26 @@ public class AliasManagerModel {
 
     public void setSelectedAlias(final Optional<Alias> alias) {
         final Optional<Alias> oldAlias = model.getSelectedAlias();
+        if (oldAlias.isPresent()) {
+            final Alias details = oldAlias.get();
+            if (!details.getName().equals(aliasName)) {
+                renameAlias(details.getName(), aliasName);
+            }
+            if (details.getMinArguments() != minArgs
+                    || !details.getSubstitution().equals(substitution)) {
+                editAlias(aliasName, minArgs, substitution);
+            }
+        }
         model.setSelectedAlias(alias);
+        if (alias.isPresent()) {
+            aliasName = alias.get().getName();
+            minArgs = alias.get().getMinArguments();
+            substitution = alias.get().getSubstitution();
+        } else {
+            aliasName = "";
+            minArgs = 0;
+            substitution = "";
+        }
         pcs.firePropertyChange("selectedAlias", oldAlias, alias);
     }
 
@@ -102,8 +133,53 @@ public class AliasManagerModel {
         return model.getSelectedAlias();
     }
 
+    public String getName() {
+        return aliasName;
+    }
+
+    public int getMininumArguments() {
+        return minArgs;
+    }
+
+    public String getSubstitution() {
+        return substitution;
+    }
+
+    public void setName(final String aliasName) {
+        this.aliasName = aliasName;
+    }
+
+    public void setMinimumArguments(final int minArgs) {
+        this.minArgs = minArgs;
+    }
+
+    public void setSubstitution(final String substitution) {
+        this.substitution = substitution;
+    }
+
     public void save() {
+        setSelectedAlias(Optional.<Alias>absent());
         model.save();
+    }
+
+    public ValidationResponse isCommandValid() {
+        if (getSelectedAlias().isPresent()) {
+            return ValidatorChain.<String>builder()
+                    .addValidator(new CommandNameValidator(commandController.getCommandChar()))
+                    .addValidator(new FileNameValidator())
+                    .addValidator(new AliasNameValidator(this))
+                    .build().validate(getName());
+        } else {
+            return new ValidationResponse();
+        }
+    }
+
+    public ValidatorChain<String> getNewCommandValidator() {
+        return ValidatorChain.<String>builder()
+                .addValidator(new CommandNameValidator(commandController.getCommandChar()))
+                .addValidator(new FileNameValidator())
+                .addValidator(new UniqueAliasNameValidator(this))
+                .build();
     }
 
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
