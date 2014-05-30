@@ -27,12 +27,7 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
-import com.dmdirc.commandparser.validators.CommandNameValidator;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.validators.FileNameValidator;
-import com.dmdirc.util.validators.ValidationResponse;
-import com.dmdirc.util.validators.ValidatorChain;
 
 import com.google.common.base.Optional;
 
@@ -65,18 +60,15 @@ public class AliasManagerLinker {
     private final AliasManagerModel model;
     private final AliasManagerDialog dialog;
     private final IconManager iconManager;
-    private final CommandController commandController;
 
     public AliasManagerLinker(final AliasManagerController controller,
             final AliasManagerModel model,
             final AliasManagerDialog dialog,
-            final IconManager iconManager,
-            final CommandController commandController) {
+            final IconManager iconManager) {
         this.controller = controller;
         this.model = model;
         this.dialog = dialog;
         this.iconManager = iconManager;
-        this.commandController = commandController;
     }
 
     public void bindCommandList(final JTable commandList) {
@@ -175,33 +167,15 @@ public class AliasManagerLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 final Optional<Alias> selectedAlias = model.getSelectedAlias();
                 command.setEnabled(selectedAlias.isPresent());
-                if (selectedAlias.isPresent()) {
-                    command.setText(selectedAlias.get().getName());
-                } else {
-                    command.setText("");
-                    command.setValidation(new ValidationResponse());
-                }
+                command.setText(model.getName());
+                command.setValidation(model.isCommandValid());
             }
         });
         command.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                final ValidatorChain<String> chain = ValidatorChain.<String>builder()
-                        .addValidator(new CommandNameValidator(commandController.getCommandChar()))
-                        .addValidator(new FileNameValidator())
-                        .addValidator(new AliasNameValidator(model, model.getSelectedAlias()))
-                        .build();
-                final ValidationResponse validation = chain.validate(command.getText());
-                command.setValidation(validation);
-                if (validation.isFailure()) {
-                    return;
-                }
-                if (command.isEnabled() && model.getSelectedAlias().isPresent()) {
-                    final String oldName = model.getSelectedAlias().get().getName();
-                    if (!command.getText().equals(oldName)) {
-                        model.renameAlias(oldName, command.getText());
-                    }
-                }
+                model.setName(command.getText());
+                command.setValidation(model.isCommandValid());
             }
 
             @Override
@@ -241,11 +215,7 @@ public class AliasManagerLinker {
 
             @Override
             public void stateChanged(final ChangeEvent e) {
-                if (argumentsNumber.isEnabled() && model.getSelectedAlias().isPresent()) {
-                    final String name = model.getSelectedAlias().get().getName();
-                    model.editAlias(name, (Integer) argumentsNumber.getValue(),
-                            model.getSelectedAlias().get().getSubstitution());
-                }
+                model.setMinimumArguments((Integer) argumentsNumber.getValue());
             }
         });
     }
@@ -268,11 +238,7 @@ public class AliasManagerLinker {
         response.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                if (response.isEnabled() && model.getSelectedAlias().isPresent()) {
-                    final String name = model.getSelectedAlias().get().getName();
-                    final int minArgs = model.getSelectedAlias().get().getMinArguments();
-                    model.editAlias(name, minArgs, response.getText());
-                }
+                model.setSubstitution(response.getText());
             }
 
             @Override
@@ -297,13 +263,8 @@ public class AliasManagerLinker {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final ValidatorChain<String> chain = ValidatorChain.<String>builder()
-                        .addValidator(new CommandNameValidator(commandController.getCommandChar()))
-                        .addValidator(new FileNameValidator())
-                        .addValidator(new UniqueAliasNameValidator(model))
-                        .build();
                 new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add Alias", "Enter the alias name", chain) {
+                        "Add Alias", "Enter the alias name", model.getNewCommandValidator()) {
 
                             private static final long serialVersionUID = 3;
 

@@ -26,25 +26,22 @@ import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
-import com.google.common.base.Optional;
-
 /**
  * Validates an alias name again the list, taking into account the selected alias.
  */
 public class AliasNameValidator implements Validator<String> {
 
-    private final AliasManagerModel aliases;
-    private final Optional<Alias> selectedAlias;
+    private final AliasManagerModel model;
 
-    public AliasNameValidator(final AliasManagerModel aliases, final Optional<Alias> selectedAlias) {
-        this.aliases = aliases;
-        this.selectedAlias = selectedAlias;
+    public AliasNameValidator(final AliasManagerModel model) {
+        this.model = model;
     }
 
     @Override
     public ValidationResponse validate(final String object) {
-        for (Alias targetAlias : aliases.getAliases()) {
-            if (targetAlias != selectedAlias.get() && targetAlias.getName().equalsIgnoreCase(object)) {
+        for (Alias targetAlias : model.getAliases()) {
+            if (targetAlias != model.getSelectedAlias().get()
+                    && targetAlias.getName().equalsIgnoreCase(object)) {
                 return new ValidationResponse("Alias names must be unique");
             }
         }
