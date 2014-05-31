@@ -26,27 +26,22 @@ import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
-import java.util.List;
-
 /**
  * Ensures profile names are unique.
  */
-class ProfileRenameValidator implements Validator<String> {
+public class ProfileRenameValidator implements Validator<String> {
 
-    /** List of profiles to validate. */
-    private final List<Profile> profiles;
-    /** Currently selected profile. */
-    private final Profile selectedProfile;
+    /** Profile model. */
+    private final ProfileManagerModel model;
 
-    public ProfileRenameValidator(final List<Profile> profiles, final Profile selectedProfile) {
-        this.profiles = profiles;
-        this.selectedProfile = selectedProfile;
+    public ProfileRenameValidator(final ProfileManagerModel model) {
+        this.model = model;
     }
 
     @Override
     public ValidationResponse validate(final String object) {
-        for (Profile targetprofile : profiles) {
-            if (targetprofile != selectedProfile
+        for (Profile targetprofile : model.getProfiles()) {
+            if (targetprofile != model.getSelectedProfile()
                     && targetprofile.getName().equalsIgnoreCase(object)) {
                 return new ValidationResponse("Profile names must be unique");
             }
