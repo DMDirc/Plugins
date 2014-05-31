@@ -31,7 +31,7 @@ import javax.swing.text.JTextComponent;
 /**
  * Validates a JTextComponent.
  */
-public class JTextComponentComponentValidator extends ComponentValidator
+public class JTextComponentComponentValidator extends ComponentValidator<String>
         implements DocumentListener {
 
     /**

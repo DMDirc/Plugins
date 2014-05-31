@@ -28,8 +28,10 @@ import com.dmdirc.util.validators.Validator;
 
 /**
  * Validates UI components and triggers listeners appropriately.
+ *
+ * @param <T> Object type to be validated
  */
-public abstract class ComponentValidator {
+public abstract class ComponentValidator<T> {
 
     /**
      * List of listeners.
@@ -38,7 +40,7 @@ public abstract class ComponentValidator {
     /**
      * Validator to validate against.
      */
-    private final Validator<String> validator;
+    private final Validator<T> validator;
     /**
      * Current validation state.
      */
@@ -49,17 +51,17 @@ public abstract class ComponentValidator {
      *
      * @param validator Validator to validate against
      */
-    public ComponentValidator(final Validator<String> validator) {
+    public ComponentValidator(final Validator<T> validator) {
         this.listeners = new ListenerList();
         this.validator = validator;
     }
 
     /**
-     * Returns the string to validate for this component.
+     * Returns the object to validate for this component.
      *
-     * @return String to validate
+     * @return Object to validate
      */
-    public abstract String getValidatable();
+    public abstract T getValidatable();
 
     /**
      * Adds all required hooks needed to validate component.
