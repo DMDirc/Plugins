@@ -94,6 +94,8 @@ public class AliasManagerLinker {
                 final int index = commandList.getSelectedRow();
                 if (index == -1) {
                     model.setSelectedAlias(Optional.<Alias>absent());
+                } else if (index >= commandModel.getRowCount()) {
+                    model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index - 1)));
                 } else {
                     model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index)));
                 }
@@ -141,6 +143,16 @@ public class AliasManagerLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 if (evt.getOldValue() != null) {
                     commandModel.removeValue((Alias) evt.getOldValue());
+                    final int index = commandList.getSelectedRow();
+                    if (index == -1) {
+                        model.setSelectedAlias(Optional.<Alias>absent());
+                    } else if (index >= commandModel.getRowCount()) {
+                        model.setSelectedAlias(Optional.fromNullable(commandModel.
+                                getValue(index - 1)));
+                        commandList.getSelectionModel().setLeadSelectionIndex(index - 1);
+                    } else {
+                        model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index)));
+                    }
                 }
             }
         });
