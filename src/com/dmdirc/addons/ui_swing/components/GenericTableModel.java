@@ -39,6 +39,10 @@ import javax.swing.table.AbstractTableModel;
 public class GenericTableModel<T> extends AbstractTableModel {
 
     /**
+     * Serialisation version.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
      * List of values in the model.
      */
     private final List<T> values;
