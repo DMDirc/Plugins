@@ -29,8 +29,6 @@ import com.dmdirc.interfaces.CommandController;
 
 import com.google.common.collect.Sets;
 
-import java.util.HashSet;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,11 +64,11 @@ public class DebugTest {
     /** Checks the debug command with no arguments shows usage. */
     @Test
     public void testNoArgs() {
-        debug = new Debug(controller, new HashSet<DebugCommand>());
+        debug = new Debug(controller, Sets.<DebugCommand>newHashSet());
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
         debug.execute(container, arguments, null);
-        verify(container).addLine(eq("commandUsage"), anyObject(),
+        verify(container).addLine(eq("commandUsage"), anyString(),
                 eq("debug"), anyObject());
     }
 
