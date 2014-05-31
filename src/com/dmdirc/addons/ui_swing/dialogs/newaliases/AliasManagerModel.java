@@ -27,7 +27,7 @@ import com.dmdirc.commandparser.validators.CommandNameValidator;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.util.validators.FileNameValidator;
-import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
 import com.dmdirc.util.validators.ValidatorChain;
 
 import com.google.common.base.Optional;
@@ -162,19 +162,15 @@ public class AliasManagerModel {
         model.save();
     }
 
-    public ValidationResponse isCommandValid() {
-        if (getSelectedAlias().isPresent()) {
-            return ValidatorChain.<String>builder()
-                    .addValidator(new CommandNameValidator(commandController.getCommandChar()))
-                    .addValidator(new FileNameValidator())
-                    .addValidator(new AliasNameValidator(this))
-                    .build().validate(getName());
-        } else {
-            return new ValidationResponse();
-        }
+    public Validator<String> getCommandValidator() {
+        return ValidatorChain.<String>builder()
+                .addValidator(new CommandNameValidator(commandController.getCommandChar()))
+                .addValidator(new FileNameValidator())
+                .addValidator(new AliasNameValidator(this))
+                .build();
     }
 
-    public ValidatorChain<String> getNewCommandValidator() {
+    public Validator<String> getNewCommandValidator() {
         return ValidatorChain.<String>builder()
                 .addValidator(new CommandNameValidator(commandController.getCommandChar()))
                 .addValidator(new FileNameValidator())
