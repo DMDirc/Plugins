@@ -27,15 +27,24 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import com.google.common.collect.Sets;
+
 import java.util.HashSet;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.dmdirc.harness.CommandArgsMatcher.*;
-import static org.mockito.Mockito.*;
+import static com.dmdirc.harness.CommandArgsMatcher.eqLine;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DebugTest {
@@ -68,18 +77,18 @@ public class DebugTest {
     /** Checks the debug command with an invalid subcommand shows an error. */
     @Test
     public void testInvalidArg() {
-        debug = new Debug(controller, new HashSet<DebugCommand>());
+        debug = new Debug(controller, Sets.<DebugCommand>newHashSet());
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
 
         debug.execute(container, arguments, null);
-        verify(container).addLine(eq("commandError"), anyObject());
+        verify(container).addLine(eq("commandError"), anyString());
     }
 
     /** Checks the debug command executes a subcommand with no args. */
     @Test
     public void testCommandNoArgs() {
-        debug = new Debug(controller, new HashSet<DebugCommand>() {{ add(debugCommand); }});
+        debug = new Debug(controller, Sets.newHashSet(debugCommand));
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
         when(arguments.getArgumentsAsString(1)).thenReturn("");
@@ -87,14 +96,14 @@ public class DebugTest {
 
         debug.execute(container, arguments, commandContext);
 
-        verify(container, never()).addLine(anyString(), anyObject());
+        verify(container, never()).addLine(anyString(), anyString());
         verify(debugCommand).execute(same(container), eqLine("/test"), same(commandContext));
     }
 
     /** Checks the debug command executes a subcommand with args. */
     @Test
     public void testCommandWithArgs() {
-        debug = new Debug(controller, new HashSet<DebugCommand>() {{ add(debugCommand); }});
+        debug = new Debug(controller, Sets.newHashSet(debugCommand));
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[]{"test", "1", "2", "3"});
         when(arguments.getArgumentsAsString(1)).thenReturn("1 2 3");
@@ -102,7 +111,7 @@ public class DebugTest {
 
         debug.execute(container, arguments, commandContext);
 
-        verify(container, never()).addLine(anyString(), anyObject());
+        verify(container, never()).addLine(anyString(), anyString());
         verify(debugCommand).execute(same(container), eqLine("/test 1 2 3"), same(commandContext));
     }
 
