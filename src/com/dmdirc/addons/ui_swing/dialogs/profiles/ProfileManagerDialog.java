@@ -26,8 +26,8 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
+import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -42,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
@@ -59,6 +60,8 @@ public class ProfileManagerDialog extends StandardDialog {
     private final ProfileManagerDialogLinker linker;
     /** List of profiles. */
     private final JList<Profile> profileList = new JList<>();
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** List of nicknames for a profile. */
     private final ValidatableReorderableJList<String> nicknames
             = new ValidatableReorderableJList<>();
@@ -69,11 +72,11 @@ public class ProfileManagerDialog extends StandardDialog {
     /** Deletes the selected nickname from the active profile. */
     private final JButton deleteNickname = new JButton("Delete");
     /** Edits the name of the active profile. */
-    private final ValidatableJTextField name;
+    private final JTextField name;
     /** Edits the realname for the active profile. */
-    private final ValidatableJTextField realname;
+    private final JTextField realname;
     /** Edits the ident for the active profile. */
-    private final ValidatableJTextField ident;
+    private final JTextField ident;
     /** Adds a new profile to the list. */
     private final JButton addProfile = new JButton("Add");
     /** Deletes the active profile. */
@@ -97,9 +100,10 @@ public class ProfileManagerDialog extends StandardDialog {
         setTitle("Profile Manager");
         this.model = new ProfileManagerModel(identityController, identityFactory);
         this.controller = new ProfileManagerController(this, model, identityFactory);
-        realname = new ValidatableJTextField(iconManager);
-        ident = new ValidatableJTextField(iconManager);
-        name = new ValidatableJTextField(iconManager);
+        this.iconManager = iconManager;
+        realname = new JTextField();
+        ident = new JTextField();
+        name = new JTextField();
         initComponents();
         linker = new ProfileManagerDialogLinker(controller, model, this, iconManager);
         linker.bindAddNickname(addNickname);
@@ -134,7 +138,8 @@ public class ProfileManagerDialog extends StandardDialog {
         add(addProfile, "grow");
         add(deleteProfile, "grow, wrap");
         add(new JLabel("Name: "), "align label, span 2, split 2, flowx, sgx label");
-        add(name, "growx, pushx, sgx textinput");
+        add(ValidationFactory.getValidatorPanel(name, model.getNameValidator(), iconManager),
+                "growx, pushx, sgx textinput");
         add(new JLabel("Nicknames: "), "align label, span 2, split 2, flowx, sgx label, aligny 50%");
         add(new JScrollPane(nicknames), "grow, push");
         add(Box.createGlue(), "flowx, span 4, split 4, sgx label");
@@ -142,9 +147,11 @@ public class ProfileManagerDialog extends StandardDialog {
         add(editNickname, "grow");
         add(deleteNickname, "grow");
         add(new JLabel("Realname: "), "align label, span 2, split 2, flowx, sgx label");
-        add(realname, "growx, pushx, sgx textinput");
+        add(ValidationFactory.getValidatorPanel(realname, model.getRealnameValidator(), iconManager),
+                "growx, pushx, sgx textinput");
         add(new JLabel("Ident: "), "align label, span 2, split 2, flowx, sgx label");
-        add(ident, "growx, pushx, sgx textinput");
+        add(ValidationFactory.getValidatorPanel(ident, model.getIdentValidator(), iconManager),
+                "growx, pushx, sgx textinput");
         add(getLeftButton(), "flowx, split 2, right, sg button");
         add(getRightButton(), "right, sg button");
     }
