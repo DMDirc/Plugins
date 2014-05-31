@@ -28,7 +28,10 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.IdentValidator;
+import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
+import com.dmdirc.util.validators.ValidatorChain;
 
 import com.google.common.collect.ImmutableList;
 
@@ -448,17 +451,28 @@ public class ProfileManagerModel {
                 && !isRealnameValid().isFailure();
     }
 
+    /**
+     * Retrieves the profile name validator, if there is no active profile the validation passes.
+     *
+     * @return Passes if the name is a non empty non duplicate filename
+     */
+    public Validator<String> getNameValidator() {
+        return ValidatorChain.<String>builder()
+                .addValidator(new FileNameValidator())
+                .addValidator(new ProfileRenameValidator(this))
+                .build();
+    }
+
+    /**
+     * Is the profile name valid? If there is no active profile the validation passes.
+     *
+     * @return Passes if the name is a non empty non duplicate filename
+     */
     public ValidationResponse isNameValid() {
         if (selectedProfile == null) {
             return new ValidationResponse();
         }
-        final ValidationResponse filenameValidation = new FileNameValidator()
-                .validate(selectedProfile.getName());
-        if (filenameValidation.isFailure()) {
-            return filenameValidation;
-        }
-        return new ProfileRenameValidator(displayedProfiles, selectedProfile).validate(
-                selectedProfile.getName());
+        return getNameValidator().validate(selectedProfile.getName());
     }
 
     /**
@@ -478,6 +492,15 @@ public class ProfileManagerModel {
     }
 
     /**
+     * Retrieves the realname validator, if there is no active profile the validation passes.
+     *
+     * @return Passes if the realname is a non empty string
+     */
+    public Validator<String> getRealnameValidator() {
+        return new NotEmptyValidator();
+    }
+
+    /**
      * Is the realname in the active profile valid? If there is no active profile the validation
      * passes.
      *
@@ -487,10 +510,18 @@ public class ProfileManagerModel {
         if (selectedProfile == null) {
             return new ValidationResponse();
         }
-        if (selectedProfile.getRealname().isEmpty()) {
-            return new ValidationResponse("Realname cannot be empty");
-        }
-        return new ValidationResponse();
+        return getRealnameValidator().validate(selectedProfile.getRealname());
+    }
+
+    /**
+     * Retrieves the ident validator, if there is no active profile the validation passes.
+     *
+     * @return Passes if the ident is an empty string and a valid ident
+     */
+    public Validator<String> getIdentValidator() {
+        return ValidatorChain.<String>builder()
+                .addValidator(new IdentValidator())
+                .build();
     }
 
     /**
@@ -503,11 +534,7 @@ public class ProfileManagerModel {
         if (selectedProfile == null) {
             return new ValidationResponse();
         }
-        if (selectedProfile.getIdent() == null
-                || selectedProfile.getIdent().isEmpty()) {
-            return new ValidationResponse();
-        }
-        return new IdentValidator().validate(selectedProfile.getIdent());
+        return getIdentValidator().validate(selectedProfile.getIdent());
     }
 
     /**
