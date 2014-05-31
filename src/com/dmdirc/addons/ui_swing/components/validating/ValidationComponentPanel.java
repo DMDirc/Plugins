@@ -53,9 +53,9 @@ public class ValidationComponentPanel extends JPanel implements ComponentValidat
      * @param component   Component to validate
      */
     public ValidationComponentPanel(final IconManager iconManager, final JComponent component) {
-        setLayout(new MigLayout("fill, hidemode 3"));
+        setLayout(new MigLayout("fill, hidemode 3, ins 0"));
         error = new JLabel(new ImageIcon(iconManager.getImage("error")));
-        add(component, "grow, push, gap unrel");
+        add(component, "grow, push");
         add(error, "");
         error.setVisible(false);
     }

@@ -22,32 +22,48 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.actions.wrappers.Profile;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * ProfileNameValidator tests.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProfileNameValidatorTest {
+
+    @Mock private Profile other;
+    @Mock private Profile selected;
+    @Mock private ProfileManagerModel model;
+    private List<Profile> profiles;
+
+    @Before
+    public void setup() {
+        when(other.getName()).thenReturn("other");
+        when(selected.getName()).thenReturn("selected");
+        profiles = new ArrayList<>(2);
+        profiles.add(selected);
+        profiles.add(other);
+        when(model.getProfiles()).thenReturn(profiles);
+        when(model.getSelectedProfile()).thenReturn(selected);
+    }
 
     /**
      * Test of validate method, of class ProfileNameValidator.
      */
     @Test
     public void testValidateNoDupes() {
-        final Profile other = mock(Profile.class);
-        when(other.getName()).thenReturn("other");
-        final Profile selected = mock(Profile.class);
-        when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<>();
-        profiles.add(selected);
-        profiles.add(other);
-        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertFalse(instance.validate("Random").isFailure());
     }
 
@@ -56,14 +72,7 @@ public class ProfileNameValidatorTest {
      */
     @Test
     public void testValidateNonSelectedDupe() {
-        final Profile other = mock(Profile.class);
-        when(other.getName()).thenReturn("other");
-        final Profile selected = mock(Profile.class);
-        when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<>();
-        profiles.add(selected);
-        profiles.add(other);
-        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertTrue(instance.validate("other").isFailure());
     }
 
@@ -72,14 +81,7 @@ public class ProfileNameValidatorTest {
      */
     @Test
     public void testValidateSelectedDupe() {
-        final Profile other = mock(Profile.class);
-        when(other.getName()).thenReturn("other");
-        final Profile selected = mock(Profile.class);
-        when(selected.getName()).thenReturn("selected");
-        final List<Profile> profiles = new ArrayList<>();
-        profiles.add(selected);
-        profiles.add(other);
-        ProfileRenameValidator instance = new ProfileRenameValidator(profiles, selected);
+        ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertFalse(instance.validate("selected").isFailure());
     }
 }
