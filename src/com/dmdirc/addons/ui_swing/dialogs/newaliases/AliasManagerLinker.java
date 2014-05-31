@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.newaliases;
 
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
@@ -43,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -158,7 +158,7 @@ public class AliasManagerLinker {
         });
     }
 
-    public void bindCommand(final ValidatableJTextField command) {
+    public void bindCommand(final JTextField command) {
         command.setEnabled(false);
 
         model.addPropertyChangeListener("selectedAlias", new PropertyChangeListener() {
@@ -168,14 +168,12 @@ public class AliasManagerLinker {
                 final Optional<Alias> selectedAlias = model.getSelectedAlias();
                 command.setEnabled(selectedAlias.isPresent());
                 command.setText(model.getName());
-                command.setValidation(model.isCommandValid());
             }
         });
         command.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
                 model.setName(command.getText());
-                command.setValidation(model.isCommandValid());
             }
 
             @Override
