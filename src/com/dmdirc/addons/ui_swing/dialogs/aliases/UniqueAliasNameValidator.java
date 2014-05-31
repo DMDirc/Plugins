@@ -20,41 +20,33 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.newaliases;
+package com.dmdirc.addons.ui_swing.dialogs.aliases;
+
+import com.dmdirc.commandparser.aliases.Alias;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
+
 
 /**
- * Alias manager dialog controller reacts to actions in the UI.
+ * Validates an alias name ensuring its uniqueness.
  */
-public class AliasManagerController {
+public class UniqueAliasNameValidator implements Validator<String> {
 
-    private final AliasManagerModel model;
-    private final AliasManagerDialog dialog;
+    /** Model to containing aliases to validate. */
+    private final AliasManagerModel aliases;
 
-    public AliasManagerController(final AliasManagerDialog dialog,
-            final AliasManagerModel model) {
-        this.model = model;
-        this.dialog = dialog;
+    public UniqueAliasNameValidator(final AliasManagerModel aliases) {
+        this.aliases = aliases;
     }
 
-    public void addAlias(final String name, final int minArguments, final String substitutions) {
-        model.addAlias(name, minArguments, substitutions);
-    }
-
-    public void removeAlias(final String name) {
-        model.removeAlias(name);
-    }
-
-    public void editAlias(final String name, final int minArguments, final String substitutions) {
-        model.editAlias(name, minArguments, substitutions);
-    }
-
-    public void saveAndCloseDialog() {
-        model.save();
-        dialog.dispose();
-    }
-
-    public void discardAndCloseDialog() {
-        dialog.dispose();
+    @Override
+    public ValidationResponse validate(final String object) {
+        for (Alias targetAlias : aliases.getAliases()) {
+            if (targetAlias.getName().equalsIgnoreCase(object)) {
+                return new ValidationResponse("Alias names must be unique");
+            }
+        }
+        return new ValidationResponse();
     }
 
 }

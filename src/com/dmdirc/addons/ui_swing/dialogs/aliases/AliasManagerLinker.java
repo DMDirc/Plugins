@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.newaliases;
+package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;

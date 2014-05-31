@@ -20,7 +20,32 @@
  * SOFTWARE.
  */
 
-/**
- * Alias manager.
- */
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
+
+import com.dmdirc.commandparser.aliases.Alias;
+import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.Validator;
+
+/**
+ * Validates an alias name again the list, taking into account the selected alias.
+ */
+public class AliasNameValidator implements Validator<String> {
+
+    private final AliasManagerModel model;
+
+    public AliasNameValidator(final AliasManagerModel model) {
+        this.model = model;
+    }
+
+    @Override
+    public ValidationResponse validate(final String object) {
+        for (Alias targetAlias : model.getAliases()) {
+            if (targetAlias != model.getSelectedAlias().get()
+                    && targetAlias.getName().equalsIgnoreCase(object)) {
+                return new ValidationResponse("Alias names must be unique");
+            }
+        }
+        return new ValidationResponse();
+    }
+
+}

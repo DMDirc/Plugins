@@ -53,22 +53,18 @@ public class SettingsMenu extends JMenu implements ActionListener {
     private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
     /** Provider of alias manager dialogs. */
     private final DialogProvider<AliasManagerDialog> aliasDialogProvider;
-    /** Provider of alias manager dialogs. */
-    private final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.newaliases.AliasManagerDialog> newAliasDialogProvider;
 
     @Inject
     public SettingsMenu(
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
             final DialogProvider<ActionsManagerDialog> actionsDialogProvider,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
-            final DialogProvider<AliasManagerDialog> aliasDialogProvider,
-            final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.newaliases.AliasManagerDialog> newAliasDialogProvider) {
+            final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
         super("Settings");
         this.profileDialogProvider = profileDialogProvider;
         this.actionsDialogProvider = actionsDialogProvider;
         this.prefsDialogProvider = prefsDialogProvider;
         this.aliasDialogProvider = aliasDialogProvider;
-        this.newAliasDialogProvider = newAliasDialogProvider;
 
         setMnemonic('e');
         initSettingsMenu();
@@ -109,13 +105,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         menuItem.setActionCommand("Aliases");
         menuItem.addActionListener(this);
         add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('l');
-        menuItem.setText("New Alias Manager");
-        menuItem.setActionCommand("NewAliases");
-        menuItem.addActionListener(this);
-        add(menuItem);
     }
 
     @Override
@@ -132,9 +121,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
                 break;
             case "Aliases":
                 aliasDialogProvider.displayOrRequestFocus();
-                break;
-            case "NewAliases":
-                newAliasDialogProvider.displayOrRequestFocus();
                 break;
         }
     }
