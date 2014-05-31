@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.actions.wrappers.Profile;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatableJTextField;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
@@ -41,6 +40,7 @@ import java.beans.VetoableChangeListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -295,20 +295,18 @@ public class ProfileManagerDialogLinker {
      *
      * @param profileName Text field to bind
      */
-    public void bindProfileName(final ValidatableJTextField profileName) {
+    public void bindProfileName(final JTextField profileName) {
         profileName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setName(profileName.getText());
                 profileName.setEnabled(model.isManipulateProfileAllowed());
-                profileName.setValidation(model.isNameValid());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 model.setName(profileName.getText());
                 profileName.setEnabled(model.isManipulateProfileAllowed());
-                profileName.setValidation(model.isNameValid());
             }
 
             @Override
@@ -317,7 +315,6 @@ public class ProfileManagerDialogLinker {
                     model.setName(profileName.getText());
                 }
                 profileName.setEnabled(model.isManipulateProfileAllowed());
-                profileName.setValidation(model.isNameValid());
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
@@ -325,7 +322,6 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileName.setText(model.getName());
                 profileName.setEnabled(model.isManipulateProfileAllowed());
-                profileName.setValidation(model.isNameValid());
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
@@ -333,7 +329,6 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileName.setText(model.getName());
                 profileName.setEnabled(model.isManipulateProfileAllowed());
-                profileName.setValidation(model.isNameValid());
             }
         });
         profileName.setEnabled(model.isManipulateProfileAllowed());
@@ -344,27 +339,24 @@ public class ProfileManagerDialogLinker {
      *
      * @param profileRealname Textfield to bind
      */
-    public void bindProfileRealnames(final ValidatableJTextField profileRealname) {
+    public void bindProfileRealnames(final JTextField profileRealname) {
         profileRealname.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setRealname(profileRealname.getText());
                 profileRealname.setEnabled(model.isManipulateProfileAllowed());
-                profileRealname.setValidation(model.isRealnameValid());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 model.setRealname(profileRealname.getText());
                 profileRealname.setEnabled(model.isManipulateProfileAllowed());
-                profileRealname.setValidation(model.isRealnameValid());
             }
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 model.setRealname(profileRealname.getText());
                 profileRealname.setEnabled(model.isManipulateProfileAllowed());
-                profileRealname.setValidation(model.isRealnameValid());
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
@@ -372,7 +364,6 @@ public class ProfileManagerDialogLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileRealname.setText(model.getRealname());
                 profileRealname.setEnabled(model.isManipulateProfileAllowed());
-                profileRealname.setValidation(model.isRealnameValid());
             }
         });
         profileRealname.setEnabled(model.isManipulateProfileAllowed());
@@ -383,41 +374,36 @@ public class ProfileManagerDialogLinker {
      *
      * @param profileIdent Textfield to bind
      */
-    public void bindProfileIdent(final ValidatableJTextField profileIdent) {
+    public void bindProfileIdent(final JTextField profileIdent) {
         profileIdent.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 model.setIdent(profileIdent.getText());
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
-                profileIdent.setValidation(model.isIdentValid());
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
                 model.setIdent(profileIdent.getText());
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
-                profileIdent.setValidation(model.isIdentValid());
             }
 
             @Override
             public void changedUpdate(final DocumentEvent e) {
                 model.setIdent(profileIdent.getText());
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
-                profileIdent.setValidation(model.isIdentValid());
             }
         });
         model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
-                profileIdent.setValidation(model.isIdentValid());
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
-                profileIdent.setValidation(model.isIdentValid());
             }
         });
         profileIdent.setEnabled(model.isManipulateProfileAllowed());
