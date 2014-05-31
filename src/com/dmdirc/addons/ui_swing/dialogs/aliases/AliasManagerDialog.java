@@ -22,449 +22,108 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.actions.Action;
-import com.dmdirc.actions.ActionCondition;
-import com.dmdirc.actions.ActionFactory;
-import com.dmdirc.actions.ActionManager;
-import com.dmdirc.actions.ActionSubstitutorFactory;
-import com.dmdirc.actions.CoreActionComparison;
-import com.dmdirc.actions.wrappers.Alias;
-import com.dmdirc.actions.wrappers.AliasWrapper;
-import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.components.renderers.ActionConditionCellRenderer;
-import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
-import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.ui.AliasDialogModel;
+import com.dmdirc.ui.IconManager;
+import com.dmdirc.util.validators.NotEmptyValidator;
 
 import java.awt.Dimension;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableRowSorter;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Alias manager dialog.
+ * Dialog to list and change command aliases.
  */
-public class AliasManagerDialog extends StandardDialog implements ActionListener,
-        ListSelectionListener {
+public class AliasManagerDialog extends StandardDialog {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 3;
-    /** Factory to use when creating aliases. */
-    private final ActionFactory actionFactory;
-    /** Alias wrapper to retrieve aliases from. */
-    private final AliasWrapper aliasWrapper;
-    /** Actions substitutor factory. */
-    private final ActionSubstitutorFactory substitutorFactory;
-    /** Table scrollpane. */
-    private JScrollPane scrollPane;
-    /** Error table. */
-    private JTable table;
-    /** Table model. */
-    private AliasTableModel tableModel;
-    /** Error detail panel. */
-    private AliasPanel aliasDetails;
-    /** Add/edit button. */
-    private JButton addButton;
-    /** Delete button. */
-    private JButton deleteButton;
-    /** Selected row. */
-    private int selectedRow;
-    /** Substitutions panel. */
-    private AliasSubstitutionsPanel subsPanel;
-    /** Show/Hide substitution button. */
-    private JButton showSubs;
+    private static final long serialVersionUID = 1;
+    private final AliasManagerModel model;
+    private final AliasManagerController controller;
+    private final AliasManagerLinker linker;
 
-    /**
-     * Creates a new instance of ErrorListDialog.
-     *
-     * @param parentWindow       Parent window
-     * @param substitutorFactory Actions substitution factory
-     * @param aliasWrapper       The alias wrapper to read aliases from.
-     * @param actionFactory      The factory to use to create new actions.
-     * @param aliasPanel         The alias panel to use.
-     */
     @Inject
-    public AliasManagerDialog(
-            @MainWindow final Window parentWindow,
-            final ActionSubstitutorFactory substitutorFactory,
-            final AliasWrapper aliasWrapper,
-            final ActionFactory actionFactory,
-            final AliasPanel aliasPanel) {
-        super(parentWindow, ModalityType.MODELESS);
-
-        this.substitutorFactory = substitutorFactory;
-        this.aliasWrapper = aliasWrapper;
-        this.actionFactory = actionFactory;
-
-        setTitle("Alias manager");
-
-        selectedRow = -1;
-
-        initComponents(aliasPanel);
-        layoutComponents();
-        initListeners();
-    }
-
-    /** Initialises the components. */
-    private void initComponents(final AliasPanel aliasPanel) {
-        final TableCellRenderer arrayRenderer = new ArrayCellRenderer();
-        final TableCellRenderer conditionRenderer = new ActionConditionCellRenderer();
-
-        orderButtons(new JButton(), new JButton());
-        addButton = new JButton("Add");
-        deleteButton = new JButton("Delete");
-
-        deleteButton.setEnabled(false);
-
-        scrollPane = new JScrollPane();
-
-        tableModel = new AliasTableModel(getTableData());
-        table = new PackingTable(tableModel, scrollPane, false) {
-            /** Java Serialisation verion ID. */
-            private static final long serialVersionUID = 1;
-
-            @Override
-            public TableCellRenderer getCellRenderer(final int row,
-                    final int column) {
-                switch (column) {
-                    case 1:
-                        return conditionRenderer;
-                    case 2:
-                        return arrayRenderer;
-                    default:
-                        return super.getCellRenderer(row, column);
-                }
-            }
-        };
-        table.setAutoCreateColumnsFromModel(true);
-        table.setColumnSelectionAllowed(false);
-        table.setCellSelectionEnabled(false);
-        table.setDragEnabled(false);
-        table.setFillsViewportHeight(false);
-        table.setRowSelectionAllowed(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setReorderingAllowed(false);
-
-        final TableRowSorter<AliasTableModel> sorter = new TableRowSorter<>(tableModel);
-        sorter.setComparator(2, new StringArrayComparator());
-        table.setRowSorter(sorter);
-        table.getRowSorter().toggleSortOrder(0);
-
-        scrollPane.setViewportView(table);
-
-        aliasDetails = aliasPanel;
-        subsPanel = new AliasSubstitutionsPanel(substitutorFactory);
-        subsPanel.setVisible(false);
-        showSubs = new JButton("Show Substitutions");
-    }
-
-    /**
-     * Updates the table data.
-     */
-    public void updateTableData() {
-        tableModel.setAliases(getTableData());
-    }
-
-    /**
-     * Gets the table data fromt he alias wrapper.
-     *
-     * @return Alias list
-     */
-    private List<Alias> getTableData() {
-        final List<Alias> aliases = new ArrayList<>();
-
-        for (Action loopAction : aliasWrapper) {
-            final List<ActionCondition> arguments = loopAction.getConditions();
-
-            ActionCondition argument;
-
-            argument = arguments.get(0);
-
-            if (argument.getComparison() != CoreActionComparison.STRING_EQUALS) {
-                argument = arguments.get(1);
-            }
-
-            aliases.add(new Alias(actionFactory, argument.getTarget(),
-                    arguments, loopAction.getResponse()));
-        }
-
-        return aliases;
-    }
-
-    /** Initialises the listeners. */
-    private void initListeners() {
-        table.getSelectionModel().addListSelectionListener(this);
-        getOkButton().addActionListener(this);
-        getCancelButton().addActionListener(this);
-        addButton.addActionListener(this);
-        deleteButton.addActionListener(this);
-        showSubs.addActionListener(this);
-    }
-
-    /** Lays out the components. */
-    private void layoutComponents() {
-        setLayout(new MigLayout("fill, hidemode 3, pack"));
+    public AliasManagerDialog(@MainWindow final Window mainFrame,
+            final AliasDialogModel dialogModel,
+            @GlobalConfig final IconManager iconManager,
+            final CommandController commandController) {
+        super(mainFrame, ModalityType.DOCUMENT_MODAL);
+        this.model = new AliasManagerModel(dialogModel, commandController);
+        controller = new AliasManagerController(this, model);
+        linker = new AliasManagerLinker(controller, model, this, iconManager);
+        setTitle("Alias Manager");
+        final JTable aliasList = new JTable();
+        final JTextField command = new JTextField();
+        final JSpinner argumentsNumber = new JSpinner();
+        final JTextArea response = new JTextArea();
+        final JButton addAlias = new JButton("Add Alias");
+        final JButton deleteAlias = new JButton("Delete Alias");
+        getOkButton();
+        getCancelButton();
+        setLayout(new MigLayout("fill, pack"));
         setMinimumSize(new Dimension(800, 400));
-        table.setPreferredScrollableViewportSize(new Dimension(800, 150));
+        final JScrollPane scrollPane = new JScrollPane(aliasList);
+        aliasList.setPreferredScrollableViewportSize(new Dimension(800, 150));
         scrollPane.setMinimumSize(new Dimension(750, 150));
-        final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-                true, scrollPane, aliasDetails);
-        splitPane.setDividerSize((int) PlatformDefaults.getPanelInsets(0).
-                getValue());
+        final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, scrollPane,
+                getAliasDetails(command, argumentsNumber, response, iconManager));
+        splitPane.setDividerSize((int) PlatformDefaults.getPanelInsets(0).getValue());
 
         add(splitPane, "spanx 5, grow, push, wrap");
-        add(subsPanel, "spanx 5, grow, pushy, wrap");
-        add(showSubs, "split 3, sgx button");
-        add(addButton, "sgx button, gap unrel");
-        add(deleteButton, "sgx button");
-        add(getLeftButton(), "sgx button, gap unrel");
+        add(addAlias, "split 2, sgx button");
+        add(deleteAlias, "sgx button");
+        add(getLeftButton(), "sgx button");
         add(getRightButton(), "sgx button");
-    }
 
-    /** {@inheritDoc}. */
-    @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-
-            if (selectedRow > -1 && selectedRow < tableModel.getRowCount() && aliasDetails.
-                    getAlias() == tableModel.getAlias(
-                            table.getRowSorter().convertRowIndexToModel(selectedRow))) {
-                updateAlias();
-            }
-
-            if (table.getSelectedRow() > -1) {
-                aliasDetails.setAlias(tableModel.getAlias(table.getRowSorter().
-                        convertRowIndexToModel(table.getSelectedRow())));
-                deleteButton.setEnabled(true);
-            } else {
-                aliasDetails.clear();
-                deleteButton.setEnabled(false);
-            }
-
-            selectedRow = table.getSelectedRow();
-        }
-    }
-
-    /** Updates the selected alias with the edited details. */
-    private void updateAlias() {
-        final Alias alias = tableModel.getAlias(table.getRowSorter().
-                convertRowIndexToModel(selectedRow));
-
-        alias.update(aliasDetails.getNewAlias());
-
-        tableModel.fireTableRowsUpdated(tableModel.indexOf(alias),
-                tableModel.indexOf(alias));
+        linker.bindCommandList(aliasList);
+        linker.bindCommand(command);
+        linker.bindArgumentsNumber(argumentsNumber);
+        linker.bindResponse(response);
+        linker.bindAddAlias(addAlias);
+        linker.bindDeleteAlias(deleteAlias);
+        linker.bindOKButton(getOkButton());
+        linker.bindCancelButton(getCancelButton());
+        model.load();
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a panel showing all alias details.
      *
-     * @param e Action event
+     * @param command         Command name
+     * @param argumentsNumber Number of arguments
+     * @param response        Alias substitution
+     *
+     * @return Panel to display
      */
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == deleteButton) {
-            delete();
-        } else if (e.getSource() == addButton) {
-            add();
-        } else if (e.getSource() == getCancelButton()) {
-            dispose();
-        } else if (e.getSource() == getOkButton()) {
-            if (table.getSelectedRow() != -1) {
-                updateAlias();
-            }
-            if (checkForDuplicates()) {
-                final StandardQuestionDialog dialog = new StandardQuestionDialog(
-                        this, ModalityType.APPLICATION_MODAL,
-                        "Duplicate Aliases", "There are duplicate aliases in "
-                        + "the table, these need to be removed before saving") {
-                            /** Java Serialisation verion ID. */
-                            private static final long serialVersionUID = 1;
-
-                            @Override
-                            public boolean save() {
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                                //Ignore
-                            }
-                        };
-                dialog.getOkButton().setVisible(false);
-                dialog.getCancelButton().setText("OK");
-                dialog.display();
-                return;
-            }
-            save();
-            dispose();
-        } else if (e.getSource() == showSubs) {
-            if (subsPanel.isVisible()) {
-                final Dimension minSize = getMinimumSize();
-                minSize.setSize(minSize.getWidth(), minSize.getHeight()
-                        - subsPanel.getSize().getHeight());
-                setMinimumSize(minSize);
-                subsPanel.setVisible(false);
-                pack();
-                showSubs.setText("Show Substitutions");
-            } else {
-                subsPanel.setVisible(true);
-                pack();
-                final Dimension minSize = getMinimumSize();
-                minSize.setSize(minSize.getWidth(), minSize.getHeight()
-                        + subsPanel.getSize().getHeight());
-                setMinimumSize(minSize);
-                showSubs.setText("Hide Substitutions");
-            }
-        }
-    }
-
-    /** Adds an alias. */
-    private void add() {
-        final Alias alias = new Alias(actionFactory, "");
-        tableModel.addRow(alias);
-        final int newRow = table.getRowSorter().
-                convertRowIndexToView(tableModel.indexOf(alias));
-        table.getSelectionModel().setSelectionInterval(newRow, newRow);
-        aliasDetails.focusCommand();
-    }
-
-    /** Deletes an alias. */
-    private void delete() {
-        if (table.getSelectedRow() != -1) {
-            tableModel.removeRow(table.getRowSorter().
-                    convertRowIndexToModel(table.getSelectedRow()));
-        }
-    }
-
-    /** Saves the aliases. */
-    private void save() {
-        final List<Action> actions = aliasWrapper.getActions();
-        final List<Alias> aliases = tableModel.getAliases();
-
-        final List<Alias> newAliases = new ArrayList<>();
-        final List<Alias> modifiedAliases = new ArrayList<>();
-
-        for (Alias alias : aliases) {
-            final Action action = getAction(alias);
-
-            if (action == null) {
-                newAliases.add(alias);
-            } else {
-                if (!action.getName().equals(alias.getName()) || !action.
-                        getConditions().
-                        equals(alias.getArguments()) || !Arrays.equals(action.
-                                getResponse(), alias.getResponse())) {
-                    modifiedAliases.add(alias);
-                }
-                actions.remove(action);
-            }
-        }
-
-        for (Action action : actions) {
-            action.delete();
-        }
-
-        saveNewAliases(newAliases);
-
-        saveModifiedAliases(modifiedAliases);
-
-        ActionManager.getActionManager().loadUserActions();
-    }
-
-    /**
-     * Saves new aliases.
-     *
-     * @param aliases List of new aliases to save
-     */
-    private void saveNewAliases(final List<Alias> aliases) {
-        for (Alias alias : aliases) {
-            alias.createAction().save();
-        }
-    }
-
-    /**
-     * Saves modified aliases.
-     *
-     * @param aliases List of modified aliases to save
-     */
-    private void saveModifiedAliases(final List<Alias> aliases) {
-        for (Alias alias : aliases) {
-            final Action action = getAction(alias);
-            if (action != null) {
-                action.setName(alias.getName());
-                action.setConditions(alias.getArguments());
-                action.setResponse(alias.getResponse());
-                action.save();
-            }
-        }
-    }
-
-    /**
-     * Returns the action corresponding to the specified alias.
-     *
-     * @param alias Alias to check
-     *
-     * @return Corresponding action or null if none found
-     */
-    private Action getAction(final Alias alias) {
-        final List<Action> actions = aliasWrapper.getActions();
-        Action action = null;
-
-        for (Action loopAction : actions) {
-            if (loopAction.getName().equals(alias.getName()) && loopAction.
-                    getConditions().
-                    equals(alias.getArguments())) {
-                action = loopAction;
-                break;
-            }
-        }
-
-        return action;
-    }
-
-    /**
-     * Checks if ths alias matches another alias.
-     *
-     * @return true iif there are duplicate matches
-     */
-    private boolean checkForDuplicates() {
-        final List<Alias> aliases = tableModel.getAliases();
-
-        for (Alias alias : aliases) {
-            int matches = 0;
-
-            for (Alias loopAlias : aliases) {
-                if (loopAlias.matches(alias)) {
-                    matches++;
-                }
-            }
-
-            if (matches > 1) {
-                return true;
-            }
-        }
-
-        return false;
+    private JPanel getAliasDetails(final JTextField command, final JSpinner argumentsNumber,
+            final JTextArea response, final IconManager iconManager) {
+        final JPanel aliasDetails = new JPanel();
+        aliasDetails.setLayout(new MigLayout("fill, ins 0"));
+        aliasDetails.add(new JLabel("Command: "));
+        aliasDetails.add(ValidationFactory.getValidatorPanel(command,
+                model.getCommandValidator(), iconManager), "sgy args, growx, pushx");
+        aliasDetails.add(new JLabel("#Arguments: "));
+        aliasDetails.add(argumentsNumber, "sgy args, growx, pushx, wrap");
+        aliasDetails.add(new JLabel("Response: "));
+        aliasDetails.add(ValidationFactory.getValidatorPanel(new JScrollPane(response),
+                response, new NotEmptyValidator(), iconManager), "span 3, grow, push, wrap");
+        return aliasDetails;
     }
 
 }

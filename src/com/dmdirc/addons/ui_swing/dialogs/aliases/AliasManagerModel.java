@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.newaliases;
+package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.commandparser.validators.CommandNameValidator;
