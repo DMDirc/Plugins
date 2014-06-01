@@ -181,13 +181,13 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     /**
      * Replaces the element at the specified index with a new object.
      *
-     * @param object New object
-     * @param index  Index to be replaced
+     * @param oldValue Old value
+     * @param newValue New value
      */
-    public void replace(final T object, final int index) {
-        list.remove(object);
-        list.add(index, object);
-        fireContentsChanged(object, index, index);
+    public void replace(final T oldValue, final T newValue) {
+        final int index = list.indexOf(oldValue);
+        list.set(index, newValue);
+        fireContentsChanged(this, index, index);
     }
 
     /**

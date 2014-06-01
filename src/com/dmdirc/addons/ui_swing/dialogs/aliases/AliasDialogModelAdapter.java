@@ -23,30 +23,34 @@
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.commandparser.aliases.Alias;
-import com.dmdirc.util.validators.ValidationResponse;
-import com.dmdirc.util.validators.Validator;
+import com.dmdirc.interfaces.ui.AliasDialogModelListener;
 
+import com.google.common.base.Optional;
 
 /**
- * Validates an alias name ensuring its uniqueness.
+ * An abstract adapter class for receiving alias dialog model events. The methods in this class are
+ * empty. This class exists as convenience for creating listener objects.
  */
-public class UniqueAliasNameValidator implements Validator<String> {
+public class AliasDialogModelAdapter implements AliasDialogModelListener {
 
-    /** Model to containing aliases to validate. */
-    private final AliasManagerModel aliases;
-
-    public UniqueAliasNameValidator(final AliasManagerModel aliases) {
-        this.aliases = aliases;
+    @Override
+    public void aliasAdded(final Alias alias) {
     }
 
     @Override
-    public ValidationResponse validate(final String object) {
-        for (Alias targetAlias : aliases.getAliases()) {
-            if (targetAlias.getName().equalsIgnoreCase(object)) {
-                return new ValidationResponse("Alias names must be unique");
-            }
-        }
-        return new ValidationResponse();
+    public void aliasRemoved(final Alias alias) {
+    }
+
+    @Override
+    public void aliasEdited(final Alias oldAlias, final Alias newAlias) {
+    }
+
+    @Override
+    public void aliasRenamed(final Alias oldAlias, final Alias newAlias) {
+    }
+
+    @Override
+    public void aliasSelectionChanged(final Optional<Alias> alias) {
     }
 
 }
