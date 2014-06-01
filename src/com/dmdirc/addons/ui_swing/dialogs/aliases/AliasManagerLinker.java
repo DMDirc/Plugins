@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
+import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
@@ -34,10 +35,6 @@ import com.google.common.base.Optional;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -58,12 +55,12 @@ import javax.swing.event.ListSelectionListener;
 public class AliasManagerLinker {
 
     private final AliasManagerController controller;
-    private final AliasManagerModel model;
+    private final AliasDialogModel model;
     private final AliasManagerDialog dialog;
     private final IconManager iconManager;
 
     public AliasManagerLinker(final AliasManagerController controller,
-            final AliasManagerModel model,
+            final AliasDialogModel model,
             final AliasManagerDialog dialog,
             final IconManager iconManager) {
         this.controller = controller;
@@ -74,24 +71,18 @@ public class AliasManagerLinker {
 
     public void bindCommandList(final JList<Alias> commandList) {
         final GenericListModel<Alias> commandModel = new GenericListModel<>();
+        final VetoableListSelectionModel selectionModel = new VetoableListSelectionModel();
         commandList.setCellRenderer(new PropertyListCellRenderer<>(commandList.getCellRenderer(),
                 Alias.class, "name"));
         commandList.setModel(commandModel);
-        commandList.setSelectionModel(new VetoableListSelectionModel());
-        ((VetoableListSelectionModel) commandList.getSelectionModel()).addVetoableSelectionListener(
-                new VetoableChangeListener() {
-
-                    @Override
-                    public void vetoableChange(final PropertyChangeEvent evt) throws
-                            PropertyVetoException {
-                        if ((Integer) evt.getNewValue() == -1) {
-                            throw new PropertyVetoException("Blank selection not allowed", evt);
-                        }
-                    }
-                });
+        commandModel.addAll(model.getAliases());
+        commandList.setSelectionModel(selectionModel);
         commandList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    return;
+                }
                 final int index = commandList.getSelectedIndex();
                 if (index == -1) {
                     model.setSelectedAlias(Optional.<Alias>absent());
@@ -103,92 +94,39 @@ public class AliasManagerLinker {
                 }
             }
         });
-        model.addPropertyChangeListener("aliases", new PropertyChangeListener() {
+        model.addListener(new AliasDialogModelHandler() {
 
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                for (Alias alias : model.getAliases()) {
-                    commandModel.add(alias);
-                }
-                if (commandModel.getSize() > 0) {
-                    commandList.getSelectionModel().setLeadSelectionIndex(0);
-                }
+            public void aliasRenamed(final Alias oldAlias, final Alias newAlias) {
+                commandModel.replace(oldAlias, newAlias);
             }
-        });
-        model.addPropertyChangeListener("editAlias", new PropertyChangeListener() {
 
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    final Alias oldAlias = (Alias) evt.getOldValue();
-                    final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.indexOf(oldAlias);
-                    commandModel.replace(newAlias, oldIndex);
-                }
+            public void aliasEdited(final Alias oldAlias, final Alias newAlias) {
+                commandModel.replace(oldAlias, newAlias);
             }
-        });
-        model.addPropertyChangeListener("renameAlias", new PropertyChangeListener() {
 
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    final Alias oldAlias = (Alias) evt.getOldValue();
-                    final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.indexOf(oldAlias);
-                    commandModel.replace(newAlias, oldIndex);
-                }
+            public void aliasRemoved(final Alias alias) {
+                commandModel.remove(alias);
             }
-        });
-        model.addPropertyChangeListener("deleteAlias", new PropertyChangeListener() {
 
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getOldValue() != null) {
-                    commandModel.remove((Alias) evt.getOldValue());
-                    final int index = commandList.getSelectedIndex();
-                    if (index == -1) {
-                        model.setSelectedAlias(Optional.<Alias>absent());
-                    } else if (index >= commandModel.getSize()) {
-                        model.setSelectedAlias(Optional.fromNullable(commandModel.
-                                get(index - 1)));
-                        commandList.getSelectionModel().setLeadSelectionIndex(index - 1);
-                    } else {
-                        model.setSelectedAlias(Optional.fromNullable(commandModel.
-                                getElementAt(index)));
-                    }
-                }
+            public void aliasAdded(final Alias alias) {
+                commandModel.add(alias);
+                commandList.getSelectionModel().setSelectionInterval(
+                        commandModel.indexOf(alias), commandModel.indexOf(alias));
             }
-        });
-        model.addPropertyChangeListener("addAlias", new PropertyChangeListener() {
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getNewValue() != null) {
-                    final Alias alias = (Alias) evt.getNewValue();
-                    commandModel.add(alias);
-                    commandList.getSelectionModel().setSelectionInterval(
-                            commandModel.indexOf(alias), commandModel.indexOf(alias));
-                }
-            }
         });
     }
 
     public void bindCommand(final JTextField command) {
         command.setEnabled(false);
-
-        model.addPropertyChangeListener("selectedAlias", new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                final Optional<Alias> selectedAlias = model.getSelectedAlias();
-                command.setEnabled(selectedAlias.isPresent());
-                command.setText(model.getName());
-            }
-        });
         command.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setName(command.getText());
+                model.setSelectedAliasName(command.getText());
             }
 
             @Override
@@ -205,53 +143,46 @@ public class AliasManagerLinker {
             public void changedUpdate(final DocumentEvent e) {
                 update();
             }
+        });
+        model.addListener(new AliasDialogModelHandler() {
+
+            @Override
+            public void aliasSelectionChanged(final Optional<Alias> alias) {
+                command.setEnabled(model.isCommandValid());
+                command.setText(model.getSelectedAliasName());
+            }
+
         });
     }
 
     public void bindArgumentsNumber(final JSpinner argumentsNumber) {
         argumentsNumber.setEnabled(false);
         argumentsNumber.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        model.addPropertyChangeListener("selectedAlias", new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                final Optional<Alias> selectedAlias = model.getSelectedAlias();
-                argumentsNumber.setEnabled(selectedAlias.isPresent());
-                if (selectedAlias.isPresent()) {
-                    argumentsNumber.setValue(model.getSelectedAlias().get().getMinArguments());
-                } else {
-                    argumentsNumber.setValue(0);
-                }
-            }
-        });
         argumentsNumber.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(final ChangeEvent e) {
-                model.setMinimumArguments((Integer) argumentsNumber.getValue());
+                model.setSelectedAliasMinimumArguments((Integer) argumentsNumber.getValue());
             }
+        });
+
+        model.addListener(new AliasDialogModelHandler() {
+
+            @Override
+            public void aliasSelectionChanged(final Optional<Alias> alias) {
+                argumentsNumber.setEnabled(model.isMinimumArgumentsValid());
+                argumentsNumber.setValue(model.getSelectedAliasMininumArguments());
+            }
+
         });
     }
 
     public void bindResponse(final JTextArea response) {
         response.setEnabled(false);
-        model.addPropertyChangeListener("selectedAlias", new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                final Optional<Alias> selectedAlias = model.getSelectedAlias();
-                response.setEnabled(selectedAlias.isPresent());
-                if (selectedAlias.isPresent()) {
-                    response.setText(model.getSelectedAlias().get().getSubstitution());
-                } else {
-                    response.setText("");
-                }
-            }
-        });
         response.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setSubstitution(response.getText());
+                model.setSelectedAliasSubstitution(response.getText());
             }
 
             @Override
@@ -268,6 +199,15 @@ public class AliasManagerLinker {
             public void changedUpdate(final DocumentEvent e) {
                 update();
             }
+        });
+        model.addListener(new AliasDialogModelHandler() {
+
+            @Override
+            public void aliasSelectionChanged(final Optional<Alias> alias) {
+                response.setEnabled(model.isSubstitutionValid());
+                response.setText(model.getSelectedAliasSubstitution());
+            }
+
         });
     }
 
@@ -283,7 +223,7 @@ public class AliasManagerLinker {
 
                     @Override
                     public boolean save() {
-                        model.addAlias(getText(), 0, "");
+                        model.addAlias(getText(), 0, getText());
                         return true;
                             }
 
@@ -297,14 +237,6 @@ public class AliasManagerLinker {
 
     public void bindDeleteAlias(final JButton deleteAlias) {
         deleteAlias.setEnabled(false);
-        model.addPropertyChangeListener("selectedAlias", new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                final Optional<Alias> alias = model.getSelectedAlias();
-                deleteAlias.setEnabled(alias.isPresent());
-            }
-        });
         deleteAlias.addActionListener(new ActionListener() {
 
             @Override
@@ -314,6 +246,14 @@ public class AliasManagerLinker {
                     model.removeAlias(alias.get().getName());
                 }
             }
+        });
+        model.addListener(new AliasDialogModelHandler() {
+
+            @Override
+            public void aliasSelectionChanged(final Optional<Alias> alias) {
+                deleteAlias.setEnabled(model.getSelectedAlias().isPresent());
+            }
+
         });
     }
 

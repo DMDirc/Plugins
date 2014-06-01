@@ -53,19 +53,16 @@ import net.miginfocom.swing.MigLayout;
 public class AliasManagerDialog extends StandardDialog {
 
     private static final long serialVersionUID = 1;
-    private final AliasManagerModel model;
-    private final AliasManagerController controller;
-    private final AliasManagerLinker linker;
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame,
-            final AliasDialogModel dialogModel,
+            final AliasDialogModel model,
             @GlobalConfig final IconManager iconManager,
             final CommandController commandController) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
-        this.model = new AliasManagerModel(dialogModel, commandController);
-        controller = new AliasManagerController(this, model);
-        linker = new AliasManagerLinker(controller, model, this, iconManager);
+        final AliasManagerController controller = new AliasManagerController(this, model);
+        final AliasManagerLinker linker = new AliasManagerLinker(controller, model, this,
+                iconManager);
         setTitle("Alias Manager");
         final JList<Alias> aliasList = new JList<>();
         final JTextField command = new JTextField();
@@ -106,7 +103,6 @@ public class AliasManagerDialog extends StandardDialog {
         linker.bindDeleteAlias(deleteAlias);
         linker.bindOKButton(getOkButton());
         linker.bindCancelButton(getCancelButton());
-        model.load();
     }
 
 }
