@@ -22,16 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
+import com.dmdirc.interfaces.ui.AliasDialogModel;
+
 /**
  * Alias manager dialog controller reacts to actions in the UI.
  */
 public class AliasManagerController {
 
-    private final AliasManagerModel model;
+    private final AliasDialogModel model;
     private final AliasManagerDialog dialog;
 
     public AliasManagerController(final AliasManagerDialog dialog,
-            final AliasManagerModel model) {
+            final AliasDialogModel model) {
         this.model = model;
         this.dialog = dialog;
     }
