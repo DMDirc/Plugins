@@ -42,7 +42,7 @@ public class VetoableListSelectionModel implements ListSelectionModel {
     /** Listener list. */
     private final ListenerList listeners = new ListenerList();
     /** Selected index. */
-    private int selection;
+    private int selection = -1;
     /** Is the value adjusting? */
     private boolean valueAdjusting;
 
