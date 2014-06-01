@@ -33,6 +33,7 @@ import java.awt.Window;
  */
 public class SendRequestDialog extends StandardQuestionDialog {
 
+    private static final long serialVersionUID = 1L;
     private final DCCManager manager;
     private final String token;
     private final long ip;

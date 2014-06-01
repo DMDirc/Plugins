@@ -128,7 +128,7 @@ public class Apple implements InvocationHandler {
      * @return Output from method.invoke()
      */
     private Object reflectMethod(final Object obj, final String className, final String methodName,
-            final Class[] classes, final Object[] objects) {
+            final Class<?>[] classes, final Object[] objects) {
         try {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
             final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0]
@@ -150,7 +150,7 @@ public class Apple implements InvocationHandler {
      *
      * @return Output from method.invoke()
      */
-    private Object doAppleMethod(final String methodName, final Class[] classes,
+    private Object doAppleMethod(final String methodName, final Class<?>[] classes,
             final Object[] objects) {
         if (!isApple()) {
             return null;
