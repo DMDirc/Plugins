@@ -33,6 +33,7 @@ import java.awt.Window;
  */
 public class ChatRequestDialog extends StandardQuestionDialog {
 
+    private static final long serialVersionUID = 1L;
     private final DCCManager manager;
     private final Parser parser;
     private final String nickname;

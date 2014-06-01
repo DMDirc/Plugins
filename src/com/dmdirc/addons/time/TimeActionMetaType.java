@@ -39,7 +39,7 @@ public enum TimeActionMetaType implements ActionMetaType {
                 }
 
                 @Override
-                public Class[] getArgTypes() {
+                public Class<?>[] getArgTypes() {
                     return new Class<?>[]{Calendar.class};
                 }
 
