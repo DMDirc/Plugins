@@ -28,11 +28,10 @@ import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Window;
 
-/**
- * Confirm DCC Chat dialog.
- */
+
 public class ChatRequestDialog extends StandardQuestionDialog {
 
+    private static final long serialVersionUID = 1L;
     private final DCCManager manager;
     private final Parser parser;
     private final String nickname;

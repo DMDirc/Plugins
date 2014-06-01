@@ -28,11 +28,10 @@ import com.dmdirc.parser.interfaces.Parser;
 
 import java.awt.Window;
 
-/**
- * Confirm DCC Send dialog.
- */
+
 public class SendRequestDialog extends StandardQuestionDialog {
 
+    private static final long serialVersionUID = 1L;
     private final DCCManager manager;
     private final String token;
     private final long ip;
