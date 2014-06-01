@@ -23,9 +23,11 @@
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
@@ -37,15 +39,12 @@ import java.awt.Window;
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -68,7 +67,7 @@ public class AliasManagerDialog extends StandardDialog {
         controller = new AliasManagerController(this, model);
         linker = new AliasManagerLinker(controller, model, this, iconManager);
         setTitle("Alias Manager");
-        final JTable aliasList = new JTable();
+        final JList<Alias> aliasList = new JList<>();
         final JTextField command = new JTextField();
         final JSpinner argumentsNumber = new JSpinner();
         final JTextArea response = new JTextArea();
@@ -76,20 +75,28 @@ public class AliasManagerDialog extends StandardDialog {
         final JButton deleteAlias = new JButton("Delete Alias");
         getOkButton();
         getCancelButton();
-        setLayout(new MigLayout("fill, pack"));
         setMinimumSize(new Dimension(800, 400));
-        final JScrollPane scrollPane = new JScrollPane(aliasList);
-        aliasList.setPreferredScrollableViewportSize(new Dimension(800, 150));
-        scrollPane.setMinimumSize(new Dimension(750, 150));
-        final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, scrollPane,
-                getAliasDetails(command, argumentsNumber, response, iconManager));
-        splitPane.setDividerSize((int) PlatformDefaults.getPanelInsets(0).getValue());
+        setLayout(new MigLayout("flowy, fill", "[][][grow]", "[][][][grow][]"));
 
-        add(splitPane, "spanx 5, grow, push, wrap");
-        add(addAlias, "split 2, sgx button");
-        add(deleteAlias, "sgx button");
-        add(getLeftButton(), "sgx button");
-        add(getRightButton(), "sgx button");
+        add(new TextLabel("Aliases allow you to rename commands, to aggregate multiple commands"
+                + "into a single command, or to make shortcuts to common commands."), "spanx");
+        add(new JScrollPane(aliasList),
+                "growy, pushy, spany 3, split 3, wmin 200, wmax 200");
+        add(addAlias, "growx");
+        add(deleteAlias, "growx, wrap");
+
+        add(new JLabel("Command: "), "align label, sgx label");
+        add(new JLabel("Minimum Arguments: "), "align label, sgx label");
+        add(new JLabel("Response: "), "align label, sgx label, wrap");
+
+        add(ValidationFactory.getValidatorPanel(command, model.getCommandValidator(), iconManager),
+                "growx, pushx");
+        add(argumentsNumber, "growx, pushx");
+        add(ValidationFactory.getValidatorPanel(new JScrollPane(response), response,
+                new NotEmptyValidator(), iconManager), "spanx 2, grow, push");
+
+        add(new JButton("OK"), "flowx, split 3, right, sg button");
+        add(new JButton("Cancel"), "sg button");
 
         linker.bindCommandList(aliasList);
         linker.bindCommand(command);
@@ -100,30 +107,6 @@ public class AliasManagerDialog extends StandardDialog {
         linker.bindOKButton(getOkButton());
         linker.bindCancelButton(getCancelButton());
         model.load();
-    }
-
-    /**
-     * Creates a panel showing all alias details.
-     *
-     * @param command         Command name
-     * @param argumentsNumber Number of arguments
-     * @param response        Alias substitution
-     *
-     * @return Panel to display
-     */
-    private JPanel getAliasDetails(final JTextField command, final JSpinner argumentsNumber,
-            final JTextArea response, final IconManager iconManager) {
-        final JPanel aliasDetails = new JPanel();
-        aliasDetails.setLayout(new MigLayout("fill, ins 0"));
-        aliasDetails.add(new JLabel("Command: "));
-        aliasDetails.add(ValidationFactory.getValidatorPanel(command,
-                model.getCommandValidator(), iconManager), "sgy args, growx, pushx");
-        aliasDetails.add(new JLabel("#Arguments: "));
-        aliasDetails.add(argumentsNumber, "sgy args, growx, pushx, wrap");
-        aliasDetails.add(new JLabel("Response: "));
-        aliasDetails.add(ValidationFactory.getValidatorPanel(new JScrollPane(response),
-                response, new NotEmptyValidator(), iconManager), "span 3, grow, push, wrap");
-        return aliasDetails;
     }
 
 }
