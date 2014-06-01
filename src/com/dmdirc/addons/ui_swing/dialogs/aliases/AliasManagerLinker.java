@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.addons.ui_swing.components.GenericTableModel;
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
@@ -39,8 +40,8 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -71,10 +72,10 @@ public class AliasManagerLinker {
         this.iconManager = iconManager;
     }
 
-    public void bindCommandList(final JTable commandList) {
-        final GenericTableModel<Alias> commandModel = new GenericTableModel<>(
-                Alias.class, "getName", "getMinArguments", "getSubstitution");
-        commandModel.setHeaderNames("Name", "Minimum Arguments", "Substitution");
+    public void bindCommandList(final JList<Alias> commandList) {
+        final GenericListModel<Alias> commandModel = new GenericListModel<>();
+        commandList.setCellRenderer(new PropertyListCellRenderer<>(commandList.getCellRenderer(),
+                Alias.class, "name"));
         commandList.setModel(commandModel);
         commandList.setSelectionModel(new VetoableListSelectionModel());
         ((VetoableListSelectionModel) commandList.getSelectionModel()).addVetoableSelectionListener(
@@ -91,13 +92,14 @@ public class AliasManagerLinker {
         commandList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
-                final int index = commandList.getSelectedRow();
+                final int index = commandList.getSelectedIndex();
                 if (index == -1) {
                     model.setSelectedAlias(Optional.<Alias>absent());
-                } else if (index >= commandModel.getRowCount()) {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index - 1)));
+                } else if (index >= commandModel.getSize()) {
+                    model.setSelectedAlias(Optional.fromNullable(commandModel.
+                            getElementAt(index - 1)));
                 } else {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index)));
+                    model.setSelectedAlias(Optional.fromNullable(commandModel.getElementAt(index)));
                 }
             }
         });
@@ -106,9 +108,9 @@ public class AliasManagerLinker {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 for (Alias alias : model.getAliases()) {
-                    commandModel.addValue(alias);
+                    commandModel.add(alias);
                 }
-                if (commandModel.getRowCount() > 0) {
+                if (commandModel.getSize() > 0) {
                     commandList.getSelectionModel().setLeadSelectionIndex(0);
                 }
             }
@@ -120,8 +122,8 @@ public class AliasManagerLinker {
                 if (evt.getNewValue() != null) {
                     final Alias oldAlias = (Alias) evt.getOldValue();
                     final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.getIndex(oldAlias);
-                    commandModel.replaceValueAt(newAlias, oldIndex);
+                    final int oldIndex = commandModel.indexOf(oldAlias);
+                    commandModel.replace(newAlias, oldIndex);
                 }
             }
         });
@@ -132,8 +134,8 @@ public class AliasManagerLinker {
                 if (evt.getNewValue() != null) {
                     final Alias oldAlias = (Alias) evt.getOldValue();
                     final Alias newAlias = (Alias) evt.getNewValue();
-                    final int oldIndex = commandModel.getIndex(oldAlias);
-                    commandModel.replaceValueAt(newAlias, oldIndex);
+                    final int oldIndex = commandModel.indexOf(oldAlias);
+                    commandModel.replace(newAlias, oldIndex);
                 }
             }
         });
@@ -142,16 +144,17 @@ public class AliasManagerLinker {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
                 if (evt.getOldValue() != null) {
-                    commandModel.removeValue((Alias) evt.getOldValue());
-                    final int index = commandList.getSelectedRow();
+                    commandModel.remove((Alias) evt.getOldValue());
+                    final int index = commandList.getSelectedIndex();
                     if (index == -1) {
                         model.setSelectedAlias(Optional.<Alias>absent());
-                    } else if (index >= commandModel.getRowCount()) {
+                    } else if (index >= commandModel.getSize()) {
                         model.setSelectedAlias(Optional.fromNullable(commandModel.
-                                getValue(index - 1)));
+                                get(index - 1)));
                         commandList.getSelectionModel().setLeadSelectionIndex(index - 1);
                     } else {
-                        model.setSelectedAlias(Optional.fromNullable(commandModel.getValue(index)));
+                        model.setSelectedAlias(Optional.fromNullable(commandModel.
+                                getElementAt(index)));
                     }
                 }
             }
@@ -162,9 +165,9 @@ public class AliasManagerLinker {
             public void propertyChange(final PropertyChangeEvent evt) {
                 if (evt.getNewValue() != null) {
                     final Alias alias = (Alias) evt.getNewValue();
-                    commandModel.addValue(alias);
+                    commandModel.add(alias);
                     commandList.getSelectionModel().setSelectionInterval(
-                            commandModel.getIndex(alias), commandModel.getIndex(alias));
+                            commandModel.indexOf(alias), commandModel.indexOf(alias));
                 }
             }
         });
