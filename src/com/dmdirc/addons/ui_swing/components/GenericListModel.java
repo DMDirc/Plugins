@@ -178,6 +178,12 @@ public class GenericListModel<T> extends AbstractListModel<T> {
         return succes;
     }
 
+    public void replace(final T obj, final int index) {
+        list.remove(obj);
+        list.add(index, obj);
+        fireContentsChanged(obj, index, index);
+    }
+
     /**
      * Clears this model of all items.
      */
