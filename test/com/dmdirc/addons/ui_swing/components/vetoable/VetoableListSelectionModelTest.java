@@ -26,6 +26,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,14 +37,17 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VetoableListSelectionModelTest {
 
-    @Mock private VetoableChangeListener listener;
+    @Mock private VetoableChangeListener vetoListener;
+    @Mock private ListSelectionListener selectionListener;
 
     @Test
     public void testInitialState() {
@@ -61,20 +67,74 @@ public class VetoableListSelectionModelTest {
     @Test
     public void testVetoedCalled() throws PropertyVetoException {
         final VetoableListSelectionModel instance = new VetoableListSelectionModel();
-        instance.addVetoableSelectionListener(listener);
+        instance.addVetoableSelectionListener(vetoListener);
         instance.setLeadSelectionIndex(5);
         assertEquals(instance.getLeadSelectionIndex(), 5);
-        verify(listener).vetoableChange(any(PropertyChangeEvent.class));
+        verify(vetoListener).vetoableChange(any(PropertyChangeEvent.class));
     }
 
     @Test
     public void testVetoedCalledAndVetoed() throws PropertyVetoException {
         doThrow(new PropertyVetoException(null, null))
-                .when(listener).vetoableChange(any(PropertyChangeEvent.class));
+                .when(vetoListener).vetoableChange(any(PropertyChangeEvent.class));
         final VetoableListSelectionModel instance = new VetoableListSelectionModel();
-        instance.addVetoableSelectionListener(listener);
+        instance.addVetoableSelectionListener(vetoListener);
         instance.setLeadSelectionIndex(5);
         assertEquals(instance.getLeadSelectionIndex(), -1);
+    }
+
+    @Test
+    public void testListenerCalledWithoutVetoListener() {
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        instance.addListSelectionListener(selectionListener);
+        instance.setLeadSelectionIndex(5);
+        assertEquals(instance.getLeadSelectionIndex(), 5);
+        verify(selectionListener).valueChanged(any(ListSelectionEvent.class));
+    }
+
+    @Test
+    public void testListenerCalledWithVetoListenerNoVeto() throws PropertyVetoException {
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        instance.addListSelectionListener(selectionListener);
+        instance.addVetoableSelectionListener(vetoListener);
+        instance.setLeadSelectionIndex(5);
+        assertEquals(instance.getLeadSelectionIndex(), 5);
+        verify(vetoListener).vetoableChange(any(PropertyChangeEvent.class));
+        verify(selectionListener).valueChanged(any(ListSelectionEvent.class));
+    }
+
+    @Test
+    public void testListenerCalledWithVetoListenerWithVeto() throws PropertyVetoException {
+        doThrow(new PropertyVetoException(null, null))
+                .when(vetoListener).vetoableChange(any(PropertyChangeEvent.class));
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        instance.addListSelectionListener(selectionListener);
+        instance.addVetoableSelectionListener(vetoListener);
+        instance.setLeadSelectionIndex(5);
+        assertEquals(instance.getLeadSelectionIndex(), -1);
+        verify(vetoListener).vetoableChange(any(PropertyChangeEvent.class));
+        verify(selectionListener, never()).valueChanged(any(ListSelectionEvent.class));
+    }
+
+    @Test
+    public void testClearSelection() {
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        instance.setLeadSelectionIndex(5);
+        assertEquals(instance.getLeadSelectionIndex(), 5);
+        instance.clearSelection();
+        assertEquals(instance.getLeadSelectionIndex(), -1);
+    }
+
+    @Test
+    public void testIsSelectionEmpty() {
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        assertTrue(instance.isSelectionEmpty());
+    }
+
+    @Test
+    public void testisSelectedIndex() {
+        final VetoableListSelectionModel instance = new VetoableListSelectionModel();
+        assertTrue(instance.isSelectedIndex(-1));
     }
 
 }
