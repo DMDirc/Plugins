@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
-import com.dmdirc.commandparser.aliases.AliasDialogModelAdapter;
+import com.dmdirc.ui.core.aliases.AliasDialogModelAdapter;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 
