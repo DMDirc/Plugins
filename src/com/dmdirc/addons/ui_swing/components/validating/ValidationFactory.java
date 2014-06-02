@@ -26,9 +26,11 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.Validator;
 
 import java.awt.Component;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JLayer;
+import javax.swing.JList;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -72,6 +74,48 @@ public class ValidationFactory {
             final IconManager iconManager) {
         final ComponentValidator<String, JTextComponent> componentValidator
                 = new JTextComponentComponentValidator(validation, validator);
+        final ValidationLayerUI<T> validationLayer = new ValidationLayerUI<T>();
+        final ValidationComponentPanel panel = new ValidationComponentPanel(iconManager,
+                new JLayer<T>(display, validationLayer));
+        componentValidator.addHooks();
+        componentValidator.addComponentValidatorListener(validationLayer);
+        componentValidator.addComponentValidatorListener(panel);
+        return panel;
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
+     * @return Validating component panel for the component
+     */
+    public static JComponent getValidatorPanel(
+            final JList<String> validation, final Validator<List<String>> validator,
+            final IconManager iconManager) {
+        return getValidatorPanel(validation, validation, validator, iconManager);
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     *
+     * @param display     Component to display instead in the panel
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
+     * @param <T>         Type of component to wrap in the layer UI
+     *
+     * @return Validating component panel for the component
+     */
+    public static <T extends Component> JComponent getValidatorPanel(final T display,
+            final JList<String> validation, final Validator<List<String>> validator,
+            final IconManager iconManager) {
+        final ComponentValidator<List<String>, JList<String>> componentValidator
+                = new JListComponentValidator<String>(validation, validator);
         final ValidationLayerUI<T> validationLayer = new ValidationLayerUI<T>();
         final ValidationComponentPanel panel = new ValidationComponentPanel(iconManager,
                 new JLayer<T>(display, validationLayer));

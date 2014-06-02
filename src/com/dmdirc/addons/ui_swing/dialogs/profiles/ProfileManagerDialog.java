@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.profiles;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.wrappers.Profile;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
+import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -63,8 +63,7 @@ public class ProfileManagerDialog extends StandardDialog {
     /** Icon manager. */
     private final IconManager iconManager;
     /** List of nicknames for a profile. */
-    private final ValidatableReorderableJList<String> nicknames
-            = new ValidatableReorderableJList<>();
+    private final ReorderableJList<String> nicknames = new ReorderableJList<>();
     /** Adds a new nickname to the active profile. */
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
@@ -104,7 +103,6 @@ public class ProfileManagerDialog extends StandardDialog {
         realname = new JTextField();
         ident = new JTextField();
         name = new JTextField();
-        initComponents();
         linker = new ProfileManagerDialogLinker(controller, model, this, iconManager);
         linker.bindAddNickname(addNickname);
         linker.bindAddProfile(addProfile);
@@ -118,6 +116,7 @@ public class ProfileManagerDialog extends StandardDialog {
         linker.bindProfileName(name);
         linker.bindProfileNicknames(nicknames);
         linker.bindProfileRealnames(realname);
+        initComponents();
         model.load();
     }
 
@@ -141,7 +140,8 @@ public class ProfileManagerDialog extends StandardDialog {
         add(ValidationFactory.getValidatorPanel(name, model.getNameValidator(), iconManager),
                 "growx, pushx, sgx textinput");
         add(new JLabel("Nicknames: "), "align label, span 2, split 2, flowx, sgx label, aligny 50%");
-        add(new JScrollPane(nicknames), "grow, push");
+        add(ValidationFactory.getValidatorPanel(new JScrollPane(nicknames), nicknames,
+                model.getNicknamesValidator(), iconManager), "grow, push");
         add(Box.createGlue(), "flowx, span 4, split 4, sgx label");
         add(addNickname, "grow");
         add(editNickname, "grow");
