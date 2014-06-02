@@ -70,8 +70,8 @@ public class ValidationFactory {
     public static <T extends Component> JComponent getValidatorPanel(final T display,
             final JTextComponent validation, final Validator<String> validator,
             final IconManager iconManager) {
-        final ComponentValidator<String> componentValidator = new JTextComponentComponentValidator(
-                validation, validator);
+        final ComponentValidator<String, JTextComponent> componentValidator
+                = new JTextComponentComponentValidator(validation, validator);
         final ValidationLayerUI<T> validationLayer = new ValidationLayerUI<T>();
         final ValidationComponentPanel panel = new ValidationComponentPanel(iconManager,
                 new JLayer<T>(display, validationLayer));

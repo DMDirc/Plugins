@@ -28,16 +28,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
-/**
- * Validates a JTextComponent.
- */
-public class JTextComponentComponentValidator extends ComponentValidator<String>
-        implements DocumentListener {
 
-    /**
-     * Component to validate.
-     */
-    private final JTextComponent textArea;
+public class JTextComponentComponentValidator extends ComponentValidator<String, JTextComponent>
+        implements DocumentListener {
 
     /**
      * Creates a new validator.
@@ -47,18 +40,17 @@ public class JTextComponentComponentValidator extends ComponentValidator<String>
      */
     public JTextComponentComponentValidator(final JTextComponent textArea,
             final Validator<String> validator) {
-        super(validator);
-        this.textArea = textArea;
+        super(textArea, validator);
     }
 
     @Override
     public String getValidatable() {
-        return textArea.getText();
+        return getComponent().getText();
     }
 
     @Override
     public void addHooks() {
-        textArea.getDocument().addDocumentListener(this);
+        getComponent().getDocument().addDocumentListener(this);
     }
 
     @Override

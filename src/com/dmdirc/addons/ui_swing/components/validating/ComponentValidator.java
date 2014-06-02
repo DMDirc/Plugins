@@ -26,17 +26,26 @@ import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
+import com.google.common.base.Preconditions;
+
+import javax.swing.JComponent;
+
 /**
  * Validates UI components and triggers listeners appropriately.
  *
  * @param <T> Object type to be validated
+ * @param <V> Type of the component to be validated
  */
-public abstract class ComponentValidator<T> {
+public abstract class ComponentValidator<T, V extends JComponent> {
 
     /**
      * List of listeners.
      */
     private final ListenerList listeners;
+    /**
+     * Component to validate.
+     */
+    private final V component;
     /**
      * Validator to validate against.
      */
@@ -49,11 +58,15 @@ public abstract class ComponentValidator<T> {
     /**
      * Creates a new component validator.
      *
+     * @param component The component to validate
      * @param validator Validator to validate against
      */
-    public ComponentValidator(final Validator<T> validator) {
+    public ComponentValidator(final V component, final Validator<T> validator) {
+        Preconditions.checkNotNull(component, "Component cannot be null");
+        Preconditions.checkNotNull(validator, "Validator cannot be null");
         this.listeners = new ListenerList();
         this.validator = validator;
+        this.component = component;
     }
 
     /**
@@ -69,12 +82,26 @@ public abstract class ComponentValidator<T> {
     public abstract void addHooks();
 
     /**
+     * Gets the component that is being validated.
+     *
+     * @return Component Component to be validated
+     */
+    protected V getComponent() {
+        return component;
+    }
+
+    /**
      * Validates this component.
      *
      * @return Result of the validation
      */
     public ValidationResponse validate() {
-        final ValidationResponse validation = validator.validate(getValidatable());
+        final ValidationResponse validation;
+        if (component.isEnabled()) {
+            validation = validator.validate(getValidatable());
+        } else {
+            validation = new ValidationResponse();
+        }
         if (validation.isFailure() != isFailure) {
             listeners.getCallable(ComponentValidatorListener.class).validationChanged(validation);
         }
