@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.profiles;
 
 import com.dmdirc.actions.wrappers.Profile;
-import com.dmdirc.addons.ui_swing.components.validating.ValidatableReorderableJList;
+import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
@@ -124,7 +124,7 @@ public class ProfileManagerDialogLinker {
      *
      * @param nicknames list to bind
      */
-    public void bindProfileNicknames(final ValidatableReorderableJList<String> nicknames) {
+    public void bindProfileNicknames(final ReorderableJList<String> nicknames) {
         nicknames.setModel(new DefaultListModel<String>());
         nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         nicknames.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -142,7 +142,6 @@ public class ProfileManagerDialogLinker {
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
-                nicknames.setValidation(model.isNicknamesValid());
             }
         });
         model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
@@ -160,7 +159,6 @@ public class ProfileManagerDialogLinker {
                 }
                 nicknames.setSelectedValue(model.getSelectedNickname(), true);
                 nicknames.setEnabled(model.isManipulateProfileAllowed());
-                nicknames.setValidation(model.isNicknamesValid());
             }
         });
         nicknames.setEnabled(model.isManipulateProfileAllowed());
