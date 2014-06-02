@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.IdentValidator;
+import com.dmdirc.util.validators.ListNotEmptyValidator;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Model used to store state for the profile manager dialog.
@@ -485,10 +487,16 @@ public class ProfileManagerModel {
         if (selectedProfile == null) {
             return new ValidationResponse();
         }
-        if (selectedProfile.getNicknames().isEmpty()) {
-            return new ValidationResponse("Nickname cannot be empty");
-        }
-        return new ValidationResponse();
+        return getNicknamesValidator().validate(selectedProfile.getNicknames());
+    }
+
+    /**
+     * Retrieves the nicknames validator.
+     *
+     * @return Passes if the nicknames list is non empty
+     */
+    public Validator<List<String>> getNicknamesValidator() {
+        return new ListNotEmptyValidator<String>();
     }
 
     /**
