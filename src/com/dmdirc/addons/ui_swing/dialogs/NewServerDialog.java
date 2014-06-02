@@ -27,9 +27,7 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
-import com.dmdirc.addons.ui_swing.components.vetoable.VetoableChangeEvent;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
-import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxSelectionListener;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -49,6 +47,9 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -71,7 +72,7 @@ import net.miginfocom.swing.MigLayout;
  * Dialog that allows the user to enter details of a new server to connect to.
  */
 public class NewServerDialog extends StandardDialog implements
-        ActionListener, VetoableComboBoxSelectionListener, ConfigProviderListener {
+        ActionListener, VetoableChangeListener, ConfigProviderListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
@@ -333,8 +334,10 @@ public class NewServerDialog extends StandardDialog implements
     }
 
     @Override
-    public boolean selectionChanged(final VetoableChangeEvent e) {
-        return e.getNewValue() != null;
+    public void vetoableChange(final PropertyChangeEvent e) throws PropertyVetoException {
+        if (e.getNewValue() == null) {
+            throw new PropertyVetoException("Value cannot be null", e);
+        }
     }
 
     @Override
