@@ -60,9 +60,7 @@ public class AliasManagerDialog extends StandardDialog {
             @GlobalConfig final IconManager iconManager,
             final CommandController commandController) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
-        final AliasManagerController controller = new AliasManagerController(this, model);
-        final AliasManagerLinker linker = new AliasManagerLinker(controller, model, this,
-                iconManager);
+        final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
         setTitle("Alias Manager");
         final JList<Alias> aliasList = new JList<>();
         final JTextField command = new JTextField();
