@@ -84,6 +84,8 @@ public class ValidationFactory {
      * @param validator   Validator to validate against
      * @param iconManager Icon manager to get icons from
      *
+     * @param <T>         Type of component to wrap in the layer UI
+     *
      * @return Validating component panel for the component
      */
     public static <T> JComponent getValidatorPanel(
@@ -95,13 +97,13 @@ public class ValidationFactory {
     /**
      * Retrieves a validating component panel for the given component.
      *
-     *
      * @param display     Component to display instead in the panel
      * @param validation  Component to validate
      * @param validator   Validator to validate against
      * @param iconManager Icon manager to get icons from
      *
      * @param <T>         Type of component to wrap in the layer UI
+     * @param <V>         The type of item in the model that will be validated.
      *
      * @return Validating component panel for the component
      */
@@ -109,17 +111,17 @@ public class ValidationFactory {
             final JList<V> validation, final Validator<List<V>> validator,
             final IconManager iconManager) {
         final ComponentValidator<List<V>, JList<V>> componentValidator
-                = new JListComponentValidator<V>(validation, validator);
+                = new JListComponentValidator<>(validation, validator);
         return getPanel(display, componentValidator, iconManager);
     }
 
-    private static <T extends Component, A, B extends JComponent> JComponent getPanel(
+    private static <T extends Component> JComponent getPanel(
             final T display,
-            final ComponentValidator<A, B> componentValidator,
+            final ComponentValidator<?, ? extends JComponent> componentValidator,
             final IconManager iconManager) {
-        final ValidationLayerUI<T> validationLayer = new ValidationLayerUI<T>();
+        final ValidationLayerUI<T> validationLayer = new ValidationLayerUI<>();
         final ValidationComponentPanel panel = new ValidationComponentPanel(iconManager,
-                new JLayer<T>(display, validationLayer));
+                new JLayer<>(display, validationLayer));
         componentValidator.addHooks();
         componentValidator.addComponentValidatorListener(validationLayer);
         componentValidator.addComponentValidatorListener(panel);
