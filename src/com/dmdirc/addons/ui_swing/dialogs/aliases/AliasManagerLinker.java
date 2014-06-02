@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
+import com.dmdirc.commandparser.aliases.AliasDialogModelAdapter;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 
@@ -54,16 +55,14 @@ import javax.swing.event.ListSelectionListener;
  */
 public class AliasManagerLinker {
 
-    private final AliasManagerController controller;
     private final AliasDialogModel model;
     private final AliasManagerDialog dialog;
     private final IconManager iconManager;
 
-    public AliasManagerLinker(final AliasManagerController controller,
+    public AliasManagerLinker(
             final AliasDialogModel model,
             final AliasManagerDialog dialog,
             final IconManager iconManager) {
-        this.controller = controller;
         this.model = model;
         this.dialog = dialog;
         this.iconManager = iconManager;
@@ -262,8 +261,17 @@ public class AliasManagerLinker {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                controller.saveAndCloseDialog();
+                model.save();
+                dialog.dispose();
             }
+        });
+        model.addListener(new AliasDialogModelAdapter() {
+
+            @Override
+            public void selectedAliasEdited(String name, int minArgs, String sub) {
+                okButton.setEnabled(model.isSelectedAliasValid());
+            }
+
         });
     }
 
@@ -273,7 +281,7 @@ public class AliasManagerLinker {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                controller.discardAndCloseDialog();
+                dialog.dispose();
             }
         });
     }
