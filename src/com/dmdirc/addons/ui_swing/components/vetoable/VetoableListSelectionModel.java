@@ -160,6 +160,10 @@ public class VetoableListSelectionModel implements ListSelectionModel {
     @Override
     public void setValueIsAdjusting(final boolean valueIsAdjusting) {
         if (valueAdjusting != valueIsAdjusting) {
+            if (fireVetoableSelectionChange(
+                    new PropertyChangeEvent(this, "selection", selection, selection))) {
+                return;
+            }
             valueAdjusting = valueIsAdjusting;
             listeners.getCallable(ListSelectionListener.class).valueChanged(new ListSelectionEvent(
                     this, selection, selection, valueAdjusting));

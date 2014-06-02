@@ -36,6 +36,9 @@ import com.google.common.base.Optional;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -90,6 +93,16 @@ public class AliasManagerLinker {
                             getElementAt(index - 1)));
                 } else {
                     model.setSelectedAlias(Optional.fromNullable(commandModel.getElementAt(index)));
+                }
+            }
+        });
+        selectionModel.setLeadSelectionIndex(0);
+        selectionModel.addVetoableSelectionListener(new VetoableChangeListener() {
+
+            @Override
+            public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
+                if (!model.isSelectedAliasValid()) {
+                    throw new PropertyVetoException("Currently selected alias is invalid.", evt);
                 }
             }
         });
