@@ -73,10 +73,11 @@ public class AliasManagerDialog extends StandardDialog {
         getOkButton();
         getCancelButton();
         setMinimumSize(new Dimension(800, 400));
+        setPreferredSize(new Dimension(800, 400));
         setLayout(new MigLayout("flowy, fill", "[][][grow]", "[][][][grow][]"));
 
         add(new TextLabel("Aliases allow you to rename commands, to aggregate multiple commands"
-                + "into a single command, or to make shortcuts to common commands."), "spanx");
+                + "into a single command, or to make shortcuts to common commands."), "spanx, pushy");
         add(new JScrollPane(aliasList),
                 "growy, pushy, spany 3, split 3, wmin 200, wmax 200");
         add(addAlias, "growx");
