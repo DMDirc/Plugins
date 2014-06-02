@@ -24,10 +24,16 @@ package com.dmdirc.addons.ui_swing.components.vetoable;
 
 import com.dmdirc.util.collections.ListenerList;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+
 import javax.swing.DefaultComboBoxModel;
 
 /**
  * Vetoable combo box model.
+ *
+ * @param <T> Type to be stored
  */
 public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
 
@@ -58,8 +64,8 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
      * @param l Listener to add
      */
     public void addVetoableSelectionListener(
-            final VetoableComboBoxSelectionListener l) {
-        listeners.add(VetoableComboBoxSelectionListener.class, l);
+            final VetoableChangeListener l) {
+        listeners.add(VetoableChangeListener.class, l);
     }
 
     /**
@@ -68,8 +74,8 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
      * @param l Listener to remove
      */
     public void removeVetoableSelectionListener(
-            final VetoableComboBoxSelectionListener l) {
-        listeners.remove(VetoableComboBoxSelectionListener.class, l);
+            final VetoableChangeListener l) {
+        listeners.remove(VetoableChangeListener.class, l);
     }
 
     /**
@@ -81,13 +87,16 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
      * @return true iif the event is to be vetoed
      */
     protected boolean fireVetoableSelectionChange(final Object oldValue, final Object newValue) {
-        boolean result = true;
-        final VetoableChangeEvent event = new VetoableChangeEvent(this, oldValue, newValue);
-        for (VetoableComboBoxSelectionListener listener : listeners.get(
-                VetoableComboBoxSelectionListener.class)) {
-            result &= listener.selectionChanged(event);
+        final PropertyChangeEvent event = new PropertyChangeEvent(this, "selection", oldValue,
+                newValue);
+        for (VetoableChangeListener listener : listeners.get(VetoableChangeListener.class)) {
+            try {
+                listener.vetoableChange(event);
+            } catch (PropertyVetoException ex) {
+                return true;
+            }
         }
-        return result;
+        return false;
     }
 
     @Override
