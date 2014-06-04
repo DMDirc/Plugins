@@ -28,6 +28,7 @@ import com.dmdirc.util.validators.Validator;
 import java.awt.Component;
 import java.util.List;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JList;
@@ -84,6 +85,41 @@ public class ValidationFactory {
      * @param validator   Validator to validate against
      * @param iconManager Icon manager to get icons from
      *
+     * @return Validating component panel for the component
+     */
+    public static JComponent getIntValidatorPanel(final JTextComponent validation,
+            final Validator<Integer> validator, final IconManager iconManager) {
+        return getIntValidatorPanel(validation, validation, validator, iconManager);
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     *
+     * @param display     Component to display instead in the panel
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
+     * @param <T>         Type of component to wrap in the layer UI
+     *
+     * @return Validating component panel for the component
+     */
+    public static <T extends Component> JComponent getIntValidatorPanel(final T display,
+            final JTextComponent validation, final Validator<Integer> validator,
+            final IconManager iconManager) {
+        final ComponentValidator<Integer, JTextComponent> componentValidator
+                = new IntegerJTextComponentComponentValidator(validation, validator);
+        return getPanel(display, componentValidator, iconManager);
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
      * @param <T>         Type of component to wrap in the layer UI
      *
      * @return Validating component panel for the component
@@ -112,6 +148,44 @@ public class ValidationFactory {
             final IconManager iconManager) {
         final ComponentValidator<List<V>, JList<V>> componentValidator
                 = new JListComponentValidator<>(validation, validator);
+        return getPanel(display, componentValidator, iconManager);
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
+     * @param <T>         Type of component to wrap in the layer UI
+     *
+     * @return Validating component panel for the component
+     */
+    public static <T> JComponent getValidatorPanel(
+            final JComboBox<T> validation, final Validator<List<T>> validator,
+            final IconManager iconManager) {
+        return getValidatorPanel(validation, validation, validator, iconManager);
+    }
+
+    /**
+     * Retrieves a validating component panel for the given component.
+     *
+     * @param display     Component to display instead in the panel
+     * @param validation  Component to validate
+     * @param validator   Validator to validate against
+     * @param iconManager Icon manager to get icons from
+     *
+     * @param <T>         Type of component to wrap in the layer UI
+     * @param <V>         The type of item in the model that will be validated.
+     *
+     * @return Validating component panel for the component
+     */
+    public static <T extends Component, V> JComponent getValidatorPanel(final T display,
+            final JComboBox<V> validation, final Validator<List<V>> validator,
+            final IconManager iconManager) {
+        final ComponentValidator<List<V>, JComboBox<V>> componentValidator
+                = new JComboBoxComponentValidator<>(validation, validator);
         return getPanel(display, componentValidator, iconManager);
     }
 
