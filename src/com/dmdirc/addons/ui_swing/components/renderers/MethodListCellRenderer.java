@@ -60,12 +60,16 @@ public class MethodListCellRenderer<E> extends DMDircListCellRenderer<E> {
     protected void renderValue(final JLabel label, final E value, final int index,
             final boolean isSelected, final boolean hasFocus) {
         String textValue = "";
-        try {
-            textValue = (String) read.invoke(value);
-        } catch (ReflectiveOperationException ex) {
-            textValue = value.toString();
-        } finally {
-            label.setText(textValue);
+        if (value == null) {
+            label.setText("");
+        } else {
+            try {
+                textValue = (String) read.invoke(value);
+            } catch (ReflectiveOperationException ex) {
+                textValue = value.toString();
+            } finally {
+                label.setText(textValue);
+            }
         }
     }
 
