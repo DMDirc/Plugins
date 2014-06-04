@@ -95,7 +95,7 @@ public class ProfileManagerDialog extends StandardDialog {
             final IdentityFactory identityFactory,
             final IdentityController identityController,
             @GlobalConfig final IconManager iconManager) {
-        super(mainFrame, ModalityType.MODELESS);
+        super(mainFrame, ModalityType.DOCUMENT_MODAL);
         setTitle("Profile Manager");
         this.model = new ProfileManagerModel(identityController, identityFactory);
         this.controller = new ProfileManagerController(this, model, identityFactory);
