@@ -103,9 +103,8 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
     public void setSelectedItem(final Object anObject) {
         final Object oldItem = getSelectedItem();
 
-        super.setSelectedItem(anObject);
         if (!fireVetoableSelectionChange(oldItem, anObject)) {
-            super.setSelectedItem(oldItem);
+            super.setSelectedItem(anObject);
         }
     }
 
