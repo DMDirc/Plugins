@@ -47,10 +47,13 @@ public class NotifyMyAndroidClient {
     private final Collection<String> apiKeys;
     /** The application to report ourselves as. */
     private final String application;
+    /** Downloader to download files. */
+    private final Downloader downloader;
 
     public NotifyMyAndroidClient(final Collection<String> apiKeys, final String application) {
         this.apiKeys = apiKeys;
         this.application = application;
+        this.downloader = new Downloader();
     }
 
     /**
@@ -81,7 +84,8 @@ public class NotifyMyAndroidClient {
         LOG.info("Sending notification to NMA for event '{}'", event);
         LOG.debug("Arguments: {}", arguments);
 
-        final List<String> response = Downloader.getPage(BASE_URL + NOTIFY_PATH, arguments);
+        final List<String> response = downloader.getPage(BASE_URL + NOTIFY_PATH,
+                arguments);
         LOG.debug("Response: {}", response);
     }
 

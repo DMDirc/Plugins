@@ -53,24 +53,29 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
     private final String dmdircInfo;
     /** Error/Success message. */
     private final StringBuilder error;
+    /** Download to download files. */
+    private final Downloader downloader;
 
     /**
      * Creates a new send worker to send feedback.
      *
+     * @param downloader Used to download files
      * @param dialog   Parent feedback dialog
      * @param config   Config
      * @param name     Name
      * @param email    Email
      * @param feedback Feedback
      */
-    public SendWorker(final FeedbackDialog dialog, final AggregateConfigProvider config,
-            final String name, final String email, final String feedback) {
-        this(dialog, config, name, email, feedback, "", "");
+    public SendWorker(final Downloader downloader, final FeedbackDialog dialog,
+            final AggregateConfigProvider config, final String name, final String email,
+            final String feedback) {
+        this(downloader, dialog, config, name, email, feedback, "", "");
     }
 
     /**
      * Creates a new send worker to send feedback.
      *
+     * @param downloader Used to download files
      * @param dialog     Parent feedback dialog
      * @param config     Config
      * @param name       Name
@@ -79,11 +84,10 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
      * @param serverInfo serverInfo
      * @param dmdircInfo DMDirc info
      */
-    public SendWorker(final FeedbackDialog dialog, final AggregateConfigProvider config,
-            final String name, final String email, final String feedback,
-            final String serverInfo, final String dmdircInfo) {
-        super();
-
+    public SendWorker(final Downloader downloader, final FeedbackDialog dialog,
+            final AggregateConfigProvider config, final String name, final String email,
+            final String feedback, final String serverInfo, final String dmdircInfo) {
+        this.downloader = downloader;
         this.dialog = dialog;
         this.config = config;
         this.name = name;
@@ -129,7 +133,7 @@ public class SendWorker extends LoggingSwingWorker<Object, Void> {
      */
     private void sendData(final Map<String, String> postData) {
         try {
-            final List<String> response = Downloader.getPage("http://www.dmdirc.com/feedback.php",
+            final List<String> response = downloader.getPage("http://www.dmdirc.com/feedback.php",
                     postData);
             if (response.size() >= 1) {
                 for (final String responseLine : response) {
