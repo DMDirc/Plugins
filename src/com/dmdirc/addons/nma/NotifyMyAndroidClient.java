@@ -81,7 +81,8 @@ public class NotifyMyAndroidClient {
         LOG.info("Sending notification to NMA for event '{}'", event);
         LOG.debug("Arguments: {}", arguments);
 
-        final List<String> response = Downloader.getPage(BASE_URL + NOTIFY_PATH, arguments);
+        final List<String> response = Downloader.getDownloader().getPage(BASE_URL + NOTIFY_PATH,
+                arguments);
         LOG.debug("Response: {}", response);
     }
 
