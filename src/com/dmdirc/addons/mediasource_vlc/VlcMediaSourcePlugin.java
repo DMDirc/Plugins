@@ -53,11 +53,14 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
     private final PluginInfo pluginInfo;
     /** The identity controller to read settings from. */
     private final IdentityController identityController;
+    /** Downloader to download files. */
+    private final Downloader downloader;
 
     public VlcMediaSourcePlugin(final PluginInfo pluginInfo,
             final IdentityController identityController) {
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
+        this.downloader = new Downloader();
     }
 
     @Override
@@ -241,8 +244,8 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         try {
             final String host = identityController.getGlobalConfiguration()
                     .getOption(pluginInfo.getDomain(), "host");
-            res = Downloader.getPage("http://" + host + "/old/info.html");
-            res2 = Downloader.getPage("http://" + host + "/old/");
+            res = downloader.getPage("http://" + host + "/old/info.html");
+            res2 = downloader.getPage("http://" + host + "/old/");
             parseInformation(res, res2);
             return true;
         } catch (IOException ex) {

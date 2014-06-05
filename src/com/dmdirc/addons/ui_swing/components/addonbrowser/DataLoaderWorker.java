@@ -84,10 +84,13 @@ public class DataLoaderWorker
     private final UpdateManager updateManager;
     /** Configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
+    /** Downloader to download files. */
+    private final Downloader downloader;
 
     /**
      * Creates a new data loader worker.
      *
+     * @param downloader    Used to download files
      * @param globalConfig  Configuration to read settings from.
      * @param urlBuilder    URL Builder to use when loading addon resources.
      * @param workerFactory Factory to use to produce install workers.
@@ -99,6 +102,7 @@ public class DataLoaderWorker
      * @param scrollPane    Table's parent scrollpane
      */
     public DataLoaderWorker(
+            final Downloader downloader,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
@@ -108,6 +112,7 @@ public class DataLoaderWorker
             @Unbound final boolean download,
             @Unbound final BrowserWindow browserWindow,
             @Unbound final JScrollPane scrollPane) {
+        this.downloader = downloader;
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
         this.workerFactory = workerFactory;
@@ -133,7 +138,7 @@ public class DataLoaderWorker
             loadingPanel.add(jpb, "growx, wrap");
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
-                Downloader.downloadPage("http://addons.dmdirc.com/feed",
+                downloader.downloadPage("http://addons.dmdirc.com/feed",
                         tempDirectory + "addons.feed", this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
