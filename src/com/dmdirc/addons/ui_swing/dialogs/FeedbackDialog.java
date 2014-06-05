@@ -34,6 +34,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.ClientInfo;
+import com.dmdirc.util.io.Downloader;
 
 import java.awt.Insets;
 import java.awt.Window;
@@ -64,6 +65,8 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
     private final AggregateConfigProvider config;
     /** Config directory. */
     private final String configDirectory;
+    /** Downloader to download files. */
+    private final Downloader downloader;
     /** Information label. */
     private TextLabel info;
     /** Name field. */
@@ -82,6 +85,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
     /**
      * Instantiates the feedback dialog.
      *
+     * @param downloader    Downloader to download files
      * @param parentWindow  Parent window
      * @param serverManager Server manager
      * @param config        Config
@@ -89,12 +93,14 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
      */
     @Inject
     public FeedbackDialog(
+            final Downloader downloader,
             @MainWindow final Window parentWindow,
             final ServerManager serverManager,
             @GlobalConfig final AggregateConfigProvider config,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         super(parentWindow, ModalityType.MODELESS);
 
+        this.downloader = downloader;
         this.serverManager = serverManager;
         this.config = config;
         this.configDirectory = baseDirectory;
@@ -233,7 +239,7 @@ public class FeedbackDialog extends StandardDialog implements ActionListener, Do
                     .append("\n");
             dmdircInfo.append("Look & Feel: ").append(SwingController.getLookAndFeel());
         }
-        new SendWorker(this, config, name.getText().trim(), email.getText().trim(),
+        new SendWorker(downloader, this, config, name.getText().trim(), email.getText().trim(),
                 feedback.getText().trim(), serverInfo.toString().trim(),
                 dmdircInfo.toString().trim()).execute();
     }

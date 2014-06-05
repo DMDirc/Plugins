@@ -241,8 +241,8 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
         try {
             final String host = identityController.getGlobalConfiguration()
                     .getOption(pluginInfo.getDomain(), "host");
-            res = Downloader.getPage("http://" + host + "/old/info.html");
-            res2 = Downloader.getPage("http://" + host + "/old/");
+            res = Downloader.getDownloader().getPage("http://" + host + "/old/info.html");
+            res2 = Downloader.getDownloader().getPage("http://" + host + "/old/");
             parseInformation(res, res2);
             return true;
         } catch (IOException ex) {

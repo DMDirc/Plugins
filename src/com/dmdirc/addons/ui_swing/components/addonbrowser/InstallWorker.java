@@ -53,16 +53,19 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     private final String themeDirectory;
     /** Plugin manager to inform of new plugins. */
     private final PluginManager pluginManager;
+    /** Downloader to download files. */
+    private final Downloader downloader;
 
     public InstallWorker(
+            final Downloader downloader,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager,
             @Unbound final AddonInfo info,
             @Unbound final InstallerWindow window) {
-        super();
 
+        this.downloader = downloader;
         this.info = info;
         this.installer = window;
         this.tempDirectory = tempDirectory;
@@ -75,7 +78,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     protected String doInBackground() {
         try {
             final File file = new File(tempDirectory, "." + info.getId());
-            Downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
+            downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
                     + info.getDownload(), file.getAbsolutePath());
 
             switch (info.getType()) {
