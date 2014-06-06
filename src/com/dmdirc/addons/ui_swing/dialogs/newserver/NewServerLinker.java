@@ -61,7 +61,6 @@ public class NewServerLinker {
     }
 
     public void bindHostname(final JTextField hostnameField) {
-        hostnameField.setText(model.getHostname().isPresent() ? model.getHostname().get() : "");
         hostnameField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
@@ -94,11 +93,10 @@ public class NewServerLinker {
                 }
             }
         });
+        hostnameField.setText(model.getHostname().isPresent() ? model.getHostname().get() : "");
     }
 
     public void bindPort(final JTextField portField) {
-        portField.setText(model.getPort().isPresent() ? Integer.toString(model.getPort().get())
-                : "");
         portField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
@@ -124,10 +122,11 @@ public class NewServerLinker {
                 update();
             }
         });
+        portField.setText(model.getPort().isPresent() ? Integer.toString(model.getPort().get())
+                : "");
     }
 
     public void bindPassword(final JTextField passwordField) {
-        passwordField.setText(model.getPassword().isPresent() ? model.getPassword().get() : "");
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
@@ -149,16 +148,12 @@ public class NewServerLinker {
                 update();
             }
         });
+        passwordField.setText(model.getPassword().isPresent() ? model.getPassword().get() : "");
     }
 
     public void bindProfiles(final JComboBox<ConfigProvider> profilesCombobox) {
         final VetoableComboBoxModel<ConfigProvider> comboBoxModel = new VetoableComboBoxModel<>();
         profilesCombobox.setModel(comboBoxModel);
-        profilesCombobox.setRenderer(new PropertyListCellRenderer<>(profilesCombobox.getRenderer(),
-                ConfigProvider.class, "name"));
-        for (ConfigProvider profile : model.getProfileList()) {
-            comboBoxModel.addElement(profile);
-        }
         if (model.getSelectedProfile().isPresent()) {
             comboBoxModel.setSelectedItem(model.getSelectedProfile().get());
         } else if (comboBoxModel.getSize() > 0) {
@@ -182,6 +177,11 @@ public class NewServerLinker {
                 }
             }
         });
+        profilesCombobox.setRenderer(new PropertyListCellRenderer<>(profilesCombobox.getRenderer(),
+                ConfigProvider.class, "name"));
+        for (ConfigProvider profile : model.getProfileList()) {
+            comboBoxModel.addElement(profile);
+        }
     }
 
     public void bindEditProfiles(final JButton edit,
@@ -205,7 +205,6 @@ public class NewServerLinker {
     }
 
     public void bindSSL(final JCheckBox sslCheckbox) {
-        sslCheckbox.setSelected(model.getSSL());
         sslCheckbox.addActionListener(new ActionListener() {
 
             @Override
@@ -213,6 +212,7 @@ public class NewServerLinker {
                 model.setSSL(sslCheckbox.isSelected());
             }
         });
+        sslCheckbox.setSelected(model.getSSL());
     }
 
     public void bindSaveAsDefault(final JCheckBox saveAsDefaultCheckbox) {
@@ -223,10 +223,10 @@ public class NewServerLinker {
                 model.setSaveAsDefault(saveAsDefaultCheckbox.isSelected());
             }
         });
+        saveAsDefaultCheckbox.setSelected(model.getSaveAsDefault());
     }
 
     public void bindOKButton(final JButton okButton) {
-        okButton.setEnabled(model.isSaveAllowed());
         okButton.addActionListener(new ActionListener() {
 
             @Override
@@ -244,6 +244,7 @@ public class NewServerLinker {
                 okButton.setEnabled(model.isSaveAllowed());
             }
         });
+        okButton.setEnabled(model.isSaveAllowed());
     }
 
     public void bindCancelButton(final JButton cancelButton) {

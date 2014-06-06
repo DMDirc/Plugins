@@ -73,6 +73,17 @@ public class NewServerDialog extends StandardDialog {
         final JCheckBox saveAsDefault
                 = new NoBorderJCheckBox("Save these settings as the defaults?");
 
+        model.loadModel();
+        linker.bindHostname(hostname);
+        linker.bindPort(port);
+        linker.bindPassword(password);
+        linker.bindProfiles(profiles);
+        linker.bindEditProfiles(edit, profileManagerDialog);
+        linker.bindSSL(ssl);
+        linker.bindSaveAsDefault(saveAsDefault);
+        linker.bindOKButton(getOkButton());
+        linker.bindCancelButton(getCancelButton());
+
         setResizable(false);
 
         setTitle("New Server");
@@ -96,17 +107,6 @@ public class NewServerDialog extends StandardDialog {
         add(saveAsDefault, "skip, grow, span, wrap 2*unrel");
         add(getLeftButton(), "span, split 2, right, sg button");
         add(getRightButton(), "right, sg button");
-
-        model.loadModel();
-        linker.bindHostname(hostname);
-        linker.bindPort(port);
-        linker.bindPassword(password);
-        linker.bindProfiles(profiles);
-        linker.bindEditProfiles(edit, profileManagerDialog);
-        linker.bindSSL(ssl);
-        linker.bindSaveAsDefault(saveAsDefault);
-        linker.bindOKButton(getOkButton());
-        linker.bindCancelButton(getCancelButton());
     }
 
 }
