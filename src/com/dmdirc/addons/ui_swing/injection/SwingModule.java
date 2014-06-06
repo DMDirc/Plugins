@@ -57,6 +57,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.ServiceLocator;
@@ -158,6 +159,11 @@ public class SwingModule {
     @MainWindow
     public Window getMainWindow(final MainFrame mainFrame) {
         return mainFrame;
+    }
+
+    @Provides
+    public StatusBar getStatusBar(final SwingStatusBar statusBar) {
+        return statusBar;
     }
 
     @Provides

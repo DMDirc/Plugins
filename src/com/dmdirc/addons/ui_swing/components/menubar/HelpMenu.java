@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.dialogs.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
+import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 
 import java.awt.event.ActionEvent;
