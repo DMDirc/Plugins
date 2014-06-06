@@ -199,6 +199,7 @@ public class ValidationFactory {
         componentValidator.addHooks();
         componentValidator.addComponentValidatorListener(validationLayer);
         componentValidator.addComponentValidatorListener(panel);
+        componentValidator.validate();
         return panel;
     }
 
