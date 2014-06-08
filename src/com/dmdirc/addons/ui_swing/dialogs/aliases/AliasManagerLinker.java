@@ -77,7 +77,6 @@ public class AliasManagerLinker {
         commandList.setCellRenderer(new PropertyListCellRenderer<>(commandList.getCellRenderer(),
                 Alias.class, "name"));
         commandList.setModel(commandModel);
-        commandModel.addAll(model.getAliases());
         commandList.setSelectionModel(selectionModel);
         commandList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -88,6 +87,8 @@ public class AliasManagerLinker {
                 final int index = commandList.getSelectedIndex();
                 if (index == -1) {
                     model.setSelectedAlias(Optional.<Alias>absent());
+                } else if (commandModel.getSize() == 0) {
+                    model.setSelectedAlias(Optional.<Alias>absent());
                 } else if (index >= commandModel.getSize()) {
                     model.setSelectedAlias(Optional.fromNullable(commandModel.
                             getElementAt(index - 1)));
@@ -96,12 +97,11 @@ public class AliasManagerLinker {
                 }
             }
         });
-        selectionModel.setLeadSelectionIndex(0);
         selectionModel.addVetoableSelectionListener(new VetoableChangeListener() {
 
             @Override
             public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
-                if (!model.isSelectedAliasValid()) {
+                if (!model.isChangeAliasAllowed()) {
                     throw new PropertyVetoException("Currently selected alias is invalid.", evt);
                 }
             }
@@ -128,6 +128,19 @@ public class AliasManagerLinker {
                 commandModel.add(alias);
                 commandList.getSelectionModel().setSelectionInterval(
                         commandModel.indexOf(alias), commandModel.indexOf(alias));
+            }
+
+            @Override
+            public void aliasSelectionChanged(final Optional<Alias> alias) {
+                final int index;
+                if (alias.isPresent()) {
+                    index = commandModel.indexOf(alias.get());
+                } else {
+                    index = -1;
+                }
+                if (index != selectionModel.getLeadSelectionIndex()) {
+                    selectionModel.setLeadSelectionIndex(index);
+                }
             }
 
         });
