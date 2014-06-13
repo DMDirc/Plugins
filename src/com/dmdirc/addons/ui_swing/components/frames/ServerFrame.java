@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
@@ -173,8 +174,14 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        dialogProvider.dispose(connection);
-        super.windowClosing(window);
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                dialogProvider.dispose(connection);
+                ServerFrame.super.windowClosing(window);
+            }
+        });
     }
 
     @Override

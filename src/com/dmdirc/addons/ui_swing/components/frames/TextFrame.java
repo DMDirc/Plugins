@@ -492,8 +492,14 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        setVisible(false);
-        getTextPane().close();
+        UIUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                setVisible(false);
+                getTextPane().close();
+            }
+        });
     }
 
     /**

@@ -275,11 +275,16 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        saveSplitPanePosition();
-        topicBar.close();
-        dialogProvider.dispose(channel);
+        UIUtilities.invokeLater(new Runnable() {
 
-        super.windowClosing(window);
+            @Override
+            public void run() {
+                saveSplitPanePosition();
+                topicBar.close();
+                dialogProvider.dispose(channel);
+                ChannelFrame.super.windowClosing(window);
+            }
+        });
     }
 
     @Override
