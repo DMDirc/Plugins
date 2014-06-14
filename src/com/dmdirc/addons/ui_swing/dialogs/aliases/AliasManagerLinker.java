@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.GenericListModel;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
@@ -42,6 +43,7 @@ import java.beans.VetoableChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -202,7 +204,7 @@ public class AliasManagerLinker {
         });
     }
 
-    public void bindResponse(final JTextArea response) {
+    public void bindResponse(final JTextArea response, final JScrollPane responseScroll) {
         response.setEnabled(false);
         response.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -231,6 +233,7 @@ public class AliasManagerLinker {
             public void aliasSelectionChanged(final Optional<Alias> alias) {
                 response.setEnabled(model.isSubstitutionValid());
                 response.setText(model.getSelectedAliasSubstitution());
+                UIUtilities.resetScrollPane(responseScroll);
             }
 
         });
