@@ -90,9 +90,10 @@ public class VetoableListSelectionModel implements ListSelectionModel {
                 new PropertyChangeEvent(this, "selection", selection, index0))) {
             return;
         }
+        final int oldSelection = selection;
         selection = index0;
         listeners.getCallable(ListSelectionListener.class).valueChanged(new ListSelectionEvent(this,
-                selection, selection, valueAdjusting));
+                oldSelection, selection, valueAdjusting));
     }
 
     @Override
