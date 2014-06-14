@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -68,6 +69,7 @@ public class AliasManagerDialog extends StandardDialog {
         final JTextArea response = new JTextArea();
         final JButton addAlias = new JButton("Add Alias");
         final JButton deleteAlias = new JButton("Delete Alias");
+        final JScrollPane responseScroll = new JScrollPane(response);
         getOkButton();
         getCancelButton();
         setMinimumSize(new Dimension(800, 400));
@@ -88,16 +90,18 @@ public class AliasManagerDialog extends StandardDialog {
         add(ValidationFactory.getValidatorPanel(command, model.getCommandValidator(), iconManager),
                 "growx, pushx");
         add(argumentsNumber, "growx, pushx");
-        add(ValidationFactory.getValidatorPanel(new JScrollPane(response), response,
+        add(ValidationFactory.getValidatorPanel(responseScroll, response,
                 new NotEmptyValidator(), iconManager), "spanx 2, grow, push");
 
         add(getLeftButton(), "flowx, split 3, right, sg button");
         add(getRightButton(), "sg button");
 
+        UIUtilities.addUndoManager(response);
+
         linker.bindCommandList(aliasList);
         linker.bindCommand(command);
         linker.bindArgumentsNumber(argumentsNumber);
-        linker.bindResponse(response);
+        linker.bindResponse(response, responseScroll);
         linker.bindAddAlias(addAlias);
         linker.bindDeleteAlias(deleteAlias);
         linker.bindOKButton(getOkButton());
