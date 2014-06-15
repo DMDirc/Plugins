@@ -122,7 +122,16 @@ public class AliasManagerLinker {
 
             @Override
             public void aliasRemoved(final Alias alias) {
+                final int index = commandModel.indexOf(alias);
                 commandModel.remove(alias);
+                if (index >= commandModel.getSize()) {
+                    model.setSelectedAlias(Optional.fromNullable(
+                            commandModel.getElementAt(commandModel.getSize() - 1)));
+                } else if (index == -1 && !commandModel.isEmpty()) {
+                    model.setSelectedAlias(Optional.fromNullable(commandModel.get(0)));
+                } else {
+                    model.setSelectedAlias(Optional.fromNullable(commandModel.get(index)));
+                }
             }
 
             @Override
