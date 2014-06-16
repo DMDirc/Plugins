@@ -89,6 +89,7 @@ public class PluginPanel extends AddonPanel {
         this.userConfig = userConfig;
         eventBus.register(this);
         pluginManager.refreshPlugins();
+        load();
     }
 
     @Override

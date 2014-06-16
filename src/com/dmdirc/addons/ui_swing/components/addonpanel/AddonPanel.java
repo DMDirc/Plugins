@@ -121,7 +121,12 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         getMoreLabel.addHyperlinkListener(this);
         addonInfo = new AddonInfoPanel();
         addonInfo.addListener(this);
+    }
 
+    /**
+     * Populates the list in a background thread.
+     */
+    protected void load() {
         /** {@inheritDoc}. */
         new LoggingSwingWorker<Object, Object>() {
             /** {@inheritDoc}. */
