@@ -81,6 +81,7 @@ public class ThemePanel extends AddonPanel {
         this.iconManager = iconManager;
         this.updateManager = updateManager;
         this.userConfig = userConfig;
+        load();
     }
 
     @Override
