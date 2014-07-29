@@ -26,7 +26,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
-import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.Plugin;
@@ -47,8 +46,6 @@ public class NowPlayingManager {
 
     /** Plugin manager to get plugins from. */
     private final PluginManager pluginManager;
-    /** Action controller to register listeners. */
-    private final ActionController actionController;
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Event bus to subscribe to events on. */
@@ -65,13 +62,11 @@ public class NowPlayingManager {
     @Inject
     public NowPlayingManager(
             final PluginManager pluginManager,
-            final ActionController actionController,
             final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain) {
         this.pluginManager = pluginManager;
-        this.actionController = actionController;
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.eventBus = eventBus;
