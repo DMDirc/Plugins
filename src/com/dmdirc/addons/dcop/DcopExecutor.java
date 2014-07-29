@@ -22,17 +22,22 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.ClientModule;
+import java.util.List;
 
-import dagger.Module;
-import dagger.Provides;
+/**
+ * Provides a method for executing DCOP queries and retrieving the result.
+ */
+public interface DcopExecutor {
 
-@Module(injects = DcopCommand.class, addsTo = ClientModule.class)
-public class DcopModule {
-
-    @Provides
-    public DcopExecutor getExecutor(final DcopCommandLineExecutor executor) {
-        return executor;
-    }
+    /**
+     * Retrieves the result from executing the specified query.
+     *
+     * @param app      The name of the application to query.
+     * @param object   The name of the object within the application to query.
+     * @param function The name of the function to call.
+     *
+     * @return The output of the specified DCOP query.
+     */
+    List<String> getDcopResult(final String app, final String object, final String function);
 
 }

@@ -22,43 +22,30 @@
 
 package com.dmdirc.addons.dcop;
 
-import com.dmdirc.plugins.Exported;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import dagger.ObjectGraph;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * Allows the user to execute dcop commands (and read the results).
+ * Executes DCOP commands by shelling out to the `dcop` binary.
  */
-public final class DcopPlugin extends BaseCommandPlugin {
+@Singleton
+public class DcopCommandLineExecutor implements DcopExecutor {
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new DcopModule()));
-        registerCommand(DcopCommand.class, DcopCommand.INFO);
+    @Inject
+    public DcopCommandLineExecutor() {
     }
 
-    /**
-     * Retrieves the result from executing the specified command.
-     *
-     * @param command The command to be executed
-     *
-     * @return The output of the specified command
-     *
-     * @deprecated Use a {@link DcopExecutor}.
-     */
-    @Exported
-    @Deprecated
-    public static List<String> getDcopResult(final String command) {
+    @Override
+    public List<String> getDcopResult(
+            final String app,
+            final String object,
+            final String function) {
         final ArrayList<String> result = new ArrayList<>();
 
         InputStreamReader reader;
@@ -66,13 +53,12 @@ public final class DcopPlugin extends BaseCommandPlugin {
         Process process;
 
         try {
-            process = Runtime.getRuntime().exec(command);
+            process = Runtime.getRuntime().exec(new String[]{"dcop", app, object, function});
 
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
 
             String line;
-
             while ((line = input.readLine()) != null) {
                 result.add(line);
             }

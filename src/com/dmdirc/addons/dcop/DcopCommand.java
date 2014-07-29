@@ -44,26 +44,33 @@ public class DcopCommand extends Command {
     public static final CommandInfo INFO = new BaseCommandInfo("dcop",
             "dcop <app> <object> <function> - retrieves information from a DCOP aplication",
             CommandType.TYPE_SERVER);
+    /** The executor to use to run queries. */
+    private final DcopExecutor executor;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
+     * @param executor   The executor to use to run queries.
      */
     @Inject
-    public DcopCommand(final CommandController controller) {
+    public DcopCommand(
+            final CommandController controller,
+            final DcopExecutor executor) {
         super(controller);
+        this.executor = executor;
     }
 
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (args.getArguments().length != 3) {
+        final String[] arguments = args.getArguments();
+        if (arguments.length != 3) {
             showUsage(origin, args.isSilent(), "dcop", "<app> <object> <function>");
             return;
         }
 
-        final List<String> res = DcopPlugin.getDcopResult("dcop " + args.getArgumentsAsString());
+        final List<String> res = executor.getDcopResult(arguments[0], arguments[1], arguments[2]);
         for (String line : res) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
         }
