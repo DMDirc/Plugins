@@ -38,13 +38,13 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.events.ServerCtcpEvent;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
@@ -655,16 +655,16 @@ public class DCCManager {
                 "receive.savelocation"));
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                Logger.userError(ErrorLevel.LOW,
-                        "Unable to create download dir (file exists instead)");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                        "Unable to create download dir (file exists instead)", ""));
             }
         } else {
             try {
                 dir.mkdirs();
                 dir.createNewFile();
             } catch (IOException ex) {
-                Logger.userError(ErrorLevel.LOW,
-                        "Unable to create download dir");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                        "Unable to create download dir", ""));
             }
         }
 
