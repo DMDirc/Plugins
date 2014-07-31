@@ -28,6 +28,8 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +51,7 @@ public class IdentClientTest {
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
     @Mock private AggregateConfigProvider config;
+    @Mock private EventBus eventBus;
 
     protected IdentClient getClient() {
         final List<Server> servers = new ArrayList<>();
@@ -61,7 +64,7 @@ public class IdentClientTest {
         when(client.getNickname()).thenReturn("nickname");
         when(client.getUsername()).thenReturn("username");
 
-        return new IdentClient(null, null, sm, config, "plugin-Identd");
+        return new IdentClient(eventBus, null, null, sm, config, "plugin-Identd");
     }
 
     @Test
