@@ -23,11 +23,13 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ServerManager;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.util.io.StreamUtils;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +42,8 @@ import java.net.Socket;
  */
 public class IdentClient implements Runnable {
 
+    /** The event bus to post errors on. */
+    private final EventBus eventBus;
     /** The IdentdServer that owns this Client. */
     private final IdentdServer server;
     /** The Socket that we are in charge of. */
@@ -56,15 +60,17 @@ public class IdentClient implements Runnable {
     /**
      * Create the IdentClient.
      *
+     * @param eventBus      The event bus to post errors on
      * @param server        The server that owns this
      * @param socket        The socket we are handing
      * @param serverManager Server manager to retrieve servers from
      * @param config        Global config to read settings from
      * @param domain        This plugin's settings domain
      */
-    public IdentClient(final IdentdServer server, final Socket socket,
+    public IdentClient(final EventBus eventBus, final IdentdServer server, final Socket socket,
             final ServerManager serverManager, final AggregateConfigProvider config,
             final String domain) {
+        this.eventBus = eventBus;
         this.server = server;
         this.socket = socket;
         this.serverManager = serverManager;
@@ -97,7 +103,8 @@ public class IdentClient implements Runnable {
             }
         } catch (IOException e) {
             if (thisThread == thread) {
-                Logger.userError(ErrorLevel.HIGH, "ClientSocket Error: " + e.getMessage());
+                eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, e,
+                        "ClientSocket Error: " + e.getMessage(), ""));
             }
         } finally {
             StreamUtils.close(in);
