@@ -43,12 +43,12 @@ import com.dmdirc.events.ChannelQuitEvent;
 import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -150,12 +150,13 @@ public class LoggingManager implements ConfigChangeListener {
         final File dir = new File(directoryProvider.get());
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                Logger.userError(ErrorLevel.LOW,
-                        "Unable to create logging dir (file exists instead)");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                        "Unable to create logging dir (file exists instead)", ""));
             }
         } else {
             if (!dir.mkdirs()) {
-                Logger.userError(ErrorLevel.LOW, "Unable to create logging dir");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                        "Unable to create logging dir", ""));
             }
         }
 
@@ -392,7 +393,7 @@ public class LoggingManager implements ConfigChangeListener {
      */
     protected void showBackBuffer(final FrameContainer frame, final String filename) {
         if (frame == null) {
-            Logger.userError(ErrorLevel.LOW, "Given a null frame");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null, "Given a null frame", ""));
             return;
         }
 
@@ -412,8 +413,9 @@ public class LoggingManager implements ConfigChangeListener {
                 frame.addLine(getColouredString(colour, "--- End of backbuffer\n"),
                         backbufferTimestamp);
             } catch (IOException | SecurityException e) {
-                Logger.userError(ErrorLevel.LOW, "Unable to show backbuffer (Filename: " + filename
-                        + "): " + e.getMessage());
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                        "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage(),
+                        ""));
             }
         }
     }
@@ -487,8 +489,10 @@ public class LoggingManager implements ConfigChangeListener {
                 final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
                 dateString = dateFormat.format(new Date()).trim();
 
-                Logger.userError(ErrorLevel.LOW, "Dateformat String '" + timestamp
-                        + "' is invalid. For more information: http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, iae,
+                        "Dateformat String '" + timestamp + "' is invalid. For more information: "
+                        + "http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html",
+                        ""));
             }
             finalLine.append(dateString);
             finalLine.append(' ');
@@ -602,7 +606,8 @@ public class LoggingManager implements ConfigChangeListener {
 
             if (!new File(directory.toString()).exists() && !(new File(directory.toString())).
                     mkdirs()) {
-                Logger.userError(ErrorLevel.LOW, "Unable to create date dirs");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                        "Unable to create date dirs", ""));
             }
         }
 
@@ -653,12 +658,13 @@ public class LoggingManager implements ConfigChangeListener {
         final File dir = new File(directory.toString() + network + System.getProperty(
                 "file.separator"));
         if (dir.exists() && !dir.isDirectory()) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to create networkfolders dir (file exists instead)");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                    "Unable to create networkfolders dir (file exists instead)", ""));
             // Prepend network name to file instead.
             prependNetwork = true;
         } else if (!dir.exists() && !dir.mkdirs()) {
-            Logger.userError(ErrorLevel.LOW, "Unable to create networkfolders dir");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                    "Unable to create networkfolders dir", ""));
             prependNetwork = true;
         }
 
