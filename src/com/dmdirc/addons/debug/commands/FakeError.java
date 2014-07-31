@@ -28,9 +28,12 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.AppErrorEvent;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.input.AdditionalTabTargets;
+
+import com.google.common.eventbus.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,48 +43,45 @@ import javax.inject.Provider;
  */
 public class FakeError extends DebugCommand implements IntelligentCommand {
 
+    /** The event bus to post errors on . */
+    private final EventBus eventBus;
+
     /**
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
+     * @param eventBus        The event bus to post errors on
      */
     @Inject
-    public FakeError(final Provider<Debug> commandProvider) {
+    public FakeError(final Provider<Debug> commandProvider, final EventBus eventBus) {
         super(commandProvider);
+        this.eventBus = eventBus;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getName() {
         return "error";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getUsage() {
         return "<user|app> [<low|medium|high|fatal|unknown>] - Creates an error"
                 + " with the specified parameters, defaults to high priority.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("user")) {
-            Logger.userError(getLevel(args.getArguments()), "Debug error message");
+            eventBus.post(new UserErrorEvent(getLevel(args.getArguments()),
+                    null, "Debug error message", ""));
         } else if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("app")) {
-            Logger.appError(getLevel(args.getArguments()), "Debug error message",
-                    new IllegalArgumentException());
+            eventBus.post(new AppErrorEvent(getLevel(args.getArguments()),
+                    new IllegalArgumentException(), "Debug error message", ""));
         } else {
             showUsage(origin, args.isSilent(), getName(), getUsage());
         }
@@ -106,9 +106,6 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
