@@ -33,6 +33,8 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceProvider;
 
+import com.google.common.eventbus.EventBus;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -51,16 +53,21 @@ public class ServerListServiceProvider implements ServiceProvider {
     private final List<Service> services;
     /** Plugin Manager */
     private final PluginManager pluginManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new server list service provider.
      *
      * @param pluginManager The PluginManager to use.
      * @param serverList    The {@link ServerList} to retrieve items from
+     * @param eventBus      The event bus to post errors to
      */
-    public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList) {
+    public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList,
+            final EventBus eventBus) {
         this.serverList = serverList;
         this.pluginManager = pluginManager;
+        this.eventBus = eventBus;
         this.services = Arrays.asList(new Service[]{
             pluginManager.getService("parser", "serverlist", true)
         });
@@ -145,7 +152,7 @@ public class ServerListServiceProvider implements ServiceProvider {
      * @return A corresponding parser instance
      */
     protected Parser getParserForItem(final MyInfo myInfo, final ServerGroupItem item) {
-        return new ParserFactory(pluginManager).getParser(myInfo, item.getAddress());
+        return new ParserFactory(pluginManager, eventBus).getParser(myInfo, item.getAddress());
     }
 
 }
