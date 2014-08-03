@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,13 +67,15 @@ public class ServerList implements ConfigProviderListener {
      * @param serverManager      Server Manager to use.
      * @param identityController The controller to read/write settings with.
      * @param identityFactory    The factory to create new identities with.
+     * @param eventBus           The event bus to post errors to
      */
     @Inject
     public ServerList(
             final PluginManager pluginManager,
             final ServerManager serverManager,
             final IdentityController identityController,
-            final IdentityFactory identityFactory) {
+            final IdentityFactory identityFactory,
+            final EventBus eventBus) {
         this.serverManager = serverManager;
         this.identityController = identityController;
         this.identityFactory = identityFactory;
@@ -82,7 +86,7 @@ public class ServerList implements ConfigProviderListener {
             configProviderAdded(identity);
         }
 
-        new ServerListServiceProvider(pluginManager, this).register();
+        new ServerListServiceProvider(pluginManager, this, eventBus).register();
     }
 
     /**
