@@ -24,9 +24,12 @@ package com.dmdirc.addons.mediasource_dbus;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import dagger.ObjectGraph;
 
 /**
  * Provides a media source for dbus players.
@@ -48,6 +53,15 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
     private final Map<String, MediaSource> mprisSources = new HashMap<>();
     /** The path to qdbus. */
     private String qdbus;
+    /** Event bus to post errors to. */
+    private EventBus eventBus;
+
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+
+        eventBus = getObjectGraph().get(EventBus.class);
+    }
 
     @Override
     public void onLoad() {
@@ -115,7 +129,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
      *
      * @return The output of the specified command
      */
-    protected static List<String> getInfo(final String[] args) {
+    protected List<String> getInfo(final String[] args) {
         final ArrayList<String> result = new ArrayList<>();
 
         InputStreamReader reader;
@@ -138,7 +152,7 @@ public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
             input.close();
             process.destroy();
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.HIGH, "Unable to get dbus info", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, ex, "Unable to get dbus info", ""));
         }
 
         return result;
