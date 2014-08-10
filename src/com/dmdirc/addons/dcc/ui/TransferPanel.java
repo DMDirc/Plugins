@@ -28,10 +28,12 @@ import com.dmdirc.addons.dcc.TransferContainer;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -75,16 +77,18 @@ public class TransferPanel extends JPanel implements ActionListener,
     private final JButton openButton = new JButton("Open");
     /** The transfer that this window is showing. */
     private final DCCTransfer dcc;
+    /** The event bus to post errors. */
+    private final EventBus errorBus;
 
     /**
      * Creates a new transfer window for the specified UI controller and owner.
      *
-     * @param owner The frame container that owns this frame
+     * @param owner    The frame container that owns this frame
+     * @param errorBus The event bus to post errors to
      */
-    public TransferPanel(final FrameContainer owner) {
-        super();
-
+    public TransferPanel(final FrameContainer owner, final EventBus errorBus) {
         this.transferContainer = (TransferContainer) owner;
+        this.errorBus = errorBus;
         dcc = transferContainer.getDCC();
 
         dcc.addHandler(this);
@@ -146,18 +150,19 @@ public class TransferPanel extends JPanel implements ActionListener,
             try {
                 Desktop.getDesktop().open(file);
             } catch (IllegalArgumentException ex) {
-                Logger.userError(ErrorLevel.LOW, "Unable to open file: " + file, ex);
+                errorBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                        "Unable to open file: " + file, ""));
                 openButton.setEnabled(false);
             } catch (IOException ex) {
                 try {
                     Desktop.getDesktop().open(file.getParentFile());
                 } catch (IllegalArgumentException ex1) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to open folder: " + file.
-                            getParentFile(), ex1);
+                    errorBus.post(new UserErrorEvent(ErrorLevel.LOW, ex1, "Unable to open folder: "
+                            + file.getParentFile(), ""));
                     openButton.setEnabled(false);
                 } catch (IOException ex1) {
-                    Logger.userError(ErrorLevel.LOW, "No associated handler "
-                            + "to open file or directory.", ex1);
+                    errorBus.post(new UserErrorEvent(ErrorLevel.LOW, ex1,
+                            "No associated handler to open file or directory.", ""));
                     openButton.setEnabled(false);
                 }
             }

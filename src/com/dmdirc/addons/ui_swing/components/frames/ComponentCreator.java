@@ -32,6 +32,8 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.SimpleInjector;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +52,7 @@ public class ComponentCreator {
      *
      * @param frame      Frame to initialise
      * @param controller UI Controller
+     * @param eventBus   Global event bus
      * @param urlBuilder URL builder to inject.
      * @param owner      container
      *
@@ -61,12 +64,14 @@ public class ComponentCreator {
     public Set<JComponent> initFrameComponents(
             final Object frame,
             final SwingController controller,
+            final EventBus eventBus,
             final URLBuilder urlBuilder,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
         final Set<String> names = owner.getComponents();
         final Set<JComponent> components = new HashSet<>();
 
+        injector.addParameter(eventBus);
         injector.addParameter(frame);
         injector.addParameter(owner);
         injector.addParameter(controller);

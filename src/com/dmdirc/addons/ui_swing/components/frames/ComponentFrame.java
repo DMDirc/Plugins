@@ -30,6 +30,8 @@ import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
@@ -49,21 +51,26 @@ public class ComponentFrame extends TextFrame {
     private final FrameContainer owner;
     /** Parent controller. */
     private final SwingController controller;
+    /** The global event bus. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of CustomFrame.
      *
+     * @param eventBus      The global event bus
      * @param deps          The dependencies required by text frames.
      * @param urlBuilder    URL builder to use when making components.
      * @param owner         The frame container that owns this frame.
      * @param commandParser The parser to use to process commands.
      */
     public ComponentFrame(
+            final EventBus eventBus,
             final TextFrameDependencies deps,
             final URLBuilder urlBuilder,
             @Unbound final FrameContainer owner,
             @Unbound final CommandParser commandParser) {
         super(owner, commandParser, deps);
+        this.eventBus = eventBus;
         this.controller = deps.controller;
         this.urlBuilder = urlBuilder;
         this.owner = owner;
@@ -76,7 +83,7 @@ public class ComponentFrame extends TextFrame {
     private void initComponents() {
         setLayout(new MigLayout("fill"));
         for (JComponent comp : new ComponentCreator()
-                .initFrameComponents(this, controller, urlBuilder, owner)) {
+                .initFrameComponents(this, controller, eventBus, urlBuilder, owner)) {
             add(comp, "wrap, grow");
         }
     }

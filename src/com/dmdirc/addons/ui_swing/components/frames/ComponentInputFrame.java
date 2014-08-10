@@ -28,6 +28,8 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -47,21 +49,26 @@ public class ComponentInputFrame extends InputTextFrame {
     private final FrameContainer owner;
     /** Parent controller. */
     private final SwingController controller;
+    /** The global event bus. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of CustomInputFrame.
      *
+     * @param eventBus           The global event bus
      * @param deps               The dependencies required by text frames.
      * @param inputFieldProvider The provider to use to create a new input field.
      * @param urlBuilder         URL builder to use when making components.
      * @param owner              The frame container that owns this frame
      */
     public ComponentInputFrame(
+            final EventBus eventBus,
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final URLBuilder urlBuilder,
             final FrameContainer owner) {
         super(deps, inputFieldProvider, owner);
+        this.eventBus = eventBus;
         this.controller = deps.controller;
         this.urlBuilder = urlBuilder;
         this.owner = owner;
@@ -74,7 +81,7 @@ public class ComponentInputFrame extends InputTextFrame {
     private void initComponents() {
         setLayout(new MigLayout("fill"));
         for (JComponent comp : new ComponentCreator()
-                .initFrameComponents(this, controller, urlBuilder, owner)) {
+                .initFrameComponents(this, controller, eventBus, urlBuilder, owner)) {
             add(comp, "wrap, grow");
         }
     }
