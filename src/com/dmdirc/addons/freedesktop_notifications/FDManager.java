@@ -24,17 +24,18 @@ package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 
 import com.google.common.base.Strings;
+import com.google.common.eventbus.EventBus;
 import com.google.common.html.HtmlEscapers;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class FDManager implements ConfigChangeListener {
     private final String domain;
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -67,11 +70,13 @@ public class FDManager implements ConfigChangeListener {
             @GlobalConfig final AggregateConfigProvider config,
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
-            final PluginFilesHelper filesHelper) {
+            final PluginFilesHelper filesHelper,
+            final EventBus eventBus) {
         this.domain = domain;
         this.config = config;
         this.userConfig = userConfig;
         this.filesHelper = filesHelper;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -157,8 +162,9 @@ public class FDManager implements ConfigChangeListener {
             filesHelper.extractResoucesEndingWith(".py");
             filesHelper.extractResoucesEndingWith(".png");
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM,
-                    "Unable to extract files for Free desktop notifications: " + ex.getMessage(), ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+                    "Unable to extract files for Free desktop notifications: " + ex.getMessage(),
+                    ""));
         }
     }
 
