@@ -125,9 +125,8 @@ public class TitleMediaSource implements MediaSource {
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
 
-            String line = "";
-
-            while ((line = input.readLine()) != null) {
+            final String line = input.readLine();
+            if (line != null) {
                 return line;
             }
         } catch (IOException ex) {
