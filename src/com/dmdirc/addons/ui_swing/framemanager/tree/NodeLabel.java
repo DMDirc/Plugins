@@ -103,11 +103,7 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     @Override
     public void selectionChanged(final TextFrame window) {
-        if (equals(window.getContainer())) {
-            selected = true;
-        } else {
-            selected = false;
-        }
+        selected = equals(window.getContainer());
     }
 
     @Override
