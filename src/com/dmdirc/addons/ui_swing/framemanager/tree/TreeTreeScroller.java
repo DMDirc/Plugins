@@ -25,10 +25,10 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import javax.swing.tree.TreePath;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Extention of TreeScroller to scroll the tree view.
@@ -44,8 +44,8 @@ public class TreeTreeScroller extends TreeScroller {
      * Creates a new Tree scroller for the tree view.
      *
      * @param activeFrameManager The active window manager
-     * @param windowFactory     Factory to use to retrieve swing windows.
-     * @param tree              Tree view tree
+     * @param windowFactory      Factory to use to retrieve swing windows.
+     * @param tree               Tree view tree
      */
     public TreeTreeScroller(
             final ActiveFrameManager activeFrameManager,
@@ -59,23 +59,10 @@ public class TreeTreeScroller extends TreeScroller {
 
     @Override
     protected void setPath(final TreePath path) {
-        if (path == null) {
-            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                    new IllegalArgumentException("path == null"));
-            return;
-        }
-        if (path.getLastPathComponent() == null) {
-            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                    new IllegalArgumentException("Last component == null"));
-            return;
-        }
-        if (((TreeViewNode) path.getLastPathComponent()).getWindow() == null) {
-            Logger.appError(ErrorLevel.HIGH, "Unable to change focus",
-                    new IllegalArgumentException("Frame is null"));
-            return;
-        }
+        checkNotNull(path);
+        checkNotNull(path.getLastPathComponent());
+        checkNotNull(((TreeViewNode) path.getLastPathComponent()).getWindow());
         super.setPath(path);
-
         activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
                 ((TreeViewNode) path.getLastPathComponent()).getWindow()));
     }
