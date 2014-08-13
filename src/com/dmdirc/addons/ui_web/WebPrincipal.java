@@ -58,10 +58,7 @@ public class WebPrincipal implements Principal {
             return false;
         }
         final WebPrincipal other = (WebPrincipal) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
 
     @Override
