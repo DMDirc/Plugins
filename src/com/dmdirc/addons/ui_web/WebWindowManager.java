@@ -25,12 +25,14 @@ package com.dmdirc.addons.ui_web;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
+
+import com.google.common.eventbus.EventBus;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,15 +80,20 @@ public class WebWindowManager implements FrameListener {
     private final Map<FrameContainer, WebWindow> windows = new HashMap<>();
     /** A map of window IDs to their windows. */
     private final Map<String, WebWindow> windowsById = new HashMap<>();
+    /** Event bus to post errors . */
+    private final EventBus eventBus;
 
     /**
      * Creates a new window manager for the specified controller.
      *
      * @param controller    The Web UI controller that owns this manager
      * @param windowManager Window manager to add/remove windows
+     * @param eventBus      The event bus to post errors on
      */
-    public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager) {
+    public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager,
+            final EventBus eventBus) {
         this.controller = controller;
+        this.eventBus = eventBus;
 
         windowManager.addListenerAndSync(this);
     }
@@ -163,8 +170,8 @@ public class WebWindowManager implements FrameListener {
         if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
             clazz = IMPLEMENTATIONS.get(window.getComponents());
         } else {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to create web window for"
-                    + " components: " + window.getComponents());
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, null,
+                    "Unable to create web window for components: " + window.getComponents(), ""));
             return;
         }
 
@@ -177,8 +184,9 @@ public class WebWindowManager implements FrameListener {
             windows.put(window, frame);
             windowsById.put(id, frame);
         } catch (ReflectiveOperationException ex) {
-            Logger.appError(ErrorLevel.MEDIUM, "Unable to create window of type "
-                    + clazz.getCanonicalName() + " for web ui", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+                    "Unable to create window of type " + clazz.getCanonicalName() + " for web ui",
+                    ""));
         }
     }
 

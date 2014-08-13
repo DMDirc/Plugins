@@ -120,7 +120,7 @@ public class WebInterfaceUI implements UIController {
             // Break horribly!
         }
 
-        windowManager = new WebWindowManager(this, coreWindowManager);
+        windowManager = new WebWindowManager(this, coreWindowManager, eventBus);
 
         statusBarManager.registerStatusBar(new WebStatusBar(handler));
     }
