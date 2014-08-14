@@ -88,7 +88,7 @@ public class ActionsPanel extends JPanel {
         if (group.getSelection().equals(tempAccept.getModel())) {
             return CertificateAction.IGNORE_TEMPORARILY;
         } else if (group.getSelection().equals(permAccept.getModel())) {
-            return CertificateAction.IGNORE_PERMANENTY;
+            return CertificateAction.IGNORE_PERMANENTLY;
         } else {
             return CertificateAction.DISCONNECT;
         }
