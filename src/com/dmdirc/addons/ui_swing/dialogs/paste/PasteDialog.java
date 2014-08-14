@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
@@ -33,8 +32,6 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import com.google.common.eventbus.EventBus;
 
@@ -57,7 +54,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Allows the user to confirm and modify a multi-line paste.
  */
-@Factory(inject = true)
 public final class PasteDialog extends StandardDialog implements ActionListener,
         KeyListener {
 
@@ -99,14 +95,14 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      * @param parentWindow      Parent window
      */
     public PasteDialog(
-            @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider config,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
             final EventBus eventBus,
-            @Unbound final InputTextFrame newParent,
-            @Unbound final String text,
-            @Unbound final Window parentWindow) {
+            final InputTextFrame newParent,
+            final String text,
+            final Window parentWindow) {
         super(parentWindow, ModalityType.MODELESS);
 
         parent = newParent;
