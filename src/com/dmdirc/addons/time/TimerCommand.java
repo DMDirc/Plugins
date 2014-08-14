@@ -73,7 +73,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
         if (args.getArguments().length > 0) {
             switch (args.getArguments()[0]) {
                 case "--cancel":
-                    int timerKey = 0;
+                    int timerKey;
                     try {
                         timerKey = Integer.parseInt(args.getArgumentsAsString(1));
                     } catch (NumberFormatException ex) {
@@ -105,8 +105,8 @@ public class TimerCommand extends Command implements IntelligentCommand {
                     if (args.getArguments().length < 3) {
                         doUsage(origin, args.isSilent());
                     } else {
-                        int repetitions = 0;
-                        int interval = 0;
+                        int repetitions;
+                        int interval;
 
                         final String command = args.getArgumentsAsString(2);
 

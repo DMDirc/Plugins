@@ -413,7 +413,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     @Override
     public void mouseClicked(final MouseEvent e) {
-        String clickedText = "";
+        String clickedText;
         final int start;
         final int end;
 

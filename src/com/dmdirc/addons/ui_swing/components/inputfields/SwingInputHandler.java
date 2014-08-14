@@ -73,7 +73,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addUpHandler() {
-        JTextComponent localTarget = null;
+        JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
@@ -103,7 +103,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addDownHandler() {
-        JTextComponent localTarget = null;
+        JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
@@ -198,7 +198,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addEnterHandler() {
-        JTextComponent localTarget = null;
+        JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
