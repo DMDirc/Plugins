@@ -455,10 +455,10 @@ public class DCCTransfer extends DCC {
                     // Process all the ack packets that may have been sent.
                     // In true turbo dcc mode, none will have been sent and the socket
                     // will just close, in fast-dcc mode all the acks will be here,
-                    // So keep reading acks untill the socket closes (IOException) or we
-                    // have recieved all the acks.
+                    // So keep reading acks until the socket closes (IOException) or we
+                    // have received all the acks.
                     if (turbo) {
-                        int ack = 0;
+                        int ack;
                         do {
                             try {
                                 ack = in.readInt();

@@ -27,6 +27,7 @@ import com.dmdirc.ui.IconManager;
 
 import java.awt.Dimension;
 
+import javax.annotation.Nullable;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -45,6 +46,7 @@ public class CategoryLabel extends JLabel {
     /** Panel gap. */
     private final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
     /** Parent list. */
+    @Nullable
     private final JList<? extends PreferencesCategory> parentList;
 
     /**
@@ -57,7 +59,7 @@ public class CategoryLabel extends JLabel {
      * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
-            final JList<? extends PreferencesCategory> parentList,
+            @Nullable final JList<? extends PreferencesCategory> parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {
         super();

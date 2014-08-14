@@ -110,8 +110,7 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
             reader = new InputStreamReader(process.getInputStream());
             input = new BufferedReader(reader);
 
-            String line = "";
-
+            String line;
             while ((line = input.readLine()) != null) {
                 result.add(line);
             }

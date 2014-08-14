@@ -30,6 +30,8 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import javax.swing.JLabel;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Simple panel to show when a user is away or not.
  */
@@ -53,13 +55,11 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
     public AwayLabel(final FrameContainer container) {
         super("(away)");
 
-        this.container = container;
+        this.container = checkNotNull(container);
 
-        container.getConfigManager().addChangeListener("ui", AWAY_INDICATOR,
-                this);
+        container.getConfigManager().addChangeListener("ui", AWAY_INDICATOR, this);
         setVisible(false);
-        useAwayIndicator = container.getConfigManager().getOptionBool("ui",
-                AWAY_INDICATOR);
+        useAwayIndicator = container.getConfigManager().getOptionBool("ui", AWAY_INDICATOR);
 
         if (container.getConnection() != null) {
             setVisible(container.getConnection().isAway());
@@ -112,7 +112,7 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
 
     @Override
     public void windowClosing(final FrameContainer window) {
-        if (container != null && container.getConnection() != null) {
+        if (container.getConnection() != null) {
             container.getConnection().removeAwayStateListener(this);
         }
     }
