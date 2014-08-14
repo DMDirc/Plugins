@@ -207,7 +207,7 @@ public class AliasManagerLinker {
             @Override
             public void aliasSelectionChanged(final Optional<Alias> alias) {
                 argumentsNumber.setEnabled(model.isMinimumArgumentsValid());
-                argumentsNumber.setValue(model.getSelectedAliasMininumArguments());
+                argumentsNumber.setValue(model.getSelectedAliasMinimumArguments());
             }
 
         });

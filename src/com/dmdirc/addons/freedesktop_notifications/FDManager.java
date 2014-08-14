@@ -159,8 +159,8 @@ public class FDManager implements ConfigChangeListener {
         setCachedSettings();
         // Extract the files needed
         try {
-            filesHelper.extractResoucesEndingWith(".py");
-            filesHelper.extractResoucesEndingWith(".png");
+            filesHelper.extractResourcesEndingWith(".py");
+            filesHelper.extractResourcesEndingWith(".png");
         } catch (IOException ex) {
             eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
                     "Unable to extract files for Free desktop notifications: " + ex.getMessage(),

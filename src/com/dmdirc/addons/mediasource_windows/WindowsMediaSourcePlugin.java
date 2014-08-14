@@ -97,8 +97,8 @@ public class WindowsMediaSourcePlugin extends BasePlugin
     public void onLoad() {
         // Extract the .dlls and .exe
         try {
-            filesHelper.extractResoucesEndingWith(".dll");
-            filesHelper.extractResoucesEndingWith(".exe");
+            filesHelper.extractResourcesEndingWith(".dll");
+            filesHelper.extractResourcesEndingWith(".exe");
         } catch (IOException ex) {
             Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: "
                     + ex.getMessage(), ex);
