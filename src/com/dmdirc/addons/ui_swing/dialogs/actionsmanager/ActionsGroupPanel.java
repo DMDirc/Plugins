@@ -31,8 +31,6 @@ import com.dmdirc.addons.ui_swing.components.renderers.ArrayCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StringArrayComparator;
 import com.dmdirc.addons.ui_swing.dialogs.actioneditor.ActionEditorDialogFactory;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
@@ -56,7 +54,6 @@ import net.miginfocom.swing.MigLayout;
  * The actions group panel is the control displayed within the tabbed control of the actions manager
  * dialog. It shows the user all actions belonging to a particular group.
  */
-@Factory(inject = true, singleton = true)
 public class ActionsGroupPanel extends JPanel implements ActionListener,
         ListSelectionListener {
 
@@ -90,8 +87,8 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     public ActionsGroupPanel(
             final ActionEditorDialogFactory editorDialogFactory,
-            @Unbound final ActionsManagerDialog parent,
-            @Unbound final ActionGroup group) {
+            final ActionsManagerDialog parent,
+            final ActionGroup group) {
         super();
 
         this.editorDialogFactory = editorDialogFactory;

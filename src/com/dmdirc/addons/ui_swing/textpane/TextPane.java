@@ -22,19 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -61,7 +57,6 @@ import org.jdesktop.jxlayer.JXLayer;
 /**
  * Styled, scrollable text pane.
  */
-@Factory(inject = true, singleton = true)
 public final class TextPane extends JComponent implements MouseWheelListener,
         AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
 
@@ -97,9 +92,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param frame        Parent Frame
      */
     public TextPane(
-            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String configDomain,
+            final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
-            @Unbound final TextFrame frame) {
+            final TextFrame frame) {
         super();
         this.frame = frame;
         this.configDomain = configDomain;

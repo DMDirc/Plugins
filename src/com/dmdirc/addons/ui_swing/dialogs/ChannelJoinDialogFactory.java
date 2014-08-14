@@ -22,52 +22,38 @@
 
 package com.dmdirc.addons.ui_swing.dialogs;
 
+import com.dmdirc.ClientModule;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
- * A dialog to prompt the user for a channel and then join that channel.
+ * Factory for {@link ChannelJoinDialog}s.
  */
-public class ChannelJoinDialog extends StandardInputDialog {
+@Singleton
+public class ChannelJoinDialogFactory {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1;
-    /** Active frame manager. */
+    private final Window mainWindow;
     private final ActiveFrameManager activeFrameManager;
+    private final IconManager iconManager;
 
-    /**
-     * Creates a new dialog which prompts a user and then joins the channel they specify.
-     *
-     * @param mainWindow         Main window to use as a parent.
-     * @param activeFrameManager The active window manager
-     * @param iconManager        The icon manager to use for validating text fields.
-     * @param title              Window title
-     * @param message            Window message
-     */
-    public ChannelJoinDialog(
-            final Window mainWindow,
+    @Inject
+    public ChannelJoinDialogFactory(
+            @MainWindow final Window mainWindow,
             final ActiveFrameManager activeFrameManager,
-            final IconManager iconManager,
-            final String title,
-            final String message) {
-        super(mainWindow, ModalityType.APPLICATION_MODAL, iconManager, title, message);
-
+            @ClientModule.GlobalConfig final IconManager iconManager) {
+        this.mainWindow = mainWindow;
         this.activeFrameManager = activeFrameManager;
+        this.iconManager = iconManager;
     }
 
-    @Override
-    public boolean save() {
-        activeFrameManager.getActiveFrame().getContainer().getConnection()
-                .join(new ChannelJoinRequest(getText()));
-        return true;
-    }
-
-    @Override
-    public void cancelled() {
-        //Ignore
+    public ChannelJoinDialog getChannelJoinDialog(final String title, final String message) {
+        return new ChannelJoinDialog(mainWindow, activeFrameManager, iconManager, title, message);
     }
 
 }
