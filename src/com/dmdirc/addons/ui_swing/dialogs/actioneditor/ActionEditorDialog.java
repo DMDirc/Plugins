@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionFactory;
 import com.dmdirc.actions.ActionStatus;
@@ -31,8 +30,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -50,7 +47,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Action editor dialog.
  */
-@Factory(inject = true, singleton = true)
 public class ActionEditorDialog extends StandardDialog implements ActionListener,
         PropertyChangeListener {
 
@@ -97,12 +93,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param group         Action's group
      */
     public ActionEditorDialog(
-            @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider config,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory,
-            @Unbound final ActionsManagerDialog parentWindow,
-            @Unbound final String group) {
+            final ActionsManagerDialog parentWindow,
+            final String group) {
         super(parentWindow, ModalityType.DOCUMENT_MODAL);
         LOG.debug("loading with group: " + group);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -131,12 +127,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param action        Action to be edited
      */
     public ActionEditorDialog(
-            @SuppressWarnings("qualifiers") @GlobalConfig final IconManager iconManager,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider config,
+            final IconManager iconManager,
+            final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory,
-            @Unbound final ActionsManagerDialog parentWindow,
-            @Unbound final Action action) {
+            final ActionsManagerDialog parentWindow,
+            final Action action) {
         super(parentWindow, ModalityType.DOCUMENT_MODAL);
         LOG.debug("loading with action: " + action);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
