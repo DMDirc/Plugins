@@ -184,9 +184,6 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
      * @return whether the flavour is supported
      */
     private boolean hasSerialArrayListFlavor(final DataFlavor[] transferFlavors) {
-        if (serialArrayListFlavor == null) {
-            return false;
-        }
         for (DataFlavor transferFlavor : transferFlavors) {
             if (transferFlavor.equals(serialArrayListFlavor)) {
                 return true;

@@ -100,12 +100,12 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
         if (this.addonToggle != null) {
             this.addonToggle.removeListener(this);
         }
-        addonToggle.addListener(this);
         this.addonToggle = addonToggle;
         if (addonToggle == null) {
             description.setText("");
             status.setEnabled(false);
         } else {
+            addonToggle.addListener(this);
             status.setEnabled(true);
             description.setText("<b>" + addonToggle.getName() + "</b> "
                     + addonToggle.getVersion() + " by "

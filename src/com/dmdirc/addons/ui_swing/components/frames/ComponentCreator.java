@@ -82,7 +82,7 @@ public class ComponentCreator {
         for (String string : names) {
             Object object;
             try {
-                Class<?> clazz = null;
+                Class<?> clazz;
                 if (string.equals(WindowComponent.INPUTFIELD.getIdentifier())) {
                     clazz = SwingInputField.class;
                 } else if (string.equals(WindowComponent.TEXTAREA.getIdentifier())) {

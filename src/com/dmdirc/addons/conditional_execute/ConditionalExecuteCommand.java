@@ -237,7 +237,7 @@ public class ConditionalExecuteCommand extends Command {
             } else {
                 // Command to run!
                 if (namespace.canRun(inverse) && origin.isWritable()) {
-                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i++));
+                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i));
                 }
                 return;
             }

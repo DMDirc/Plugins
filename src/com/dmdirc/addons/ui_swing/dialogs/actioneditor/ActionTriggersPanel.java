@@ -287,10 +287,10 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         triggerList.setEnabled(enabled);
         if (enabled) {
             if (triggerGroup.getModel().getSize() > 0) {
-                triggerGroup.setEnabled(enabled);
+                triggerGroup.setEnabled(true);
             }
             if (triggerItem.getModel().getSize() > 0) {
-                triggerItem.setEnabled(enabled);
+                triggerItem.setEnabled(true);
             }
         } else {
             triggerGroup.setEnabled(false);
