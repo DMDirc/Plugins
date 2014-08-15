@@ -25,10 +25,12 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.ClientModule.AddonConfig;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -50,13 +52,15 @@ public class SwingUIInitialiser {
     private final ConfigProvider addonConfig;
     private final DialogKeyListener dialogKeyListener;
     private final DMDircEventQueue eventQueue;
+    private final EventBus eventBus;
 
     @Inject
-    public SwingUIInitialiser(final Apple apple,
+    public SwingUIInitialiser(final EventBus eventBus, final Apple apple,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @AddonConfig final ConfigProvider addonConfig,
             final DialogKeyListener dialogKeyListener,
             final DMDircEventQueue eventQueue) {
+        this.eventBus = eventBus;
         this.apple = apple;
         this.globalConfig = globalConfig;
         this.addonConfig = addonConfig;
@@ -122,7 +126,8 @@ public class SwingUIInitialiser {
                             Font.PLAIN, 12));
                 } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
                         IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                    Logger.userError(ErrorLevel.LOW, "Unable to set UI Settings");
+                    eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                            "Unable to set UI Settings", ""));
                 }
 
                 if ("Metal".equals(UIManager.getLookAndFeel().getName())

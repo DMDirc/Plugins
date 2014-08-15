@@ -26,9 +26,9 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
 
@@ -104,7 +104,8 @@ public class Apple implements InvocationHandler {
                 registerOpenURLCallback();
                 eventBus.register(this);
             } catch (UnsatisfiedLinkError ule) {
-                Logger.appError(ErrorLevel.MEDIUM, "Unable to load JNI library.", ule);
+                eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM,
+                        ule, "Unable to load JNI library", ""));
             }
         }
     }
@@ -135,7 +136,7 @@ public class Apple implements InvocationHandler {
                     : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
         } catch (ReflectiveOperationException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to find OS X classes");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to find OS X classes.", ""));
         }
 
         return null;
