@@ -54,11 +54,9 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
      */
     @Inject
     public CreditsPanel(final URLHandler urlHandler) {
-        super();
-
         this.urlHandler = urlHandler;
 
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 

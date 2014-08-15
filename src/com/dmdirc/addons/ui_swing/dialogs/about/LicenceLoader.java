@@ -24,16 +24,14 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -44,54 +42,42 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Background loader of licences into a list.
  */
 public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
-    /** Tree. */
+    /** Tree to add licenses to. */
     private final JTree tree;
     /** Model to load licences into. */
     private final DefaultTreeModel model;
-    /** Manager to use to get plugin information from */
-    private final PluginManager pluginManager;
+    /** List of plugins to get licenses for. */
+    private final Collection<PluginInfo> plugins;
 
     /**
      * Instantiates a new licence loader.
      *
-     * @param pluginManager to get plugin manager from to get plugin list from to read licenses
-     * @param tree          Tree
-     * @param model         Model to load licences into
+     * @param plugins List of plugins to get licenses from
+     * @param tree    Tree to add licenses to
+     * @param model   Model to load licences into
      */
-    public LicenceLoader(
-            final PluginManager pluginManager,
-            final JTree tree,
+    public LicenceLoader(final Collection<PluginInfo> plugins, final JTree tree,
             final DefaultTreeModel model) {
-        super();
-
-        this.pluginManager = pluginManager;
+        this.plugins = plugins;
         this.tree = tree;
         this.model = model;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IOException on any exception in the background task
-     */
     @Override
     protected Void doInBackground() throws IOException {
         final ResourceManager rm = ResourceManager.getResourceManager();
-        if (rm == null) {
-            Logger.userError(ErrorLevel.LOW, "Unable to load licences, "
-                    + "no resource manager");
-        } else {
-            addCoreLicences(rm);
-            for (PluginInfo pi : pluginManager.getPluginInfos()) {
-                addPluginLicences(pi);
-            }
+        checkNotNull(rm, "Unable to find resource manager");
+        addCoreLicences(rm);
+        for (PluginInfo pi : plugins) {
+            addPluginLicences(pi);
         }
-
         return null;
     }
 
@@ -101,9 +87,9 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
         if (licenceString.length() > 1) {
             final String[] licenceStringParts = licenceString.split(" - ");
             return new Licence(licenceStringParts[1], licenceStringParts[0],
-                    "<html><h1>" + licenceStringParts[1] + "</h1><p>"
-                    + readInputStream(entry.getValue()).replace("\n", "<br>")
-                    + "</p></html>");
+                    "<html><h1>" + licenceStringParts[1] + "</h1><p>" +
+                            readInputStream(entry.getValue()).replace("\n", "<br>") +
+                            "</p></html>");
         } else {
             return null;
         }
@@ -112,8 +98,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     private void addCoreLicences(final ResourceManager rm) {
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode("DMDirc");
         final Map<String, InputStream> licences = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        licences.putAll(rm.getResourcesStartingWithAsInputStreams(
-                "com/dmdirc/licences/"));
+        licences.putAll(rm.getResourcesStartingWithAsInputStreams("com/dmdirc/licences/"));
         addLicensesToNode(licences, root);
     }
 
@@ -147,8 +132,8 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
                 @Override
                 public void run() {
-                    model.insertNodeInto(new DefaultMutableTreeNode(licence),
-                            root, model.getChildCount(root));
+                    model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
+                            model.getChildCount(root));
                 }
             });
         }
@@ -173,13 +158,12 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
      */
     private String readInputStream(final InputStream stream) {
         String line;
-        final BufferedReader input = new BufferedReader(new InputStreamReader(stream));
         final StringBuilder text = new StringBuilder();
 
-        try {
+        try (BufferedReader input = new BufferedReader(new InputStreamReader(stream))) {
             line = input.readLine();
             while (line != null) {
-                text.append(line).append("\n");
+                text.append(line).append('\n');
                 line = input.readLine();
             }
         } catch (IOException ex) {

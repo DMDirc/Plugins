@@ -78,11 +78,9 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     public LicencesPanel(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final PluginManager pluginManager) {
-        super();
-
-        this.config = globalConfig;
+        config = globalConfig;
         initComponents();
-        new LicenceLoader(pluginManager, list, listModel).execute();
+        new LicenceLoader(pluginManager.getPluginInfos(), list, listModel).execute();
         addListeners();
         layoutComponents();
     }
