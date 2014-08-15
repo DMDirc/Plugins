@@ -29,10 +29,12 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.util.collections.ListenerList;
+
+import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,6 +62,8 @@ public class SwingWindowFactory implements FrameListener {
     private final Provider<ActiveFrameManager> activeFrameManager;
     /** Our list of listeners. */
     private final ListenerList listeners = new ListenerList();
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -69,6 +73,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
      * @param channelFrameFactory     The factory to use to produce channel frames.
+     * @param eventBus                The event bus to post errors to
      */
     @Inject
     public SwingWindowFactory(
@@ -76,8 +81,10 @@ public class SwingWindowFactory implements FrameListener {
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
-            final ChannelFrameFactory channelFrameFactory) {
+            final ChannelFrameFactory channelFrameFactory,
+            final EventBus eventBus) {
         this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
 
         registerImplementation(customFrameFactory);
         registerImplementation(customInputFrameFactory);
@@ -131,7 +138,8 @@ public class SwingWindowFactory implements FrameListener {
      */
     protected TextFrame doAddWindow(final FrameContainer window) {
         if (!implementations.containsKey(window.getComponents())) {
-            Logger.userError(ErrorLevel.HIGH, "Unable to create window: Unknown type");
+            eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, null,
+                    "Unable to create window: Unknown type.", ""));
             return null;
         }
 
