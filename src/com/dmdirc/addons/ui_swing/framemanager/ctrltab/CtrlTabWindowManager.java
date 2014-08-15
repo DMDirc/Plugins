@@ -35,10 +35,12 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -57,8 +59,7 @@ import javax.swing.tree.TreeSelectionModel;
  * A Window manager to handle ctrl[+shift]+tab switching between windows.
  */
 @Singleton
-public class CtrlTabWindowManager implements SwingWindowListener,
-        SelectionListener {
+public class CtrlTabWindowManager implements SwingWindowListener, SelectionListener {
 
     /** Node storage, used for adding and deleting nodes correctly. */
     private final Map<Window, TreeViewNode> nodes;
@@ -68,21 +69,26 @@ public class CtrlTabWindowManager implements SwingWindowListener,
     private final TreeScroller treeScroller;
     /** Selection model for the tree scroller. */
     private final TreeSelectionModel selectionModel;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new ctrl tab window manager.
      *
      * @param globalConfig       The configuration to read settings from.
      * @param windowFactory      The window factory to use to create and listen for windows.
-     * @param mainFrame     The main frame that owns this window manager
+     * @param mainFrame          The main frame that owns this window manager
      * @param activeFrameManager Active frame manager.
+     * @param eventBus           The eventBus to post errors to
      */
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
             final ActiveFrameManager activeFrameManager,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            final EventBus eventBus) {
+        this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
@@ -126,8 +132,7 @@ public class CtrlTabWindowManager implements SwingWindowListener,
 
             @Override
             public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window.
-                        getContainer());
+                final TreeViewNode node = new TreeViewNode(null, window.getContainer());
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
@@ -144,15 +149,14 @@ public class CtrlTabWindowManager implements SwingWindowListener,
 
             @Override
             public void run() {
-                if (nodes == null || nodes.get(window) == null) {
+                if (nodes.get(window) == null) {
                     return;
                 }
                 final TreeViewNode node = nodes.get(window);
                 if (node.getLevel() == 0) {
-                    Logger.appError(ErrorLevel.MEDIUM,
-                            "delServer triggered for root node"
-                            + node.toString(),
-                            new IllegalArgumentException());
+                    eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM,
+                            new IllegalArgumentException(),
+                            "delServer triggered for root node" + node.toString(), ""));
                 } else {
                     model.removeNodeFromParent(nodes.get(window));
                 }

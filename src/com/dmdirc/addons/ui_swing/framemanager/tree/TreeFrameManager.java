@@ -31,16 +31,18 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -65,9 +67,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Manages open windows in the application in a tree style view.
  */
-public class TreeFrameManager implements FrameManager,
-        Serializable, ConfigChangeListener, NotificationListener,
-        FrameInfoListener {
+public class TreeFrameManager implements FrameManager, Serializable, ConfigChangeListener,
+        NotificationListener, FrameInfoListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
@@ -89,6 +90,8 @@ public class TreeFrameManager implements FrameManager,
     private final WindowManager windowManager;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of the TreeFrameManager.
@@ -99,6 +102,7 @@ public class TreeFrameManager implements FrameManager,
      * @param activeFrameManager The active window manager
      * @param windowFactory      The factory to use to retrieve swing windows.
      * @param domain             The domain to read settings from.
+     * @param eventBus           The event bus to post errors to
      */
     @Inject
     public TreeFrameManager(
@@ -107,13 +111,15 @@ public class TreeFrameManager implements FrameManager,
             final ColourManager colourManager,
             final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
-            @PluginDomain(SwingController.class) final String domain) {
+            @PluginDomain(SwingController.class) final String domain,
+            final EventBus eventBus) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();
         this.config = globalConfig;
         this.colourManager = colourManager;
         this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
 
         UIUtilities.invokeLater(new Runnable() {
             @Override
@@ -186,15 +192,14 @@ public class TreeFrameManager implements FrameManager,
 
             @Override
             public void run() {
-                if (nodes == null || nodes.get(window.getContainer()) == null) {
+                if (nodes.get(window.getContainer()) == null) {
                     return;
                 }
                 final DefaultMutableTreeNode node = nodes.get(window.getContainer());
                 if (node.getLevel() == 0) {
-                    Logger.appError(ErrorLevel.MEDIUM,
-                            "delServer triggered for root node"
-                            + node.toString(),
-                            new IllegalArgumentException());
+                    eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM,
+                            new IllegalArgumentException(),
+                            "delServer triggered for root node" + node.toString(), ""));
                 } else {
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
@@ -321,8 +326,7 @@ public class TreeFrameManager implements FrameManager,
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, window);
-                    final Collection<FrameContainer> childWindows = window
-                            .getChildren();
+                    final Collection<FrameContainer> childWindows = window.getChildren();
                     for (FrameContainer childWindow : childWindows) {
                         addWindow(nodes.get(window), childWindow);
                     }

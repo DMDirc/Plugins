@@ -34,12 +34,14 @@ import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -67,6 +69,8 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     private final String actionsDirectory;
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Instantiate the wizard.
@@ -77,22 +81,23 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
      * @param pluginExtractor       Plugin extractor to use.
      * @param iconManager           Manager to use to find icons.
      * @param profileDialogProvider Provider to use to obtain PMDs.
+     * @param eventBus              The event bus to post errors to.
      */
     @Inject
-    public SwingFirstRunWizard(
-            @MainWindow final Window parentWindow,
+    public SwingFirstRunWizard(@MainWindow final Window parentWindow,
             @UserConfig final ConfigProvider config,
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
-            final CorePluginExtractor pluginExtractor,
-            @GlobalConfig final IconManager iconManager,
-            final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
+            final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider,
+            final EventBus eventBus) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.actionsDirectory = actionsDirectory;
         this.profileDialogProvider = profileDialogProvider;
+        this.eventBus = eventBus;
 
-        wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(),
-                parentWindow, ModalityType.APPLICATION_MODAL);
+        wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(), parentWindow,
+                ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
         if (Apple.isAppleUI()) {
@@ -147,25 +152,25 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
         for (Entry<String, byte[]> resource : resources.entrySet()) {
             try {
-                final String resourceName = actionsDirectory + resource.getKey()
-                        .substring(27, resource.getKey().length());
-                final File newDir = new File(resourceName.substring(0,
-                        resourceName.lastIndexOf('/')) + "/");
+                final String resourceName = actionsDirectory +
+                        resource.getKey().substring(27, resource.getKey().length());
+                final File newDir =
+                        new File(resourceName.substring(0, resourceName.lastIndexOf('/')) + "/");
 
                 if (!newDir.exists()) {
                     newDir.mkdirs();
                 }
 
-                final File newFile = new File(newDir,
-                        resourceName.substring(resourceName.lastIndexOf('/') + 1,
-                                resourceName.length()));
+                final File newFile = new File(newDir, resourceName
+                        .substring(resourceName.lastIndexOf('/') + 1, resourceName.length()));
 
                 if (!newFile.isDirectory()) {
                     ResourceManager.getResourceManager().
                             resourceToFile(resource.getValue(), newFile);
                 }
             } catch (IOException ex) {
-                Logger.userError(ErrorLevel.LOW, "Failed to extract actions");
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                        "Failed to extract actions", ""));
             }
         }
     }
