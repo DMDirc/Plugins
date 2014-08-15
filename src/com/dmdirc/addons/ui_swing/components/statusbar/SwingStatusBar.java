@@ -24,9 +24,9 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.StatusMessage;
+
+import com.google.common.base.Preconditions;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -47,14 +47,12 @@ public class SwingStatusBar extends JPanel implements StatusBar {
     private static final long serialVersionUID = 5;
     /** Mig layout component restraints. */
     private final String componentConstraints;
-    /** Height for the status bar. */
-    private final int height;
     /** message label. */
     private final MessageLabel messageLabel;
     /** error panel. */
-    private final ErrorPanel errorPanel;
+    private final ErrorPanel errorLabel;
     /** update label. */
-    private final UpdaterLabel updateLabel;
+    private final UpdaterLabel updaterLabel;
     /** Invite label. */
     private final InviteLabel inviteLabel;
 
@@ -73,23 +71,23 @@ public class SwingStatusBar extends JPanel implements StatusBar {
             final MessageLabel messageLabel) {
         checkOnEDT();
 
-        height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
+        final int height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue()
                 + (int) PlatformDefaults.getUnitValueX("related").getValue();
         componentConstraints = "sgy components, hmax " + height + ", hmin " + height
                 + ", wmin 20, shrink 0";
 
+        this.errorLabel = errorLabel;
+        this.updaterLabel = updaterLabel;
         this.messageLabel = messageLabel;
-        this.errorPanel = errorLabel;
-        this.updateLabel = updaterLabel;
         this.inviteLabel = inviteLabel;
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3"));
 
         add(messageLabel, "grow, push, sgy components, hmax " + height
                 + ", hmin " + height);
-        add(updateLabel, componentConstraints);
-        add(errorPanel, componentConstraints);
+        add(updaterLabel, componentConstraints);
+        add(errorLabel, componentConstraints);
         add(inviteLabel, componentConstraints);
     }
 
@@ -105,24 +103,20 @@ public class SwingStatusBar extends JPanel implements StatusBar {
 
     @Override
     public void addComponent(final StatusBarComponent component) {
-        if (!(component instanceof Component)) {
-            Logger.appError(ErrorLevel.HIGH, "Error adding status bar component",
-                    new IllegalArgumentException("Component must be an "
-                            + "instance of java.awt.component"));
-            return;
-        }
+        Preconditions.checkArgument(component instanceof Component,
+                "Error removing status bar component");
         if (!Arrays.asList(getComponents()).contains(component)) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
-                    remove(updateLabel);
-                    remove(errorPanel);
+                    remove(updaterLabel);
+                    remove(errorLabel);
                     remove(inviteLabel);
                     add((Component) component, componentConstraints);
-                    add(updateLabel, componentConstraints);
+                    add(updaterLabel, componentConstraints);
                     add(inviteLabel, componentConstraints);
-                    add(errorPanel, componentConstraints);
+                    add(errorLabel, componentConstraints);
                     validate();
                 }
             });
@@ -131,12 +125,8 @@ public class SwingStatusBar extends JPanel implements StatusBar {
 
     @Override
     public void removeComponent(final StatusBarComponent component) {
-        if (!(component instanceof Component)) {
-            Logger.appError(ErrorLevel.HIGH, "Error removing status bar "
-                    + "component", new IllegalArgumentException("Component "
-                            + "must be an instance of java.awt.component"));
-            return;
-        }
+        Preconditions.checkArgument(component instanceof Component,
+                "Error removing status bar component");
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -145,16 +135,6 @@ public class SwingStatusBar extends JPanel implements StatusBar {
                 validate();
             }
         });
-    }
-
-    /**
-     * Returns the message label for this status bar. This is intended to be used for advanced
-     * plugins that wish to do compliated things with messages.
-     *
-     * @return Message label component
-     */
-    public MessageLabel getMessageComponent() {
-        return messageLabel;
     }
 
 }
