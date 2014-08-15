@@ -29,8 +29,6 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 
@@ -59,7 +57,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
      * @param commandController The controller to use to retrieve command information.
      * @param commandParser     The command parser to use for this text field.
      * @param parentWindow      The window that owns this input handler
-     * @param eventBus          The event bus to use to despatch input events.
+     * @param eventBus          The event bus to use to dispatch input events.
      */
     public SwingInputHandler(
             final ServiceManager serviceManager,
@@ -73,7 +71,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addUpHandler() {
-        JTextComponent localTarget;
+        final JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
@@ -103,7 +101,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addDownHandler() {
-        JTextComponent localTarget;
+        final JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
@@ -162,6 +160,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     @Override
                     protected void done() {
                         localTarget.setEditable(true);
+                        super.done();
                     }
                 }.execute();
             }
@@ -185,6 +184,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                             @Override
                             protected void done() {
                                 localTarget.setEditable(true);
+                                super.done();
                             }
                         }.execute();
                     }
@@ -198,7 +198,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
     @Override
     protected void addEnterHandler() {
-        JTextComponent localTarget;
+        final JTextComponent localTarget;
         if (target instanceof JTextComponent) {
             localTarget = (JTextComponent) target;
         } else if (target instanceof SwingInputField) {
@@ -226,10 +226,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                         } else if (e.getSource() instanceof JTextField) {
                             source = (JTextField) e.getSource();
                         } else {
-                            Logger.appError(ErrorLevel.HIGH, "Unable to send "
-                                    + "line", new IllegalArgumentException(
-                                            "Event is not from known source."));
-                            return;
+                            throw new IllegalArgumentException(
+                                            "Event is not from known source.");
                         }
                         if (source.isEditable()) {
                             new LoggingSwingWorker<Object, Void>() {
@@ -255,21 +253,11 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         target.addKeyListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyTyped(final KeyEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyPressed(final KeyEvent e) {
         if (e.getKeyCode() != KeyEvent.VK_TAB && e.getKeyCode()
@@ -284,11 +272,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyReleased(final KeyEvent e) {
         validateText();

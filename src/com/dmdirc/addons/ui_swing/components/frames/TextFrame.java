@@ -124,7 +124,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      * @param commandParser The command parser to use for this frame.
      * @param deps          Collection of TextPane dependencies.
      */
-    public TextFrame(
+    protected TextFrame(
             final FrameContainer owner,
             final CommandParser commandParser,
             final TextFrameDependencies deps) {

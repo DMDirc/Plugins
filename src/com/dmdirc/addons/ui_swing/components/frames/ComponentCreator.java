@@ -26,8 +26,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.textpane.TextPane;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.SimpleInjector;
 import com.dmdirc.util.URLBuilder;
@@ -82,7 +82,7 @@ public class ComponentCreator {
         for (String string : names) {
             Object object;
             try {
-                Class<?> clazz;
+                final Class<?> clazz;
                 if (string.equals(WindowComponent.INPUTFIELD.getIdentifier())) {
                     clazz = SwingInputField.class;
                 } else if (string.equals(WindowComponent.TEXTAREA.getIdentifier())) {
@@ -93,7 +93,8 @@ public class ComponentCreator {
                 object = injector.createInstance(clazz);
             } catch (ClassNotFoundException | IllegalArgumentException ex) {
                 object = null;
-                Logger.userError(ErrorLevel.HIGH, "Unable to create component: " + ex.getMessage());
+                eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                        "Unable to create component: " + ex.getMessage(), ""));
             }
             if (object instanceof JComponent) {
                 components.add((JComponent) object);
