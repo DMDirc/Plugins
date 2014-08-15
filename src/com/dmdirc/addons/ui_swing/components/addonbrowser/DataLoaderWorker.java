@@ -33,7 +33,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
-import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
@@ -59,7 +58,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Loads the addon data feed into the addon browser.
  */
-@Factory(inject = true)
 public class DataLoaderWorker
         extends LoggingSwingWorker<Collection<AddonInfo>, Object>
         implements DownloadListener {
