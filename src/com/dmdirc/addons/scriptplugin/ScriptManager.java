@@ -23,8 +23,10 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,12 +48,16 @@ public class ScriptManager {
     private final String scriptDirectory;
     /** Store Script State Name,Engine */
     private final Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
+    /** The event bus to post events to. */
+    private final EventBus eventBus;
 
     @Inject
     public ScriptManager(final ScriptEngineManager scriptEngineManager,
-            @Directory(ScriptModule.SCRIPTS) final String scriptDirectory) {
+            @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
+            final EventBus eventBus) {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -96,11 +102,11 @@ public class ScriptManager {
         if (!scripts.containsKey(scriptFilename)) {
             try {
                 final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(scriptEngineManager,
-                        scriptFilename);
+                        eventBus, scriptFilename);
                 scripts.put(scriptFilename, wrapper);
             } catch (FileNotFoundException | ScriptException e) {
-                Logger.userError(ErrorLevel.LOW, "Error loading '" + scriptFilename + "': " + e.
-                        getMessage(), e);
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                        "Error loading '" + scriptFilename + "': " + e.getMessage(), ""));
                 return false;
             }
         }

@@ -22,10 +22,11 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,6 +43,8 @@ import javax.script.ScriptException;
  */
 public class ScriptEngineWrapper {
 
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
     /** The File this script is from */
@@ -55,14 +58,17 @@ public class ScriptEngineWrapper {
      * Create a new ScriptEngineWrapper
      *
      * @param scriptEngineManager Manager to get script engines
+     * @param eventBus            The event bus to post errors to
      * @param filename            Filename of script
      *
      * @throws java.io.FileNotFoundException If file is not found
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
-            final String filename) throws FileNotFoundException, ScriptException {
+            final EventBus eventBus, final String filename)
+            throws FileNotFoundException, ScriptException {
         Preconditions.checkNotNull(filename, "File cannot be null");
+        this.eventBus = eventBus;
         this.scriptEngineManager = scriptEngineManager;
         file = new File(filename);
 
@@ -136,8 +142,9 @@ public class ScriptEngineWrapper {
             // and do nothing rather that add an error every time a method is called
             // that doesn't exist (such as the action_* methods)
         } catch (ScriptException e) {
-            Logger.userError(ErrorLevel.LOW, "Error calling '" + functionName + "' in '" + file.
-                    getPath() + "': " + e.getMessage(), e);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                    "Error calling '" + functionName + "' in '" + file.getPath() + "': " +
+                            e.getMessage(), ""));
         }
     }
 
@@ -156,8 +163,8 @@ public class ScriptEngineWrapper {
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
         } catch (ScriptException e) {
-            Logger.userError(ErrorLevel.LOW, "Reloading '" + file.getPath() + "' failed: " + e.
-                    getMessage(), e);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                    "Reloading '" + file.getPath() + "' failed: " + e.getMessage(), ""));
             // Tell it that its rehash failed
             callFunction("onRehashFailed", e);
             return false;
