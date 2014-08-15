@@ -22,9 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -34,7 +31,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
  */
 public class StringTransferable implements Transferable {
 
-    /** Local tranfer flavour. */
+    /** Local transfer flavour. */
     private DataFlavor localStringFlavor;
     /** Serial transfer flavour. */
     private final DataFlavor serialStringFlavor;
@@ -47,15 +44,13 @@ public class StringTransferable implements Transferable {
      * @param data String to transfer
      */
     public StringTransferable(final String data) {
-        super();
-
         this.data = data;
 
         try {
             localStringFlavor = new DataFlavor(
                     DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String");
         } catch (ClassNotFoundException e) {
-            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " + e.getMessage());
+            //This class will always exist
         }
         serialStringFlavor = new DataFlavor(String.class, "String");
     }
@@ -70,11 +65,6 @@ public class StringTransferable implements Transferable {
         return localStringFlavor.equals(flavor) || serialStringFlavor.equals(flavor);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return String to transfer
-     */
     @Override
     public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
         if (!isDataFlavorSupported(flavor)) {
