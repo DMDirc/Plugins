@@ -162,7 +162,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
             licence.setText("<b>Name:</b> DMDirc<br>"
                     + "<b>Version:</b> " + config
                     .getOption("version", "version") + "<br>"
-                    + "<b>Desciption:</b> The intelligent IRC client");
+                    + "<b>Description:</b> The intelligent IRC client");
         }
         UIUtilities.resetScrollPane(scrollPane);
     }

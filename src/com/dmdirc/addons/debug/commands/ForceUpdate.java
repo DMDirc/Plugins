@@ -87,7 +87,7 @@ public class ForceUpdate extends DebugCommand {
             UpdateChecker.checkNow(updateManager, identityController, "Forced update checker");
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "
-                    + "currenty disabled.  You can enable it by typing:");
+                    + "currently disabled.  You can enable it by typing:");
             sendLine(origin, args.isSilent(), FORMAT_ERROR, Styliser.CODE_FIXED
                     + "    /set updater enable true");
         }

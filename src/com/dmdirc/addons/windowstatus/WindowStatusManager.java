@@ -139,7 +139,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         if (current == null) {
             return;
         }
-        final StringBuffer textString = new StringBuffer();
+        final StringBuilder textString = new StringBuilder();
 
         if (current instanceof Connection) {
             textString.append(((Connection) current).getAddress());
@@ -172,7 +172,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
                 Integer count = types.get(im);
 
                 if (count == null) {
-                    count = Integer.valueOf(1);
+                    count = 1;
                 } else {
                     count++;
                 }

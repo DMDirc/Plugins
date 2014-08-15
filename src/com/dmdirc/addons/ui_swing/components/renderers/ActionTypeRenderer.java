@@ -40,7 +40,7 @@ public final class ActionTypeRenderer extends DMDircListCellRenderer<Object> {
     /**
      * Creates a new instance of this renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param renderer Parent renderer
      */
     public ActionTypeRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);

@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_web;
 
 /**
- * Details an event that occured.
+ * Details an event that occurred.
  */
 public class Event {
 

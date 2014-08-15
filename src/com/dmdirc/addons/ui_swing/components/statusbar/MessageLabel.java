@@ -61,11 +61,11 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     private final StatusMessage defaultMessage;
     /** Message queue. */
     private final Queue<StatusMessage> queue;
-    /** Messsage label. */
+    /** Message label. */
     private final JLabel label;
     /** History label. */
     private final MessagePopup historyLabel;
-    /** Current status messsage. */
+    /** Current status message. */
     private StatusMessage currentMessage;
     /** Timer to clear the message. */
     private transient TimerTask messageTimer;
@@ -109,7 +109,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         queue.add(message);
         LOG.debug("Queue size: {}", queue.size());
         if (queue.size() == 1) {
-            LOG.info("Showing only messsage {}", message);
+            LOG.info("Showing only message {}", message);
             currentMessage = message;
             updateCurrentMessage();
         }

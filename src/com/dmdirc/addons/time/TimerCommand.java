@@ -46,7 +46,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("timer",
             "timer [--list|--cancel <timer id> | <repetitions> <interval> "
-            + "<command>] - lists all active timers / cancells an active timer "
+            + "<command>] - lists all active timers / cancels an active timer "
             + "of given ID / schedules a command to be executed after a certain "
             + "time",
             CommandType.TYPE_GLOBAL);

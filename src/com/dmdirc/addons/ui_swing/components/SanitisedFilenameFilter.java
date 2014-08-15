@@ -39,9 +39,7 @@ public class SanitisedFilenameFilter extends DocumentFilter {
             final int offset, final String string, final AttributeSet attr)
             throws BadLocationException {
 
-        if (string == null || string.isEmpty()) {
-            return;
-        } else {
+        if (string != null && !string.isEmpty()) {
             replace(fb, offset, string.length(), string, attr);
         }
     }

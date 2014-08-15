@@ -65,7 +65,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     private TitlePanel titleLabel;
     /** Current step. */
     private int currentStep;
-    /** Prevous step button. */
+    /** Previous step button. */
     private JButton prev;
     /** Next step button. */
     private JButton next;
@@ -305,7 +305,7 @@ public class WizardPanel extends JPanel implements ActionListener {
     /**
      * Fires step hidden events.
      *
-     * @param step step thats been hidden
+     * @param step step that's been hidden
      */
     private void fireStepHidden(final Step step) {
         for (StepListener listener : stepListeners.get(StepListener.class)) {

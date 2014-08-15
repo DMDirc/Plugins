@@ -126,8 +126,8 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
         addIndex = index;
         addCount = transferList.size();
 
-        for (int i = 0; i < transferList.size(); i++) {
-            listModel.add(index++, transferList.get(i));
+        for (T aTransferList : transferList) {
+            listModel.add(index++, aTransferList);
         }
 
         return true;

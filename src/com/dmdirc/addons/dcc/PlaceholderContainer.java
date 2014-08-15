@@ -51,7 +51,7 @@ public class PlaceholderContainer extends FrameContainer {
      * @param config       Config manager
      * @param parentWindow Window that will parent new dialogs.
      * @param urlBuilder   The URL builder to use when finding icons.
-     * @param eventBus     The bus to despatch events on.
+     * @param eventBus     The bus to dispatch events on.
      */
     public PlaceholderContainer(
             final DCCManager plugin,

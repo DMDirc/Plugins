@@ -45,7 +45,7 @@ public class EtchedLineBorder extends EtchedBorder {
         /** Creates a border at the bottom. */
         BOTTOM,
 
-    };
+    }
 
     /**
      * Creates a new etched line border.

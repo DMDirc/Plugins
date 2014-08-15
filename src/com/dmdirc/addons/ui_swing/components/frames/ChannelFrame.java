@@ -70,7 +70,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private NickList nicklist;
     /** Topic bar. */
     private TopicBar topicBar;
-    /** Event bus to despatch events on. */
+    /** Event bus to dispatch events on. */
     private final EventBus eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;

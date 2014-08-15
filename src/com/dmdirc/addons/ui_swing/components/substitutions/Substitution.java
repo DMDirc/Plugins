@@ -29,7 +29,7 @@ public final class Substitution {
 
     /** Substitution name. */
     private final String name;
-    /** Subsitution value. */
+    /** Substitution value. */
     private final String value;
 
     /**

@@ -41,7 +41,7 @@ public final class AudioPlayer implements Runnable {
     /** The AudioType enum */
     public static enum AudioType {
 
-        WAV, INVALID;
+        WAV, INVALID
 
     }
     /** The file object of the file to play */

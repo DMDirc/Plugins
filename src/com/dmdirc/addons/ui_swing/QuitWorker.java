@@ -46,7 +46,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     private final ServerManager serverManager;
     /** The main frame to interact with. */
     private final MainFrame mainFrame;
-    /** Bus to despatch events on. */
+    /** Bus to dispatch events on. */
     private final EventBus eventBus;
 
     /**
@@ -55,7 +55,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
      * @param identityController The identity controller to use to read/write settings.
      * @param serverManager      The server manager to use to disconnect all servers.
      * @param mainFrame          The main frame to interact with.
-     * @param eventBus           Bus to despatch events on.
+     * @param eventBus           Bus to dispatch events on.
      */
     @Inject
     public QuitWorker(

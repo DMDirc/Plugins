@@ -38,7 +38,7 @@ public class ListModeCellRenderer extends DMDircListCellRenderer<ChannelListMode
     /**
      * Creates a new instance of this renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param renderer Parent renderer
      */
     public ListModeCellRenderer(final ListCellRenderer<? super ChannelListModeItem> renderer) {
         super(renderer);

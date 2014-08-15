@@ -34,25 +34,25 @@ import javax.swing.SwingUtilities;
 /**
  * URL Substitutions panel.
  */
-public class URLSubsitutionsPanel extends SubstitutionsPanel<List<String>> {
+public class URLSubstitutionsPanel extends SubstitutionsPanel<List<String>> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     /**
-     * Instantiates a new URL subsitutiuons panel.
+     * Instantiates a new URL substitutions panel.
      */
-    public URLSubsitutionsPanel() {
+    public URLSubstitutionsPanel() {
         super("Substitutions may be used as part of the launch command",
                 SubstitutionsPanel.Alignment.VERTICAL, null);
     }
 
     /**
-     * Instantiates a new URL subsitutiuons panel.
+     * Instantiates a new URL substitutions panel.
      *
      * @param subs list of substitutions.
      */
-    public URLSubsitutionsPanel(final List<String> subs) {
+    public URLSubstitutionsPanel(final List<String> subs) {
         super("Substitutions may be used as part of the launch command", subs);
     }
 

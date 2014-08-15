@@ -98,7 +98,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     }
 
     /**
-     * Checks the first index of the speficied option.
+     * Checks the first index of the specified option.
      *
      * @param object Object to check the index of
      *
@@ -109,7 +109,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     }
 
     /**
-     * Checks the last index of the speficied option.
+     * Checks the last index of the specified option.
      *
      * @param object Object to check the index of
      *
@@ -171,11 +171,11 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public boolean remove(final T obj) {
         final int index = indexOf(obj);
-        final boolean succes = list.remove(obj);
+        final boolean success = list.remove(obj);
         if (index >= 0) {
             fireIntervalRemoved(this, index, index);
         }
-        return succes;
+        return success;
     }
 
     /**

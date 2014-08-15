@@ -42,7 +42,7 @@ public class LagDisplayPanel extends StatusbarPopupPanel<JLabel> {
     private final ServerInfoDialogFactory dialogFactory;
 
     /**
-     * Creates a new instace of {@link LagDisplayPanel}.
+     * Creates a new instance of {@link LagDisplayPanel}.
      *
      * @param dialogFactory The factory to use to create dialogs.
      */

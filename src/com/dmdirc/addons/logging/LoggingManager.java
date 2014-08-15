@@ -128,13 +128,9 @@ public class LoggingManager implements ConfigChangeListener {
     private int backbufferLines;
 
     @Inject
-    public LoggingManager(
-            @PluginDomain(LoggingPlugin.class) final String domain,
-            final ActionController actionController,
+    public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final WindowManager windowManager,
-            final URLBuilder urlBuilder,
-            final EventBus eventBus,
+            final WindowManager windowManager, final URLBuilder urlBuilder, final EventBus eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
         this.domain = domain;
         this.config = globalConfig;
@@ -477,7 +473,7 @@ public class LoggingManager implements ConfigChangeListener {
      * @return true on success, else false.
      */
     protected boolean appendLine(final String filename, final String line) {
-        final StringBuffer finalLine = new StringBuffer();
+        final StringBuilder finalLine = new StringBuilder();
 
         if (addtime) {
             String dateString;

@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandparser.aliases.Alias;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
@@ -56,10 +55,8 @@ public class AliasManagerDialog extends StandardDialog {
     private static final long serialVersionUID = 1;
 
     @Inject
-    public AliasManagerDialog(@MainWindow final Window mainFrame,
-            final AliasDialogModel model,
-            @GlobalConfig final IconManager iconManager,
-            final CommandController commandController) {
+    public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
+            @GlobalConfig final IconManager iconManager) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
         setTitle("Alias Manager");

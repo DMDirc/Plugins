@@ -70,7 +70,6 @@ public class Input extends Command implements IntelligentCommand {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "input",
                     "[--clear] <text to insert into inputfield");
-            return;
         } else if (args.getArguments().length == 1
                 && "--clear".equals(args.getArgumentsAsString(0))) {
             ((InputWindow) windowFactory.getSwingWindow(origin))

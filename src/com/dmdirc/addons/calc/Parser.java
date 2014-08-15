@@ -30,12 +30,12 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The parser takes the output from a {@link Lexer} and applies precdence rules to build the tokens
+ * The parser takes the output from a {@link Lexer} and applies precedence rules to build the tokens
  * into a tree.
  */
 public class Parser {
 
-    /** A list of token types sorted by their precendece. */
+    /** A list of token types sorted by their precedence. */
     protected static final List<TokenType> TOKENS_BY_PRECEDENCE;
     /** The lexer whose output will be parsed. */
     protected final Lexer lexer;
@@ -234,7 +234,7 @@ public class Parser {
     }
 
     /**
-     * A class which compares token types based on their precendence.
+     * A class which compares token types based on their precedence.
      */
     protected static class TokenTypePrecedenceComparator implements
             Comparator<TokenType> {

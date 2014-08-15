@@ -74,13 +74,13 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final Window mainWindow;
     /** Window management. */
     private final WindowManager windowManager;
-    /** The sink manager to use to despatch messages. */
+    /** The sink manager to use to dispatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
-    /** The bus to despatch events on. */
+    /** The bus to dispatch events on. */
     private final EventBus eventBus;
 
     /**
@@ -89,11 +89,11 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param controller          The controller to use for command information.
      * @param mainWindow          The main client window, to use as a parent for dialogs.
      * @param plugin              The DCC Plugin that this command belongs to
-     * @param messageSinkManager  The sink manager to use to despatch messages.
+     * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param windowManager       Window management
      * @param tabCompleterFactory The factory to use for tab completers.
      * @param urlBuilder          The URL builder to use when finding icons.
-     * @param eventBus            The bus to despatch events on.
+     * @param eventBus            The bus to dispatch events on.
      */
     @Inject
     public DCCCommand(

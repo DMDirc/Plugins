@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.IconManager;
@@ -54,10 +53,8 @@ public class NewServerDialog extends StandardDialog {
     private static final long serialVersionUID = 1;
 
     @Inject
-    public NewServerDialog(@MainWindow final Window mainFrame,
-            final NewServerDialogModel model,
+    public NewServerDialog(@MainWindow final Window mainFrame, final NewServerDialogModel model,
             @GlobalConfig final IconManager iconManager,
-            final CommandController commandController,
             final DialogProvider<ProfileManagerDialog> profileManagerDialog) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final NewServerLinker linker = new NewServerLinker(model, this);

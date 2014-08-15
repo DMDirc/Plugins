@@ -79,7 +79,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     private final AggregateConfigProvider config;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
-    /** The bus to despatch events on. */
+    /** The bus to dispatch events on. */
     private final EventBus eventBus;
 
     /**
@@ -89,7 +89,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      * @param config            Config to read settings from
      * @param pluginManager     to retrieve tab completers with
      * @param commandController The controller to use to retrieve command information.
-     * @param eventBus          The bus to despatch events on.
+     * @param eventBus          The bus to dispatch events on.
      * @param newParent         The frame that owns this dialog
      * @param text              text to show in the paste dialog
      * @param parentWindow      Parent window

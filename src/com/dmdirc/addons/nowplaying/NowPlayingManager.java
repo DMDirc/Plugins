@@ -23,11 +23,9 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -60,11 +58,8 @@ public class NowPlayingManager {
     private List<String> order;
 
     @Inject
-    public NowPlayingManager(
-            final PluginManager pluginManager,
-            final EventBus eventBus,
+    public NowPlayingManager(final PluginManager pluginManager, final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            @UserConfig final ConfigProvider userConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain) {
         this.pluginManager = pluginManager;
         this.globalConfig = globalConfig;
@@ -191,7 +186,7 @@ public class NowPlayingManager {
      * Retrieves the "best" source to use for displaying media information. The best source is
      * defined as the earliest in the list that is running and not paused, or, if no such source
      * exists, the earliest in the list that is running and paused. If neither condition is
-     * satisified returns null.
+     * satisfied returns null.
      *
      * @return The best source to use for media info
      */

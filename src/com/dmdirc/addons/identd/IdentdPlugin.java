@@ -122,7 +122,7 @@ public class IdentdPlugin extends BasePlugin {
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 domain, "advanced.useCustomSystem", "Use custom OS",
                 "By default the plugin uses 'UNIX' or 'WIN32' as the system "
-                + "type, this can be overriden by enabling this.",
+                + "type, this can be overridden by enabling this.",
                 manager.getConfigManager(), manager.getIdentity()));
         advanced.addSetting(new PreferencesSetting(PreferencesType.TEXT,
                 domain, "advanced.customSystem", "Custom OS to use",

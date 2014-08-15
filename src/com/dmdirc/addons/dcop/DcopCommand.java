@@ -42,7 +42,7 @@ public class DcopCommand extends Command {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("dcop",
-            "dcop <app> <object> <function> - retrieves information from a DCOP aplication",
+            "dcop <app> <object> <function> - retrieves information from a DCOP application",
             CommandType.TYPE_SERVER);
     /** The executor to use to run queries. */
     private final DcopExecutor executor;

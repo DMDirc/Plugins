@@ -34,6 +34,6 @@ public enum MouseEventType {
     /** Mouse dragged. */
     DRAG,
     /** Mouse released. */
-    RELEASED;
+    RELEASED
 
 }

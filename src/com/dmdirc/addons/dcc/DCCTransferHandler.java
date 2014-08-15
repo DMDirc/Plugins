@@ -46,11 +46,11 @@ public interface DCCTransferHandler {
     void socketOpened(final DCCTransfer dcc);
 
     /**
-     * Called when data is sent/recieved.
+     * Called when data is sent/relieved.
      *
      * @param dcc   The DCCTransfer that this message is from
-     * @param bytes The number of new bytes that were transfered
+     * @param bytes The number of new bytes that were transferred
      */
-    void dataTransfered(final DCCTransfer dcc, final int bytes);
+    void dataTransferred(final DCCTransfer dcc, final int bytes);
 
 }

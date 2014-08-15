@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.addons.ui_swing.dialogs.url.URLSubsitutionsPanel;
+import com.dmdirc.addons.ui_swing.dialogs.url.URLSubstitutionsPanel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -81,7 +81,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
     /** example label. */
     private JLabel exampleLabel;
     /** Substitutions panel. */
-    private URLSubsitutionsPanel subsPanel;
+    private URLSubstitutionsPanel subsPanel;
 
     /**
      * Instantiates the URLDialog.
@@ -130,7 +130,7 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         optionType.add(mail);
         optionType.add(custom);
 
-        subsPanel = new URLSubsitutionsPanel(Arrays.asList(new String[]{
+        subsPanel = new URLSubstitutionsPanel(Arrays.asList(new String[]{
             "url",
             "fragment", "host", "path", "port", "query", "protocol",
             "username",

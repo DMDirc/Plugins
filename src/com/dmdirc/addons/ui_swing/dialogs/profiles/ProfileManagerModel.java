@@ -496,7 +496,7 @@ public class ProfileManagerModel {
      * @return Passes if the nicknames list is non empty
      */
     public Validator<List<String>> getNicknamesValidator() {
-        return new ListNotEmptyValidator<String>();
+        return new ListNotEmptyValidator<>();
     }
 
     /**

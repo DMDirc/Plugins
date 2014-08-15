@@ -64,7 +64,7 @@ public abstract class DCC implements Runnable {
      * from the {@link #serverListeningSem}, then it is <em>guaranteed</em> that the {@link #run()}
      * method is blocking waiting for incoming connections. In addition, it is <em>guaranteed</em>
      * that the {@link #run()} method is holding the {@link #serverSocketSem} permit, and it will
-     * continue holding that permit until it can reaquire the {@link #serverListeningSem} permit.
+     * continue holding that permit until it can reacquire the {@link #serverListeningSem} permit.
      */
     private final Semaphore serverListeningSem = new Semaphore(0);
 
@@ -234,7 +234,7 @@ public abstract class DCC implements Runnable {
     /**
      * Check if this socket can be written to.
      *
-     * @return True if the socket is writable, false otehrwise
+     * @return True if the socket is writable, false otherwise
      */
     public boolean isWriteable() {
         return false;

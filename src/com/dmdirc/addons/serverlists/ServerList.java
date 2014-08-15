@@ -107,7 +107,7 @@ public class ServerList implements ConfigProviderListener {
      *
      * @throws IOException if the new identity cannot be written
      */
-    public void addServerGroup(final ServerGroup group) throws IOException {
+    public void addServerGroup(final ServerGroup group) {
         final ServerGroupWriter writer = new ServerGroupWriter(
                 identityFactory.createCustomConfig(group.getName(), "servergroup"));
         group.setModified(true);

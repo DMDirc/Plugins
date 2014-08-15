@@ -45,7 +45,7 @@ public class HistoryWindow extends FrameContainer {
      * @param reader     The reader to use to get the history
      * @param parent     The window this history window was opened from
      * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to despatch events on.
+     * @param eventBus   The bus to dispatch events on.
      * @param numLines   The number of lines to show
      */
     public HistoryWindow(

@@ -24,12 +24,10 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -73,9 +71,7 @@ public class NickColourManager implements ConfigChangeListener {
     @Inject
     public NickColourManager(final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
-            @UserConfig final ConfigProvider userConfig,
-            final EventBus eventBus) {
+            @GlobalConfig final AggregateConfigProvider globalConfig, final EventBus eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
@@ -264,7 +260,8 @@ public class NickColourManager implements ConfigChangeListener {
         settext = globalConfig.getOptionBool(domain, "settext");
         setnicklist = globalConfig.getOptionBool(domain, "setnicklist");
         if (globalConfig.hasOptionString(domain, "randomcolours")) {
-            randColours = globalConfig.getOptionList(domain, "randomcolours").toArray(new String[0]);
+            final List<String> list = globalConfig.getOptionList(domain, "randomcolours");
+            randColours = list.toArray(new String[list.size()]);
         }
     }
 

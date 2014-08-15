@@ -39,14 +39,14 @@ import javax.inject.Provider;
  */
 public class FirstRun extends DebugCommand {
 
-    /** Eventbus to trigger first run event on. */
+    /** Event bus to trigger first run event on. */
     private final EventBus eventBus;
 
     /**
      * Creates a new instance of the command.
      *
      * @param commandProvider The provider to use to access the main debug command.
-     * @param eventBus        Eventbus to trigger first run event on.
+     * @param eventBus        Event bus to trigger first run event on.
      */
     @Inject
     public FirstRun(final Provider<Debug> commandProvider, final EventBus eventBus) {

@@ -53,7 +53,7 @@ import javax.swing.text.JTextComponent;
 @Singleton
 public class DMDircEventQueue extends EventQueue {
 
-    /** Event bus to despatch events to. */
+    /** Event bus to dispatch events to. */
     private final EventBus eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;

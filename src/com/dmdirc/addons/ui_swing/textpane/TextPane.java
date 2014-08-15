@@ -278,7 +278,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @return Selected text
      */
     public String getSelectedText(final boolean styled) {
-        final StringBuffer selectedText = new StringBuffer();
+        final StringBuilder selectedText = new StringBuilder();
         final LinePosition selectedRange = canvas.getSelectedRange();
 
         if (selectedRange.getStartLine() == -1) {

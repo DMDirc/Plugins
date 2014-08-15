@@ -28,7 +28,7 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 import dagger.ObjectGraph;
 
 /**
- * The redirect plugin allows the suer to redirect the output of commands that would normally echo
+ * The redirect plugin allows the user to redirect the output of commands that would normally echo
  * their results locally to a channel or chat window instead.
  */
 public class RedirectPlugin extends BaseCommandPlugin {

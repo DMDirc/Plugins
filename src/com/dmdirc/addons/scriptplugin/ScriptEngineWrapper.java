@@ -106,7 +106,7 @@ public class ScriptEngineWrapper {
      * @throws java.io.FileNotFoundException If file is not found
      * @throws javax.script.ScriptException  If there was an error during creation
      */
-    protected ScriptEngine createEngine() throws FileNotFoundException, ScriptException {
+    protected ScriptEngine createEngine() throws ScriptException {
         final ScriptEngine result = scriptEngineManager.getEngineByName("JavaScript");
         try (FileReader fr = new FileReader(file)) {
             result.eval(fr);
@@ -155,7 +155,7 @@ public class ScriptEngineWrapper {
             engine = createEngine();
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
-        } catch (FileNotFoundException | ScriptException e) {
+        } catch (ScriptException e) {
             Logger.userError(ErrorLevel.LOW, "Reloading '" + file.getPath() + "' failed: " + e.
                     getMessage(), e);
             // Tell it that its rehash failed

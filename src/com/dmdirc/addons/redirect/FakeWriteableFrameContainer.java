@@ -45,8 +45,8 @@ public class FakeWriteableFrameContainer extends FrameContainer {
      * Creates a new instance of FakeInputWindow.
      *
      * @param target             The message target that output gets sent to
-     * @param messageSinkManager The sink manager to use to despatch messages.
-     * @param eventBus           The bus to despatch events on.
+     * @param messageSinkManager The sink manager to use to dispatch messages.
+     * @param eventBus           The bus to dispatch events on.
      * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
