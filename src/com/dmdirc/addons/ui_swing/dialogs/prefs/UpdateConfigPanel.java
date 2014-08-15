@@ -26,15 +26,17 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.prefs.PreferencesInterface;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,8 +66,6 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private JScrollPane scrollPane;
     /** Component table model. */
     private UpdateTableModel tableModel;
-    /** Component table. */
-    private PackingTable table;
     /** Check now button. */
     private JButton checkNow;
     /** Update channel. */
@@ -78,6 +78,8 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private final CachingUpdateManager updateManager;
     /** Controller to pass to the update checker. */
     private final IdentityController identityController;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new update config panel.
@@ -86,17 +88,20 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
      * @param globalConfig       The configuration to read global settings from.
      * @param updateManager      The manager to read update information from.
      * @param identityController Controller to pass to the update checker.
+     * @param eventBus           The event bus to post the errors to
      */
     @Inject
     public UpdateConfigPanel(
             @UserConfig final ConfigProvider userConfig,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CachingUpdateManager updateManager,
-            final IdentityController identityController) {
+            final IdentityController identityController,
+            final EventBus eventBus) {
         this.userConfig = userConfig;
         this.globalConfig = globalConfig;
         this.updateManager = updateManager;
         this.identityController = identityController;
+        this.eventBus = eventBus;
 
         initComponents();
         addListeners();
@@ -126,7 +131,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
         tableModel = new UpdateTableModel(updateManager, updateManager.getComponents());
-        table = new PackingTable(tableModel, scrollPane);
+        final PackingTable table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
         checkNow.setEnabled(globalConfig.getOptionBool("updater", "enable"));
         updateChannel = new JComboBox<>(new DefaultComboBoxModel<>(UpdateChannel.values()));
@@ -136,8 +141,8 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         try {
             channel = UpdateChannel.valueOf(globalConfig.getOption("updater", "channel"));
         } catch (IllegalArgumentException e) {
-            Logger.userError(ErrorLevel.LOW, "Invalid setting for update "
-                    + "channel, defaulting to none.");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                    "Invalid setting for update channel, defaulting to none.", ""));
         }
         updateChannel.setSelectedItem(channel);
         scrollPane.setViewportView(table);

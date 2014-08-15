@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Component;
 import java.awt.Font;
 import java.util.HashMap;
@@ -48,18 +50,22 @@ public class PreferencesListCellRenderer extends JLabel implements
     private final IconManager iconManager;
     /** Label map. */
     private final Map<PreferencesCategory, JLabel> labelMap;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new prefs list cell renderer.
      *
      * @param iconManager Icon manager to load icons
+     * @param eventBus    The event bus to post errors to
      * @param numCats     Number of categories in the list
      */
-    public PreferencesListCellRenderer(final IconManager iconManager,
+    public PreferencesListCellRenderer(final IconManager iconManager, final EventBus eventBus,
             final int numCats) {
         labelMap = new HashMap<>();
         this.numCats = numCats;
         this.iconManager = iconManager;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -67,7 +73,7 @@ public class PreferencesListCellRenderer extends JLabel implements
             final PreferencesCategory value, final int index, final boolean isSelected,
             final boolean cellHasFocus) {
         if (!labelMap.containsKey(value)) {
-            labelMap.put(value, new CategoryLabel(iconManager,
+            labelMap.put(value, new CategoryLabel(iconManager, eventBus,
                     list, value, numCats, index));
         }
         final JLabel label = labelMap.get(value);

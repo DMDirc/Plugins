@@ -30,8 +30,10 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -67,20 +69,23 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     private final PreferencesCategory category;
     /** Prefs component factory instance. */
     private final PrefsComponentFactory factory;
+    /** The event bus to post the errors to. */
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new preferences category loader.
      *
      * @param factory       Prefs component factory instance
+     * @param eventBus      The event bus to post errors ro
      * @param categoryPanel Parent Category panel
      * @param category      Preferences Category to load
      */
     public PrefsCategoryLoader(final PrefsComponentFactory factory,
+            final EventBus eventBus,
             final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
-        super();
-
         this.factory = factory;
+        this.eventBus = eventBus;
         this.categoryPanel = categoryPanel;
         this.category = category;
 
@@ -119,7 +124,8 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         } catch (InterruptedException ex) {
             panel = errorCategory;
         } catch (ExecutionException ex) {
-            Logger.appError(ErrorLevel.MEDIUM, "Error loading prefs panel", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+                    "Error loading prefs panel", ""));
             panel = errorCategory;
         }
         return panel;
@@ -275,7 +281,6 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      *
      * @since 0.6.3m1
      * @param category   The category to be added
-     * @param namePrefix Category name prefix
      */
     private JPanel addCategory(final PreferencesCategory category) {
         final JPanel panel = UIUtilities.invokeAndWait(
