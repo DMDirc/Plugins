@@ -33,9 +33,11 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -76,14 +78,14 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private PreferencesDialogModel manager;
     /** Manager loading swing worker. */
     private final LoggingSwingWorker<PreferencesDialogModel, Void> worker;
-    /** Panel size. */
-    private int panelSize = 500;
     /** The provider to use for restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
     /** The provider to use to produce a category panel. */
     private final Provider<CategoryPanel> categoryPanelProvider;
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -93,6 +95,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * @param restartDialogProvider The provider to use for restart dialogs.
      * @param dialogModelProvider   The provider to use to get a dialog model.
      * @param categoryPanelProvider The provider to use to produce a category panel.
+     * @param eventBus              The event bus to post errors to.
      */
     @Inject
     public SwingPreferencesDialog(
@@ -100,12 +103,14 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             @GlobalConfig final IconManager iconManager,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
-            final Provider<CategoryPanel> categoryPanelProvider) {
+            final Provider<CategoryPanel> categoryPanelProvider,
+            final EventBus eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.iconManager = iconManager;
         this.restartDialogProvider = restartDialogProvider;
         this.categoryPanelProvider = categoryPanelProvider;
+        this.eventBus = eventBus;
 
         initComponents();
 
@@ -119,8 +124,8 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     prefsManager = dialogModelProvider.get();
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
-                    Logger.appError(ErrorLevel.HIGH, "Unable to load the" + "preferences dialog.",
-                            ex);
+                    eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                            "Unable to load the preferences dialog", ""));
                 }
                 return prefsManager;
             }
@@ -136,7 +141,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     } catch (InterruptedException ex) {
                         //Ignore
                     } catch (ExecutionException ex) {
-                        Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
+                        eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
                     }
                 }
             }
@@ -151,7 +156,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         mainPanel.setCategory(null);
 
         final int count = countCategories(manager.getCategories());
-        tabList.setCellRenderer(new PreferencesListCellRenderer(iconManager, count));
+        tabList.setCellRenderer(new PreferencesListCellRenderer(iconManager, eventBus, count));
 
         addCategories(manager.getCategories());
     }
@@ -282,20 +287,9 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             final int index = tabList.getSelectedIndex();
             tabList.scrollRectToVisible(tabList.getCellBounds(index, index));
             selected = node;
-            if (selected != null) {
-                selected.fireCategorySelected();
-            }
+            selected.fireCategorySelected();
             mainPanel.setCategory(selected);
         }
-    }
-
-    /**
-     * Returns the selected category.
-     *
-     * @return Selected category
-     */
-    protected PreferencesCategory getSelectedCategory() {
-        return selected;
     }
 
     public void saveOptions() {
@@ -305,28 +299,10 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         }
     }
 
-    /**
-     * Gets the maximum panel size.
-     *
-     * @return Max panel size
-     */
-    public int getPanelHeight() {
-        return panelSize;
-    }
-
-    /**
-     * Sets the panel size to the specified value.
-     *
-     * @param panelSize New panel size
-     */
-    protected void setPanelHeight(final int panelSize) {
-        this.panelSize = panelSize;
-    }
-
     @Override
     public void dispose() {
         synchronized (SwingPreferencesDialog.this) {
-            if (worker != null && !worker.isDone()) {
+            if (!worker.isDone()) {
                 worker.cancel(true);
             }
             if (manager != null) {

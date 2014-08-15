@@ -32,6 +32,8 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Component;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,35 +75,41 @@ public class CategoryPanel extends JPanel {
     private LoggingSwingWorker<JPanel, Object> worker;
     /** Prefs component factory. */
     private final PrefsComponentFactory factory;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new category panel.
      *
+     * @param eventBus    The event bus to post errors to
      * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
      */
     @Inject
     public CategoryPanel(
+            final EventBus eventBus,
             final PrefsComponentFactory factory,
             @GlobalConfig final IconManager iconManager) {
-        this(factory, iconManager, null);
+        this(eventBus, factory, iconManager, null);
     }
 
     /**
      * Instantiates a new category panel.
      *
+     * @param eventBus    The event bus to post errors to
      * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
      * @param category    Initial category
      */
-    public CategoryPanel(final PrefsComponentFactory factory,
+    public CategoryPanel(
+            final EventBus eventBus, final PrefsComponentFactory factory,
             final IconManager iconManager,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
         this.factory = factory;
+        this.eventBus = eventBus;
 
-        panels = Collections.synchronizedMap(
-                new HashMap<PreferencesCategory, JPanel>());
+        panels = Collections.synchronizedMap(new HashMap<PreferencesCategory, JPanel>());
 
         loading = new JPanel(new MigLayout("fillx"));
         loading.add(new TextLabel("Loading..."));
@@ -214,7 +222,7 @@ public class CategoryPanel extends JPanel {
                 }
             });
 
-            worker = new PrefsCategoryLoader(factory, this, category);
+            worker = new PrefsCategoryLoader(factory, eventBus, this, category);
             worker.execute();
         } else {
             categoryLoaded(category);

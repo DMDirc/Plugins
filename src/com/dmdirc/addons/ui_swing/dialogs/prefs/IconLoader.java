@@ -23,9 +23,11 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.IconManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +40,8 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
 
     /** Category this icon will be used for. */
     private final CategoryLabel label;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /** Icon to load. */
     private final String icon;
     /** Icon manager. */
@@ -48,14 +52,14 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
      * loaded in the background.
      *
      * @param iconManager Icon manager
+     * @param eventBus    The event bus to post errors to
      * @param label       Label to load category for
-     * @param icon        Icon to load1111
+     * @param icon        Icon to load
      */
-    public IconLoader(final IconManager iconManager,
+    public IconLoader(final IconManager iconManager, final EventBus eventBus,
             final CategoryLabel label, final String icon) {
-        super();
-
         this.iconManager = iconManager;
+        this.eventBus = eventBus;
         this.label = label;
         this.icon = icon;
     }
@@ -72,7 +76,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            Logger.appError(ErrorLevel.LOW, ex.getMessage(), ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex, ex.getMessage(), ""));
         }
 
     }

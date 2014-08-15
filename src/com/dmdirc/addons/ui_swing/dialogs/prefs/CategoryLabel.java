@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Dimension;
 
 import javax.annotation.Nullable;
@@ -43,8 +45,6 @@ public class CategoryLabel extends JLabel {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -1659415238166842265L;
-    /** Panel gap. */
-    private final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
     /** Parent list. */
     @Nullable
     private final JList<? extends PreferencesCategory> parentList;
@@ -59,15 +59,15 @@ public class CategoryLabel extends JLabel {
      * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
+            final EventBus eventBus,
             @Nullable final JList<? extends PreferencesCategory> parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {
-        super();
-
         this.parentList = parentList;
+        final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
 
         setText(category.getTitle());
-        new IconLoader(iconManager, this, category.getIcon()).execute();
+        new IconLoader(iconManager, eventBus, this, category.getIcon()).execute();
 
         int level = 0;
         PreferencesCategory temp = category;
@@ -80,8 +80,11 @@ public class CategoryLabel extends JLabel {
                 + padding));
         setBorder(BorderFactory.createEmptyBorder(padding / 2, padding + level
                 * 18, padding / 2, padding));
-        setBackground(parentList.getBackground());
-        setForeground(parentList.getForeground());
+
+        if (parentList != null) {
+            setBackground(parentList.getBackground());
+            setForeground(parentList.getForeground());
+        }
         setOpaque(true);
         setToolTipText(null);
 
@@ -105,11 +108,6 @@ public class CategoryLabel extends JLabel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param icon New icon
-     */
     @Override
     public void setIcon(final Icon icon) {
         super.setIcon(icon);
