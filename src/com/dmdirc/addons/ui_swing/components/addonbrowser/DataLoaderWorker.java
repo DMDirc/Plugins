@@ -28,9 +28,9 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.annotations.factory.Unbound;
@@ -38,6 +38,8 @@ import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,6 +86,8 @@ public class DataLoaderWorker
     private final AggregateConfigProvider globalConfig;
     /** Downloader to download files. */
     private final Downloader downloader;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new data loader worker.
@@ -94,6 +98,7 @@ public class DataLoaderWorker
      * @param workerFactory Factory to use to produce install workers.
      * @param updateManager Manager to use to retrieve update information.
      * @param tempDirectory The directory to store temporary items in, such as the addons feed.
+     * @param eventBus      The event bus to post errors to
      * @param table         Table to load data into
      * @param download      Download new addons feed?
      * @param browserWindow Browser window to pass to table objects
@@ -106,6 +111,7 @@ public class DataLoaderWorker
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            final EventBus eventBus,
             @Unbound final AddonTable table,
             @Unbound final boolean download,
             @Unbound final BrowserWindow browserWindow,
@@ -120,6 +126,7 @@ public class DataLoaderWorker
         this.tempDirectory = tempDirectory;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -140,7 +147,7 @@ public class DataLoaderWorker
                         tempDirectory + "addons.feed", this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
-                loadingPanel.add(new TextLabel("Unable to download feeds."));
+                loadingPanel.add(new TextLabel("Unable to download feeds: " + ex.getMessage()));
                 return Collections.<AddonInfo>emptyList();
             }
         }
@@ -173,7 +180,7 @@ public class DataLoaderWorker
         } catch (final InterruptedException ex) {
             data = Collections.<AddonInfo>emptyList();
         } catch (final ExecutionException ex) {
-            Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
             data = Collections.<AddonInfo>emptyList();
         }
         final int selectedRow;

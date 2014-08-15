@@ -29,6 +29,8 @@ import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.Downloader;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Inject;
 import javax.swing.JScrollPane;
 
@@ -43,6 +45,7 @@ public class DataLoaderWorkerFactory {
     private final InstallWorkerFactory workerFactory;
     private final UpdateManager updateManager;
     private final String tempDirectory;
+    private final EventBus eventBus;
 
     @Inject
     public DataLoaderWorkerFactory(final Downloader downloader,
@@ -50,6 +53,7 @@ public class DataLoaderWorkerFactory {
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
+            final EventBus eventBus,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory) {
         this.downloader = downloader;
         this.globalConfig = globalConfig;
@@ -57,10 +61,11 @@ public class DataLoaderWorkerFactory {
         this.workerFactory = workerFactory;
         this.updateManager = updateManager;
         this.tempDirectory = tempDirectory;
+        this.eventBus = eventBus;
     }
     public DataLoaderWorker getDataLoaderWorker(final AddonTable list, final boolean download,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         return new DataLoaderWorker(downloader, globalConfig, urlBuilder, workerFactory,
-                updateManager, tempDirectory, list, download, browserWindow, scrollPane);
+                updateManager, tempDirectory, eventBus, list, download, browserWindow, scrollPane);
     }
 }
