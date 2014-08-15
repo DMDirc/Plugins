@@ -69,8 +69,6 @@ public final class InfoPanel extends JPanel {
             final SwingController controller,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
-        super();
-
         this.controller = controller;
         this.globalConfig = globalConfig;
         this.baseDirectory = baseDirectory;
@@ -93,7 +91,7 @@ public final class InfoPanel extends JPanel {
                 + "<b>Mode Aliases version: </b>"
                 + globalConfig.getOption("identity", "modealiasversion")
                 + "<br>"
-                + "<b>Swing UI version: </b>" + controller.getVersion().toString() + "<br>"
+                + "<b>Swing UI version: </b>" + controller.getVersion() + "<br>"
                 + "<b>OS Version: </b>" + ClientInfo.getOperatingSystemInformation() + "<br>"
                 + "<b>Profile directory: </b>" + baseDirectory + "<br>"
                 + "<b>Java version: </b>" + ClientInfo.getJavaInformation() + "<br>"

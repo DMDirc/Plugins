@@ -50,7 +50,7 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
     /** Credits panel. */
     private CreditsPanel cp;
     /** Tab history. */
-    private int history = 0;
+    private int history;
 
     /**
      * Creates a new instance of AboutDialog.

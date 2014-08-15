@@ -51,11 +51,8 @@ public final class AboutPanel extends JPanel implements HyperlinkListener {
      */
     @Inject
     public AboutPanel(final URLHandler urlHandler) {
-        super();
-
         this.urlHandler = urlHandler;
-
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 
