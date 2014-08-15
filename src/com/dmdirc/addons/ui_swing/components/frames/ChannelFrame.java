@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
@@ -39,9 +38,6 @@ import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
-import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -60,7 +56,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The channel frame is the GUI component that represents a channel to the user.
  */
-@Factory(inject = true, singleton = true, providers = true)
 public final class ChannelFrame extends InputTextFrame implements ActionListener {
 
     /** A version number for this class. */
@@ -99,13 +94,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * @param dialogProvider     The dialog provider to get the channel settings dialog from.
      */
     public ChannelFrame(
-            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
+            final String domain,
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
             final TopicBarFactory topicBarFactory,
-            @Unbound final Channel owner) {
+            final Channel owner) {
         super(deps, inputFieldProvider, owner);
 
         this.eventBus = deps.eventBus;

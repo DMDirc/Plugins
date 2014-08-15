@@ -35,8 +35,6 @@ import com.dmdirc.tls.CertificateManager;
 import com.dmdirc.tls.CertificateProblemListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -54,7 +52,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
-@Factory(inject = true, singleton = true, providers = true)
 public final class ServerFrame extends InputTextFrame implements
         ActionListener, CertificateProblemListener {
 
@@ -85,7 +82,7 @@ public final class ServerFrame extends InputTextFrame implements
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
-            @Unbound final Connection owner) {
+            final Connection owner) {
         super(deps, inputFieldProvider, owner.getWindowModel());
         this.mainWindow = deps.mainWindow;
         this.iconManager = deps.iconManager;

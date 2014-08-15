@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import javax.inject.Provider;
 import javax.swing.JPopupMenu;
@@ -36,7 +34,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A custom frame that includes an input field (for use with writable containers).
  */
-@Factory(inject = true, singleton = true, providers = true)
 public class CustomInputFrame extends InputTextFrame {
 
     /** A version number for this class. */
@@ -52,7 +49,7 @@ public class CustomInputFrame extends InputTextFrame {
     public CustomInputFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
-            @Unbound final FrameContainer owner) {
+            final FrameContainer owner) {
         super(deps, inputFieldProvider, owner);
 
         initComponents();

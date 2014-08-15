@@ -27,8 +27,6 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.util.URLBuilder;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import com.google.common.eventbus.EventBus;
 
@@ -40,7 +38,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A very basic frame that adds components from a frame container.
  */
-@Factory(inject = true, singleton = true)
 public class ComponentFrame extends TextFrame {
 
     /** A version number for this class. */
@@ -67,8 +64,8 @@ public class ComponentFrame extends TextFrame {
             final EventBus eventBus,
             final TextFrameDependencies deps,
             final URLBuilder urlBuilder,
-            @Unbound final FrameContainer owner,
-            @Unbound final CommandParser commandParser) {
+            final FrameContainer owner,
+            final CommandParser commandParser) {
         super(owner, commandParser, deps);
         this.eventBus = eventBus;
         this.controller = deps.controller;
