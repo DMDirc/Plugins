@@ -33,11 +33,11 @@ import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.messages.ColourManager;
@@ -109,20 +109,20 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      * @param inputFieldProvider The provider to use to create a new input field.
      * @param owner              WritableFrameContainer owning this frame.
      */
-    public InputTextFrame(
+    protected InputTextFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final FrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
-        this.config = owner.getConfigManager();
-        this.colourManager = new ColourManager(config);
-        this.parentWindow = deps.mainWindow;
-        this.pluginManager = deps.pluginManager;
-        this.pasteDialogFactory = deps.pasteDialog;
-        this.clipboard = deps.clipboard;
-        this.commandController = deps.commandController;
-        this.eventBus = deps.eventBus;
+        config = owner.getConfigManager();
+        colourManager = new ColourManager(config);
+        parentWindow = deps.mainWindow;
+        pluginManager = deps.pluginManager;
+        pasteDialogFactory = deps.pasteDialog;
+        clipboard = deps.clipboard;
+        commandController = deps.commandController;
+        eventBus = deps.eventBus;
 
         initComponents(inputFieldProvider);
 
@@ -233,11 +233,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         return inputField;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
         if (mouseEvent.getSource() == getTextPane()) {
@@ -245,51 +240,26 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent mouseEvent) {
         processMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         processMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent mouseEvent) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent mouseEvent) {
         //Ignore
     }
 
-    /**
-     * Processes every mouse button event to check for a popup trigger.
-     *
-     * @param e mouse event
-     */
     @Override
     public void processMouseEvent(final MouseEvent e) {
         if (e.isPopupTrigger() && e.getSource() == getInputField()) {
@@ -312,7 +282,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 return;
             }
         } catch (final IllegalStateException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to paste from clipboard.");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unable to past from clipboard.", ""));
             return;
         }
 
@@ -322,10 +293,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             doPaste((String) Toolkit.getDefaultToolkit()
                     .getSystemClipboard().getData(DataFlavor.stringFlavor));
         } catch (final IOException ex) {
-            Logger.userError(ErrorLevel.LOW,
-                    "Unable to get clipboard contents: " + ex.getMessage());
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
         } catch (final UnsupportedFlavorException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unsupported clipboard type", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unsupported clipboard type", ""));
         }
     }
 
@@ -406,6 +378,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                                     config.getOptionString(
                                             "ui", "inputforegroundcolour",
                                             "ui", "foregroundcolour"), null)));
+                    break;
+                default:
+                    //Do nothing
                     break;
             }
         }
