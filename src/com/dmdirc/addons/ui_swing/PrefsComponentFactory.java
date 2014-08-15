@@ -39,6 +39,8 @@ import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.util.validators.Validator;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -75,19 +77,24 @@ public final class PrefsComponentFactory {
     private final IconManager iconManager;
     /** The colour manager to use for colour preferences. */
     private final ColourManager colourManager;
+    /** The global event bus. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of PrefsComponentFactory.
      *
+     * @param eventBus      The global event bus.
      * @param iconManager   The icon manager to use for dialog and error icons.
      * @param colourManager The colour manager to use for colour preferences.
      */
     @Inject
     public PrefsComponentFactory(
+            final EventBus eventBus,
             @GlobalConfig final IconManager iconManager,
             final ColourManager colourManager) {
         this.iconManager = iconManager;
         this.colourManager = colourManager;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -100,7 +107,7 @@ public final class PrefsComponentFactory {
      * @return An appropriate JComponent descendant
      */
     public JComponent getComponent(final PreferencesSetting setting) {
-        JComponent option;
+        final JComponent option;
 
         switch (setting.getType()) {
             case TEXT:
@@ -160,7 +167,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getTextOption(final PreferencesSetting setting) {
         final ValidatingJTextField option = new ValidatingJTextField(
@@ -182,7 +189,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getBooleanOption(
             final PreferencesSetting setting) {
@@ -206,7 +213,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getComboOption(final PreferencesSetting setting) {
         final JComboBox<Object> option = new JComboBox<>(setting.getComboOptions().entrySet().
@@ -227,7 +234,7 @@ public final class PrefsComponentFactory {
             @Override
             @SuppressWarnings("unchecked")
             public void actionPerformed(final ActionEvent e) {
-                final Object selected = ((JComboBox) e.getSource())
+                final Object selected = ((JComboBox<?>) e.getSource())
                         .getSelectedItem();
                 if (selected != null) {
                     setting.setValue(((Map.Entry<String, String>) selected).getKey());
@@ -243,7 +250,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getIntegerOption(
             final PreferencesSetting setting) {
@@ -289,7 +296,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getOptionalIntegerOption(
             final PreferencesSetting setting) {
@@ -343,7 +350,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getDurationOption(
             final PreferencesSetting setting) {
@@ -371,7 +378,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getColourOption(
             final PreferencesSetting setting) {
@@ -382,9 +389,8 @@ public final class PrefsComponentFactory {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final OptionalColourChooser chooser = ((OptionalColourChooser) e.getSource());
-                setting.setValue(chooser.isEnabled() + ":"
-                        + chooser.getColour());
+                final OptionalColourChooser chooser = (OptionalColourChooser) e.getSource();
+                setting.setValue(chooser.isEnabled() + ":" + chooser.getColour());
             }
         });
 
@@ -396,7 +402,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getOptionalColourOption(
             final PreferencesSetting setting) {
@@ -426,12 +432,12 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getFontOption(final PreferencesSetting setting) {
         final String value = setting.getValue();
 
-        final FontPicker option = new FontPicker(value);
+        final FontPicker option = new FontPicker(eventBus, value);
 
         option.addActionListener(new ActionListener() {
 
@@ -454,9 +460,9 @@ public final class PrefsComponentFactory {
      * Initialises and returns a FileBrowser for the specified setting.
      *
      * @param setting The setting to create the component for
-     * @param type    The type of filechooser we want (Files/Directories/Both)
+     * @param type    The type of file chooser we want (Files/Directories/Both)
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private JComponent getFileBrowseOption(
             final PreferencesSetting setting, final int type) {
@@ -486,7 +492,7 @@ public final class PrefsComponentFactory {
      *
      * @param setting The setting to create the component for
      *
-     * @return A JComponent descendent for the specified setting
+     * @return A JComponent descendant for the specified setting
      */
     private static JComponent getLabelOption(final PreferencesSetting setting) {
         final JPanel panel = new JPanel(new MigLayout("fill"));

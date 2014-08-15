@@ -23,8 +23,10 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -49,7 +51,7 @@ public class FontPicker extends JComboBox<Object> {
      *
      * @param fontFamily Font family
      */
-    public FontPicker(final String fontFamily) {
+    public FontPicker(final EventBus eventBus, final String fontFamily) {
         super(new DefaultComboBoxModel<>());
         this.fontFamily = fontFamily;
 
@@ -69,7 +71,7 @@ public class FontPicker extends JComboBox<Object> {
                 } catch (InterruptedException ex) {
                     //Ignore
                 } catch (ExecutionException ex) {
-                    Logger.appError(ErrorLevel.MEDIUM, ex.getMessage(), ex);
+                    eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
                 }
             }
         }.execute();
@@ -80,7 +82,7 @@ public class FontPicker extends JComboBox<Object> {
      *
      * @param fonts Fonts to load
      */
-    private void loadFonts(final String[] fonts) {
+    private void loadFonts(final String... fonts) {
         final int size = getFont().getSize();
         for (final String font : fonts) {
             SwingUtilities.invokeLater(new Runnable() {
