@@ -29,10 +29,12 @@ import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.util.collections.ListenerList;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -57,21 +59,23 @@ public class ServerListModel {
     private final ServerManager serverManager;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new server list model.
      *
+     * @param eventBus           The event bus to post errors to
      * @param serverManager      ServerManager currently in use.
      * @param identityController The controller to read/write settings with.
      * @param serverList         The server list to use for the top-level entries.
      */
     @Inject
-    public ServerListModel(
-            final ServerManager serverManager,
-            final IdentityController identityController,
-            final ServerList serverList) {
+    public ServerListModel(final EventBus eventBus, final ServerManager serverManager,
+            final IdentityController identityController, final ServerList serverList) {
         this.serverManager = serverManager;
         this.identityController = identityController;
+        this.eventBus = eventBus;
         list = serverList;
         listeners = new ListenerList();
     }
@@ -82,8 +86,7 @@ public class ServerListModel {
      * @return Populated tree model
      */
     public DefaultTreeModel getTreeModel() {
-        return populateModel(new DefaultTreeModel(
-                new DefaultMutableTreeNode("All Servers")));
+        return populateModel(new DefaultTreeModel(new DefaultMutableTreeNode("All Servers")));
     }
 
     /**
@@ -104,12 +107,10 @@ public class ServerListModel {
      */
     public DefaultTreeModel populateModel(final DefaultTreeModel model) {
         for (ServerGroup group : list.getServerGroups()) {
-            final DefaultMutableTreeNode child = new DefaultMutableTreeNode(
-                    group);
-            model.insertNodeInto(child, (DefaultMutableTreeNode) model
-                    .getRoot(), model.getChildCount(model.getRoot()));
-            model.nodeStructureChanged((DefaultMutableTreeNode) model
-                    .getRoot());
+            final DefaultMutableTreeNode child = new DefaultMutableTreeNode(group);
+            model.insertNodeInto(child, (DefaultMutableTreeNode) model.getRoot(),
+                    model.getChildCount(model.getRoot()));
+            model.nodeStructureChanged((DefaultMutableTreeNode) model.getRoot());
             addGroups(model, child, group.getItems());
         }
         return model;
@@ -122,12 +123,10 @@ public class ServerListModel {
      * @param parent Parent node to populate
      * @param items  Items to add to parent node
      */
-    private void addGroups(final DefaultTreeModel model,
-            final DefaultMutableTreeNode parent,
+    private void addGroups(final DefaultTreeModel model, final DefaultMutableTreeNode parent,
             final List<ServerGroupItem> items) {
         for (ServerGroupItem group : items) {
-            final DefaultMutableTreeNode child = new DefaultMutableTreeNode(
-                    group);
+            final DefaultMutableTreeNode child = new DefaultMutableTreeNode(group);
             model.insertNodeInto(child, parent, model.getChildCount(parent));
             if (group instanceof ServerGroup) {
                 addGroups(model, child, ((ServerGroup) group).getItems());
@@ -151,8 +150,7 @@ public class ServerListModel {
      */
     public void setSelectedItem(final ServerGroupItem item) {
         activeItem = item;
-        for (ServerListListener listener : listeners.get(
-                ServerListListener.class)) {
+        for (ServerListListener listener : listeners.get(ServerListListener.class)) {
             listener.serverGroupChanged(item);
         }
     }
@@ -165,10 +163,9 @@ public class ServerListModel {
     public PerformDescription getSelectedItemPerformDescription() {
         PerformDescription perform;
         if (activeItem instanceof ServerEntry) {
-            perform = new PerformDescription(PerformType.SERVER, activeItem
-                    .getName());
-        } else if (activeItem instanceof ServerGroup
-                && ((ServerGroup) activeItem).getNetwork() != null) {
+            perform = new PerformDescription(PerformType.SERVER, activeItem.getName());
+        } else if (activeItem instanceof ServerGroup &&
+                ((ServerGroup) activeItem).getNetwork() != null) {
             perform = new PerformDescription(PerformType.NETWORK,
                     ((ServerGroup) activeItem).getNetwork());
         } else {
@@ -192,8 +189,7 @@ public class ServerListModel {
      * @param save Do we need to save changes
      */
     public void dialogClosed(final boolean save) {
-        for (ServerListListener listener : listeners.get(
-                ServerListListener.class)) {
+        for (ServerListListener listener : listeners.get(ServerListListener.class)) {
             listener.dialogClosed(save);
         }
     }
@@ -205,8 +201,8 @@ public class ServerListModel {
      * @param groupName   Group name (not null or empty)
      * @param networkName Network name (may be null or empty)
      */
-    public void addGroup(final ServerGroup parentGroup,
-            final String groupName, final String networkName) {
+    public void addGroup(final ServerGroup parentGroup, final String groupName,
+            final String networkName) {
         final ServerGroup sg = new ServerGroup(identityController, groupName);
         if (networkName != null && !networkName.isEmpty()) {
             sg.setNetwork(networkName);
@@ -217,12 +213,11 @@ public class ServerListModel {
             } else {
                 parentGroup.addItem(sg);
             }
-            for (ServerListListener listener : listeners.get(
-                    ServerListListener.class)) {
+            for (ServerListListener listener : listeners.get(ServerListListener.class)) {
                 listener.serverGroupAdded(parentGroup, sg);
             }
         } catch (final IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to create group", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to create group", ""));
         }
     }
 
@@ -233,13 +228,12 @@ public class ServerListModel {
      * @param entryName   name (not null or empty)
      * @param url         Valid URI
      */
-    public void addEntry(final ServerGroup parentGroup, final String entryName,
-            final URI url) {
-        final ServerGroupItem sg = new ServerEntry(identityController,
-                serverManager, parentGroup, entryName, url, null);
+    public void addEntry(final ServerGroup parentGroup, final String entryName, final URI url) {
+        final ServerGroupItem sg =
+                new ServerEntry(identityController, serverManager, parentGroup, entryName, url,
+                        null);
         parentGroup.addItem(sg);
-        for (ServerListListener listener : listeners.get(
-                ServerListListener.class)) {
+        for (ServerListListener listener : listeners.get(ServerListListener.class)) {
             listener.serverGroupAdded(parentGroup, sg);
         }
     }
