@@ -63,6 +63,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -79,7 +80,7 @@ public class DCCManager {
     private PlaceholderContainer container;
     /** Config manager to read settings from. */
     private final AggregateConfigProvider config;
-    /** The sink manager to use to despatch messages. */
+    /** The sink manager to use to dispatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** Window Management. */
     private final WindowManager windowManager;
@@ -93,7 +94,7 @@ public class DCCManager {
     private final String domain;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
-    /** The bus to despatch events on. */
+    /** The bus to dispatch events on. */
     private final EventBus eventBus;
 
     /**
@@ -104,13 +105,13 @@ public class DCCManager {
      * @param identityController    The Identity controller that provides the current config
      * @param globalConfig          The configuration to read settings from.
      * @param commandController     Command controller to register commands
-     * @param messageSinkManager    The sink manager to use to despatch messages.
+     * @param messageSinkManager    The sink manager to use to dispatch messages.
      * @param windowManager         Window Management
      * @param tabCompleterFactory   The factory to use for tab completers.
      * @param windowFactory         The window factory to register the DCC implementations with.
      * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
      * @param urlBuilder            The URL builder to use when finding icons.
-     * @param eventBus              The bus to despatch events on.
+     * @param eventBus              The bus to dispatch events on.
      * @param commandParser         The command parser to use for DCC windows.
      * @param baseDirectory         The directory to create a downloads directory within.
      */
@@ -141,19 +142,29 @@ public class DCCManager {
         this.eventBus = eventBus;
 
         windowFactory.registerImplementation(
-                new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel")),
                 new SwingWindowFactory.WindowProvider() {
                     @Override
                     public TextFrame getWindow(final FrameContainer container) {
                         return componentFrameFactory.getComponentFrame(container, commandParser);
                     }
+
+                    @Override
+                    public Set<String> getComponents() {
+                        return new HashSet<>(Arrays.asList(
+                                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
+                    }
                 });
         windowFactory.registerImplementation(
-                new HashSet<>(Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel")),
                 new SwingWindowFactory.WindowProvider() {
                     @Override
                     public TextFrame getWindow(final FrameContainer container) {
                         return componentFrameFactory.getComponentFrame(container, commandParser);
+                    }
+
+                    @Override
+                    public Set<String> getComponents() {
+                        return new HashSet<>(Arrays.asList(
+                                "com.dmdirc.addons.dcc.ui.TransferPanel"));
                     }
                 });
 
@@ -497,9 +508,8 @@ public class DCCManager {
         }
 
         if (DCCTransfer.findByToken(token) == null && !dontAsk) {
-            if (!token.isEmpty() && !port.equals("0")) {
-                // This is a reverse DCC Send that we no longer care about.
-            } else {
+            if (token.isEmpty() || port.equals("0")) {
+                // Make sure this is not a reverse DCC Send that we no longer care about.
                 eventBus.post(new DccSendRequestEvent(connection, nickname, filename));
                 new SendRequestDialog(mainWindow, this, token, ipLong, portInt, filename, size,
                         nickname, connection).display();
@@ -518,13 +528,9 @@ public class DCCManager {
             return;
         }
         send.setAddress(ip, port);
-        if (newSend) {
-            send.setFileName(filename);
-            send.setFileSize(size);
-            saveFile(nickname, send, parser, port == 0, token);
-        } else {
-            send.connect();
-        }
+        send.setFileName(filename);
+        send.setFileSize(size);
+        saveFile(nickname, send, parser, port == 0, token);
     }
 
     /**

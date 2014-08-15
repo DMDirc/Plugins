@@ -23,27 +23,21 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Topic;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
-import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import com.google.common.base.Optional;
 
@@ -74,7 +68,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Component to show and edit topics for a channel.
  */
-@Factory(inject = true, singleton = true)
 public class TopicBar extends JComponent implements ActionListener, ConfigChangeListener,
         MouseListener, DocumentListener, TopicChangeListener {
 
@@ -96,8 +89,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     private final int topicLengthMax;
     /** The config domain to read settings from. */
     private final String domain;
-    /** Clipboard to copy and paste from. */
-    private final Clipboard clipboard;
     /** Empty Attribute set. */
     private SimpleAttributeSet as;
     /** Foreground Colour. */
@@ -128,21 +119,20 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param iconManager       The icon manager to use for this bar's icons.
      */
     public TopicBar(
-            @SuppressWarnings("qualifiers") @MainWindow final Window parentWindow,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
-            @SuppressWarnings("qualifiers") @PluginDomain(SwingController.class) final String domain,
+            final Window parentWindow,
+            final AggregateConfigProvider globalConfig,
+            final String domain,
             final ColourManager colourManager,
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            @Unbound final Channel channel,
-            @Unbound final ChannelFrame window,
-            @Unbound final IconManager iconManager) {
+            final Channel channel,
+            final ChannelFrame window,
+            final IconManager iconManager) {
         this.channel = channel;
         this.domain = domain;
         this.colourManager = colourManager;
         this.window = window;
-        this.clipboard = clipboard;
         topicText = new TextPaneInputField(parentWindow, globalConfig, colourManager, iconManager);
         topicLengthMax = channel.getMaxTopicLength();
         updateOptions();

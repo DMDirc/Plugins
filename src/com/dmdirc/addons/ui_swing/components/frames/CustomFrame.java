@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import javax.swing.JPopupMenu;
 
@@ -35,7 +33,6 @@ import net.miginfocom.swing.MigLayout;
 /**
  * A very basic custom frame.
  */
-@Factory(inject = true, singleton = true, providers = true)
 public class CustomFrame extends TextFrame {
 
     /** A version number for this class. */
@@ -50,8 +47,8 @@ public class CustomFrame extends TextFrame {
      */
     public CustomFrame(
             final TextFrameDependencies deps,
-            @Unbound final CommandParser commandParser,
-            @Unbound final FrameContainer owner) {
+            final CommandParser commandParser,
+            final FrameContainer owner) {
         super(owner, commandParser, deps);
 
         initComponents();

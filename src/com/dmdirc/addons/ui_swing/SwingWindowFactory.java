@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
@@ -30,17 +29,13 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.Logger;
-import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.collections.ListenerList;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,7 +69,6 @@ public class SwingWindowFactory implements FrameListener {
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
      * @param channelFrameFactory     The factory to use to produce channel frames.
-     * @param commandParser           Command parser to use for custom non-input windows.
      */
     @Inject
     public SwingWindowFactory(
@@ -82,53 +76,13 @@ public class SwingWindowFactory implements FrameListener {
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
-            final ChannelFrameFactory channelFrameFactory,
-            final GlobalCommandParser commandParser) {
+            final ChannelFrameFactory channelFrameFactory) {
         this.activeFrameManager = activeFrameManager;
 
-        // TODO: Allow auto-factories to implement an interface and simplify this a bit.
-        registerImplementation(
-                new HashSet<>(Arrays.asList(
-                                WindowComponent.TEXTAREA.getIdentifier())),
-                new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return customFrameFactory.getCustomFrame(commandParser, container);
-                    }
-                });
-        registerImplementation(
-                new HashSet<>(Arrays.asList(
-                                WindowComponent.TEXTAREA.getIdentifier(),
-                                WindowComponent.INPUTFIELD.getIdentifier())),
-                new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return customInputFrameFactory.getCustomInputFrame(container);
-                    }
-                });
-        registerImplementation(
-                new HashSet<>(Arrays.asList(
-                                WindowComponent.TEXTAREA.getIdentifier(),
-                                WindowComponent.INPUTFIELD.getIdentifier(),
-                                WindowComponent.CERTIFICATE_VIEWER.getIdentifier())),
-                new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return serverFrameFactory.getServerFrame(container.getConnection());
-                    }
-                });
-        registerImplementation(
-                new HashSet<>(Arrays.asList(
-                                WindowComponent.TEXTAREA.getIdentifier(),
-                                WindowComponent.INPUTFIELD.getIdentifier(),
-                                WindowComponent.TOPICBAR.getIdentifier(),
-                                WindowComponent.USERLIST.getIdentifier())),
-                new WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return channelFrameFactory.getChannelFrame((Channel) container);
-                    }
-                });
+        registerImplementation(customFrameFactory);
+        registerImplementation(customInputFrameFactory);
+        registerImplementation(serverFrameFactory);
+        registerImplementation(channelFrameFactory);
     }
 
     /**
@@ -137,13 +91,10 @@ public class SwingWindowFactory implements FrameListener {
      * <p>
      * If a previous provider exists for the same configuration, it will be replaced.
      *
-     * @param components The component configuration that is provided by the implementation.
      * @param provider   The provider to use to generate new windows.
      */
-    public final void registerImplementation(
-            final Set<String> components,
-            final WindowProvider provider) {
-        implementations.put(components, provider);
+    public final void registerImplementation(final WindowProvider provider) {
+        implementations.put(provider.getComponents(), provider);
     }
 
     /**
@@ -175,11 +126,10 @@ public class SwingWindowFactory implements FrameListener {
      * Creates a new window for the specified container.
      *
      * @param window The container that owns the window
-     * @param focus  Whether the window should be focused initially
      *
      * @return The created window or null on error
      */
-    protected TextFrame doAddWindow(final FrameContainer window, final boolean focus) {
+    protected TextFrame doAddWindow(final FrameContainer window) {
         if (!implementations.containsKey(window.getComponents())) {
             Logger.userError(ErrorLevel.HIGH, "Unable to create window: Unknown type");
             return null;
@@ -211,13 +161,13 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     @Override
-    public void addWindow(final FrameContainer parent,
-            final FrameContainer window, final boolean focus) {
+    public void addWindow(final FrameContainer parent, final FrameContainer window,
+            final boolean focus) {
         UIUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
-                final TextFrame childWindow = doAddWindow(window, focus);
+                final TextFrame childWindow = doAddWindow(window);
 
                 if (childWindow == null) {
                     return;
@@ -275,6 +225,13 @@ public class SwingWindowFactory implements FrameListener {
          * @return A new window for the given container.
          */
         TextFrame getWindow(FrameContainer container);
+
+        /**
+         * Gets the set of components that this provider can provide windows for.
+         *
+         * @return The components this provider operates on.
+         */
+        Set<String> getComponents();
 
     }
 
