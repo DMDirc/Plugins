@@ -53,7 +53,7 @@ public class DebugWindow extends FrameContainer {
      * @param parser     The parser this plugin is debugging
      * @param connection The connection this window is associated with.
      * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to despatch events on.
+     * @param eventBus   The bus to dispatch events on.
      */
     public DebugWindow(
             final DebugInfoListener listener,

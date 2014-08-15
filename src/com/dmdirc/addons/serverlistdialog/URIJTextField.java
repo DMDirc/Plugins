@@ -43,7 +43,7 @@ public class URIJTextField extends ValidatingJTextField {
     @Override
     public String getText() {
         final String hostname = super.getText();
-        if (hostname.indexOf("://") == -1) {
+        if (!hostname.contains("://")) {
             return "irc://" + hostname;
         } else {
             return hostname;

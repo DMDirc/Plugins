@@ -99,7 +99,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private final Clipboard clipboard;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
-    /** The bus to despatch input events on. */
+    /** The bus to dispatch input events on. */
     private final EventBus eventBus;
 
     /**

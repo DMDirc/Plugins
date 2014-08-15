@@ -60,7 +60,7 @@ public class TransferContainer extends FrameContainer implements
     private final DCCTransfer dcc;
     /** Other Nickname */
     private final String otherNickname;
-    /** Total data transfered */
+    /** Total data transferred */
     private volatile long transferCount = 0;
     /** Time Started */
     private long timeStarted = 0;
@@ -86,7 +86,7 @@ public class TransferContainer extends FrameContainer implements
      * @param targetNick Nickname of target
      * @param connection The connection that the send was that initiated on
      * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to despatch events on.
+     * @param eventBus   The bus to dispatch events on.
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
@@ -141,13 +141,13 @@ public class TransferContainer extends FrameContainer implements
     }
 
     /**
-     * Called when data is sent/recieved
+     * Called when data is sent/received
      *
      * @param dcc   The DCCSend that this message is from
-     * @param bytes The number of new bytes that were transfered
+     * @param bytes The number of new bytes that were transferred
      */
     @Override
-    public void dataTransfered(final DCCTransfer dcc, final int bytes) {
+    public void dataTransferred(final DCCTransfer dcc, final int bytes) {
         final double percent;
         synchronized (this) {
             transferCount += bytes;
@@ -163,7 +163,7 @@ public class TransferContainer extends FrameContainer implements
                 title.append("*");
             }
             title.append(dcc.getType() == DCCTransfer.TransferType.SEND
-                    ? "Sending: " : "Recieving: ");
+                    ? "Sending: " : "Receiving: ");
             title.append(otherNickname);
             title.append(" (")
                     .append(String.format("%.0f", Math.floor(percent)))
@@ -208,14 +208,14 @@ public class TransferContainer extends FrameContainer implements
      */
     public double getRemainingTime() {
         final double bytesPerSecond = getBytesPerSecond();
-        final long remaningBytes;
+        final long remainingBytes;
 
         synchronized (this) {
-            remaningBytes = dcc.getFileSize() - dcc.getFileStart()
+            remainingBytes = dcc.getFileSize() - dcc.getFileStart()
                     - transferCount;
         }
 
-        return bytesPerSecond > 0 ? (remaningBytes / bytesPerSecond) : 1;
+        return bytesPerSecond > 0 ? (remainingBytes / bytesPerSecond) : 1;
     }
 
     /**
@@ -307,7 +307,7 @@ public class TransferContainer extends FrameContainer implements
         if (connection != null && connection.getState() == ServerState.CONNECTED) {
             final String myNickname = connection.getParser().getLocalClient()
                     .getNickname();
-            // Check again incase we have changed nickname to the same nickname
+            // Check again in case we have changed nickname to the same nickname
             //that this send is for.
             if (connection.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {

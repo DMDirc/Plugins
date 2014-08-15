@@ -51,20 +51,20 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             "redirect <command> - sends the output of the command to a "
             + "channel or query window",
             CommandType.TYPE_CHAT);
-    /** The sink manager to use to despatch messages. */
+    /** The sink manager to use to dispatch messages. */
     private final MessageSinkManager messageSinkManager;
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
-    /** The bus to despatch events on. */
+    /** The bus to dispatch events on. */
     private final EventBus eventBus;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller         The controller to use for command information.
-     * @param messageSinkManager The sink manager to use to despatch messages.
+     * @param messageSinkManager The sink manager to use to dispatch messages.
      * @param urlBuilder         The URL builder to use when finding icons.
-     * @param eventBus           The bus to despatch events on.
+     * @param eventBus           The bus to dispatch events on.
      */
     @Inject
     public RedirectCommand(

@@ -68,9 +68,9 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param nick                My Current Nickname
      * @param targetNick          Nickname of target
      * @param tabCompleterFactory The factory to use to create tab completers.
-     * @param messageSinkManager  The sink manager to use to despatch messages.
+     * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param urlBuilder          The URL builder to use when finding icons.
-     * @param eventBus            The bus to despatch events on.
+     * @param eventBus            The bus to dispatch events on.
      */
     public ChatContainer(
             @Nullable final FrameContainer parent,

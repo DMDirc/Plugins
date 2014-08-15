@@ -101,7 +101,7 @@ public class TransferPanel extends JPanel implements ActionListener,
             add(new JLabel("To: " + transferContainer
                     .getOtherNickname()), "wrap");
         } else {
-            add(new JLabel("Recieving: " + dcc.getShortFileName()), "wrap");
+            add(new JLabel("Receiving: " + dcc.getShortFileName()), "wrap");
             add(new JLabel("From: " + transferContainer
                     .getOtherNickname()), "wrap");
         }
@@ -183,7 +183,7 @@ public class TransferPanel extends JPanel implements ActionListener,
             @Override
             public void run() {
                 if (transferContainer.isComplete()) {
-                    status.setText("Status: Transfer Compelete.");
+                    status.setText("Status: Transfer Complete.");
 
                     if (transferContainer.shouldShowOpenButton()) {
                         openButton.setVisible(true);
@@ -215,7 +215,7 @@ public class TransferPanel extends JPanel implements ActionListener,
     }
 
     @Override
-    public void dataTransfered(final DCCTransfer dcc, final int bytes) {
+    public void dataTransferred(final DCCTransfer dcc, final int bytes) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -223,7 +223,7 @@ public class TransferPanel extends JPanel implements ActionListener,
                 if (dcc.getType() == DCCTransfer.TransferType.SEND) {
                     status.setText("Status: Sending");
                 } else {
-                    status.setText("Status: Recieving");
+                    status.setText("Status: Receiving");
                 }
 
                 progress.setValue((int) transferContainer.getPercent());

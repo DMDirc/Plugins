@@ -77,7 +77,7 @@ public class NoatunSource implements MediaSource {
     @Override
     public String getArtist() {
         final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
-        if (result.indexOf(" - ") == -1) {
+        if (!result.contains(" - ")) {
             return "";
         }
         return result.substring(0, result.indexOf(" - "));
@@ -86,7 +86,7 @@ public class NoatunSource implements MediaSource {
     @Override
     public String getTitle() {
         final String result = myPlugin.getDcopResult("dcop noatun Noatun title").get(0);
-        if (result.indexOf(" - ") == -1) {
+        if (!result.contains(" - ")) {
             return "";
         }
         return result.substring(result.indexOf(" - ") + 3, result.length());

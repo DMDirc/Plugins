@@ -40,7 +40,7 @@ public final class ActionComparisonCellRenderer extends DMDircListCellRenderer<O
     /**
      * Creates a new instance of this renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param renderer Parent renderer
      */
     public ActionComparisonCellRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);

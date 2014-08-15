@@ -42,7 +42,7 @@ public class JListComponentValidator<T> extends ComponentValidator<List<T>, JLis
     @SuppressWarnings("unchecked")
     public List<T> getValidatable() {
         final int size = getComponent().getModel().getSize();
-        final List<T> items = new ArrayList<T>(size);
+        final List<T> items = new ArrayList<>(size);
         final ListModel<T> model = getComponent().getModel();
         for (int i = 0; i < size; i++) {
             items.add(model.getElementAt(i));

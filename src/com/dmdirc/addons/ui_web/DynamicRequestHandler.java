@@ -223,7 +223,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doInput(final HttpServletRequest request) throws IOException {
+    private void doInput(final HttpServletRequest request) {
         final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
@@ -235,7 +235,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doKey(final HttpServletRequest request) throws IOException {
+    private void doKey(final HttpServletRequest request) {
         final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
@@ -259,7 +259,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doTab(final HttpServletRequest request) throws IOException {
+    private void doTab(final HttpServletRequest request) {
         final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
@@ -274,8 +274,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doKeyUpDown(final boolean up, final HttpServletRequest request)
-            throws IOException {
+    private void doKeyUpDown(final boolean up, final HttpServletRequest request) {
         final WebWindow window = controller.getWindowManager().getWindow(
                 request.getParameter("window"));
 
@@ -296,8 +295,7 @@ public class DynamicRequestHandler extends AbstractHandler {
         }
     }
 
-    private void doNewServer(final HttpServletRequest request)
-            throws IOException {
+    private void doNewServer(final HttpServletRequest request) {
         try {
             serverManager.connectToAddress(
                     new URI("irc://" + request.getParameter("password") + "@"
@@ -370,16 +368,14 @@ public class DynamicRequestHandler extends AbstractHandler {
         response.getWriter().write(toJSON(clients.values().toArray()));
     }
 
-    private void doJoinChannel(final HttpServletRequest request)
-            throws IOException {
+    private void doJoinChannel(final HttpServletRequest request) {
         final String windowID = request.getParameter("source");
         final WebWindow window = controller.getWindowManager().getWindow(windowID);
         window.getContainer().getConnection().join(new ChannelJoinRequest(request.
                 getParameter("channel")));
     }
 
-    private void doOpenQuery(final HttpServletRequest request)
-            throws IOException {
+    private void doOpenQuery(final HttpServletRequest request) {
         final String windowID = request.getParameter("source");
         final WebWindow window = controller.getWindowManager().getWindow(windowID);
         window.getContainer().getConnection().getQuery(request.getParameter(

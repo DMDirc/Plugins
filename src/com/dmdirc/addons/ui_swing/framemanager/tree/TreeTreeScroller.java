@@ -31,7 +31,7 @@ import javax.swing.tree.TreePath;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Extention of TreeScroller to scroll the tree view.
+ * Extension of TreeScroller to scroll the tree view.
  */
 public class TreeTreeScroller extends TreeScroller {
 

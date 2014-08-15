@@ -47,7 +47,7 @@ public class CurrentOptionsPanel extends JPanel implements
     private static final long serialVersionUID = 2;
     /** Parent settings panel. */
     private final SettingsPanel parent;
-    /** Curent options to display. */
+    /** Current options to display. */
     private final List<JComponent> settings;
     /** Icon manager. */
     private final IconManager iconManager;

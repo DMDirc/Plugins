@@ -34,6 +34,6 @@ public enum BackgroundOption {
     /** Centered, no stretching. */
     CENTER,
     /** Tiled. */
-    TILED;
+    TILED
 
 }

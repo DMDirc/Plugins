@@ -57,7 +57,7 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
         /** Horizontal separator. */
         HORIZONTAL,
         /** Vertical separator. */
-        VERTICAL;
+        VERTICAL
 
     }
 

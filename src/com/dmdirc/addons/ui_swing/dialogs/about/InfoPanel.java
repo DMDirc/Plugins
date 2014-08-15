@@ -90,7 +90,7 @@ public final class InfoPanel extends JPanel {
 
         infoPane.setText("<html>"
                 + "<b>DMDirc version: </b>" + ClientInfo.getVersionInformation() + "<br>"
-                + "<b>Mode Alises version: </b>"
+                + "<b>Mode Aliases version: </b>"
                 + globalConfig.getOption("identity", "modealiasversion")
                 + "<br>"
                 + "<b>Swing UI version: </b>" + controller.getVersion().toString() + "<br>"

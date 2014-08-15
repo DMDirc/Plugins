@@ -30,11 +30,8 @@ import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.util.collections.ListenerList;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -211,18 +208,13 @@ public class ServerListModel {
         if (networkName != null && !networkName.isEmpty()) {
             sg.setNetwork(networkName);
         }
-        try {
-            if (parentGroup == null) {
-                list.addServerGroup(sg);
-            } else {
-                parentGroup.addItem(sg);
-            }
-            for (ServerListListener listener : listeners.get(
-                    ServerListListener.class)) {
-                listener.serverGroupAdded(parentGroup, sg);
-            }
-        } catch (final IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to create group", ex);
+        if (parentGroup == null) {
+            list.addServerGroup(sg);
+        } else {
+            parentGroup.addItem(sg);
+        }
+        for (ServerListListener listener : listeners.get(ServerListListener.class)) {
+            listener.serverGroupAdded(parentGroup, sg);
         }
     }
 

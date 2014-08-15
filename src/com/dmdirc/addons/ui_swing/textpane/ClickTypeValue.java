@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 /**
- * Returns a click type and assocaited value.
+ * Returns a click type and associated value.
  */
 public class ClickTypeValue {
 

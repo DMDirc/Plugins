@@ -171,11 +171,11 @@ public class IdentClient implements Runnable {
                 os = "MACOS";
             } else if (osName.startsWith("linux")) {
                 os = "UNIX";
-            } else if (osName.indexOf("bsd") > -1) {
+            } else if (osName.contains("bsd")) {
                 os = "UNIX-BSD";
             } else if ("os/2".equals(osName)) {
                 os = "OS/2";
-            } else if (osName.indexOf("unix") > -1) {
+            } else if (osName.contains("unix")) {
                 os = "UNIX";
             } else if ("irix".equals(osName)) {
                 os = "IRIX";

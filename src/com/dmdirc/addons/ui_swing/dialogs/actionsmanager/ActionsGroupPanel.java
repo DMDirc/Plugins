@@ -140,7 +140,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             /** Action type renderer. */
             private final ActionTypeTableCellRenderer typeRenderer
                     = new ActionTypeTableCellRenderer();
-            /** Action response renrderer. */
+            /** Action response renderer. */
             private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
 
             @Override

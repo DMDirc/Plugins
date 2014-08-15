@@ -52,10 +52,10 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param icon                The icon to use
      * @param configManager       Config manager
      * @param parser              Command parser to use for this window
-     * @param messageSinkManager  The sink manager to use to despatch messages.
+     * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
      * @param urlBuilder          The URL builder to use when finding icons.
-     * @param eventBus            The bus to despatch events on.
+     * @param eventBus            The bus to dispatch events on.
      * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(

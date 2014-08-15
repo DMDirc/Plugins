@@ -48,7 +48,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
         /** Horizontal orientation. */
         HORIZONTAL,
         /** Vertical orientation. */
-        VERTICAL;
+        VERTICAL
 
     }
 

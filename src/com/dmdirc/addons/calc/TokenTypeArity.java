@@ -37,6 +37,6 @@ public enum TokenTypeArity {
     /** A type which takes one operand. */
     UNARY,
     /** A type which takes two operands. */
-    BINARY;
+    BINARY
 
 }

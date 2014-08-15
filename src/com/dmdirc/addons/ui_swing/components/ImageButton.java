@@ -106,7 +106,7 @@ public class ImageButton<T> extends JButton {
     }
 
     /**
-     * Get's this buttons object.
+     * Gets this buttons object.
      *
      * @return This button's object
      */

@@ -223,7 +223,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
      *
      * @param e The mouse event that triggered this call
      *
-     * @return A colour object representing the colour beneat the mouse
+     * @return A colour object representing the colour beneath the mouse
      */
     private Color getHexColour(final MouseEvent e) {
         final int i = e.getX() - BORDER_SIZE;

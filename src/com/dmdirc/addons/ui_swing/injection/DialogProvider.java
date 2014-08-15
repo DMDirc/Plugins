@@ -67,7 +67,7 @@ public class DialogProvider<T extends StandardDialog> {
      * displayed to the user - use {@link #displayOrRequestFocus()} to do so.
      *
      * <p>
-     * This method <em>must</em> be called on the Event Despatch Thread.
+     * This method <em>must</em> be called on the Event Dispatch Thread.
      *
      * @return An instance of the dialog.
      */
@@ -89,7 +89,7 @@ public class DialogProvider<T extends StandardDialog> {
      * user's attention.
      *
      * <p>
-     * This method <em>must</em> be called on the Event Despatch Thread.
+     * This method <em>must</em> be called on the Event Dispatch Thread.
      */
     public void displayOrRequestFocus() {
         checkOnEDT();
@@ -108,7 +108,7 @@ public class DialogProvider<T extends StandardDialog> {
      * user's attention.
      *
      * <p>
-     * This method <em>must</em> be called on the Event Despatch Thread.
+     * This method <em>must</em> be called on the Event Dispatch Thread.
      *
      * @param parent Parent window for the dialog
      */

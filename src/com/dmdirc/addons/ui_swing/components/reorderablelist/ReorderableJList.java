@@ -274,7 +274,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
         //get the list object
         final T target = getModel().getElementAt(index);
-        //create the trasnferable object
+        //create the transferable object
         final ArrayList<T> transferObject = new ArrayList<>();
         transferObject.add(target);
         final ListTransferable<T> trans = new ListTransferable<>(transferObject);

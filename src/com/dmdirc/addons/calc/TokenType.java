@@ -179,8 +179,8 @@ public enum TokenType {
         if (follows == null) {
             follows = new ArrayList<>();
 
-            for (int i = 0; i < strfollows.length; i++) {
-                follows.addAll(searchValueOf(strfollows[i]));
+            for (String strfollow : strfollows) {
+                follows.addAll(searchValueOf(strfollow));
             }
         }
 

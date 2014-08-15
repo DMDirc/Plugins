@@ -25,6 +25,7 @@ package com.dmdirc.addons.scriptplugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -371,9 +372,7 @@ public class TypedProperties extends Properties {
         } else {
             final String[] bits = res.split("\n");
             final ArrayList<String> result = new ArrayList<>();
-            for (final String bit : bits) {
-                result.add(bit);
-            }
+            Collections.addAll(result, bits);
             return result;
         }
     }

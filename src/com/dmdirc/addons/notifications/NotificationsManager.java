@@ -23,11 +23,9 @@
 package com.dmdirc.addons.notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -56,11 +54,8 @@ public class NotificationsManager {
     private final EventBus eventBus;
 
     @Inject
-    public NotificationsManager(
-            @PluginDomain(NotificationsPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
-            @UserConfig final ConfigProvider userSettings,
-            final EventBus eventBus,
+    public NotificationsManager(@PluginDomain(NotificationsPlugin.class) final String domain,
+            @GlobalConfig final AggregateConfigProvider globalConfig, final EventBus eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
         this.globalConfig = globalConfig;
@@ -118,7 +113,7 @@ public class NotificationsManager {
 
     /**
      * Checks to see if the specified notification method needs to be added to our order list, and
-     * adds it if neccessary.
+     * adds it if necessary.
      *
      * @param source The notification method to be tested
      */

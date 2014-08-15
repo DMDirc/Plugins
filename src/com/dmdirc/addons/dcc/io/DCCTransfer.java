@@ -48,7 +48,7 @@ public class DCCTransfer extends DCC {
     /** File Transfer Types. */
     public enum TransferType {
 
-        SEND, RECEIVE;
+        SEND, RECEIVE
 
     }
     /** The File transfer type for this file. */
@@ -185,7 +185,7 @@ public class DCCTransfer extends DCC {
     }
 
     /**
-     * Set turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevent when sending.
+     * Set turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevant when sending.
      *
      * @param turbo True for turbo dcc, else false
      */
@@ -194,7 +194,7 @@ public class DCCTransfer extends DCC {
     }
 
     /**
-     * Is turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevent when sending.
+     * Is turbo mode on/off. Turbo mode doesn't wait for ack packets. Only relevant when sending.
      *
      * @return True for turbo dcc, else false
      */
@@ -391,7 +391,7 @@ public class DCCTransfer extends DCC {
 
             if (bytesRead > 0) {
                 for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
-                    handler.dataTransfered(this, bytesRead);
+                    handler.dataTransferred(this, bytesRead);
                 }
                 fileOut.write(data, 0, bytesRead);
 
@@ -436,17 +436,17 @@ public class DCCTransfer extends DCC {
 
             if (bytesRead > 0) {
                 for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
-                    handler.dataTransfered(this, bytesRead);
+                    handler.dataTransferred(this, bytesRead);
                 }
                 out.write(data, 0, bytesRead);
                 out.flush();
 
-                // Wait for acknowlegement packet.
+                // Wait for acknowledgement packet.
                 if (!turbo) {
-                    int bytesRecieved;
+                    int bytesReceived;
                     do {
-                        bytesRecieved = in.readInt();
-                    } while ((readSize - bytesRecieved) > 0);
+                        bytesReceived = in.readInt();
+                    } while ((readSize - bytesReceived) > 0);
                 }
 
                 if (readSize == size) {

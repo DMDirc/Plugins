@@ -174,8 +174,8 @@ public final class IdentdServer implements Runnable {
             }
 
             synchronized (clientList) {
-                for (int i = 0; i < clientList.size(); ++i) {
-                    clientList.get(i).close();
+                for (IdentClient aClientList : clientList) {
+                    aClientList.close();
                 }
                 clientList.clear();
             }

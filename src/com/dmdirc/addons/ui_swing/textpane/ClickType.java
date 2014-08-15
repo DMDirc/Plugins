@@ -34,6 +34,6 @@ public enum ClickType {
     /** Nickname. */
     NICKNAME,
     /** Normal. */
-    NORMAL;
+    NORMAL
 
 }

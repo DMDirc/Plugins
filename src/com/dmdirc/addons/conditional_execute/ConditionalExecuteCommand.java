@@ -226,7 +226,7 @@ public class ConditionalExecuteCommand extends Command {
                         getName() + "'");
                 return;
             } else if (arg.equalsIgnoreCase("--status")) {
-                // Show the current status, incase some manipulations occured prior to this.
+                // Show the current status, in case some manipulations occurred prior to this.
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, namespaces.get(namespace.getName()));
                 return;
             } else if (arg.equalsIgnoreCase("--inverse")) {

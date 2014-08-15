@@ -39,7 +39,7 @@ public class WrapLabelView extends LabelView {
             }
             try {
                 //if the view contains line break char return forced break
-                if (getDocument().getText(p0, p1 - p0).indexOf("\r") >= 0) {
+                if (getDocument().getText(p0, p1 - p0).contains("\r")) {
                     return View.ForcedBreakWeight;
                 }
             } catch (BadLocationException ex) {

@@ -115,14 +115,14 @@ public class FileBrowser extends JPanel implements ActionListener {
     /**
      * Returns the current path selected by this file browser.
      *
-     * @return Path selected by this filebrowser
+     * @return Path selected by this file browser
      */
     public String getPath() {
         return pathField.getText();
     }
 
     /**
-     * Informs all action listeners that an action has occured.
+     * Informs all action listeners that an action has occurred.
      */
     protected void fireActionEvent() {
         for (ActionListener listener : listeners.get(ActionListener.class)) {

@@ -35,7 +35,7 @@ public class FontListCellRenderer extends DMDircListCellRenderer<Object> {
     /**
      * Creates a new instance of this renderer.
      *
-     * @param renderer RendereParent renderer
+     * @param renderer Parent renderer
      */
     public FontListCellRenderer(final ListCellRenderer<? super Object> renderer) {
         super(renderer);

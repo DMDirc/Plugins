@@ -133,7 +133,7 @@ public class EventBusViewer extends DebugCommand {
                 return;
             }
 
-            final StringBuffer output = new StringBuffer();
+            final StringBuilder output = new StringBuilder();
             output.append(Styliser.CODE_BOLD)
                     .append(event.getClass().getSimpleName())
                     .append(Styliser.CODE_BOLD);
