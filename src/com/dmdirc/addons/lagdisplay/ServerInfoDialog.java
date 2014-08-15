@@ -28,8 +28,6 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.util.List;
 
@@ -40,7 +38,6 @@ import javax.swing.JSeparator;
 /**
  * Shows information about all connected servers.
  */
-@Factory(inject = true, singleton = true)
 public class ServerInfoDialog extends StatusbarPopupWindow {
 
     /** A version number for this class. */
@@ -62,7 +59,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      */
     public ServerInfoDialog(
             final LagDisplayManager manager,
-            @Unbound final StatusbarPanel<JLabel> parent,
+            final StatusbarPanel<JLabel> parent,
             final MainFrame mainFrame,
             final ServerManager serverManager) {
         super(parent, mainFrame);

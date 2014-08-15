@@ -26,9 +26,8 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
-import com.dmdirc.interfaces.ActionController;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -47,18 +46,15 @@ import javax.script.ScriptEngineManager;
 public class ScriptPluginManager {
 
     private final EventBus eventBus;
-    private final ActionController actionController;
     private final String scriptDir;
     private final ScriptManager scriptManager;
     private final TypedProperties globalVariables;
 
     @Inject
     public ScriptPluginManager(final EventBus eventBus,
-            final ActionController actionController,
             @Directory(ScriptModule.SCRIPTS) final String scriptDir,
             final ScriptManager scriptManager,
             final ScriptEngineManager scriptEngineManager) {
-        this.actionController = actionController;
         this.scriptDir = scriptDir;
         this.scriptManager = scriptManager;
         this.eventBus = eventBus;
@@ -81,8 +77,9 @@ public class ScriptPluginManager {
             try (FileInputStream fis = new FileInputStream(savedVariables)) {
                 globalVariables.load(fis);
             } catch (IOException e) {
-                Logger.userError(ErrorLevel.LOW, "Error reading savedVariables from '"
-                        + savedVariables.getPath() + "': " + e.getMessage(), e);
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                        "Error reading savedVariables from '" + savedVariables.getPath() + "': "
+                                + e.getMessage(), ""));
             }
         }
     }
@@ -94,8 +91,8 @@ public class ScriptPluginManager {
         try (FileOutputStream fos = new FileOutputStream(savedVariables)) {
             globalVariables.store(fos, "# DMDirc Script Plugin savedVariables");
         } catch (IOException e) {
-            Logger.userError(ErrorLevel.LOW, "Error reading savedVariables to '" + savedVariables.
-                    getPath() + "': " + e.getMessage(), e);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,"Error reading savedVariables to '"
+                    + savedVariables.getPath() + "': " + e.getMessage(), ""));
         }
     }
 
