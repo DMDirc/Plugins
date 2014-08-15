@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.annotations.factory.Factory;
 import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.Downloader;
 
@@ -38,7 +37,6 @@ import java.util.concurrent.ExecutionException;
 /**
  * Downloads a given addon from the addon site and loads it into the client.
  */
-@Factory(inject = true)
 public class InstallWorker extends LoggingSwingWorker<String, Void> {
 
     /** Addon info. */
