@@ -37,12 +37,15 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -65,11 +68,14 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     private final String scriptDirectory;
     /** Script manager to handle scripts. */
     private final ScriptManager scriptManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of this command.
      *
      * @param scriptManager       Used to manage scripts
+     * @param eventBus            The event bus to post errors to
      * @param globalConfig        Global config
      * @param commandController   The controller to use for command information.
      * @param domain              This plugin's settings domain
@@ -78,6 +84,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      */
     @Inject
     public ScriptCommand(final ScriptManager scriptManager,
+            final EventBus eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,
@@ -89,10 +96,11 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
         this.scriptManager = scriptManager;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public void execute(final FrameContainer origin, final CommandArguments args,
+    public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {
         final String[] sargs = args.getArguments();
 
@@ -127,12 +135,13 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                         final String baseFile = scriptDirectory + '/'
                                 + globalConfig.getOption(domain, "eval.baseFile");
                         if (new File(baseFile).exists()) {
-                            wrapper = new ScriptEngineWrapper(scriptEngineManager, baseFile);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus,
+                                    baseFile);
                         } else {
-                            wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus, null);
                         }
                     } else {
-                        wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
+                        wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus, null);
                     }
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
