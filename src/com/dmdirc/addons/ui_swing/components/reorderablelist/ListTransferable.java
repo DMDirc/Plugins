@@ -22,9 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -47,18 +44,16 @@ public final class ListTransferable<T> implements Transferable {
     /**
      * Initialises the ListTransferable.
      *
-     * @param alist List to transfer
+     * @param list List to transfer
      */
-    public ListTransferable(final List<T> alist) {
-        super();
-
-        data = alist;
+    public ListTransferable(final List<T> list) {
+        data = list;
 
         try {
             localArrayListFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
                     + ";class=java.util.List");
         } catch (ClassNotFoundException e) {
-            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " + e.getMessage());
+            //This class will always exist
         }
         serialArrayListFlavor = new DataFlavor(List.class, "List");
 

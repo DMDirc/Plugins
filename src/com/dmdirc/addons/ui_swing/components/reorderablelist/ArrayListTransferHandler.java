@@ -22,9 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -64,7 +61,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
             localArrayListFlavor = new DataFlavor(
                     DataFlavor.javaJVMLocalObjectMimeType + ";class=java.util.ArrayList");
         } catch (ClassNotFoundException e) {
-            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: " + e.getMessage());
+            //This class will always exist
         }
         serialArrayListFlavor = new DataFlavor(ArrayList.class, "ArrayList");
     }
@@ -86,11 +83,8 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
             } else {
                 return false;
             }
-        } catch (UnsupportedFlavorException e) {
-            Logger.userError(ErrorLevel.LOW, "Unsupported data flavor: " + e.getMessage());
-            return false;
-        } catch (IOException e) {
-            Logger.userError(ErrorLevel.LOW, "Unable to import data: " + e.getMessage());
+        } catch (UnsupportedFlavorException | IOException e) {
+            //Don't transfer if this fails
             return false;
         }
     }
@@ -136,7 +130,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
     @Override
     protected void exportDone(final JComponent source, final Transferable data,
             final int action) {
-        if ((action == MOVE) && (indices != null)) {
+        if (action == MOVE && indices != null) {
             final DefaultListModel<T> model = (DefaultListModel<T>) sourceList.getModel();
 
             if (addCount > 0) {
@@ -163,7 +157,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
      *
      * @return whether the transferFlavors is supported
      */
-    private boolean hasLocalArrayListFlavor(final DataFlavor[] transferFlavors) {
+    private boolean hasLocalArrayListFlavor(final DataFlavor... transferFlavors) {
         if (localArrayListFlavor == null) {
             return false;
         }
@@ -183,7 +177,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
      *
      * @return whether the flavour is supported
      */
-    private boolean hasSerialArrayListFlavor(final DataFlavor[] transferFlavors) {
+    private boolean hasSerialArrayListFlavor(final DataFlavor... transferFlavors) {
         for (DataFlavor transferFlavor : transferFlavors) {
             if (transferFlavor.equals(serialArrayListFlavor)) {
                 return true;
@@ -195,7 +189,7 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
 
     @Override
     public boolean canImport(final JComponent comp, final DataFlavor[] transferFlavors) {
-        return comp instanceof JList && ((JList) comp).getModel() instanceof DefaultListModel
+        return comp instanceof JList && ((JList<?>) comp).getModel() instanceof DefaultListModel
                 && (hasLocalArrayListFlavor(transferFlavors)
                 || hasSerialArrayListFlavor(transferFlavors));
     }

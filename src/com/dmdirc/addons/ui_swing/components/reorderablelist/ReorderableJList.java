@@ -23,8 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
 import com.dmdirc.addons.ui_swing.components.renderers.ReorderableJListCellRenderer;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -103,9 +101,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
             dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
                     + ";class=java.util.List");
         } catch (ClassNotFoundException e) {
-            Logger.userError(ErrorLevel.LOW, "unable to create data flavor: "
-                    + e.getMessage());
-            dataFlavor = null;
+            //This class will always exist
         }
     }
 
@@ -229,7 +225,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         }
 
         //reject invalid drops
-        if ((index == -1) || (index == draggedIndex)) {
+        if (index == -1 || index == draggedIndex) {
             dtde.rejectDrop();
             return;
         }
@@ -238,10 +234,11 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
         //get dropped item
-        Object dragged;
+        final Object dragged;
         try {
             dragged = dtde.getTransferable().getTransferData(dataFlavor);
         } catch (UnsupportedFlavorException | IOException e) {
+            //Don't transfer if this fails
             return;
         }
 
@@ -250,7 +247,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         final DefaultListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (ArrayList) dragged) {
+        for (Object item : (ArrayList<?>) dragged) {
             @SuppressWarnings("unchecked")
             final T genericItem = (T) item;
             mod.add(newIndex, genericItem);
