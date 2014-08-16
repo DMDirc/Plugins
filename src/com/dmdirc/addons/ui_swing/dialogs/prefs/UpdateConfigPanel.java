@@ -170,17 +170,12 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         add(checkNow, "right");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (enable == e.getSource()) {
             checkNow.setEnabled(enable.isSelected());
         } else {
-            UpdateChecker.checkNow(updateManager, identityController);
+            UpdateChecker.checkNow(updateManager, identityController, eventBus);
         }
     }
 

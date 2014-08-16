@@ -34,6 +34,8 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -48,6 +50,8 @@ public class ForceUpdate extends DebugCommand {
     private final IdentityController identityController;
     /** The update manager to use when forcing an update. */
     private final CachingUpdateManager updateManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -56,18 +60,21 @@ public class ForceUpdate extends DebugCommand {
      * @param globalConfig       The global config to use to check if updates are enabled.
      * @param identityController The controller to use to read/write settings for the updater.
      * @param updateManager      The update manager to use when forcing an update.
+     * @param eventBus           The event bus to post errors to
      */
     @Inject
     public ForceUpdate(
             final Provider<Debug> commandProvider,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final IdentityController identityController,
-            final CachingUpdateManager updateManager) {
+            final CachingUpdateManager updateManager,
+            final EventBus eventBus) {
         super(commandProvider);
 
         this.globalConfig = globalConfig;
         this.identityController = identityController;
         this.updateManager = updateManager;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -84,7 +91,8 @@ public class ForceUpdate extends DebugCommand {
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (globalConfig.getOptionBool("updater", "enable")) {
-            UpdateChecker.checkNow(updateManager, identityController, "Forced update checker");
+            UpdateChecker.checkNow(updateManager, identityController, eventBus,
+                    "Forced update checker");
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "
                     + "currently disabled.  You can enable it by typing:");
