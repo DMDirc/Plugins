@@ -49,6 +49,8 @@ import javax.swing.text.JTextComponent;
  */
 public class SwingInputHandler extends InputHandler implements KeyListener {
 
+    private final EventBus eventBus;
+
     /**
      * Creates a new instance of InputHandler. Adds listeners to the target that we need to operate.
      *
@@ -67,6 +69,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final FrameContainer parentWindow,
             final EventBus eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -148,7 +151,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new LoggingSwingWorker<Object, Void>() {
+                new LoggingSwingWorker<Object, Void>(eventBus) {
 
                     @Override
                     protected Object doInBackground() {
@@ -172,7 +175,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        new LoggingSwingWorker<Object, Void>() {
+                        new LoggingSwingWorker<Object, Void>(eventBus) {
 
                             @Override
                             protected Object doInBackground() {
@@ -230,7 +233,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                                             "Event is not from known source.");
                         }
                         if (source.isEditable()) {
-                            new LoggingSwingWorker<Object, Void>() {
+                            new LoggingSwingWorker<Object, Void>(eventBus) {
 
                                 @Override
                                 protected Object doInBackground() {

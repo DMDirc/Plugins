@@ -28,6 +28,8 @@ import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -67,6 +69,8 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Config manager to bind to and retrieve settings from.
      */
     private final AggregateConfigProvider configManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /**
      * Background image.
      */
@@ -81,6 +85,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      *
      * @param configManager Config manager to retrieve settings from
      * @param urlBuilder    URL Builder
+     * @param eventBus      The event bus to post errors to
      * @param domain        Domain to retrieve settings from
      * @param imageKey      Key for background image
      * @param optionKey     Key for background type
@@ -88,6 +93,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     public BackgroundPainter(
             final AggregateConfigProvider configManager,
             final URLBuilder urlBuilder,
+            final EventBus eventBus,
             final String domain, final String imageKey,
             final String optionKey) {
         this.configManager = configManager;
@@ -95,6 +101,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         this.domain = domain;
         this.imageKey = imageKey;
         this.optionKey = optionKey;
+        this.eventBus = eventBus;
         configManager.getBinder().bind(this, BackgroundPainter.class);
     }
 
@@ -124,7 +131,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         if (value == null || value.isEmpty()) {
             backgroundImage = null;
         } else {
-            new ImageLoader(urlBuilder.getUrl(value), this).execute();
+            new ImageLoader(urlBuilder.getUrl(value), this, eventBus).execute();
         }
     }
 

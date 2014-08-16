@@ -30,6 +30,8 @@ import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Window;
 
 import javax.swing.JLabel;
@@ -60,6 +62,8 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
     private final Window parentWindow;
     /** The factory to use to produce data loader workers. */
     private final DataLoaderWorkerFactory workerFactory;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /** Addon list scroll pane. */
     private JScrollPane scrollPane;
     /** Blurb label. */
@@ -77,11 +81,11 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * @param parentWindow  Parent window
      * @param workerFactory The factory to use to produce data loader workers.
      */
-    public AddonPanel(final Window parentWindow, final DataLoaderWorkerFactory workerFactory) {
-        super();
-
+    public AddonPanel(final Window parentWindow, final DataLoaderWorkerFactory workerFactory,
+            final EventBus eventBus) {
         this.parentWindow = parentWindow;
         this.workerFactory = workerFactory;
+        this.eventBus = eventBus;
 
         initComponents();
         layoutComponents();
@@ -127,21 +131,17 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Populates the list in a background thread.
      */
     protected void load() {
-        /** {@inheritDoc}. */
-        new LoggingSwingWorker<Object, Object>() {
-            /** {@inheritDoc}. */
+        new LoggingSwingWorker<Object, Object>(eventBus) {
             @Override
             protected Object doInBackground() {
                 return populateList(addonList);
             }
 
-            /** {@inheritDoc}. */
             @Override
             protected void done() {
                 super.done();
                 scrollPane.setViewportView(addonList);
                 UIUtilities.invokeLater(new Runnable() {
-                    /** {@inheritDoc}. */
                     @Override
                     public void run() {
                         addonList.getSelectionModel()
@@ -179,7 +179,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      */
     protected abstract String getTypeName();
 
-    /** {@inheritDoc}. */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         final int newSelection = addonList.getSelectedRow();
@@ -192,7 +191,6 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
         selectedAddon = addonList.getSelectedRow();
     }
 
-    /** {@inheritDoc}. */
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == EventType.ACTIVATED) {

@@ -27,6 +27,8 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,12 +61,14 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
     /**
      * Instantiates a new licence loader.
      *
-     * @param plugins List of plugins to get licenses from
-     * @param tree    Tree to add licenses to
-     * @param model   Model to load licences into
+     * @param plugins  List of plugins to get licenses from
+     * @param tree     Tree to add licenses to
+     * @param model    Model to load licences into
+     * @param eventBus The event bus to post errors to
      */
     public LicenceLoader(final Collection<PluginInfo> plugins, final JTree tree,
-            final DefaultTreeModel model) {
+            final DefaultTreeModel model, final EventBus eventBus) {
+        super(eventBus);
         this.plugins = plugins;
         this.tree = tree;
         this.model = model;

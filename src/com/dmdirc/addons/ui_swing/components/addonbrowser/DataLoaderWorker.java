@@ -116,6 +116,7 @@ public class DataLoaderWorker
             @Unbound final boolean download,
             @Unbound final BrowserWindow browserWindow,
             @Unbound final JScrollPane scrollPane) {
+        super(eventBus);
         this.downloader = downloader;
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;

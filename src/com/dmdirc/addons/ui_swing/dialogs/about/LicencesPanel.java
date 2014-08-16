@@ -29,6 +29,8 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Font;
 import java.awt.Rectangle;
 
@@ -73,14 +75,15 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
      *
      * @param globalConfig  The config to read settings from.
      * @param pluginManager The manager to use to find plugins (to display their licenses).
+     * @param eventBus      The event bus to post errors to.
      */
     @Inject
     public LicencesPanel(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final PluginManager pluginManager) {
+            final PluginManager pluginManager, final EventBus eventBus) {
         config = globalConfig;
         initComponents();
-        new LicenceLoader(pluginManager.getPluginInfos(), list, listModel).execute();
+        new LicenceLoader(pluginManager.getPluginInfos(), list, listModel, eventBus).execute();
         addListeners();
         layoutComponents();
     }

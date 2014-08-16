@@ -32,6 +32,8 @@ import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
@@ -86,16 +88,17 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Creates a new instance of TextPane.
      *
+     * @param eventBus     The event bus to post errors to.
      * @param configDomain The domain to read configuration from.
      * @param urlBuilder   The builder to use to construct URLs for resources.
-     * @param clipboard     The clipboard to handle copy and paste actions
+     * @param clipboard    The clipboard to handle copy and paste actions
      * @param frame        Parent Frame
      */
     public TextPane(
+            final EventBus eventBus,
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
             final TextFrame frame) {
-        super();
         this.frame = frame;
         this.configDomain = configDomain;
         this.clipboard = clipboard;
@@ -110,7 +113,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
         setLayout(new MigLayout("fill, hidemode 3"));
         backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
-                urlBuilder, configDomain, "textpanebackground", "textpanebackgroundoption");
+                urlBuilder, eventBus, configDomain, "textpanebackground",
+                "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this, document);
         final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
         layer.setUI(backgroundPainter);

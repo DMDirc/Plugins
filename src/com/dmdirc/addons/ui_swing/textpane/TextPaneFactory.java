@@ -27,6 +27,8 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.datatransfer.Clipboard;
 
 import javax.inject.Inject;
@@ -41,17 +43,19 @@ public class TextPaneFactory {
     private final String configDomain;
     private final URLBuilder urlBuilder;
     private final Clipboard clipboard;
+    private final EventBus eventBus;
 
     @Inject
     public TextPaneFactory(@PluginDomain(SwingController.class) final String configDomain,
-            final URLBuilder urlBuilder, final Clipboard clipboard) {
+            final URLBuilder urlBuilder, final Clipboard clipboard, final EventBus eventBus) {
         this.configDomain = configDomain;
         this.urlBuilder = urlBuilder;
         this.clipboard = clipboard;
+        this.eventBus = eventBus;
     }
 
     public TextPane getTextPane(final TextFrame frame) {
-        return new TextPane(configDomain, urlBuilder, clipboard, frame);
+        return new TextPane(eventBus, configDomain, urlBuilder, clipboard, frame);
     }
 
 }

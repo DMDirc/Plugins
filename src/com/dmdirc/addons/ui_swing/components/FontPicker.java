@@ -56,7 +56,7 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        new LoggingSwingWorker<String[], String[]>() {
+        new LoggingSwingWorker<String[], String[]>(eventBus) {
 
             @Override
             protected String[] doInBackground() {

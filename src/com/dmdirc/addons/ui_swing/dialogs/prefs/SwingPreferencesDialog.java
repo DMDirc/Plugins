@@ -114,7 +114,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
         initComponents();
 
-        worker = new LoggingSwingWorker<PreferencesDialogModel, Void>() {
+        worker = new LoggingSwingWorker<PreferencesDialogModel, Void>(eventBus) {
 
             @Override
             protected PreferencesDialogModel doInBackground() {
@@ -251,7 +251,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             saveOptions();
         }
 
-        new LoggingSwingWorker<Void, Void>() {
+        new LoggingSwingWorker<Void, Void>(eventBus) {
             @Override
             protected Void doInBackground() {
                 if (manager != null) {
