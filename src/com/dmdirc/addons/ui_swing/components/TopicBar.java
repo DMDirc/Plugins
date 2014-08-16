@@ -40,6 +40,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 
 import java.awt.Color;
 import java.awt.Window;
@@ -117,6 +118,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param channel           The channel that this topic bar is for.
      * @param window            The window this topic bar is for.
      * @param iconManager       The icon manager to use for this bar's icons.
+     * @param eventBus          The event bus to post errors to
      */
     public TopicBar(
             final Window parentWindow,
@@ -128,7 +130,8 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final CommandController commandController,
             final Channel channel,
             final ChannelFrame window,
-            final IconManager iconManager) {
+            final IconManager iconManager,
+            final EventBus eventBus) {
         this.channel = channel;
         this.domain = domain;
         this.colourManager = colourManager;
@@ -142,7 +145,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 new NewlinesDocumentFilter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));
+                new ReplacePasteAction(eventBus, clipboard, "(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton<>("edit",
                 iconManager.getIcon("edit-inactive"),
                 iconManager.getIcon("edit"));
