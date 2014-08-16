@@ -33,6 +33,8 @@ import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Dimension;
 import java.awt.Window;
 
@@ -56,7 +58,7 @@ public class AliasManagerDialog extends StandardDialog {
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
-            @GlobalConfig final IconManager iconManager) {
+            @GlobalConfig final IconManager iconManager, final EventBus eventBus) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
         setTitle("Alias Manager");
@@ -93,7 +95,7 @@ public class AliasManagerDialog extends StandardDialog {
         add(getLeftButton(), "flowx, split 3, right, sg button");
         add(getRightButton(), "sg button");
 
-        UIUtilities.addUndoManager(response);
+        UIUtilities.addUndoManager(eventBus, response);
 
         linker.bindCommandList(aliasList);
         linker.bindCommand(command);

@@ -27,6 +27,8 @@ import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
 import com.dmdirc.ui.Colour;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -88,7 +90,7 @@ public final class UIUtilities {
      *
      * @param component component Text component to add an undo manager to
      */
-    public static void addUndoManager(final JTextComponent component) {
+    public static void addUndoManager(final EventBus eventBus, final JTextComponent component) {
         final UndoManager undoManager = new UndoManager();
 
         // Listen for undo and redo events
@@ -96,13 +98,13 @@ public final class UIUtilities {
                 new DMDircUndoableEditListener(undoManager));
 
         // Create an undo action and add it to the text component
-        component.getActionMap().put("Undo", new UndoAction(undoManager));
+        component.getActionMap().put("Undo", new UndoAction(eventBus, undoManager));
 
         // Bind the undo action to ctl-Z
         component.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
 
         // Create a redo action and add it to the text component
-        component.getActionMap().put("Redo", new RedoAction(undoManager));
+        component.getActionMap().put("Redo", new RedoAction(eventBus, undoManager));
 
         // Bind the redo action to ctl-Y
         component.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");

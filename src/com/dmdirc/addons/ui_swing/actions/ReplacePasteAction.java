@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -47,32 +49,31 @@ public final class ReplacePasteAction extends AbstractAction {
     private final String replacementRegex;
     /** Replacement string. */
     private final String replacementString;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of regex replacement paste action.
      *
-     * @param clipboard Clipboard to handle pasting
+     * @param eventBus          The event bus to post errors to
+     * @param clipboard         Clipboard to handle pasting
      * @param replacementRegex  Regex to match for replacement
      * @param replacementString Replacement string
      */
-    public ReplacePasteAction(final Clipboard clipboard, final String replacementRegex,
-            final String replacementString) {
+    public ReplacePasteAction(final EventBus eventBus, final Clipboard clipboard,
+            final String replacementRegex, final String replacementString) {
         super("NoSpacesPasteAction");
 
+        this.eventBus = eventBus;
         this.clipboard = clipboard;
         this.replacementRegex = replacementRegex;
         this.replacementString = replacementString;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (!(e.getSource() instanceof JTextComponent)
-                || !clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+        if (!(e.getSource() instanceof JTextComponent) ||
+                !clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
             return;
         }
 
@@ -82,13 +83,13 @@ public final class ReplacePasteAction extends AbstractAction {
             //Replace the current selection with the contents of the clipboard
             ((JTextComponent) e.getSource()).replaceSelection(
                     ((String) clipboard.getData(DataFlavor.stringFlavor))
-                    .replaceAll(replacementRegex, replacementString));
+                            .replaceAll(replacementRegex, replacementString));
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to get clipboard "
-                    + "contents: " + ex.getMessage());
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
         } catch (UnsupportedFlavorException ex) {
-            Logger.appError(ErrorLevel.LOW, "Unable to get clipboard "
-                    + "contents", ex);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unable to get clipboard contents", ""));
         }
     }
 

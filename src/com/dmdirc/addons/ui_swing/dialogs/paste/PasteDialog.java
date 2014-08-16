@@ -79,8 +79,6 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     private final AggregateConfigProvider config;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
-    /** The bus to dispatch events on. */
-    private final EventBus eventBus;
 
     /**
      * Creates a new instance of PreferencesDialog.
@@ -111,9 +109,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         this.config = config;
         this.pluginManager = pluginManager;
         this.commandController = commandController;
-        this.eventBus = eventBus;
 
-        initComponents(text);
+        initComponents(eventBus, text);
         initListeners();
 
         setFocusTraversalPolicy(new PasteDialogFocusTraversalPolicy(
@@ -129,13 +126,13 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      *
      * @param text text to show in the dialog
      */
-    private void initComponents(final String text) {
+    private void initComponents(final EventBus eventBus, final String text) {
         scrollPane = new JScrollPane();
         textField = new TextAreaInputField(iconManager, config, text);
         editButton = new JButton("Edit");
         infoLabel = new TextLabel();
 
-        UIUtilities.addUndoManager(textField);
+        UIUtilities.addUndoManager(eventBus, textField);
 
         orderButtons(new JButton(), new JButton());
         getOkButton().setText("Send");
@@ -207,11 +204,6 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                 KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "leftArrowAction");
     }
 
-    /**
-     * Handles the actions for the dialog.
-     *
-     * @param actionEvent Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (getOkButton().equals(actionEvent.getSource())) {
@@ -246,11 +238,6 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyTyped(final KeyEvent e) {
         infoLabel.setText("This will be sent as "
