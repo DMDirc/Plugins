@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
@@ -48,14 +50,13 @@ public class ImageLoader extends LoggingSwingWorker<Image, Void> {
      */
     private final BackgroundPainter painter;
 
-    public ImageLoader(final URL imageURL, final BackgroundPainter painter) {
+    public ImageLoader(final URL imageURL, final BackgroundPainter painter,
+            final EventBus eventBus) {
+        super(eventBus);
         this.imageURL = imageURL;
         this.painter = painter;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Image doInBackground() {
         try {
@@ -70,9 +71,6 @@ public class ImageLoader extends LoggingSwingWorker<Image, Void> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void done() {
         try {

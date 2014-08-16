@@ -84,6 +84,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             final EventBus eventBus,
             final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
+        super(eventBus);
         this.factory = factory;
         this.eventBus = eventBus;
         this.categoryPanel = categoryPanel;

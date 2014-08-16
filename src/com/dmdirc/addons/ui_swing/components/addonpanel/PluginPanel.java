@@ -82,7 +82,7 @@ public class PluginPanel extends AddonPanel {
             @GlobalConfig final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig) {
-        super(parentWindow, workerFactory);
+        super(parentWindow, workerFactory, eventBus);
         this.pluginManager = pluginManager;
         this.iconManager = iconManager;
         this.updateManager = updateManager;

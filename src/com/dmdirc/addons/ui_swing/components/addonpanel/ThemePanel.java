@@ -33,6 +33,8 @@ import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +69,7 @@ public class ThemePanel extends AddonPanel {
      * @param iconManager   Manager to use to retrieve addon-related icons.
      * @param updateManager Manager to use to retrieve update information.
      * @param userConfig    Configuration to write update-related settings to.
+     * @param eventBus      The event bus to post errors to.
      */
     @Inject
     public ThemePanel(
@@ -75,8 +78,9 @@ public class ThemePanel extends AddonPanel {
             final DataLoaderWorkerFactory workerFactory,
             @GlobalConfig final IconManager iconManager,
             final CachingUpdateManager updateManager,
-            @UserConfig final ConfigProvider userConfig) {
-        super(parentWindow, workerFactory);
+            @UserConfig final ConfigProvider userConfig,
+            final EventBus eventBus) {
+        super(parentWindow, workerFactory, eventBus);
         this.themeManager = themeManager;
         this.iconManager = iconManager;
         this.updateManager = updateManager;

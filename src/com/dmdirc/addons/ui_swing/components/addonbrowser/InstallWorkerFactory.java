@@ -26,6 +26,8 @@ import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
 
+import com.google.common.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 /**
@@ -38,21 +40,23 @@ public class InstallWorkerFactory {
     private final String pluginDirectory;
     private final String themeDirectory;
     private final PluginManager pluginManager;
+    private final EventBus eventBus;
 
     @Inject
     public InstallWorkerFactory(final Downloader downloader,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.PLUGINS) final String pluginDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.THEMES) final String themeDirectory,
-            final PluginManager pluginManager) {
+            final PluginManager pluginManager, final EventBus eventBus) {
         this.downloader = downloader;
         this.tempDirectory = tempDirectory;
         this.pluginDirectory = pluginDirectory;
         this.themeDirectory = themeDirectory;
         this.pluginManager = pluginManager;
+        this.eventBus = eventBus;
     }
     public InstallWorker getInstallWorker(final AddonInfo info, final InstallerWindow installer) {
         return new InstallWorker(downloader, tempDirectory, pluginDirectory, themeDirectory,
-                pluginManager, info, installer);
+                pluginManager, eventBus, info, installer);
     }
 }

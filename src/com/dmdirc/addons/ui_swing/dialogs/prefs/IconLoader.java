@@ -58,6 +58,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
      */
     public IconLoader(final IconManager iconManager, final EventBus eventBus,
             final CategoryLabel label, final String icon) {
+        super(eventBus);
         this.iconManager = iconManager;
         this.eventBus = eventBus;
         this.label = label;

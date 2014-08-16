@@ -30,6 +30,8 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.Downloader;
 
+import com.google.common.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -60,9 +62,10 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager,
+            final EventBus eventBus,
             @Unbound final AddonInfo info,
             @Unbound final InstallerWindow window) {
-
+        super(eventBus);
         this.downloader = downloader;
         this.info = info;
         this.installer = window;
