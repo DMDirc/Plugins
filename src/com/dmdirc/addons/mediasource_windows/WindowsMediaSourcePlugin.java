@@ -24,8 +24,6 @@ package com.dmdirc.addons.mediasource_windows;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
@@ -100,8 +98,8 @@ public class WindowsMediaSourcePlugin extends BasePlugin
             filesHelper.extractResourcesEndingWith(".dll");
             filesHelper.extractResourcesEndingWith(".exe");
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.MEDIUM, "Unable to extract files for windows media source: "
-                    + ex.getMessage(), ex);
+            throw new IllegalStateException("Unable to extract needed files: " + ex.getMessage(),
+                    ex);
         }
     }
 

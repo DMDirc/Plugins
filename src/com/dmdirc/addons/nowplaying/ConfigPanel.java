@@ -29,8 +29,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -238,8 +236,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
                 try {
                     updatePreview();
                 } catch (LinkageError | Exception e) {
-                    Logger.appError(ErrorLevel.MEDIUM,
-                            "Error when updating nowplaying preview", e);
+                    preview.setText("Error updating preview: " + e.getMessage());
                 }
             }
         }, 500);
