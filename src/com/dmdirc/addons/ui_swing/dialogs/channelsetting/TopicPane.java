@@ -30,6 +30,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -67,14 +68,14 @@ public class TopicPane extends JPanel implements ActionListener {
      * @param parent            Parent dialog
      * @param channelWindow     Channel window
      * @param clipboard         Clipboard to copy and paste with
+     * @param eventBus          The event bus to post errors to
      */
     public TopicPane(final Channel channel, final IconManager iconManager,
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow, final Clipboard clipboard) {
-        super();
-
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+            final InputWindow channelWindow, final Clipboard clipboard,
+            final EventBus eventBus) {
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
         this.channelWindow = channelWindow;
@@ -83,7 +84,7 @@ public class TopicPane extends JPanel implements ActionListener {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel(iconManager, serviceManager, commandController);
+        initTopicsPanel(iconManager, serviceManager, commandController, eventBus);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -94,9 +95,10 @@ public class TopicPane extends JPanel implements ActionListener {
     private void initTopicsPanel(
             final IconManager iconManager,
             final ServiceManager serviceManager,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final EventBus eventBus) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
-                channelWindow, clipboard, commandController);
+                channelWindow, clipboard, commandController, eventBus);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

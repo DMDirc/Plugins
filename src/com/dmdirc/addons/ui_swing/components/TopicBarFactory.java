@@ -33,6 +33,8 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 
@@ -55,6 +57,7 @@ public class TopicBarFactory {
     private final PluginManager pluginManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
+    private final EventBus eventBus;
 
     @Inject
     public TopicBarFactory(
@@ -64,7 +67,8 @@ public class TopicBarFactory {
             final ColourManager colourManager,
             final PluginManager pluginManager,
             final Clipboard clipboard,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final EventBus eventBus) {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;
@@ -72,6 +76,7 @@ public class TopicBarFactory {
         this.pluginManager = pluginManager;
         this.clipboard = clipboard;
         this.commandController = commandController;
+        this.eventBus = eventBus;
     }
 
     public TopicBar getTopicBar(
@@ -79,7 +84,7 @@ public class TopicBarFactory {
             final ChannelFrame window,
             final IconManager iconManager) {
         return new TopicBar(parentWindow.get(), globalConfig, domain, colourManager, pluginManager,
-                clipboard, commandController, channel, window, iconManager);
+                clipboard, commandController, channel, window, iconManager, eventBus);
     }
 
 }

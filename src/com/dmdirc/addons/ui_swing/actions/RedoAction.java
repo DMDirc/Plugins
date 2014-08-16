@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.event.ActionEvent;
 
@@ -40,23 +42,22 @@ public final class RedoAction extends AbstractAction {
     private static final long serialVersionUID = 1;
     /** Undo manager. */
     private final UndoManager undoManager;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of RedoAction.
      *
+     * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public RedoAction(final UndoManager undoManager) {
+    public RedoAction(final EventBus eventBus, final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;
+        this.eventBus = eventBus;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param evt Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent evt) {
         try {
@@ -64,7 +65,7 @@ public final class RedoAction extends AbstractAction {
                 undoManager.redo();
             }
         } catch (CannotUndoException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to redo");
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to redo", ""));
         }
     }
 

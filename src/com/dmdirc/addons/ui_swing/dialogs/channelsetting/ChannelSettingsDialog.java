@@ -36,6 +36,8 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -85,6 +87,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final Clipboard clipboard;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -110,7 +114,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final Channel channel,
             final Window parentWindow,
             final Clipboard clipboard,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final EventBus eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -120,10 +125,11 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.channel = checkNotNull(channel);
         this.clipboard = clipboard;
         this.commandController = checkNotNull(commandController);
+        this.eventBus = eventBus;
 
-        this.identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
+        identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
                 channel.getChannelInfo().getName());
-        this.channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
+        channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
 
         initComponents();
         initListeners();
@@ -161,7 +167,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private void initTopicTab() {
         topicModesPane = new TopicPane(channel, channel.getIconManager(),
                 commandController, serviceManager,
-                this, channelWindow, clipboard);
+                this, channelWindow, clipboard, eventBus);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 

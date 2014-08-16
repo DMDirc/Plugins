@@ -55,6 +55,8 @@ import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
 
+import com.google.common.eventbus.EventBus;
+
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 
@@ -176,13 +178,14 @@ public class DialogModule {
             final PrefsComponentFactory compFactory,
             @MainWindow final Window parentWindow,
             final Clipboard clipboard,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final EventBus eventBus) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager,
-                        compFactory, key, parentWindow, clipboard, commandController);
+                        compFactory, key, parentWindow, clipboard, commandController, eventBus);
             }
         };
     }
