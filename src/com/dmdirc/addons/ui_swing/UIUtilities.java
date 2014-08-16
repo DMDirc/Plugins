@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.addons.ui_swing.actions.RedoAction;
 import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
-import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
 import com.dmdirc.ui.Colour;
 
 import java.awt.Color;
@@ -208,7 +206,7 @@ public final class UIUtilities {
             } catch (InterruptedException ex) {
                 //Ignore
             } catch (InvocationTargetException ex) {
-                Logger.appError(ErrorLevel.HIGH, "Unable to execute thread.", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
