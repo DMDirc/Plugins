@@ -23,43 +23,46 @@
 package com.dmdirc.addons.mediasource_linux_title;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
-import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
+import com.google.common.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import dagger.ObjectGraph;
+import javax.inject.Inject;
 
 /**
  * A media source plugin which provides two {@link TitleMediaSource}s, one for the Last.fm linux
  * client and one for Spotify (running under Wine).
  */
-public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
+public class TitleMediaSourceManager {
 
-    private TitleMediaSourceManager manager;
+    /** The sources to be returned. */
+    private List<MediaSource> sources = null;
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new TitleMediaSourceModule()));
-        getObjectGraph().validate();
-        manager = getObjectGraph().get(TitleMediaSourceManager.class);
+    @Inject
+    public TitleMediaSourceManager(final EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
-    @Override
     public void onLoad() {
-        manager.onLoad();
+        sources = new ArrayList<>(2);
+        sources.add(new TitleMediaSource(eventBus, "grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'"
+                + "| grep -vE '(\"Last.fm "
+                + "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no "
+                + "name\\)):' | sed -r 's/^[^\"]*?\"(.*)\": \\(\"last\\.?fm.*$/\\1/g'", "Last.fm"));
+        sources.add(new TitleMediaSource(eventBus, "grep '\": (\"spotify.exe' | cut -d '\"' -f 2 | "
+                + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
     }
 
-    @Override
     public void onUnload() {
-        manager.onUnload();
+        sources.clear();
+        sources = null;
     }
 
-    @Override
     public List<MediaSource> getSources() {
-        return manager.getSources();
+        return sources;
     }
-
 }
