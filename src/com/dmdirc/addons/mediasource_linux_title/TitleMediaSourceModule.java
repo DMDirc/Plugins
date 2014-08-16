@@ -22,44 +22,13 @@
 
 package com.dmdirc.addons.mediasource_linux_title;
 
-import com.dmdirc.addons.nowplaying.MediaSource;
-import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.ClientModule;
 
-import java.util.List;
-
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * A media source plugin which provides two {@link TitleMediaSource}s, one for the Last.fm linux
- * client and one for Spotify (running under Wine).
+ * DI Module for the title media source plugin.
  */
-public class TitleMediaSourcePlugin extends BasePlugin implements MediaSourceManager {
-
-    private TitleMediaSourceManager manager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new TitleMediaSourceModule()));
-        getObjectGraph().validate();
-        manager = getObjectGraph().get(TitleMediaSourceManager.class);
-    }
-
-    @Override
-    public void onLoad() {
-        manager.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        manager.onUnload();
-    }
-
-    @Override
-    public List<MediaSource> getSources() {
-        return manager.getSources();
-    }
-
+@Module(injects=TitleMediaSourceManager.class, addsTo = ClientModule.class)
+public class TitleMediaSourceModule {
 }

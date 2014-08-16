@@ -24,9 +24,10 @@ package com.dmdirc.addons.mediasource_linux_title;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.Logger;
-import com.dmdirc.util.io.StreamUtils;
+
+import com.google.common.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +38,8 @@ import java.io.InputStreamReader;
  */
 public class TitleMediaSource implements MediaSource {
 
+    /** The event bus to post errors to. */
+    private final EventBus eventBus;
     /** The command to use to get the title. */
     private final String command;
     /** The name of the player we're retrieving. */
@@ -45,10 +48,12 @@ public class TitleMediaSource implements MediaSource {
     /**
      * Creates a new title media source.
      *
-     * @param command The command to be executed
-     * @param name    The name of the media source
+     * @param eventBus The event bus to post errors to
+     * @param command  The command to be executed
+     * @param name     The name of the media source
      */
-    public TitleMediaSource(final String command, final String name) {
+    public TitleMediaSource(final EventBus eventBus, final String command, final String name) {
+        this.eventBus = eventBus;
         this.command = command;
         this.name = name;
     }
@@ -111,30 +116,23 @@ public class TitleMediaSource implements MediaSource {
     }
 
     private String getInfo() {
-        InputStreamReader reader = null;
-        BufferedReader input = null;
-        Process process;
 
+        final String[] args = new String[]{"/bin/bash", "-c", "xwininfo -root -tree | " + command};
         try {
-            final String[] args = new String[]{
-                "/bin/bash", "-c", "xwininfo -root -tree | " + command
-            };
-
-            process = Runtime.getRuntime().exec(args);
-
-            reader = new InputStreamReader(process.getInputStream());
-            input = new BufferedReader(reader);
-
-            final String line = input.readLine();
-            if (line != null) {
-                return line;
+            final Process process = Runtime.getRuntime().exec(args);
+            try (InputStreamReader reader = new InputStreamReader(process.getInputStream());
+                    BufferedReader input = new BufferedReader(reader)) {
+                final String line = input.readLine();
+                if (line != null) {
+                    return line;
+                }
+            } catch (IOException ex) {
+                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                        "Unable to retrieve media source info", ""));
             }
         } catch (IOException ex) {
-            Logger.userError(ErrorLevel.LOW, "Unable to retrieve media source info",
-                    ex);
-        } finally {
-            StreamUtils.close(reader);
-            StreamUtils.close(input);
+            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                            "Unable to retrieve media source info", ""));
         }
 
         return "";
