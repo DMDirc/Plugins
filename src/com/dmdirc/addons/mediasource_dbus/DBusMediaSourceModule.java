@@ -22,43 +22,13 @@
 
 package com.dmdirc.addons.mediasource_dbus;
 
-import com.dmdirc.addons.nowplaying.MediaSource;
-import com.dmdirc.addons.nowplaying.MediaSourceManager;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.ClientModule;
 
-import java.util.List;
-
-import dagger.ObjectGraph;
+import dagger.Module;
 
 /**
- * Provides a media source for dbus players.
+ * DI Module for the DBus media source.
  */
-public class DBusMediaSource extends BasePlugin implements MediaSourceManager {
-
-    private DBusMediaSourceManager manager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new DBusMediaSourceModule()));
-        getObjectGraph().validate();
-        manager = getObjectGraph().get(DBusMediaSourceManager.class);
-    }
-
-    @Override
-    public void onLoad() {
-        manager.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        manager.onUnload();
-    }
-
-    @Override
-    public List<MediaSource> getSources() {
-        return manager.getSources();
-    }
-
+@Module(injects=DBusMediaSourceManager.class, addsTo = ClientModule.class)
+public class DBusMediaSourceModule {
 }

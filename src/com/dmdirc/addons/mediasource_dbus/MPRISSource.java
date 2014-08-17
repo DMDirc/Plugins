@@ -30,13 +30,11 @@ import java.util.Map;
 
 /**
  * A media source for anything that's compatible with MRPIS.
- *
- * @author chris
  */
 public class MPRISSource implements MediaSource {
 
     /** The media source manager. */
-    private final DBusMediaSource source;
+    private final DBusMediaSourceManager source;
     /** The service name. */
     private final String service;
     /** The name of the source. */
@@ -50,7 +48,7 @@ public class MPRISSource implements MediaSource {
      * @param source  The manager which owns this source
      * @param service The service name of the MRPIS service
      */
-    public MPRISSource(final DBusMediaSource source, final String service) {
+    public MPRISSource(final DBusMediaSourceManager source, final String service) {
         this.source = source;
         this.service = service;
 
@@ -176,7 +174,7 @@ public class MPRISSource implements MediaSource {
     protected Map<String, String> getTrackInfo() {
         final List<String> list = source.doDBusCall("org.mpris." + service,
                 "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Metadata");
-        return DBusMediaSource.parseDictionary(list);
+        return source.parseDictionary(list);
     }
 
     /**
@@ -195,7 +193,7 @@ public class MPRISSource implements MediaSource {
     /**
      * Get the duration in seconds as a string.
      *
-     * @param seconds Input to get duration for
+     * @param secondsInput Input to get duration for
      *
      * @return Duration as a string
      */
