@@ -31,8 +31,6 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
-import com.dmdirc.util.annotations.factory.Factory;
-import com.dmdirc.util.annotations.factory.Unbound;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -44,7 +42,6 @@ import javax.swing.JButton;
 import net.miginfocom.swing.MigLayout;
 
 /** URL Protocol dialog. */
-@Factory(inject = true, singleton = true)
 public class URLDialog extends StandardDialog implements ActionListener {
 
     /** Serial version UID. */
@@ -70,7 +67,7 @@ public class URLDialog extends StandardDialog implements ActionListener {
      * @param urlHandler   The URL Handler to use to handle clicked links
      */
     public URLDialog(
-            @Unbound final URI url,
+            final URI url,
             @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider global,
             @SuppressWarnings("qualifiers") @UserConfig final ConfigProvider config,
             @SuppressWarnings("qualifiers") @MainWindow final Window parentWindow,

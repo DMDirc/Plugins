@@ -33,7 +33,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
-import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
@@ -112,10 +111,10 @@ public class DataLoaderWorker
             final UpdateManager updateManager,
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             final EventBus eventBus,
-            @Unbound final AddonTable table,
-            @Unbound final boolean download,
-            @Unbound final BrowserWindow browserWindow,
-            @Unbound final JScrollPane scrollPane) {
+            final AddonTable table,
+            final boolean download,
+            final BrowserWindow browserWindow,
+            final JScrollPane scrollPane) {
         super(eventBus);
         this.downloader = downloader;
         this.globalConfig = globalConfig;

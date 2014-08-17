@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.util.annotations.factory.Unbound;
 import com.dmdirc.util.io.Downloader;
 
 import com.google.common.eventbus.EventBus;
@@ -63,8 +62,8 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             @SuppressWarnings("qualifiers") @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager,
             final EventBus eventBus,
-            @Unbound final AddonInfo info,
-            @Unbound final InstallerWindow window) {
+            final AddonInfo info,
+            final InstallerWindow window) {
         super(eventBus);
         this.downloader = downloader;
         this.info = info;
