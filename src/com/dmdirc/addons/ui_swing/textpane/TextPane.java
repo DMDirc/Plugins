@@ -179,7 +179,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Returns the last visible line in the textpane.
+     * Returns the last visible line in the TextPane.
      *
      * @return Last visible line index
      */
@@ -196,11 +196,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         scrollModel.setValue(position);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse wheel event
-     */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
         if (showNotification && e.getValue() >= scrollModel.getMaximum()) {
@@ -214,11 +209,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 + (lines == 1 ? "" : "s") + " ↓");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse wheel event
-     */
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (e.getWheelRotation() > 0) {
@@ -230,7 +220,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      *
-     * Returns the line information from a mouse click inside the textpane.
+     * Returns the line information from a mouse click inside the TextPane.
      *
      * @param point mouse position
      *
@@ -242,7 +232,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /**
      *
-     * Returns the line information from a mouse click inside the textpane.
+     * Returns the line information from a mouse click inside the TextPane.
      *
      * @param point     mouse position
      * @param selection Are we selecting text?
@@ -254,24 +244,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     public LineInfo getClickPosition(final Point point,
             final boolean selection) {
         return canvas.getClickPosition(point, selection);
-    }
-
-    /**
-     * Returns the selected text.
-     *
-     * @return Selected text
-     */
-    public String getSelectedText() {
-        return getSelectedText(false);
-    }
-
-    /**
-     * Returns the selected text.
-     *
-     * @return Selected text
-     */
-    public String getStyledSelectedText() {
-        return getSelectedText(true);
     }
 
     /**
@@ -381,7 +353,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      *
      * @param position Line position
      */
-    public void setSelectedTexT(final LinePosition position) {
+    public void setSelectedText(final LinePosition position) {
         canvas.setSelectedRange(position);
     }
 
@@ -397,7 +369,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Returns the surrouding word at the specified position.
+     * Returns the surrounding word at the specified position.
      *
      * @param lineNumber Line number to get word from
      * @param index      Position to get surrounding word
@@ -425,12 +397,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param copyControlCharacters Should we copy control codes, or strip them?
      */
     public void copy(final boolean copyControlCharacters) {
-        if (getSelectedText() != null && !getSelectedText().isEmpty()) {
+        if (getSelectedText(false) != null && !getSelectedText(false).isEmpty()) {
             clipboard.setContents(new StringSelection(getSelectedText(copyControlCharacters)), null);
         }
     }
 
-    /** Clears the textpane. */
+    /** Clears the TextPane. */
     public void clear() {
         UIUtilities.invokeLater(new Runnable() {
             /** {@inheritDoc}. */
@@ -446,12 +418,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         canvas.clearSelection();
     }
 
-    /** Scrolls one page up in the textpane. */
+    /** Scrolls one page up in the TextPane. */
     public void pageDown() {
         scrollModel.setValue(scrollModel.getValue() + 10);
     }
 
-    /** Scrolls one page down in the textpane. */
+    /** Scrolls one page down in the TextPane. */
     public void pageUp() {
         scrollModel.setValue(scrollModel.getValue() - 10);
     }
@@ -466,7 +438,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         scrollModel.setValue(scrollModel.getMaximum());
     }
 
-    /** {@inheritDoc}. */
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
         UIUtilities.invokeLater(new Runnable() {
@@ -485,7 +456,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 if (selectedRange.getEndLine() < 0) {
                     selectedRange.setEndLine(0);
                 }
-                setSelectedTexT(selectedRange);
+                setSelectedText(selectedRange);
                 if (scrollModel.getValue() == scrollModel.getMaximum()) {
                     setRangeProperties(newSize, newSize);
                 } else {
@@ -496,7 +467,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         });
     }
 
-    /** {@inheritDoc}. */
     @Override
     public void cleared() {
         UIUtilities.invokeLater(new Runnable() {
@@ -510,7 +480,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         });
     }
 
-    /** {@inheritDoc}. */
     @Override
     public void linesAdded(final int line, final int length, final int size) {
         UIUtilities.invokeLater(new Runnable() {
@@ -529,7 +498,6 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         });
     }
 
-    /** {@inheritDoc}. */
     @Override
     public void repaintNeeded() {
         UIUtilities.invokeLater(new Runnable() {
@@ -542,16 +510,16 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Retrieves this textpane's IRCDocument.
+     * Retrieves this TextPane's IRCDocument.
      *
-     * @return This textpane's IRC document
+     * @return This TextPane's IRC document
      */
     public IRCDocument getDocument() {
         return document;
     }
 
     /**
-     * Retrives the parent window for this textpane.
+     * Retrieves the parent window for this TextPane.
      *
      * @return Parent window
      */
@@ -560,7 +528,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Adds a textpane listener to this textpane.
+     * Adds a TextPane listener to this TextPane.
      *
      * @param listener Listener to add
      */
@@ -569,7 +537,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Removes a textpane listener from this textpane.
+     * Removes a TextPane listener from this TextPane.
      *
      * @param listener Listener to remove
      */
@@ -593,7 +561,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     }
 
     /**
-     * Called to close this textpane and any associated resources.
+     * Called to close this TextPane and any associated resources.
      */
     public void close() {
         backgroundPainter.unbind();
