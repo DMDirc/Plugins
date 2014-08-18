@@ -105,11 +105,11 @@ public class DataLoaderWorker
      */
     public DataLoaderWorker(
             final Downloader downloader,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider globalConfig,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            @SuppressWarnings("qualifiers") @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             final EventBus eventBus,
             final AddonTable table,
             final boolean download,

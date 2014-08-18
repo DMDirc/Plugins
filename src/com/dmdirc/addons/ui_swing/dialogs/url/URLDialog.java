@@ -68,9 +68,9 @@ public class URLDialog extends StandardDialog implements ActionListener {
      */
     public URLDialog(
             final URI url,
-            @SuppressWarnings("qualifiers") @GlobalConfig final AggregateConfigProvider global,
-            @SuppressWarnings("qualifiers") @UserConfig final ConfigProvider config,
-            @SuppressWarnings("qualifiers") @MainWindow final Window parentWindow,
+            @GlobalConfig final AggregateConfigProvider global,
+            @UserConfig final ConfigProvider config,
+            @MainWindow final Window parentWindow,
             final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
 
