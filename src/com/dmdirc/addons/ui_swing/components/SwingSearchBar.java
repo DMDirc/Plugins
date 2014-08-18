@@ -251,13 +251,13 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
                 getStartLine()))) {
             wrapIndicator.setVisible(true);
             textPane.setScrollBarPosition(result.getEndLine());
-            textPane.setSelectedTexT(result);
+            textPane.setSelectedText(result);
             validator.setValidates(true);
             searchBox.checkError();
         } else {
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
-            textPane.setSelectedTexT(result);
+            textPane.setSelectedText(result);
             foundText = true;
             validator.setValidates(foundText);
             searchBox.checkError();
