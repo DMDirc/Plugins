@@ -53,6 +53,7 @@ public class CategoryLabel extends JLabel {
      * Creates a new category label.
      *
      * @param iconManager Icon manager
+     * @param eventBus    The event bus to post errors to
      * @param parentList  Parent list
      * @param category    Parent category
      * @param numCats     Number of categories shown

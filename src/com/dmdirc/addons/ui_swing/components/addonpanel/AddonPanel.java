@@ -80,6 +80,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      *
      * @param parentWindow  Parent window
      * @param workerFactory The factory to use to produce data loader workers.
+     * @param eventBus      The event bus to post errors to.
      */
     public AddonPanel(final Window parentWindow, final DataLoaderWorkerFactory workerFactory,
             final EventBus eventBus) {

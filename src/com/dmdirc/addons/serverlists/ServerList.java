@@ -104,8 +104,6 @@ public class ServerList implements ConfigProviderListener {
      * group to an identity.
      *
      * @param group The group to be added
-     *
-     * @throws IOException if the new identity cannot be written
      */
     public void addServerGroup(final ServerGroup group) {
         final ServerGroupWriter writer = new ServerGroupWriter(

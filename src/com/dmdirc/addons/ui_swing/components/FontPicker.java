@@ -49,6 +49,7 @@ public class FontPicker extends JComboBox<Object> {
     /**
      * Creates a new Font picker for the specified font family.
      *
+     * @param eventBus   The event bus to post errors to
      * @param fontFamily Font family
      */
     public FontPicker(final EventBus eventBus, final String fontFamily) {
