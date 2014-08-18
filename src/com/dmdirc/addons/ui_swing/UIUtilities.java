@@ -88,7 +88,8 @@ public final class UIUtilities {
     /**
      * Adds an undo manager and associated key bindings to the specified text component.
      *
-     * @param component component Text component to add an undo manager to
+     * @param eventBus  The event bus to post errors to
+     * @param component The text component to add an undo manager to
      */
     public static void addUndoManager(final EventBus eventBus, final JTextComponent component) {
         final UndoManager undoManager = new UndoManager();

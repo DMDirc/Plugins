@@ -103,6 +103,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param parentWindow       Parent window
      * @param clipboard          Clipboard to copy and paste from
      * @param commandController  The controller to use to retrieve command information.
+     * @param eventBus           The event bus to post errors to.
      */
     public ChannelSettingsDialog(
             final IdentityFactory identityFactory,
