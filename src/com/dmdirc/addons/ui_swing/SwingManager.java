@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.events.FeedbackNagEvent;
@@ -76,6 +77,8 @@ public class SwingManager {
     private final SwingLinkHandler linkHandler;
     /** Bus to listen on for events. */
     private final EventBus eventBus;
+    /** The event bus for this plugin. */
+    private final EventBus swingEventBus;
     /** The provider to use to create tree-based frame managers. */
     private final TreeFrameManagerProvider treeProvider;
     /** The provider to use to create button-based frame managers. */
@@ -126,6 +129,7 @@ public class SwingManager {
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
             final EventBus eventBus,
+            @SwingEventBus final EventBus swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final ButtonBarProvider buttonProvider,
             final Provider<SwingWindowManager> swingWindowManager,
@@ -143,6 +147,7 @@ public class SwingManager {
         this.urlDialogFactory = urlDialogFactory;
         this.linkHandler = linkHandler;
         this.eventBus = eventBus;
+        this.swingEventBus = swingEventBus;
         this.treeProvider = treeProvider;
         this.buttonProvider = buttonProvider;
         this.swingWindowManager = swingWindowManager;
@@ -160,6 +165,8 @@ public class SwingManager {
         this.mainFrame.setWindowManager(ctrlTabManager);
         this.mainFrame.setStatusBar(statusBar.get());
         this.mainFrame.initComponents();
+        swingEventBus.register(mainFrame);
+        swingEventBus.register(ctrlTabManager);
 
         windowManager.addListenerAndSync(windowFactory.get());
         statusBarManager.registerStatusBar(statusBar.get());

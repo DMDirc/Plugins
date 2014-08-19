@@ -20,40 +20,31 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager;
+package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
-import javax.swing.JComponent;
+import com.google.common.base.Optional;
 
 /**
- * A frame manager is a widget that allows the user to navigate between the various frames that will
- * be open at any one time.
+ * Event triggered when a swing window is added.
  */
-public interface FrameManager extends SelectionListener {
+public class SwingWindowAddedEvent {
 
-    /**
-     * Sets the parent component of this frame manager. The frame manager should render itself
-     * within the parent.
-     *
-     * @param parent The parent control
-     */
-    void setParent(JComponent parent);
+    private final Optional<TextFrame> parentWindow;
+    private final TextFrame childWindow;
 
-    /**
-     * Indicates whether this frame manager can be positioned vertically (i.e., at the side of the
-     * screen).
-     *
-     * @return True iff the frame manager can be positioned vertically
-     */
-    boolean canPositionVertically();
+    public SwingWindowAddedEvent(final Optional<TextFrame> parentWindow,
+            final TextFrame childWindow) {
+        this.parentWindow = parentWindow;
+        this.childWindow = childWindow;
+    }
 
-    /**
-     * Indicates whether this frame manager can be positioned horizontally (i.e., at the top or
-     * bottom of the screen).
-     *
-     * @return True iff the frame manager can be positioned horizontally
-     */
-    boolean canPositionHorizontally();
+    public Optional<TextFrame> getParentWindow() {
+        return parentWindow;
+    }
 
+    public TextFrame getChildWindow() {
+        return childWindow;
+    }
 }

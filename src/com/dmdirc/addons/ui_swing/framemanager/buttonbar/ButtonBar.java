@@ -29,6 +29,8 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -39,6 +41,9 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
+
+import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -221,7 +226,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             window = windowFactory.getSwingWindow(frame);
             parentWindow = windowFactory.getSwingWindow(frame.getParent().orNull());
             if (window != null) {
-                windowAdded(parentWindow, window);
+                windowAdded(new SwingWindowAddedEvent(Optional.fromNullable(parentWindow), window));
             }
 
             if (!frame.getChildren().isEmpty()) {
@@ -324,8 +329,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
         return true;
     }
 
-    @Override
-    public void windowAdded(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowAdded(final SwingWindowAddedEvent event) {
+        final TextFrame window = event.getChildWindow();
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -338,8 +344,9 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Override
-    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowDeleted(final SwingWindowDeletedEvent event) {
+        final TextFrame window = event.getChildWindow();
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
