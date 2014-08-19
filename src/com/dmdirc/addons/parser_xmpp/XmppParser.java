@@ -666,7 +666,7 @@ public class XmppParser extends BaseSocketAwareParser {
             }
 
             getCallback(CompositionStateChangeListener.class)
-                    .onCompositionStateCanged(null, null, state, chat.getParticipant());
+                    .onCompositionStateChanged(null, null, state, chat.getParticipant());
         }
 
     }
