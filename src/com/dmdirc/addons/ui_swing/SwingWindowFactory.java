@@ -28,12 +28,15 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.util.collections.ListenerList;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
@@ -60,10 +63,10 @@ public class SwingWindowFactory implements FrameListener {
     private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
     /** Active window manager. */
     private final Provider<ActiveFrameManager> activeFrameManager;
-    /** Our list of listeners. */
-    private final ListenerList listeners = new ListenerList();
     /** The event bus to post errors to. */
     private final EventBus eventBus;
+    /** The swing event bus. */
+    private final EventBus swingEventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -74,6 +77,7 @@ public class SwingWindowFactory implements FrameListener {
      * @param serverFrameFactory      The factory to use to produce server frames.
      * @param channelFrameFactory     The factory to use to produce channel frames.
      * @param eventBus                The event bus to post errors to
+     * @param swingEventBus           The swing event bus;
      */
     @Inject
     public SwingWindowFactory(
@@ -82,9 +86,11 @@ public class SwingWindowFactory implements FrameListener {
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
-            final EventBus eventBus) {
+            final EventBus eventBus,
+            @SwingEventBus final EventBus swingEventBus) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
+        this.swingEventBus = swingEventBus;
 
         registerImplementation(customFrameFactory);
         registerImplementation(customInputFrameFactory);
@@ -102,26 +108,6 @@ public class SwingWindowFactory implements FrameListener {
      */
     public final void registerImplementation(final WindowProvider provider) {
         implementations.put(provider.getComponents(), provider);
-    }
-
-    /**
-     * Registers a new listener which will be notified about the addition and deletion of all Swing
-     * UI windows.
-     *
-     * @param listener The listener to be added
-     */
-    public void addWindowListener(final SwingWindowListener listener) {
-        listeners.add(SwingWindowListener.class, listener);
-    }
-
-    /**
-     * Un-registers the specified listener from being notified about the addiction and deletion of
-     * all Swing UI windows.
-     *
-     * @param listener The listener to be removed
-     */
-    public void removeWindowListener(final SwingWindowListener listener) {
-        listeners.remove(SwingWindowListener.class, listener);
     }
 
     @Override
@@ -180,10 +166,8 @@ public class SwingWindowFactory implements FrameListener {
                 if (childWindow == null) {
                     return;
                 }
-
-                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
-                    listener.windowAdded(parentWindow, childWindow);
-                }
+                swingEventBus.post(new SwingWindowAddedEvent(
+                        Optional.fromNullable(parentWindow), childWindow));
 
                 if (focus) {
                     activeFrameManager.get().setActiveFrame(childWindow);
@@ -200,10 +184,8 @@ public class SwingWindowFactory implements FrameListener {
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
                 final TextFrame childWindow = getSwingWindow(window);
-
-                for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
-                    listener.windowDeleted(parentWindow, childWindow);
-                }
+                swingEventBus.post(new SwingWindowDeletedEvent(
+                        Optional.fromNullable(parentWindow), childWindow));
 
                 windows.remove(window);
             }
@@ -212,9 +194,6 @@ public class SwingWindowFactory implements FrameListener {
 
     /** Disposes of this window factory, removing all listeners. */
     public void dispose() {
-        for (SwingWindowListener listener : listeners.get(SwingWindowListener.class)) {
-            listeners.remove(SwingWindowListener.class, listener);
-        }
         for (TextFrame frame : windows.values()) {
             frame.dispose();
         }

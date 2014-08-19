@@ -20,40 +20,13 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager;
+package com.dmdirc.addons.ui_swing.injection;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
-
-import javax.swing.JComponent;
+import javax.inject.Qualifier;
 
 /**
- * A frame manager is a widget that allows the user to navigate between the various frames that will
- * be open at any one time.
+ * Qualifier for the Swing plugin's event bus.
  */
-public interface FrameManager extends SelectionListener {
-
-    /**
-     * Sets the parent component of this frame manager. The frame manager should render itself
-     * within the parent.
-     *
-     * @param parent The parent control
-     */
-    void setParent(JComponent parent);
-
-    /**
-     * Indicates whether this frame manager can be positioned vertically (i.e., at the side of the
-     * screen).
-     *
-     * @return True iff the frame manager can be positioned vertically
-     */
-    boolean canPositionVertically();
-
-    /**
-     * Indicates whether this frame manager can be positioned horizontally (i.e., at the top or
-     * bottom of the screen).
-     *
-     * @return True iff the frame manager can be positioned horizontally
-     */
-    boolean canPositionHorizontally();
-
+@Qualifier
+public @interface SwingEventBus {
 }

@@ -25,14 +25,18 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
-import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,8 +52,8 @@ import net.miginfocom.swing.MigLayout;
  * Provides an MDI style bar for closing frames.
  */
 @Singleton
-public class MDIBar extends JPanel implements SwingWindowListener,
-        SelectionListener, ActionListener, ConfigChangeListener {
+public class MDIBar extends JPanel implements SelectionListener, ActionListener,
+        ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = -8028057596226636245L;
@@ -72,7 +76,6 @@ public class MDIBar extends JPanel implements SwingWindowListener,
      * @param globalConfig       The config to read settings from.
      * @param iconManager        The manager to use to retrieve icons.
      * @param domain             The domain to read settings from under.
-     * @param windowFactory      The window factory to use to create and listen for windows.
      * @param activeFrameManager Active frame manager.
      */
     @Inject
@@ -80,13 +83,11 @@ public class MDIBar extends JPanel implements SwingWindowListener,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @GlobalConfig final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
-            final SwingWindowFactory windowFactory,
-            final ActiveFrameManager activeFrameManager) {
-        super();
-
+            final ActiveFrameManager activeFrameManager,
+            @SwingEventBus final EventBus eventBus) {
         this.activeFrameManager = activeFrameManager;
-        this.config = globalConfig;
-        this.configDomain = domain;
+        config = globalConfig;
+        configDomain = domain;
         visibility = config.getOptionBool(configDomain, "mdiBarVisibility");
 
         closeButton = new NoFocusButton(iconManager.getScaledIcon("close-12", ICON_SIZE, ICON_SIZE));
@@ -95,7 +96,7 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));
         add(closeButton, "w 17!, h 17!, right");
 
-        windowFactory.addWindowListener(this);
+        eventBus.register(this);
 
         activeFrameManager.addSelectionListener(this);
         closeButton.addActionListener(this);
@@ -122,21 +123,16 @@ public class MDIBar extends JPanel implements SwingWindowListener,
         });
     }
 
-    @Override
-    public void windowAdded(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowAdded(final SwingWindowAddedEvent event) {
         check();
     }
 
-    @Override
-    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowDeleted(final SwingWindowDeletedEvent event) {
         check();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (activeFrameManager.getActiveFrame() == null) {

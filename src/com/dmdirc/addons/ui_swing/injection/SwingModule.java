@@ -106,6 +106,13 @@ public class SwingModule {
     }
 
     @Provides
+    @Singleton
+    @SwingEventBus
+    public EventBus getSwingEventBus() {
+        return new EventBus();
+    }
+
+    @Provides
     @PluginDomain(SwingController.class)
     public String getSettingsDomain() {
         return domain;

@@ -29,6 +29,8 @@ import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
@@ -49,6 +51,7 @@ import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -188,8 +191,6 @@ public class MainFrame extends JFrame implements WindowListener,
                 }
             });
 
-            windowFactory.addWindowListener(this);
-
             setTitle(getTitlePrefix());
             initDone = true;
         }
@@ -326,13 +327,11 @@ public class MainFrame extends JFrame implements WindowListener,
             public void run() {
                 frameManagerPanel.removeAll();
                 if (mainFrameManager != null) {
-                    windowFactory.removeWindowListener(mainFrameManager);
                     removeSelectionListener(mainFrameManager);
                 }
                 mainFrameManager = frameManagerProvider.get();
                 mainFrameManager.setParent(frameManagerPanel);
                 addSelectionListener(mainFrameManager);
-                windowFactory.addWindowListener(mainFrameManager);
             }
         });
     }
@@ -616,14 +615,24 @@ public class MainFrame extends JFrame implements WindowListener,
 
     @Override
     public void windowAdded(final TextFrame parent, final TextFrame window) {
+    }
+
+    @Override
+    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+    }
+
+    @Subscribe
+    public void doWindowAdded(final SwingWindowAddedEvent event) {
+        final TextFrame window = event.getChildWindow();
         if (activeFrame == null) {
             setActiveFrame(window);
         }
         window.getContainer().addFrameInfoListener(this);
     }
 
-    @Override
-    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void doWindowDeleted(final SwingWindowDeletedEvent event) {
+        final TextFrame window = event.getChildWindow();
         if (window == null) {
             return; //Deleting a window that doesnt exist will just cause problems, stop
         }
