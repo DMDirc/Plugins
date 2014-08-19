@@ -61,6 +61,7 @@ public class ScriptEngineWrapper {
      * @param eventBus            The event bus to post errors to
      * @param filename            Filename of script
      *
+     * @throws java.io.FileNotFoundException If file is not found
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
@@ -108,7 +109,6 @@ public class ScriptEngineWrapper {
      *
      * @return Created script engine
      *
-     * @throws java.io.FileNotFoundException If file is not found
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngine createEngine() throws ScriptException {
