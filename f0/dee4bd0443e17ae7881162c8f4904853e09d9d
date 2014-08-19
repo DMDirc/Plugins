@@ -1,0 +1,7 @@
+Code-Review+2: Chris Smith <chris@dmdirc.com>
+Automatic-Compile+1: DMDirc Build Manager
+Submitted-by: Chris Smith <chris@dmdirc.com>
+Submitted-at: Tue, 19 Aug 2014 10:05:13 +0100
+Reviewed-on: http://gerrit.dmdirc.com/3740
+Project: plugins
+Branch: refs/heads/master
