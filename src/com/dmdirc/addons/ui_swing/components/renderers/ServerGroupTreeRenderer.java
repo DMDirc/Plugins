@@ -58,11 +58,6 @@ public class ServerGroupTreeRenderer extends DefaultTreeCellRenderer {
         return label;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return Background colour for non selected nodes
-     */
     @Override
     public Color getBackgroundNonSelectionColor() {
         return null;

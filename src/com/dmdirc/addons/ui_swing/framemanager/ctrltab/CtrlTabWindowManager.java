@@ -26,12 +26,13 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
-import com.dmdirc.addons.ui_swing.SwingWindowListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -41,6 +42,7 @@ import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ import javax.swing.tree.TreeSelectionModel;
  * A Window manager to handle ctrl[+shift]+tab switching between windows.
  */
 @Singleton
-public class CtrlTabWindowManager implements SwingWindowListener, SelectionListener {
+public class CtrlTabWindowManager implements SelectionListener {
 
     /** Node storage, used for adding and deleting nodes correctly. */
     private final Map<Window, TreeViewNode> nodes;
@@ -102,7 +104,6 @@ public class CtrlTabWindowManager implements SwingWindowListener, SelectionListe
             }
         };
 
-        windowFactory.addWindowListener(this);
         activeFrameManager.addSelectionListener(this);
 
         mainFrame.getRootPane().getActionMap().put("prevFrameAction",
@@ -118,9 +119,10 @@ public class CtrlTabWindowManager implements SwingWindowListener, SelectionListe
                                 KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
     }
 
-    /* {@inheritDoc} */
-    @Override
-    public void windowAdded(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowAdded(final SwingWindowAddedEvent event) {
+        final TextFrame parent = event.getParentWindow().orNull();
+        final TextFrame window = event.getChildWindow();
         final TreeViewNode parentNode;
         if (parent == null) {
             parentNode = model.getRootNode();
@@ -142,9 +144,10 @@ public class CtrlTabWindowManager implements SwingWindowListener, SelectionListe
         });
     }
 
-    /* {@inheritDoc} */
-    @Override
-    public void windowDeleted(final TextFrame parent, final TextFrame window) {
+    @Subscribe
+    public void windowDeleted(final SwingWindowDeletedEvent event) {
+        final TextFrame parent = event.getParentWindow().orNull();
+        final TextFrame window = event.getChildWindow();
         UIUtilities.invokeAndWait(new Runnable() {
 
             @Override
