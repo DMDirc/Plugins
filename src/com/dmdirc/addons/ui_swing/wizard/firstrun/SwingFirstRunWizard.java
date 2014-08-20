@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.CorePluginExtractor;
+import com.dmdirc.plugins.CorePluginExtractor;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
