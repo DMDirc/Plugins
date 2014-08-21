@@ -171,6 +171,7 @@ public class SwingManager {
         windowManager.addListenerAndSync(windowFactory.get());
         statusBarManager.registerStatusBar(statusBar.get());
         eventBus.register(this);
+        eventBus.register(mainFrame);
         eventBus.register(linkHandler);
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -201,6 +202,8 @@ public class SwingManager {
         swingEventBus.unregister(ctrlTabManager);
         mainFrame.dispose();
         statusBarManager.unregisterStatusBar(statusBar.get());
+        eventBus.unregister(this);
+        eventBus.unregister(mainFrame);
         eventBus.unregister(linkHandler);
         uiInitialiser.unload();
     }

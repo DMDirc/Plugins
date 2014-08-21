@@ -39,7 +39,7 @@ import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientUnminimisedEvent;
-import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -74,8 +74,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
  * The main application frame.
  */
 public class MainFrame extends JFrame implements WindowListener,
-        ConfigChangeListener, FrameInfoListener,
-        NotificationListener, ActiveFrameManager {
+        ConfigChangeListener, NotificationListener, ActiveFrameManager {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
@@ -619,7 +618,6 @@ public class MainFrame extends JFrame implements WindowListener,
         if (activeFrame == null) {
             setActiveFrame(window);
         }
-        window.getContainer().addFrameInfoListener(this);
     }
 
     @Subscribe
@@ -646,24 +644,12 @@ public class MainFrame extends JFrame implements WindowListener,
                 setActiveFrame(focusOrder.peek());
             }
         }
-        window.getContainer().removeFrameInfoListener(this);
     }
 
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
-        //Ignore
-    }
-
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        //Ignore
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window,
-            final String title) {
-        if (activeFrame != null && activeFrame.getContainer().equals(window)) {
-            setTitle(title);
+    @Subscribe
+    public void titleChanged(final FrameTitleChangedEvent event) {
+        if (activeFrame != null && activeFrame.getContainer().equals(event.getContainer())) {
+            setTitle(event.getTitle());
         }
     }
 
