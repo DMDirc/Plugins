@@ -126,8 +126,12 @@ public class AddonCell extends JPanel implements AddonToggleListener {
 
     @Override
     public void setForeground(final Color fg) {
-        name.setForeground(fg);
-        status.setForeground(fg);
+        if (name != null) {
+            name.setForeground(fg);
+        }
+        if (status != null) {
+            status.setForeground(fg);
+        }
     }
 
     @Override
