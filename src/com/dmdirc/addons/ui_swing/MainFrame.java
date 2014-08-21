@@ -84,8 +84,6 @@ public class MainFrame extends JFrame implements WindowListener,
     private final Apple apple;
     /** Controller to use to end the program. */
     private final LifecycleController lifecycleController;
-    /** The window factory to use to create and listen for windows. */
-    private final SwingWindowFactory windowFactory;
     /** The global config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** The icon manager to use to get icons. */
@@ -131,7 +129,6 @@ public class MainFrame extends JFrame implements WindowListener,
      * Creates new form MainFrame.
      *
      * @param apple                Apple instance
-     * @param windowFactory        The window factory to use to create and listen for windows.
      * @param lifecycleController  Controller to use to end the application.
      * @param globalConfig         The config to read settings from.
      * @param quitWorker           The quit worker to use when quitting the app.
@@ -141,7 +138,6 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     public MainFrame(
             final Apple apple,
-            final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
             final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
@@ -150,7 +146,6 @@ public class MainFrame extends JFrame implements WindowListener,
             final EventBus eventBus) {
         checkOnEDT();
         this.apple = apple;
-        this.windowFactory = windowFactory;
         this.lifecycleController = lifecycleController;
         this.globalConfig = globalConfig;
         this.quitWorker = quitWorker;
@@ -221,7 +216,7 @@ public class MainFrame extends JFrame implements WindowListener,
     @Override
     public void setTitle(final String title) {
         UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
+
             @Override
             public void run() {
                 if (title == null || activeFrame == null) {
@@ -242,31 +237,16 @@ public class MainFrame extends JFrame implements WindowListener,
         return "DMDirc" + (showVersion ? " " + version : "");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowOpened(final WindowEvent windowEvent) {
         //ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowClosing(final WindowEvent windowEvent) {
         quit(exitCode);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
         new Thread(new Runnable() {
@@ -278,11 +258,6 @@ public class MainFrame extends JFrame implements WindowListener,
         }, "Quit thread").start();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowIconified(final WindowEvent windowEvent) {
         eventBus.post(new ClientMinimisedEvent());

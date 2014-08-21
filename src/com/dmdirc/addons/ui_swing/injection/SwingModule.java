@@ -33,7 +33,6 @@ import com.dmdirc.addons.ui_swing.NoopClipboard;
 import com.dmdirc.addons.ui_swing.QuitWorker;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingManager;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.commands.ChannelSettings;
 import com.dmdirc.addons.ui_swing.commands.Input;
@@ -137,7 +136,6 @@ public class SwingModule {
     @Singleton
     public MainFrame getMainFrame(
             final Apple apple,
-            final SwingWindowFactory windowFactory,
             final LifecycleController lifecycleController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final Provider<QuitWorker> quitWorker,
@@ -150,7 +148,6 @@ public class SwingModule {
             public MainFrame call() {
                 return new MainFrame(
                         apple,
-                        windowFactory,
                         lifecycleController,
                         globalConfig,
                         quitWorker,
