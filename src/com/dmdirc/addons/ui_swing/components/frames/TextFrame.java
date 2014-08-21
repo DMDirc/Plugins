@@ -167,10 +167,12 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         if (popout) {
             popoutPlaceholder = new DesktopPlaceHolderFrame();
             popoutFrame = new DesktopWindowFrame(this);
+            eventBus.register(popoutFrame);
             popoutFrame.display();
         } else if (popoutFrame != null) {
             popoutPlaceholder = null;
             popoutFrame.dispose();
+            eventBus.unregister(popoutFrame);
             popoutFrame = null;
         }
         // Call setActiveFrame again so the contents of the frame manager are updated.
