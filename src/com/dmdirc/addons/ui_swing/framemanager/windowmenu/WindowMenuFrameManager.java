@@ -86,6 +86,8 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     private final ActiveFrameManager activeFrameManager;
     private final AggregateConfigProvider globalConfig;
     private final String domain;
+    /** The client event bus to subscribe to events on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of WindowMenuFrameManager.
@@ -95,6 +97,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
      * @param domain             Domain to read settings from.
      * @param activeFrameManager The active window manager.
      * @param swingEventBus      The swing event bus.
+     * @param eventBus           The client event bus.
      */
     @Inject
     public WindowMenuFrameManager(
@@ -102,10 +105,12 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final EventBus swingEventBus) {
+            @SwingEventBus final EventBus swingEventBus,
+            final EventBus eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
         swingEventBus.register(this);
 
         menus = Collections.synchronizedMap(
@@ -162,6 +167,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
                                     WindowMenuFrameManager.this);
                         }
                     });
+            eventBus.register(item);
             items.put(window.getContainer(), item);
             final int index = getIndex(window.getContainer(), this);
             UIUtilities.invokeLater(new Runnable() {
@@ -184,6 +190,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
                                     WindowMenuFrameManager.this);
                         }
                     });
+            eventBus.register(item);
             final JMenu parentMenu;
             if (menus.containsKey(parent.getContainer())) {
                 parentMenu = menus.get(parent.getContainer());
@@ -226,9 +233,11 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
             final AbstractButton item;
             if (items.containsKey(window.getContainer())) {
                 item = items.get(window.getContainer());
+                eventBus.unregister(item);
                 items.remove(window.getContainer());
             } else if (menus.containsKey(window.getContainer())) {
                 item = menus.get(window.getContainer());
+                eventBus.unregister(item);
                 menus.remove(window.getContainer());
             } else {
                 return;
@@ -288,6 +297,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
                 menu.add(item, getIndex(item.getFrame(), menu));
             }
         });
+        eventBus.register(item);
         items.remove(item.getFrame());
         menus.put(menu.getFrame(), menu);
         menuItems.put(item.getFrame(), item);
@@ -295,6 +305,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
 
     private void replaceMenuWithItem(final JMenu parentMenu,
             final FrameContainerMenu menu, final FrameContainerMenuItem item) {
+        eventBus.register(item);
         parentMenu.remove(menu);
         parentMenu.add(item, getIndex(item.getFrame(), parentMenu));
         menus.remove(menu.getFrame());
