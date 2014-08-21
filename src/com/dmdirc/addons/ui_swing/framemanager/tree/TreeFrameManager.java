@@ -34,8 +34,8 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -72,7 +72,7 @@ import net.miginfocom.swing.MigLayout;
  * Manages open windows in the application in a tree style view.
  */
 public class TreeFrameManager implements FrameManager, Serializable, ConfigChangeListener,
-        NotificationListener, FrameInfoListener {
+        NotificationListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
@@ -217,10 +217,9 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
                 synchronized (nodes) {
+                    eventBus.unregister(nodes.get(window.getContainer()).getLabel());
                     nodes.remove(window.getContainer());
                 }
-                window.getContainer().removeFrameInfoListener(
-                        TreeFrameManager.this);
                 window.getContainer().removeNotificationListener(
                         TreeFrameManager.this);
             }
@@ -240,6 +239,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @Override
             public void run() {
                 final NodeLabel label = new NodeLabel(window);
+                eventBus.register(label);
                 final TreeViewNode node = new TreeViewNode(label, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
@@ -256,12 +256,11 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(),
                             0, 0));
                 }
-                window.addFrameInfoListener(TreeFrameManager.this);
                 window.addNotificationListener(TreeFrameManager.this);
 
                 // TODO: Should this colour be configurable?
                 node.getLabel().notificationSet(window, window.getNotification().or(Colour.BLACK));
-                node.getLabel().iconChanged(window, window.getIcon());
+                node.getLabel().iconChanged(new FrameIconChangedEvent(window, window.getIcon()));
             }
         });
     }
@@ -417,51 +416,6 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 }
             }
         });
-    }
-
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window);
-                    if (node != null) {
-                        final NodeLabel label = node.getLabel();
-                        if (label != null) {
-                            label.iconChanged(window, icon);
-                            tree.repaint();
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window);
-                    if (node != null) {
-                        final NodeLabel label = node.getLabel();
-                        if (label != null) {
-                            label.nameChanged(window, name);
-                            tree.repaint();
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window, final String title) {
-        // Do nothing
     }
 
 }
