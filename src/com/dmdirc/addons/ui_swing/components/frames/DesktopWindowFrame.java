@@ -24,8 +24,11 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.events.FrameIconChangedEvent;
+import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.interfaces.FrameCloseListener;
-import com.dmdirc.interfaces.FrameInfoListener;
+
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
@@ -38,8 +41,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Frame that contains popped out windows
  */
-public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
-        FrameCloseListener {
+public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -54,7 +56,6 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
      * @param windowWindow Frame that we want to contain in this Desktop frame. popped out.
      */
     public DesktopWindowFrame(final TextFrame windowWindow) {
-        super();
         this.windowWindow = windowWindow;
         initialLocation = windowWindow.getLocationOnScreen();
 
@@ -65,7 +66,6 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
                 windowWindow.setPopout(false);
             }
         });
-        windowWindow.getContainer().addFrameInfoListener(this);
         windowWindow.getContainer().addCloseListener(this);
 
         setLayout(new MigLayout("fill, ins rel"));
@@ -96,31 +96,30 @@ public class DesktopWindowFrame extends JFrame implements FrameInfoListener,
         });
     }
 
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    @Subscribe
+    public void iconChanged(final FrameIconChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                setIconImage(windowWindow.getIconManager().getImage(icon));
+                if (event.getContainer().equals(windowWindow.getContainer())) {
+                    setIconImage(windowWindow.getIconManager().getImage(event.getIcon()));
+                }
             }
         });
     }
 
-    @Override
-    public void titleChanged(final FrameContainer window, final String title) {
+    @Subscribe
+    public void titleChanged(final FrameTitleChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                setTitle(title);
+                if (event.getContainer().equals(windowWindow.getContainer())) {
+                    setTitle(event.getTitle());
+                }
             }
         });
-    }
-
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        //ignore
     }
 
 }
