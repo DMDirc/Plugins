@@ -26,7 +26,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.events.FrameIconChangedEvent;
+import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.ui.messages.Styliser;
 
 import com.google.common.base.Optional;
@@ -38,11 +39,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Action representing a frame.
  */
-public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListener,
-        ActionListener, SelectionListener, FrameContainerMenuInterface {
+public class FrameContainerMenuItem extends JMenuItem implements ActionListener, SelectionListener,
+        FrameContainerMenuInterface {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -76,38 +79,32 @@ public class FrameContainerMenuItem extends JMenuItem implements FrameInfoListen
         this.manager = manager;
 
         addActionListener(this);
-        frame.addFrameInfoListener(this);
     }
 
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    @Handler
+    public void iconChanged(final FrameIconChangedEvent event) {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
-                    setIcon(window.getIconManager().getIcon(icon));
+                    setIcon(window.getIconManager().getIcon(event.getIcon()));
                 }
             }
         });
     }
 
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
+    @Handler
+    public void nameChanged(final FrameNameChangedEvent event) {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
                 if (frame != null && window != null && frame.equals(window)) {
-                    setText(Styliser.stipControlCodes(name));
+                    setText(Styliser.stipControlCodes(event.getName()));
                 }
             }
         });
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window, final String title) {
-        // Do nothing
     }
 
     @Override
