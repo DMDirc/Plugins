@@ -34,7 +34,8 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.events.FrameIconChangedEvent;
+import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -43,6 +44,7 @@ import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.awt.Dimension;
@@ -77,7 +79,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public final class ButtonBar implements FrameManager, ActionListener,
         ComponentListener, Serializable, NotificationListener,
-        FrameInfoListener, MouseListener, ConfigChangeListener {
+        MouseListener, ConfigChangeListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
@@ -127,11 +129,14 @@ public final class ButtonBar implements FrameManager, ActionListener,
             final SwingWindowFactory windowFactory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
-            final ActiveFrameManager activeFrameManager) {
+            final ActiveFrameManager activeFrameManager,
+            final EventBus eventBus) {
         this.windowFactory = windowFactory;
         this.globalConfig = globalConfig;
         this.windowManager = windowManager;
         this.activeFrameManager = activeFrameManager;
+
+        eventBus.register(this);
 
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
@@ -185,7 +190,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
     @Override
     public void setParent(final JComponent parent) {
         SwingUtilities.invokeLater(new Runnable() {
-            /** {inheritDoc} */
+
             @Override
             public void run() {
                 ButtonBar.this.parent = parent;
@@ -215,7 +220,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
      *
      * @param windowCollection Collection of windows {@link FrameContainer}
      *
-     * @author Simon Mott
      * @since 0.6.4
      */
     private void initButtons(
@@ -260,7 +264,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
      *
      * @param windowCollection Collection of windows {@link FrameContainer}
      *
-     * @author Simon Mott
      * @since 0.6.4
      */
     private void displayButtons(
@@ -339,7 +342,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
                 addButton(window);
                 relayout();
                 window.getContainer().addNotificationListener(ButtonBar.this);
-                window.getContainer().addFrameInfoListener(ButtonBar.this);
             }
         });
     }
@@ -351,9 +353,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
 
             @Override
             public void run() {
-                window.getContainer().removeNotificationListener(
-                        ButtonBar.this);
-                window.getContainer().removeFrameInfoListener(ButtonBar.this);
+                window.getContainer().removeNotificationListener(ButtonBar.this);
                 if (buttons.containsKey(window)) {
                     buttonPanel.setVisible(false);
                     buttonPanel.remove(buttons.get(window));
@@ -364,11 +364,6 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    /**
-     * Called when the user clicks on one of the buttons.
-     *
-     * @param e The action event associated with this action
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final FrameToggleButton button = (FrameToggleButton) e.getSource();
@@ -380,43 +375,22 @@ public final class ButtonBar implements FrameManager, ActionListener,
         activeFrameManager.setActiveFrame(frame);
     }
 
-    /**
-     * Called when the parent component is resized.
-     *
-     * @param e A ComponentEvent corresponding to this event.
-     */
     @Override
     public void componentResized(final ComponentEvent e) {
-        buttonWidth = position.isHorizontal() ? 150
-                : (parent.getWidth() / NUM_CELLS);
+        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / NUM_CELLS);
         relayout();
     }
 
-    /**
-     * Called when the parent component is moved.
-     *
-     * @param e A ComponentEvent corresponding to this event.
-     */
     @Override
     public void componentMoved(final ComponentEvent e) {
         // Do nothing
     }
 
-    /**
-     * Called when the parent component is made visible.
-     *
-     * @param e A ComponentEvent corresponding to this event.
-     */
     @Override
     public void componentShown(final ComponentEvent e) {
         // Do nothing
     }
 
-    /**
-     * Called when the parent component is made invisible.
-     *
-     * @param e A ComponentEvent corresponding to this event.
-     */
     @Override
     public void componentHidden(final ComponentEvent e) {
         // Do nothing
@@ -473,38 +447,32 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    @Subscribe
+    public void iconChanged(final FrameIconChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                final FrameToggleButton button = getButton(window);
+                final FrameToggleButton button = getButton(event.getContainer());
                 if (button != null) {
-                    button.setIcon(window.getIconManager().getIcon(icon));
+                    button.setIcon(event.getContainer().getIconManager().getIcon(event.getIcon()));
                 }
             }
         });
     }
 
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
+    @Subscribe
+    public void nameChanged(final FrameNameChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                final FrameToggleButton button = getButton(window);
+                final FrameToggleButton button = getButton(event.getContainer());
                 if (button != null) {
-                    button.setText(name);
+                    button.setText(event.getName());
                 }
             }
         });
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window,
-            final String title) {
-        // Do nothing
     }
 
     /**
@@ -529,51 +497,26 @@ public final class ButtonBar implements FrameManager, ActionListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e MouseEvent for this event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e MouseEvent for this event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e MouseEvent for this event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e MouseEvent for this event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e MouseEvent for this event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Do nothing
