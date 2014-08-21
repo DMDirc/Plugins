@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_web.Event;
 import com.dmdirc.addons.ui_web.Message;
 import com.dmdirc.addons.ui_web.WebInterfaceUI;
 import com.dmdirc.interfaces.FrameCloseListener;
-import com.dmdirc.interfaces.FrameInfoListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
@@ -51,7 +50,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  * A server-side representation of a "window" in the Web UI.
  */
 public class WebWindow implements Window, IRCDocumentListener,
-        FrameInfoListener, FrameCloseListener {
+        FrameCloseListener {
 
     /** The unique ID of this window, used by clients to address the window. */
     private final String id;
@@ -69,7 +68,6 @@ public class WebWindow implements Window, IRCDocumentListener,
         this.handler = controller.getHandler();
 
         parent.getDocument().addIRCDocumentListener(this);
-        parent.addFrameInfoListener(this);
         parent.addCloseListener(this);
 
         final Optional<FrameContainer> grandParent = parent.getParent();
@@ -218,21 +216,6 @@ public class WebWindow implements Window, IRCDocumentListener,
 
     @Override
     public void repaintNeeded() {
-        //TODO FIXME
-    }
-
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
-        //TODO FIXME
-    }
-
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        //TODO FIXME
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window, final String title) {
         //TODO FIXME
     }
 
