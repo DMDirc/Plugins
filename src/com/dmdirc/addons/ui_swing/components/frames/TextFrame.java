@@ -139,7 +139,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         final AggregateConfigProvider config = owner.getConfigManager();
 
         owner.addCloseListener(this);
-        owner.setTitle(frameParent.getTitle());
 
         initComponents(deps.textPaneFactory);
         setFocusable(true);
