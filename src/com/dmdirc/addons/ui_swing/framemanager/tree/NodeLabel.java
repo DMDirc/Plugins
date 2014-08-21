@@ -27,10 +27,13 @@ import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.interfaces.FrameInfoListener;
+import com.dmdirc.events.FrameIconChangedEvent;
+import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.Styliser;
+
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -47,7 +50,7 @@ import net.miginfocom.swing.MigLayout;
  * Node label.
  */
 public class NodeLabel extends JPanel implements SelectionListener,
-        NotificationListener, FrameInfoListener {
+        NotificationListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -121,22 +124,18 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    @Override
-    public void iconChanged(final FrameContainer window, final String icon) {
+    @Subscribe
+    public void iconChanged(final FrameIconChangedEvent event) {
         if (equals(window)) {
-            this.icon.setIcon(window.getIconManager().getIcon(icon));
+            icon.setIcon(window.getIconManager().getIcon(event.getIcon()));
         }
     }
 
-    @Override
-    public void nameChanged(final FrameContainer window, final String name) {
-        // Do nothing
-    }
-
-    @Override
-    public void titleChanged(final FrameContainer window,
-            final String title) {
-        // Do nothing
+    @Subscribe
+    public void nameChanged(final FrameNameChangedEvent event) {
+        if (equals(window)) {
+            text.setText(event.getName());
+        }
     }
 
     /**
