@@ -41,7 +41,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -70,7 +70,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Instantiate the wizard.
@@ -89,7 +89,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.actionsDirectory = actionsDirectory;

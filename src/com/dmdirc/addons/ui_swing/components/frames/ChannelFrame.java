@@ -39,9 +39,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,6 +49,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * The channel frame is the GUI component that represents a channel to the user.
@@ -71,7 +71,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /** Topic bar. */
     private TopicBar topicBar;
     /** Event bus to dispatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** The domain to read settings from. */
@@ -113,7 +113,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         globalConfig.addChangeListener("ui", "channelSplitPanePosition", this);
         globalConfig.addChangeListener(domain, "shownicklist", this);
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
                 owner.getChannelInfo().getName());
@@ -217,7 +217,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleClientClosing(final ClientClosingEvent event) {
         saveSplitPanePosition();
     }
@@ -284,7 +284,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     @Override
     public void dispose() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         globalConfig.removeListener(this);
         super.dispose();
     }

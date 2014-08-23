@@ -38,7 +38,7 @@ import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class DataLoaderWorker
     /** Downloader to download files. */
     private final Downloader downloader;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new data loader worker.
@@ -110,7 +110,7 @@ public class DataLoaderWorker
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final AddonTable table,
             final boolean download,
             final BrowserWindow browserWindow,

@@ -46,9 +46,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -69,6 +66,9 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Allows the user to manage actions.
  */
@@ -86,7 +86,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     /** Duplicate action group validator. */
     private final ValidatorChain<String> validator;
     /** Event bus to post events to and subscribe to events on. */
-    private final EventBus eventbus;
+    private final MBassador eventbus;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -125,7 +125,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     @Inject
     public ActionsManagerDialog(
-            final EventBus eventBus,
+            final MBassador eventBus,
             final Apple apple,
             final MainFrame parentWindow,
             @UserConfig final ConfigProvider config,
@@ -206,7 +206,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         edit.addActionListener(this);
         delete.addActionListener(this);
         groups.getSelectionModel().addListSelectionListener(this);
-        eventbus.register(this);
+        eventbus.subscribe(this);
     }
 
     /**
@@ -433,12 +433,12 @@ public class ActionsManagerDialog extends StandardDialog implements
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleActionCreated(final ActionCreatedEvent event) {
         handleActionCreatedOrUpdated(event.getAction());
     }
 
-    @Subscribe
+    @Handler
     public void handleActionUpdated(final ActionUpdatedEvent event) {
         handleActionCreatedOrUpdated(event.getAction());
     }
@@ -449,7 +449,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleActionDeleted(final ActionDeletedEvent event) {
         if (event.getGroup().getName().equals(groups.getSelectedValue().getName())) {
             actions.actionDeleted(event.getName());

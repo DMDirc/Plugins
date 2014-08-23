@@ -29,9 +29,6 @@ import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -43,15 +40,18 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 public class ScriptPluginManager {
 
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     private final String scriptDir;
     private final ScriptManager scriptManager;
     private final TypedProperties globalVariables;
 
     @Inject
-    public ScriptPluginManager(final EventBus eventBus,
+    public ScriptPluginManager(final MBassador eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDir,
             final ScriptManager scriptManager,
             final ScriptEngineManager scriptEngineManager) {
@@ -64,7 +64,7 @@ public class ScriptPluginManager {
     public void onLoad() {
         // Register the plugin_loaded action initially, this will be called
         // after this method finishes for us to register the rest.
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         // Make sure our scripts dir exists
         final File newDir = new File(scriptDir);
@@ -85,7 +85,7 @@ public class ScriptPluginManager {
     }
 
     public void onUnLoad() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
 
         final File savedVariables = new File(scriptDir + "storedVariables");
         try (FileOutputStream fos = new FileOutputStream(savedVariables)) {
@@ -96,7 +96,7 @@ public class ScriptPluginManager {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handlePluginLoadEvent(final DMDircEvent event) throws ReflectiveOperationException {
         if (event instanceof PluginLoadedEvent || event instanceof PluginUnloadedEvent) {
             return;

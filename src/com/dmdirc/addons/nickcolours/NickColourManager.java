@@ -35,15 +35,15 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Provides various features related to nickname colouring.
@@ -58,7 +58,7 @@ public class NickColourManager implements ConfigChangeListener {
     /** Plugin's setting domain. */
     private final String domain;
     /** Event bus to subscribe to events on . */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
@@ -71,14 +71,14 @@ public class NickColourManager implements ConfigChangeListener {
     @Inject
     public NickColourManager(final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final EventBus eventBus) {
+            @GlobalConfig final AggregateConfigProvider globalConfig, final MBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
         this.eventBus = eventBus;
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelNames(final ChannelGotnamesEvent event) {
         final ChannelInfo chanInfo = event.getChannel().getChannelInfo();
         final String network = event.getChannel().getConnection().getNetwork();
@@ -88,7 +88,7 @@ public class NickColourManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
         final String network = event.getChannel().getConnection().getNetwork();
         colourClient(network, event.getClient());
@@ -240,14 +240,14 @@ public class NickColourManager implements ConfigChangeListener {
      */
     public void onLoad() {
         setCachedSettings();
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     /**
      * Unloads this plugin.
      */
     public void onUnload() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
     }
 
     /**

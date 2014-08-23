@@ -28,7 +28,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class IdentClientTest {
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
     @Mock private AggregateConfigProvider config;
-    @Mock private EventBus eventBus;
+    @Mock private MBassador eventBus;
 
     protected IdentClient getClient() {
         final List<Server> servers = new ArrayList<>();

@@ -34,9 +34,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +42,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Lists known plugins, enabling the end user to enable/disable these as well as download new ones.
@@ -75,7 +75,7 @@ public class PluginPanel extends AddonPanel {
      */
     @Inject
     public PluginPanel(
-            final EventBus eventBus,
+            final MBassador eventBus,
             @MainWindow final Window parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,
@@ -87,7 +87,7 @@ public class PluginPanel extends AddonPanel {
         this.iconManager = iconManager;
         this.updateManager = updateManager;
         this.userConfig = userConfig;
-        eventBus.register(this);
+        eventBus.subscribe(this);
         pluginManager.refreshPlugins();
         load();
     }
@@ -133,7 +133,7 @@ public class PluginPanel extends AddonPanel {
         return table;
     }
 
-    @Subscribe
+    @Handler
     public void handlePluginRefresh(final PluginRefreshEvent event) {
         populateList(addonList);
     }

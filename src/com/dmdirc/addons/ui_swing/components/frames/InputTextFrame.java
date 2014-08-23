@@ -42,7 +42,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -100,7 +100,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of InputFrame.

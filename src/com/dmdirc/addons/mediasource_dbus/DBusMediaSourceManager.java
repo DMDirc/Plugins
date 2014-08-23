@@ -26,7 +26,7 @@ import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,14 +47,14 @@ public class DBusMediaSourceManager {
     /** A map of discovered mpris sources. */
     private final Map<String, MediaSource> mprisSources;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The sources used by this media source. */
     private final List<MediaSource> sources;
     /** The path to qdbus. */
     private String qdbus;
 
     @Inject
-    public DBusMediaSourceManager(final EventBus eventBus) {
+    public DBusMediaSourceManager(final MBassador eventBus) {
         this.eventBus = eventBus;
         sources = new ArrayList<>();
         mprisSources = new HashMap<>();

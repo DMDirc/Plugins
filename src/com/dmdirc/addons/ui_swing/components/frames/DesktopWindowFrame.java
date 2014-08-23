@@ -28,7 +28,7 @@ import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.interfaces.FrameCloseListener;
 
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
@@ -96,7 +96,7 @@ public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
         });
     }
 
-    @Subscribe
+    @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -109,7 +109,7 @@ public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
         });
     }
 
-    @Subscribe
+    @Handler
     public void titleChanged(final FrameTitleChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 

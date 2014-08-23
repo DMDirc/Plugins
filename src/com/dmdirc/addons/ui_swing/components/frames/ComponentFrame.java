@@ -28,7 +28,7 @@ import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -49,7 +49,7 @@ public class ComponentFrame extends TextFrame {
     /** Parent controller. */
     private final SwingController controller;
     /** The global event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of CustomFrame.
@@ -61,7 +61,7 @@ public class ComponentFrame extends TextFrame {
      * @param commandParser The parser to use to process commands.
      */
     public ComponentFrame(
-            final EventBus eventBus,
+            final MBassador eventBus,
             final TextFrameDependencies deps,
             final URLBuilder urlBuilder,
             final FrameContainer owner,

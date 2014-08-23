@@ -30,13 +30,13 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 public class NotificationsManager {
 
@@ -51,11 +51,11 @@ public class NotificationsManager {
     /** Plugin manager. */
     private final PluginManager pluginManager;
     /** Event bus to listen for events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public NotificationsManager(@PluginDomain(NotificationsPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final EventBus eventBus,
+            @GlobalConfig final AggregateConfigProvider globalConfig, final MBassador eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
         this.globalConfig = globalConfig;
@@ -66,7 +66,7 @@ public class NotificationsManager {
     public void onLoad() {
         methods.clear();
         loadSettings();
-        eventBus.register(this);
+        eventBus.subscribe(this);
         for (PluginInfo target : pluginManager.getPluginInfos()) {
             if (target.isLoaded()) {
                 addPlugin(target);
@@ -76,15 +76,15 @@ public class NotificationsManager {
 
     public void onUnload() {
         methods.clear();
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
     }
 
-    @Subscribe
+    @Handler
     public void handlePluginLoaded(final PluginLoadedEvent event) {
         addPlugin(event.getPlugin());
     }
 
-    @Subscribe
+    @Handler
     public void handlePluginUnloaded(final PluginUnloadedEvent event) {
         removePlugin(event.getPlugin());
     }

@@ -29,7 +29,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -45,7 +45,7 @@ import javax.inject.Inject;
 public final class IdentdServer implements Runnable {
 
     /** The event bus to post errors on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The Thread in use for this server */
     private volatile Thread myThread = null;
     /** The current socket in use for this server */
@@ -70,7 +70,7 @@ public final class IdentdServer implements Runnable {
      * @param domain        This plugin's setting domain
      */
     @Inject
-    public IdentdServer(final EventBus eventBus,
+    public IdentdServer(final MBassador eventBus,
             final ServerManager serverManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain) {

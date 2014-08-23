@@ -29,7 +29,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.io.StreamUtils;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +43,7 @@ import java.net.Socket;
 public class IdentClient implements Runnable {
 
     /** The event bus to post errors on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The IdentdServer that owns this Client. */
     private final IdentdServer server;
     /** The Socket that we are in charge of. */
@@ -67,7 +67,7 @@ public class IdentClient implements Runnable {
      * @param config        Global config to read settings from
      * @param domain        This plugin's settings domain
      */
-    public IdentClient(final EventBus eventBus, final IdentdServer server, final Socket socket,
+    public IdentClient(final MBassador eventBus, final IdentdServer server, final Socket socket,
             final ServerManager serverManager, final AggregateConfigProvider config,
             final String domain) {
         this.eventBus = eventBus;

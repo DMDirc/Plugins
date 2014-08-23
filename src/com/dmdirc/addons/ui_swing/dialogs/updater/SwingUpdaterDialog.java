@@ -39,7 +39,7 @@ import com.dmdirc.updater.manager.UpdateManagerListener;
 import com.dmdirc.updater.manager.UpdateManagerStatus;
 import com.dmdirc.updater.manager.UpdateStatus;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -82,7 +82,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
     /** Provider of restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of the updater dialog.
@@ -97,7 +97,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             final CachingUpdateManager updateManager,
             @MainWindow final Window parentWindow,
             @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.updateManager = updateManager;

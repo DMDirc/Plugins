@@ -32,7 +32,7 @@ import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -95,7 +95,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param frame        Parent Frame
      */
     public TextPane(
-            final EventBus eventBus,
+            final MBassador eventBus,
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
             final TextFrame frame) {

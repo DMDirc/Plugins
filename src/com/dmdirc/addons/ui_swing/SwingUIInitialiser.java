@@ -30,7 +30,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -52,10 +52,10 @@ public class SwingUIInitialiser {
     private final ConfigProvider addonConfig;
     private final DialogKeyListener dialogKeyListener;
     private final DMDircEventQueue eventQueue;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
-    public SwingUIInitialiser(final EventBus eventBus, final Apple apple,
+    public SwingUIInitialiser(final MBassador eventBus, final Apple apple,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @AddonConfig final ConfigProvider addonConfig,
             final DialogKeyListener dialogKeyListener,

@@ -26,7 +26,7 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
 import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +44,7 @@ import javax.script.ScriptException;
 public class ScriptEngineWrapper {
 
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
     /** The File this script is from */
@@ -65,7 +65,7 @@ public class ScriptEngineWrapper {
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
-            final EventBus eventBus, final String filename)
+            final MBassador eventBus, final String filename)
             throws FileNotFoundException, ScriptException {
         Preconditions.checkNotNull(filename, "File cannot be null");
         this.eventBus = eventBus;

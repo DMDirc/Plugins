@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.actions.PasteAction;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 import com.dmdirc.events.ClientKeyPressedEvent;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -54,12 +54,12 @@ import javax.swing.text.JTextComponent;
 public class DMDircEventQueue extends EventQueue {
 
     /** Event bus to dispatch events to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
 
     @Inject
-    public DMDircEventQueue(final EventBus eventBus, final Clipboard clipboard) {
+    public DMDircEventQueue(final MBassador eventBus, final Clipboard clipboard) {
         this.eventBus = eventBus;
         this.clipboard = clipboard;
     }

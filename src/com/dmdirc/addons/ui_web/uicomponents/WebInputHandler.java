@@ -30,7 +30,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * An input handler for the web ui.
@@ -43,7 +43,7 @@ public class WebInputHandler extends InputHandler {
             final CommandController commandController,
             final CommandParser commandParser,
             final FrameContainer parentWindow,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
     }
 

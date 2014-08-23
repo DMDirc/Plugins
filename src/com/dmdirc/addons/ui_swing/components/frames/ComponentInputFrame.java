@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Provider;
 import javax.swing.JComponent;
@@ -50,7 +50,7 @@ public class ComponentInputFrame extends InputTextFrame {
     /** Parent controller. */
     private final SwingController controller;
     /** The global event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of CustomInputFrame.
@@ -62,7 +62,7 @@ public class ComponentInputFrame extends InputTextFrame {
      * @param owner              The frame container that owns this frame
      */
     public ComponentInputFrame(
-            final EventBus eventBus,
+            final MBassador eventBus,
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final URLBuilder urlBuilder,

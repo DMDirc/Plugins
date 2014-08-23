@@ -30,13 +30,13 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 public class IdentdManager {
 
@@ -49,12 +49,12 @@ public class IdentdManager {
     /** Ident server. */
     private final IdentdServer server;
     /** Event bus to subscribe to events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public IdentdManager(@GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain,
-            final IdentdServer server, final EventBus eventBus) {
+            final IdentdServer server, final MBassador eventBus) {
         connections = new ArrayList<>();
         this.config = config;
         this.domain = domain;
@@ -67,7 +67,7 @@ public class IdentdManager {
      */
     public void onLoad() {
         // Add action hooks
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         if (config.getOptionBool(domain, "advanced.alwaysOn")) {
             server.startServer();
@@ -78,12 +78,12 @@ public class IdentdManager {
      * Called when this plugin is unloaded.
      */
     public void onUnload() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         server.stopServer();
         connections.clear();
     }
 
-    @Subscribe
+    @Handler
     public void handleServerConnecting(final ServerConnectingEvent event) {
         synchronized (connections) {
                 if (connections.isEmpty()) {
@@ -93,12 +93,12 @@ public class IdentdManager {
             }
     }
 
-    @Subscribe
+    @Handler
     public void handleServerConnected(final ServerConnectedEvent event) {
         handleServerRemoved(event.getConnection());
     }
 
-    @Subscribe
+    @Handler
     public void handleServerConnectError(final ServerConnectErrorEvent event) {
         handleServerRemoved(event.getConnection());
     }
