@@ -23,13 +23,15 @@
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.events.StatusBarComponentAddedEvent;
+import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -51,12 +53,12 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
 
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
-    /** Status bar we're adding to. */
-    private final SwingStatusBar statusBar;
     /** Identity controller to read settings from. */
     private final IdentityController identityController;
     /** Plugin settings domain. */
     private final String domain;
+    /** The event bus to post events to. */
+    private final DMDircMBassador eventBus;
     /** The panel we use in the status bar. */
     private WindowStatusPanel panel;
     /** Should we show the real name in queries? */
@@ -68,13 +70,13 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
 
     @Inject
     public WindowStatusManager(final ActiveFrameManager activeFrameManager,
-            final SwingStatusBar statusBar,
             final IdentityController identityController,
-            @PluginDomain(WindowStatusPlugin.class) final String domain) {
+            @PluginDomain(WindowStatusPlugin.class) final String domain,
+            final DMDircMBassador eventBus) {
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
-        this.statusBar = statusBar;
         this.identityController = identityController;
+        this.eventBus = eventBus;
     }
 
     /**
@@ -88,7 +90,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
                 return new WindowStatusPanel();
             }
         });
-        statusBar.addComponent(panel);
+        eventBus.publishAsync(new StatusBarComponentAddedEvent(panel));
         activeFrameManager.addSelectionListener(this);
         identityController.getGlobalConfiguration().addChangeListener(domain, this);
         updateCache();
@@ -99,7 +101,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
      */
     public void onUnload() {
         activeFrameManager.removeSelectionListener(this);
-        statusBar.removeComponent(panel);
+        eventBus.publishAsync(new StatusBarComponentRemovedEvent(panel));
         panel = null;
     }
 

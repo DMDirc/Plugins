@@ -31,11 +31,11 @@ import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.core.components.StatusBarManager;
 
 import javax.inject.Inject;
 
 import org.mortbay.jetty.Handler;
+import org.mortbay.jetty.Server;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.SecurityHandler;
@@ -47,7 +47,7 @@ import org.mortbay.jetty.security.SecurityHandler;
 public class WebInterfaceUI implements UIController {
 
     /** The web server we're using. */
-    private final org.mortbay.jetty.Server webServer;
+    private final Server webServer;
     /** The window manager for this UI. */
     private final WebWindowManager windowManager;
     /** The dynamic request handler in use. */
@@ -65,11 +65,10 @@ public class WebInterfaceUI implements UIController {
      * @param domain               The domain to retrieve config settings from
      * @param identityController   The controller to read/write settings with.
      * @param commandController    The controller to use to retrieve command information.
-     * @param eventBus             The bus to despatch events on.
+     * @param eventBus             The bus to dispatch events on.
      * @param serverManager        The manager to use to find and create servers
      * @param pluginManager        The manager to use to find other plugins
      * @param coreWindowManager    Window management
-     * @param statusBarManager     The status bar manager.
      * @param staticRequestHandler Status request handler
      */
     @Inject
@@ -81,10 +80,7 @@ public class WebInterfaceUI implements UIController {
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final WindowManager coreWindowManager,
-            final StatusBarManager statusBarManager,
             final StaticRequestHandler staticRequestHandler) {
-        super();
-
         this.pluginManager = pluginManager;
         this.commandController = commandController;
         this.eventBus = eventBus;
@@ -104,7 +100,7 @@ public class WebInterfaceUI implements UIController {
         sh.setUserRealm(new WebUserRealm(identityController, domain));
         sh.setConstraintMappings(new ConstraintMapping[]{cm});
 
-        webServer = new org.mortbay.jetty.Server(5978);
+        webServer = new Server(5978);
 
         webServer.setHandlers(new Handler[]{
             sh,
@@ -121,7 +117,7 @@ public class WebInterfaceUI implements UIController {
 
         windowManager = new WebWindowManager(this, coreWindowManager, eventBus);
 
-        statusBarManager.registerStatusBar(new WebStatusBar(handler));
+        eventBus.subscribe(new WebStatusBar(handler));
     }
 
     public WebWindowManager getWindowManager() {
