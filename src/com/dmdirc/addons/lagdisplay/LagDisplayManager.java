@@ -35,6 +35,8 @@ import com.dmdirc.events.ServerGotpingEvent;
 import com.dmdirc.events.ServerNopingEvent;
 import com.dmdirc.events.ServerNumericEvent;
 import com.dmdirc.events.ServerPingsentEvent;
+import com.dmdirc.events.StatusBarComponentAddedEvent;
+import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -101,7 +103,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
 
     public void load() {
         panel = panelProvider.get();
-        statusBar.addComponent(panel);
+        eventBus.post(new StatusBarComponentAddedEvent(panel));
         activeFrameManager.addSelectionListener(this);
         globalConfig.addChangeListener(domain, this);
         readConfig();
@@ -109,7 +111,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
     }
 
     public void unload() {
-        statusBar.removeComponent(panel);
+        eventBus.post(new StatusBarComponentRemovedEvent(panel));
         activeFrameManager.removeSelectionListener(this);
         globalConfig.removeListener(this);
         eventBus.unsubscribe(this);
