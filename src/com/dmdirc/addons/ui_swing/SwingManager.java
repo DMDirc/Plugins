@@ -40,7 +40,6 @@ import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.core.components.StatusBarManager;
 
 import java.awt.Window;
 
@@ -59,8 +58,6 @@ public class SwingManager {
 
     /** The window factory in use. */
     private final Provider<SwingWindowFactory> windowFactory;
-    /** The status bar manager to register our status bar with. */
-    private final StatusBarManager statusBarManager;
     private final Provider<MenuBar> menuBar;
     /** The status bar in use. */
     private final Provider<SwingStatusBar> statusBar;
@@ -99,7 +96,6 @@ public class SwingManager {
      *
      * @param windowFactory           The window factory in use.
      * @param windowManager           The window manager to listen on for events.
-     * @param statusBarManager        The status bar manager to register our status bar with.
      * @param mainFrameProvider       The provider to use for the main frame.
      * @param menuBar                 The menu bar to use for the main frame.
      * @param statusBar               The status bar to use in the main frame.
@@ -119,7 +115,6 @@ public class SwingManager {
     public SwingManager(
             final Provider<SwingWindowFactory> windowFactory,
             final WindowManager windowManager,
-            final StatusBarManager statusBarManager,
             final Provider<MainFrame> mainFrameProvider,
             final Provider<MenuBar> menuBar,
             final Provider<SwingStatusBar> statusBar,
@@ -139,7 +134,6 @@ public class SwingManager {
         this.windowManager = windowManager;
         this.menuBar = menuBar;
         this.statusBar = statusBar;
-        this.statusBarManager = statusBarManager;
         this.mainFrameProvider = mainFrameProvider;
         this.ctrlTabManager = ctrlTabManager;
         this.firstRunExecutor = firstRunExecutor;
@@ -169,7 +163,7 @@ public class SwingManager {
         swingEventBus.subscribe(ctrlTabManager);
 
         windowManager.addListenerAndSync(windowFactory.get());
-        statusBarManager.registerStatusBar(statusBar.get());
+        eventBus.subscribe(statusBar.get());
         eventBus.subscribe(this);
         eventBus.subscribe(mainFrame);
         eventBus.subscribe(linkHandler);
@@ -201,7 +195,7 @@ public class SwingManager {
         swingEventBus.unsubscribe(mainFrame);
         swingEventBus.unsubscribe(ctrlTabManager);
         mainFrame.dispose();
-        statusBarManager.unregisterStatusBar(statusBar.get());
+        eventBus.unsubscribe(statusBar.get());
         eventBus.unsubscribe(this);
         eventBus.unsubscribe(mainFrame);
         eventBus.unsubscribe(linkHandler);

@@ -25,6 +25,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.events.StatusBarComponentAddedEvent;
+import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 
@@ -39,6 +41,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import net.engio.mbassy.bus.MBassador;
+
 /**
  * Feedback nag icon.
  */
@@ -51,28 +55,25 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     private final JPopupMenu menu;
     /** Show menu item. */
     private final JMenuItem show;
-    /** Status bar we're displayed in. */
-    // TODO: There should be some other class which adds the nag to the status bar, and manages it.
-    private final SwingStatusBar statusBar;
     /** Provider of feedback dialogs. */
     private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
+    /** The event bus to post events to. */
+    private final MBassador eventBus;
 
     /**
      * Creates a new feedback nag.
      *
-     * @param statusBar              Status bar the nag will be displayed in.
      * @param iconManager            The icon manager to use to find the feedback nag icon.
      * @param feedbackDialogProvider Provider of feedback dialogs.
+     * @param eventBus               The event bus to post messages to
      */
     @Inject
     public FeedbackNag(
-            final SwingStatusBar statusBar,
             @GlobalConfig final IconManager iconManager,
-            final DialogProvider<FeedbackDialog> feedbackDialogProvider) {
-        super();
-
-        this.statusBar = statusBar;
+            final DialogProvider<FeedbackDialog> feedbackDialogProvider,
+            final MBassador eventBus) {
         this.feedbackDialogProvider = feedbackDialogProvider;
+        this.eventBus = eventBus;
 
         menu = new JPopupMenu();
         show = new JMenuItem("Open");
@@ -89,58 +90,34 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show.addActionListener(this);
         dismiss.addActionListener(this);
         addMouseListener(this);
-        statusBar.addComponent(this);
+        // TODO: There should be some other class which adds the nag to the status bar
+        eventBus.publishAsync(new StatusBarComponentAddedEvent(this));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
             feedbackDialogProvider.displayOrRequestFocus();
-            statusBar.removeComponent(this);
+            eventBus.publishAsync(new StatusBarComponentRemovedEvent(this));
         }
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         checkMouseEvent(e);
@@ -157,17 +134,12 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
             feedbackDialogProvider.displayOrRequestFocus();
         }
-        statusBar.removeComponent(this);
+        eventBus.publishAsync(new StatusBarComponentRemovedEvent(this));
     }
 
 }
