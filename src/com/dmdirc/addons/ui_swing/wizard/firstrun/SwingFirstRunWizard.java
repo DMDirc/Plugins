@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.plugins.CorePluginExtractor;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -38,10 +37,9 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.plugins.CorePluginExtractor;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.resourcemanager.ResourceManager;
-
-import com.google.common.eventbus.EventBus;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -54,6 +52,8 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.bus.MBassador;
 
 /** First run wizard, used to initially setup the client for the user. */
 @Singleton
@@ -70,7 +70,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Instantiate the wizard.
@@ -89,7 +89,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.actionsDirectory = actionsDirectory;
@@ -169,7 +169,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                             resourceToFile(resource.getValue(), newFile);
                 }
             } catch (IOException ex) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                         "Failed to extract actions", ""));
             }
         }

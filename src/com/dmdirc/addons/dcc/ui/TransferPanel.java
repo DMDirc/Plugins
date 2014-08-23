@@ -33,7 +33,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -78,7 +78,7 @@ public class TransferPanel extends JPanel implements ActionListener,
     /** The transfer that this window is showing. */
     private final DCCTransfer dcc;
     /** The event bus to post errors. */
-    private final EventBus errorBus;
+    private final MBassador errorBus;
 
     /**
      * Creates a new transfer window for the specified UI controller and owner.
@@ -86,7 +86,7 @@ public class TransferPanel extends JPanel implements ActionListener,
      * @param owner    The frame container that owns this frame
      * @param errorBus The event bus to post errors to
      */
-    public TransferPanel(final FrameContainer owner, final EventBus errorBus) {
+    public TransferPanel(final FrameContainer owner, final MBassador errorBus) {
         this.transferContainer = (TransferContainer) owner;
         this.errorBus = errorBus;
         dcc = transferContainer.getDCC();

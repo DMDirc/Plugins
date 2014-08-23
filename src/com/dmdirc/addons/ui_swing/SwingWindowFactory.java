@@ -37,7 +37,6 @@ import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +47,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Handles creation of windows in the Swing UI.
@@ -64,9 +65,9 @@ public class SwingWindowFactory implements FrameListener {
     /** Active window manager. */
     private final Provider<ActiveFrameManager> activeFrameManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The swing event bus. */
-    private final EventBus swingEventBus;
+    private final MBassador swingEventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -86,8 +87,8 @@ public class SwingWindowFactory implements FrameListener {
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
-            final EventBus eventBus,
-            @SwingEventBus final EventBus swingEventBus) {
+            final MBassador eventBus,
+            @SwingEventBus final MBassador swingEventBus) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
@@ -124,7 +125,7 @@ public class SwingWindowFactory implements FrameListener {
      */
     protected TextFrame doAddWindow(final FrameContainer window) {
         if (!implementations.containsKey(window.getComponents())) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, null,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, null,
                     "Unable to create window: Unknown type.", ""));
             return null;
         }
@@ -166,7 +167,7 @@ public class SwingWindowFactory implements FrameListener {
                 if (childWindow == null) {
                     return;
                 }
-                swingEventBus.post(new SwingWindowAddedEvent(
+                swingEventBus.publishAsync(new SwingWindowAddedEvent(
                         Optional.fromNullable(parentWindow), childWindow));
 
                 if (focus) {
@@ -184,7 +185,7 @@ public class SwingWindowFactory implements FrameListener {
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
                 final TextFrame childWindow = getSwingWindow(window);
-                swingEventBus.post(new SwingWindowDeletedEvent(
+                swingEventBus.publishAsync(new SwingWindowDeletedEvent(
                         Optional.fromNullable(parentWindow), childWindow));
 
                 windows.remove(window);

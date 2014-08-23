@@ -37,13 +37,13 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Displays events passed on an event bus.
@@ -53,7 +53,7 @@ public class EventBusViewer extends DebugCommand {
     private final URLBuilder urlBuilder;
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
-    private final EventBus globalEventBus;
+    private final MBassador globalEventBus;
 
     /**
      * Creates a new instance of the command.
@@ -70,7 +70,7 @@ public class EventBusViewer extends DebugCommand {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final EventBus globalEventBus) {
+            final MBassador globalEventBus) {
         super(commandProvider);
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
@@ -105,9 +105,9 @@ public class EventBusViewer extends DebugCommand {
             windowManager.addWindow(origin, window);
         }
 
-        final EventBus eventBus = isGlobal ? globalEventBus : origin.getEventBus();
+        final MBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
         final WindowUpdater updater = new WindowUpdater(eventBus, window);
-        eventBus.register(updater);
+        eventBus.subscribe(updater);
         window.addCloseListener(updater);
     }
 
@@ -116,15 +116,15 @@ public class EventBusViewer extends DebugCommand {
      */
     private static class WindowUpdater implements FrameCloseListener {
 
-        private final EventBus eventBus;
+        private final MBassador eventBus;
         private final FrameContainer target;
 
-        WindowUpdater(final EventBus eventBus, final FrameContainer target) {
+        WindowUpdater(final MBassador eventBus, final FrameContainer target) {
             this.eventBus = eventBus;
             this.target = target;
         }
 
-        @Subscribe
+        @Handler
         public void handleEvent(final DMDircEvent event) {
             if (event instanceof ClientLineAddedEvent
                     && ((ClientLineAddedEvent) event).getFrameContainer() == target) {
@@ -158,7 +158,7 @@ public class EventBusViewer extends DebugCommand {
 
         @Override
         public void windowClosing(final FrameContainer window) {
-            eventBus.unregister(this);
+            eventBus.unsubscribe(this);
         }
 
     }

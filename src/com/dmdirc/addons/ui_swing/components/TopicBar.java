@@ -40,7 +40,7 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.Window;
@@ -131,7 +131,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final Channel channel,
             final ChannelFrame window,
             final IconManager iconManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.channel = channel;
         this.domain = domain;
         this.colourManager = colourManager;

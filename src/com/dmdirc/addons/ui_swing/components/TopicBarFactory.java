@@ -33,7 +33,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -57,7 +57,7 @@ public class TopicBarFactory {
     private final PluginManager pluginManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public TopicBarFactory(
@@ -68,7 +68,7 @@ public class TopicBarFactory {
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;

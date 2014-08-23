@@ -42,8 +42,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -62,6 +60,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import net.miginfocom.layout.PlatformDefaults;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Frame with an input field.
@@ -100,7 +100,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of InputFrame.
@@ -282,7 +282,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
                 return;
             }
         } catch (final IllegalStateException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                     "Unable to past from clipboard.", ""));
             return;
         }
@@ -293,10 +293,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
             doPaste((String) Toolkit.getDefaultToolkit()
                     .getSystemClipboard().getData(DataFlavor.stringFlavor));
         } catch (final IOException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                     "Unable to get clipboard contents: " + ex.getMessage(), ""));
         } catch (final UnsupportedFlavorException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                     "Unsupported clipboard type", ""));
         }
     }

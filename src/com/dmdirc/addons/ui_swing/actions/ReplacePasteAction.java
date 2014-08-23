@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.actions;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -35,6 +33,8 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.text.JTextComponent;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Paste action that replaces matching regexes.
@@ -50,7 +50,7 @@ public final class ReplacePasteAction extends AbstractAction {
     /** Replacement string. */
     private final String replacementString;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of regex replacement paste action.
@@ -60,7 +60,7 @@ public final class ReplacePasteAction extends AbstractAction {
      * @param replacementRegex  Regex to match for replacement
      * @param replacementString Replacement string
      */
-    public ReplacePasteAction(final EventBus eventBus, final Clipboard clipboard,
+    public ReplacePasteAction(final MBassador eventBus, final Clipboard clipboard,
             final String replacementRegex, final String replacementString) {
         super("NoSpacesPasteAction");
 
@@ -85,10 +85,10 @@ public final class ReplacePasteAction extends AbstractAction {
                     ((String) clipboard.getData(DataFlavor.stringFlavor))
                             .replaceAll(replacementRegex, replacementString));
         } catch (IOException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                     "Unable to get clipboard contents: " + ex.getMessage(), ""));
         } catch (UnsupportedFlavorException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                     "Unable to get clipboard contents", ""));
         }
     }

@@ -35,14 +35,14 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Desktop;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * This class links DCC Send objects to a window.
@@ -74,7 +74,7 @@ public class TransferContainer extends FrameContainer implements
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     /** Event bus to post events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -91,7 +91,7 @@ public class TransferContainer extends FrameContainer implements
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
             final String targetNick, final Connection connection,
-            final URLBuilder urlBuilder, final EventBus eventBus) {
+            final URLBuilder urlBuilder, final MBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, urlBuilder, eventBus,
@@ -172,7 +172,7 @@ public class TransferContainer extends FrameContainer implements
             setTitle(title.toString());
         }
 
-        eventBus.post(new DccSendDatatransferedEvent(this, bytes));
+        eventBus.publishAsync(new DccSendDatatransferedEvent(this, bytes));
     }
 
     /**
@@ -265,7 +265,7 @@ public class TransferContainer extends FrameContainer implements
      */
     @Override
     public void socketClosed(final DCCTransfer dcc) {
-        eventBus.post(new DccSendSocketclosedEvent(this));
+        eventBus.publishAsync(new DccSendSocketclosedEvent(this));
         if (!windowClosing) {
             synchronized (this) {
                 if (transferCount == dcc.getFileSize() - dcc.getFileStart()) {
@@ -286,7 +286,7 @@ public class TransferContainer extends FrameContainer implements
      */
     @Override
     public void socketOpened(final DCCTransfer dcc) {
-        eventBus.post(new DccSendSocketopenedEvent(this));
+        eventBus.publishAsync(new DccSendSocketopenedEvent(this));
         timeStarted = System.currentTimeMillis();
         setIcon(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-active" : "dcc-receive-active");

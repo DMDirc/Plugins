@@ -26,7 +26,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 
@@ -40,14 +40,14 @@ public class InstallWorkerFactory {
     private final String pluginDirectory;
     private final String themeDirectory;
     private final PluginManager pluginManager;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public InstallWorkerFactory(final Downloader downloader,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.PLUGINS) final String pluginDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.THEMES) final String themeDirectory,
-            final PluginManager pluginManager, final EventBus eventBus) {
+            final PluginManager pluginManager, final MBassador eventBus) {
         this.downloader = downloader;
         this.tempDirectory = tempDirectory;
         this.pluginDirectory = pluginDirectory;

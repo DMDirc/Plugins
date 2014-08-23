@@ -37,8 +37,8 @@ import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -82,7 +82,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
      */
     @Inject
     public InviteLabel(
-            final EventBus eventBus,
+            final MBassador eventBus,
             @GlobalConfig final IconManager iconManager,
             final ServerManager serverManager,
             final MainFrame mainFrame) {
@@ -106,7 +106,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
         }
 
         mainFrame.addSelectionListener(this);
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         update();
     }
@@ -160,17 +160,17 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
         update();
     }
 
-    @Subscribe
+    @Handler
     public void handleServerConnected(final ServerConnectedEvent event) {
         event.getConnection().addInviteListener(this);
     }
 
-    @Subscribe
+    @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
         handleServerRemoved(event.getConnection());
     }
 
-    @Subscribe
+    @Handler
     public void handleServerConnectError(final ServerConnectErrorEvent event) {
         handleServerRemoved(event.getConnection());
     }

@@ -36,7 +36,7 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class RedirectCommandTest {
     @Mock private MessageSinkManager messageSinkManager;
     @Mock private WindowManager windowManager;
     @Mock private URLBuilder urlBuilder;
-    @Mock private EventBus eventBus;
+    @Mock private MBassador eventBus;
 
     @Before
     public void setup() {

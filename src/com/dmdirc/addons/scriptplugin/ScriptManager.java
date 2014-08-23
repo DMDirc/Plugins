@@ -26,8 +26,6 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -40,6 +38,8 @@ import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import net.engio.mbassy.bus.MBassador;
+
 public class ScriptManager {
 
     /** Script engine manager. */
@@ -49,12 +49,12 @@ public class ScriptManager {
     /** Store Script State Name,Engine */
     private final Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
     /** The event bus to post events to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public ScriptManager(final ScriptEngineManager scriptEngineManager,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
         this.eventBus = eventBus;
@@ -105,7 +105,7 @@ public class ScriptManager {
                         eventBus, scriptFilename);
                 scripts.put(scriptFilename, wrapper);
             } catch (FileNotFoundException | ScriptException e) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
                         "Error loading '" + scriptFilename + "': " + e.getMessage(), ""));
                 return false;
             }

@@ -34,7 +34,7 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -51,7 +51,7 @@ public class ForceUpdate extends DebugCommand {
     /** The update manager to use when forcing an update. */
     private final CachingUpdateManager updateManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -68,7 +68,7 @@ public class ForceUpdate extends DebugCommand {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final IdentityController identityController,
             final CachingUpdateManager updateManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(commandProvider);
 
         this.globalConfig = globalConfig;
