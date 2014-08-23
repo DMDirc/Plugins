@@ -24,14 +24,15 @@ package com.dmdirc.addons.ui_web.uicomponents;
 
 import com.dmdirc.addons.ui_web.DynamicRequestHandler;
 import com.dmdirc.addons.ui_web.Event;
-import com.dmdirc.interfaces.ui.StatusBar;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.StatusMessage;
+import com.dmdirc.events.StatusBarMessageClearEvent;
+import com.dmdirc.events.StatusBarMessageEvent;
+
+import com.google.common.eventbus.Subscribe;
 
 /**
  * A status bar handler for the web UI.
  */
-public class WebStatusBar implements StatusBar {
+public class WebStatusBar {
 
     /** The request handler to pass global events to. */
     private final DynamicRequestHandler handler;
@@ -40,24 +41,14 @@ public class WebStatusBar implements StatusBar {
         this.handler = handler;
     }
 
-    @Override
-    public void clearMessage() {
+    @Subscribe
+    public void clearMessage(final StatusBarMessageClearEvent event) {
         handler.addEvent(new Event("statusbar", "Ready"));
     }
 
-    @Override
-    public void addComponent(final StatusBarComponent component) {
-        // Do nothing
-    }
-
-    @Override
-    public void removeComponent(final StatusBarComponent component) {
-        // Do nothing
-    }
-
-    @Override
-    public void setMessage(final StatusMessage message) {
-        handler.addEvent(new Event("statusbar", message.getMessage()));
+    @Subscribe
+    public void setMessage(final StatusBarMessageEvent event) {
+        handler.addEvent(new Event("statusbar", event.getMessage().getMessage()));
     }
 
 }

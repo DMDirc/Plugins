@@ -22,6 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.events.StatusBarMessageClearEvent;
+
+import com.google.common.eventbus.EventBus;
+
 import java.util.TimerTask;
 
 /**
@@ -29,22 +33,21 @@ import java.util.TimerTask;
  */
 public class MessageTimerTask extends TimerTask {
 
-    /** Message label. */
-    private final MessageLabel messageLabel;
+    /** Event bus to post clear message on. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new message timer task that clears a message label on completion.
      *
-     * @param messageLabel Message label to clear on completion
+     * @param eventBus Event bus to post clear message on.
      */
-    public MessageTimerTask(final MessageLabel messageLabel) {
-        super();
-        this.messageLabel = messageLabel;
+    public MessageTimerTask(final EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     @Override
     public void run() {
-        messageLabel.clearMessage();
+        eventBus.post(new StatusBarMessageClearEvent());
     }
 
 }
