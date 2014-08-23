@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.interfaces.ui.StatusBar;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.StatusMessage;
+import com.dmdirc.events.StatusBarComponentAddedEvent;
+import com.dmdirc.events.StatusBarComponentRemovedEvent;
 
 import com.google.common.base.Preconditions;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -41,14 +41,12 @@ import net.miginfocom.swing.MigLayout;
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /** Status bar, shows message and info on the GUI. */
-public class SwingStatusBar extends JPanel implements StatusBar {
+public class SwingStatusBar extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** Mig layout component restraints. */
     private final String componentConstraints;
-    /** message label. */
-    private final MessageLabel messageLabel;
     /** error panel. */
     private final ErrorPanel errorLabel;
     /** update label. */
@@ -79,7 +77,6 @@ public class SwingStatusBar extends JPanel implements StatusBar {
 
         this.errorLabel = errorLabel;
         this.updaterLabel = updaterLabel;
-        this.messageLabel = messageLabel;
         this.inviteLabel = inviteLabel;
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3"));
@@ -91,22 +88,12 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         add(inviteLabel, componentConstraints);
     }
 
-    @Override
-    public void setMessage(final StatusMessage message) {
-        messageLabel.setMessage(message);
-    }
-
-    @Override
-    public void clearMessage() {
-        messageLabel.clearMessage();
-    }
-
-    @Override
-    public void addComponent(final StatusBarComponent component) {
-        Preconditions.checkArgument(component instanceof Component,
+    @Subscribe
+    public void addComponent(final StatusBarComponentAddedEvent event) {
+        Preconditions.checkArgument(event.getComponent() instanceof Component,
                 "Error adding status bar component, " +
                         "component must be an instance of java.awt.component");
-        if (!Arrays.asList(getComponents()).contains(component)) {
+        if (!Arrays.asList(getComponents()).contains(event.getComponent())) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
@@ -114,7 +101,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
                     remove(updaterLabel);
                     remove(errorLabel);
                     remove(inviteLabel);
-                    add((Component) component, componentConstraints);
+                    add((Component) event.getComponent(), componentConstraints);
                     add(updaterLabel, componentConstraints);
                     add(inviteLabel, componentConstraints);
                     add(errorLabel, componentConstraints);
@@ -124,16 +111,16 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         }
     }
 
-    @Override
-    public void removeComponent(final StatusBarComponent component) {
-        Preconditions.checkArgument(component instanceof Component,
+    @Subscribe
+    public void removeComponent(final StatusBarComponentRemovedEvent event) {
+        Preconditions.checkArgument(event.getComponent() instanceof Component,
                 "Error removing status bar component" +
                         "component must be an instance of java.awt.component");
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                remove((Component) component);
+                remove((Component) event.getComponent());
                 validate();
             }
         });
