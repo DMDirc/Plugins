@@ -169,7 +169,7 @@ public class SwingManager {
         swingEventBus.register(ctrlTabManager);
 
         windowManager.addListenerAndSync(windowFactory.get());
-        statusBarManager.registerStatusBar(statusBar.get());
+        eventBus.register(statusBar.get());
         eventBus.register(this);
         eventBus.register(mainFrame);
         eventBus.register(linkHandler);
@@ -201,7 +201,7 @@ public class SwingManager {
         swingEventBus.unregister(mainFrame);
         swingEventBus.unregister(ctrlTabManager);
         mainFrame.dispose();
-        statusBarManager.unregisterStatusBar(statusBar.get());
+        eventBus.unregister(statusBar.get());
         eventBus.unregister(this);
         eventBus.unregister(mainFrame);
         eventBus.unregister(linkHandler);
