@@ -25,8 +25,12 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.events.StatusBarComponentAddedEvent;
+import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
+
+import com.google.common.eventbus.EventBus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,6 +60,8 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
     private final SwingStatusBar statusBar;
     /** Provider of feedback dialogs. */
     private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
+    /** The event bus to post events to. */
+    private final EventBus eventBus;
 
     /**
      * Creates a new feedback nag.
@@ -63,16 +69,17 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      * @param statusBar              Status bar the nag will be displayed in.
      * @param iconManager            The icon manager to use to find the feedback nag icon.
      * @param feedbackDialogProvider Provider of feedback dialogs.
+     * @param eventBus               The event bus to post messages to
      */
     @Inject
     public FeedbackNag(
             final SwingStatusBar statusBar,
             @GlobalConfig final IconManager iconManager,
-            final DialogProvider<FeedbackDialog> feedbackDialogProvider) {
-        super();
-
+            final DialogProvider<FeedbackDialog> feedbackDialogProvider,
+            final EventBus eventBus) {
         this.statusBar = statusBar;
         this.feedbackDialogProvider = feedbackDialogProvider;
+        this.eventBus = eventBus;
 
         menu = new JPopupMenu();
         show = new JMenuItem("Open");
@@ -89,58 +96,33 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         show.addActionListener(this);
         dismiss.addActionListener(this);
         addMouseListener(this);
-        statusBar.addComponent(this);
+        eventBus.post(new StatusBarComponentAddedEvent(this));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (e.getButton() == 1) {
             feedbackDialogProvider.displayOrRequestFocus();
-            statusBar.removeComponent(this);
+            eventBus.post(new StatusBarComponentRemovedEvent(this));
         }
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         checkMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         checkMouseEvent(e);
@@ -157,17 +139,12 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {
             feedbackDialogProvider.displayOrRequestFocus();
         }
-        statusBar.removeComponent(this);
+        eventBus.post(new StatusBarComponentRemovedEvent(this));
     }
 
 }

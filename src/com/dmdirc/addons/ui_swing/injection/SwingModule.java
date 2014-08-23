@@ -56,7 +56,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.ServiceLocator;
@@ -166,7 +165,7 @@ public class SwingModule {
     }
 
     @Provides
-    public StatusBar getStatusBar(final SwingStatusBar statusBar) {
+    public SwingStatusBar getStatusBar(final SwingStatusBar statusBar) {
         return statusBar;
     }
 
@@ -182,13 +181,17 @@ public class SwingModule {
             final InviteLabel inviteLabel,
             final ErrorPanel errorLabel,
             final UpdaterLabel updaterLabel,
-            final MessageLabel messageLabel) {
-        return UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
+            final MessageLabel messageLabel,
+            final EventBus eventBus) {
+        final SwingStatusBar sb = UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
             @Override
             public SwingStatusBar call() {
                 return new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel);
             }
         });
+        eventBus.register(messageLabel);
+        eventBus.register(sb);
+        return sb;
     }
 
     @Provides
