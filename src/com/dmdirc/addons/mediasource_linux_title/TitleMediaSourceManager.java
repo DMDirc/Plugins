@@ -24,7 +24,7 @@ package com.dmdirc.addons.mediasource_linux_title;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +40,10 @@ public class TitleMediaSourceManager {
     /** The sources to be returned. */
     private List<MediaSource> sources = null;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
-    public TitleMediaSourceManager(final EventBus eventBus) {
+    public TitleMediaSourceManager(final MBassador eventBus) {
         this.eventBus = eventBus;
     }
 

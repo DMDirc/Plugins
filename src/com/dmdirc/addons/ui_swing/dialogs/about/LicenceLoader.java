@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
      * @param eventBus The event bus to post errors to
      */
     public LicenceLoader(final Collection<PluginInfo> plugins, final JTree tree,
-            final DefaultTreeModel model, final EventBus eventBus) {
+            final DefaultTreeModel model, final MBassador eventBus) {
         super(eventBus);
         this.plugins = plugins;
         this.tree = tree;

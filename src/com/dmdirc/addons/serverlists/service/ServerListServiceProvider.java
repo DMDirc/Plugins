@@ -33,7 +33,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceProvider;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public class ServerListServiceProvider implements ServiceProvider {
     /** Plugin Manager */
     private final PluginManager pluginManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new server list service provider.
@@ -64,7 +64,7 @@ public class ServerListServiceProvider implements ServiceProvider {
      * @param eventBus      The event bus to post errors to
      */
     public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.serverList = serverList;
         this.pluginManager = pluginManager;
         this.eventBus = eventBus;

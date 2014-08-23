@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.wizard;
 
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.Window;
 import java.awt.event.WindowEvent;
@@ -45,12 +45,12 @@ public class SwingWindowManager {
     private final List<Window> windows;
 
     @Inject
-    public SwingWindowManager(final EventBus eventBus) {
+    public SwingWindowManager(final MBassador eventBus) {
         windows = new ArrayList<>();
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
-    @Subscribe
+    @Handler
     public void handleWindowEvent(final SwingWindowEvent event) {
         if ((event.getEvent().getSource() instanceof Window)) {
             if (event.getEvent().getID() == WindowEvent.WINDOW_OPENED) {

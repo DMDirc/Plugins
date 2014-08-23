@@ -32,9 +32,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
@@ -53,6 +50,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Integrate DMDirc with OS X better.
@@ -75,7 +75,7 @@ public class Apple implements InvocationHandler {
     /** The server manager to use to connect to URLs. */
     private final ServerManager serverManager;
     /** Event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of {@link Apple}.
@@ -91,7 +91,7 @@ public class Apple implements InvocationHandler {
     public Apple(
             @GlobalConfig final AggregateConfigProvider configManager,
             final ServerManager serverManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.configManager = configManager;
         this.serverManager = serverManager;
         this.eventBus = eventBus;
@@ -102,9 +102,9 @@ public class Apple implements InvocationHandler {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
                 registerOpenURLCallback();
-                eventBus.register(this);
+                eventBus.subscribe(this);
             } catch (UnsatisfiedLinkError ule) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
                         ule, "Unable to load JNI library", ""));
             }
         }
@@ -136,7 +136,7 @@ public class Apple implements InvocationHandler {
                     : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
         } catch (ReflectiveOperationException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to find OS X classes.", ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to find OS X classes.", ""));
         }
 
         return null;
@@ -444,7 +444,7 @@ public class Apple implements InvocationHandler {
      *
      * @param event The event describing the client opening.
      */
-    @Subscribe
+    @Handler
     public void handleClientOpened(final ClientOpenedEvent event) {
         synchronized (addresses) {
             clientOpened = true;

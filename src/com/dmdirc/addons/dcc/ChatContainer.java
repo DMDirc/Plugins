@@ -37,7 +37,7 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 
@@ -55,7 +55,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /** Other Nickname. */
     private final String otherNickname;
     /** Event bus to post events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
@@ -83,7 +83,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final TabCompleterFactory tabCompleterFactory,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parent, title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,

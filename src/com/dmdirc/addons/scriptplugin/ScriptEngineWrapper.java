@@ -26,7 +26,6 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
 import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,13 +37,15 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import net.engio.mbassy.bus.MBassador;
+
 /**
  * Class to create script engines!
  */
 public class ScriptEngineWrapper {
 
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
     /** The File this script is from */
@@ -65,7 +66,7 @@ public class ScriptEngineWrapper {
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
-            final EventBus eventBus, final String filename)
+            final MBassador eventBus, final String filename)
             throws FileNotFoundException, ScriptException {
         Preconditions.checkNotNull(filename, "File cannot be null");
         this.eventBus = eventBus;
@@ -141,7 +142,7 @@ public class ScriptEngineWrapper {
             // and do nothing rather that add an error every time a method is called
             // that doesn't exist (such as the action_* methods)
         } catch (ScriptException e) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
                     "Error calling '" + functionName + "' in '" + file.getPath() + "': " +
                             e.getMessage(), ""));
         }
@@ -162,7 +163,7 @@ public class ScriptEngineWrapper {
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
         } catch (ScriptException e) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
                     "Reloading '" + file.getPath() + "' failed: " + e.getMessage(), ""));
             // Tell it that its rehash failed
             callFunction("onRehashFailed", e);

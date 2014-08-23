@@ -31,7 +31,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
 
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.listener.Handler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,7 +56,7 @@ public class SwingLinkHandler {
         this.windowFactory = windowFactory;
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelClick(final LinkChannelClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
         final Connection connection = container.getConnection();
@@ -65,12 +65,12 @@ public class SwingLinkHandler {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleLinkClick(final LinkUrlClickedEvent event) {
         urlHandler.launchApp(event.getTarget());
     }
 
-    @Subscribe
+    @Handler
     public void handleNicknameClick(final LinkNicknameClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
         final Connection connection = container.getConnection();

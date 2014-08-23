@@ -38,8 +38,6 @@ import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
 
-import com.google.common.eventbus.EventBus;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +53,8 @@ import javax.swing.JScrollPane;
 import javax.swing.text.StyleConstants;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Loads the addon data feed into the addon browser.
@@ -86,7 +86,7 @@ public class DataLoaderWorker
     /** Downloader to download files. */
     private final Downloader downloader;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new data loader worker.
@@ -110,7 +110,7 @@ public class DataLoaderWorker
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final AddonTable table,
             final boolean download,
             final BrowserWindow browserWindow,
@@ -180,7 +180,7 @@ public class DataLoaderWorker
         } catch (final InterruptedException ex) {
             data = Collections.<AddonInfo>emptyList();
         } catch (final ExecutionException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
             data = Collections.<AddonInfo>emptyList();
         }
         final int selectedRow;

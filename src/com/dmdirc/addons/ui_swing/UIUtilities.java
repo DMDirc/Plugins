@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.actions.UndoAction;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
 import com.dmdirc.ui.Colour;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -91,7 +91,7 @@ public final class UIUtilities {
      * @param eventBus  The event bus to post errors to
      * @param component The text component to add an undo manager to
      */
-    public static void addUndoManager(final EventBus eventBus, final JTextComponent component) {
+    public static void addUndoManager(final MBassador eventBus, final JTextComponent component) {
         final UndoManager undoManager = new UndoManager();
 
         // Listen for undo and redo events

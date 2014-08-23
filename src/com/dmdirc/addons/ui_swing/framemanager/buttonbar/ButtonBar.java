@@ -44,8 +44,6 @@ import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -73,6 +71,9 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * The button bar manager is a grid of buttons that presents a manager similar to that used by mIRC.
@@ -130,13 +131,13 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
             final ActiveFrameManager activeFrameManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.windowFactory = windowFactory;
         this.globalConfig = globalConfig;
         this.windowManager = windowManager;
         this.activeFrameManager = activeFrameManager;
 
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
@@ -332,7 +333,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         return true;
     }
 
-    @Subscribe
+    @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
         final TextFrame window = event.getChildWindow();
         UIUtilities.invokeLater(new Runnable() {
@@ -346,7 +347,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Subscribe
+    @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
         UIUtilities.invokeLater(new Runnable() {
@@ -447,7 +448,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Subscribe
+    @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 
@@ -461,7 +462,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Subscribe
+    @Handler
     public void nameChanged(final FrameNameChangedEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 

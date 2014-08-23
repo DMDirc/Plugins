@@ -33,8 +33,6 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -46,6 +44,8 @@ import javax.swing.UIManager;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Loads a preferences panel for a specified preferences category in the background.
@@ -70,7 +70,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     /** Prefs component factory instance. */
     private final PrefsComponentFactory factory;
     /** The event bus to post the errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Instantiates a new preferences category loader.
@@ -81,7 +81,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      * @param category      Preferences Category to load
      */
     public PrefsCategoryLoader(final PrefsComponentFactory factory,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
         super(eventBus);
@@ -125,7 +125,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         } catch (InterruptedException ex) {
             panel = errorCategory;
         } catch (ExecutionException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
                     "Error loading prefs panel", ""));
             panel = errorCategory;
         }

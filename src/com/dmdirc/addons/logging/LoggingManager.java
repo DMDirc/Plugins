@@ -44,7 +44,6 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -59,9 +58,6 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
-
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -87,6 +83,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Manages logging activities.
  */
@@ -106,7 +105,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
             new HashMap<String, OpenFile>());
     private final URLBuilder urlBuilder;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     private final Provider<String> directoryProvider;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
@@ -130,7 +129,7 @@ public class LoggingManager implements ConfigChangeListener {
     @Inject
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final WindowManager windowManager, final URLBuilder urlBuilder, final EventBus eventBus,
+            final WindowManager windowManager, final URLBuilder urlBuilder, final MBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
         this.domain = domain;
         this.config = globalConfig;
@@ -146,12 +145,12 @@ public class LoggingManager implements ConfigChangeListener {
         final File dir = new File(directoryProvider.get());
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create logging dir (file exists instead)", ""));
             }
         } else {
             if (!dir.mkdirs()) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create logging dir", ""));
             }
         }
@@ -168,7 +167,7 @@ public class LoggingManager implements ConfigChangeListener {
             }
         }, 3600000);
 
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     public void unload() {
@@ -184,7 +183,7 @@ public class LoggingManager implements ConfigChangeListener {
             openFiles.clear();
         }
 
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
     }
 
     /**
@@ -207,7 +206,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleQueryOpened(final QueryOpenedEvent event) {
         final Parser parser = event.getQuery().getConnection().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
@@ -221,7 +220,7 @@ public class LoggingManager implements ConfigChangeListener {
         appendLine(filename, "");
     }
 
-    @Subscribe
+    @Handler
     public void handleQueryClosed(final QueryClosedEvent event) {
         final Parser parser = event.getQuery().getConnection().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
@@ -233,33 +232,33 @@ public class LoggingManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleQueryActions(final BaseQueryActionEvent event) {
         final ClientInfo client = event.getClient();
         final String filename = getLogFile(client);
         appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
     }
 
-    @Subscribe
+    @Handler
     public void handleQueryMessages(final BaseQueryMessageEvent event) {
         final ClientInfo client = event.getClient();
         final String filename = getLogFile(client);
         appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelMessage(final BaseChannelMessageEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "<%s> %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelAction(final BaseChannelActionEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "* %s %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelGotTopic(final ChannelGottopicEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         final ChannelInfo channel = event.getChannel().getChannelInfo();
@@ -272,7 +271,7 @@ public class LoggingManager implements ConfigChangeListener {
                 getTopicSetter());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         final ChannelClientInfo channelClient = event.getClient();
@@ -280,7 +279,7 @@ public class LoggingManager implements ConfigChangeListener {
                 getDisplayName(channelClient), event.getTopic());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         final ChannelClientInfo channelClient = event.getClient();
@@ -289,7 +288,7 @@ public class LoggingManager implements ConfigChangeListener {
                 getDisplayName(channelClient), client.toString());
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelPart(final ChannelPartEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         final String message = event.getMessage();
@@ -304,7 +303,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelQuit(final ChannelQuitEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         final String reason = event.getMessage();
@@ -319,7 +318,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelKick(final ChannelKickEvent event) {
         final ChannelClientInfo victim = event.getVictim();
         final ChannelClientInfo perpetrator = event.getClient();
@@ -335,14 +334,14 @@ public class LoggingManager implements ConfigChangeListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleNickChange(final ChannelNickchangeEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "*** %s is now %s", getDisplayName(event.getClient(),
                 event.getOldNick()), getDisplayName(event.getClient()));
     }
 
-    @Subscribe
+    @Handler
     public void handleModeChange(final ChannelModechangeEvent event) {
         final String filename = getLogFile(event.getChannel().getChannelInfo());
         if (event.getClient().getClient().getNickname().isEmpty()) {
@@ -358,7 +357,7 @@ public class LoggingManager implements ConfigChangeListener {
         setCachedSettings();
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelOpened(final ChannelOpenedEvent event) {
         final String filename = getLogFile(event.getChannel());
 
@@ -370,7 +369,7 @@ public class LoggingManager implements ConfigChangeListener {
         appendLine(filename, "");
     }
 
-    @Subscribe
+    @Handler
     public void handleChannelClosed(final ChannelClosedEvent event) {
         final String filename = getLogFile(event.getChannel());
 
@@ -389,7 +388,7 @@ public class LoggingManager implements ConfigChangeListener {
      */
     protected void showBackBuffer(final FrameContainer frame, final String filename) {
         if (frame == null) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null, "Given a null frame", ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null, "Given a null frame", ""));
             return;
         }
 
@@ -409,7 +408,7 @@ public class LoggingManager implements ConfigChangeListener {
                 frame.addLine(getColouredString(colour, "--- End of backbuffer\n"),
                         backbufferTimestamp);
             } catch (IOException | SecurityException e) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, e,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
                         "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage(),
                         ""));
             }
@@ -485,7 +484,7 @@ public class LoggingManager implements ConfigChangeListener {
                 final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
                 dateString = dateFormat.format(new Date()).trim();
 
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, iae,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, iae,
                         "Dateformat String '" + timestamp + "' is invalid. For more information: "
                         + "http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html",
                         ""));
@@ -602,7 +601,7 @@ public class LoggingManager implements ConfigChangeListener {
 
             if (!new File(directory.toString()).exists() && !(new File(directory.toString())).
                     mkdirs()) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create date dirs", ""));
             }
         }
@@ -654,12 +653,12 @@ public class LoggingManager implements ConfigChangeListener {
         final File dir = new File(directory.toString() + network + System.getProperty(
                 "file.separator"));
         if (dir.exists() && !dir.isDirectory()) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                     "Unable to create networkfolders dir (file exists instead)", ""));
             // Prepend network name to file instead.
             prependNetwork = true;
         } else if (!dir.exists() && !dir.mkdirs()) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                     "Unable to create networkfolders dir", ""));
             prependNetwork = true;
         }

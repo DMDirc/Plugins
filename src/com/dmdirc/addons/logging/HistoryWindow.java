@@ -29,7 +29,7 @@ import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 
@@ -53,7 +53,7 @@ public class HistoryWindow extends FrameContainer {
             final ReverseFileReader reader,
             final FrameContainer parent,
             final URLBuilder urlBuilder,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final int numLines) {
         super(parent, "raw", title, title, parent.getConfigManager(), urlBuilder, eventBus,
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));

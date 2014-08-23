@@ -30,8 +30,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -41,6 +39,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.layout.PlatformDefaults;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Initialises swing and system UI settings.
@@ -52,10 +52,10 @@ public class SwingUIInitialiser {
     private final ConfigProvider addonConfig;
     private final DialogKeyListener dialogKeyListener;
     private final DMDircEventQueue eventQueue;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
-    public SwingUIInitialiser(final EventBus eventBus, final Apple apple,
+    public SwingUIInitialiser(final MBassador eventBus, final Apple apple,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @AddonConfig final ConfigProvider addonConfig,
             final DialogKeyListener dialogKeyListener,
@@ -126,7 +126,7 @@ public class SwingUIInitialiser {
                             Font.PLAIN, 12));
                 } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
                         IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                    eventBus.post(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
                             "Unable to set UI Settings", ""));
                 }
 

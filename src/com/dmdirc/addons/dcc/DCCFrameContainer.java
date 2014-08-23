@@ -30,7 +30,7 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Collection;
 
@@ -67,7 +67,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final Collection<String> components) {
         super(parent, icon, title, title, configManager, urlBuilder, parser,
                 tabCompleterFactory.getTabCompleter(configManager),

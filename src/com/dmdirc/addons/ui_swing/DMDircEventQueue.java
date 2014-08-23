@@ -28,8 +28,6 @@ import com.dmdirc.addons.ui_swing.actions.PasteAction;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 import com.dmdirc.events.ClientKeyPressedEvent;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -47,6 +45,8 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
+import net.engio.mbassy.bus.MBassador;
+
 /**
  * Custom event queue to add common functionality to certain components.
  */
@@ -54,12 +54,12 @@ import javax.swing.text.JTextComponent;
 public class DMDircEventQueue extends EventQueue {
 
     /** Event bus to dispatch events to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
 
     @Inject
-    public DMDircEventQueue(final EventBus eventBus, final Clipboard clipboard) {
+    public DMDircEventQueue(final MBassador eventBus, final Clipboard clipboard) {
         this.eventBus = eventBus;
         this.clipboard = clipboard;
     }
@@ -74,7 +74,7 @@ public class DMDircEventQueue extends EventQueue {
         } else if (event instanceof KeyEvent) {
             handleKeyEvent((KeyEvent) event);
         } else if (event instanceof WindowEvent) {
-            eventBus.post(new SwingWindowEvent((WindowEvent) event));
+            eventBus.publish(new SwingWindowEvent((WindowEvent) event));
         }
     }
 
@@ -102,7 +102,7 @@ public class DMDircEventQueue extends EventQueue {
      * @param ke Key event
      */
     private void handleKeyEvent(final KeyEvent ke) {
-        eventBus.post(new ClientKeyPressedEvent(
+        eventBus.publishAsync(new ClientKeyPressedEvent(
                 KeyStroke.getKeyStroke(ke.getKeyChar(), ke.getModifiers())));
     }
 
