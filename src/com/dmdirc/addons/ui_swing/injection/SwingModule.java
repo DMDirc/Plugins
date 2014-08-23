@@ -182,13 +182,17 @@ public class SwingModule {
             final InviteLabel inviteLabel,
             final ErrorPanel errorLabel,
             final UpdaterLabel updaterLabel,
-            final MessageLabel messageLabel) {
-        return UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
+            final MessageLabel messageLabel,
+            final EventBus eventBus) {
+        final SwingStatusBar sb = UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
             @Override
             public SwingStatusBar call() {
                 return new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel);
             }
         });
+        eventBus.register(messageLabel);
+        eventBus.register(sb);
+        return sb;
     }
 
     @Provides

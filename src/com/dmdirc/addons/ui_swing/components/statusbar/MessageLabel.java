@@ -25,10 +25,15 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.events.StatusBarMessageClearEvent;
+import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.StatusMessage;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -46,6 +51,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -54,7 +60,7 @@ import org.slf4j.LoggerFactory;
 public class MessageLabel extends JPanel implements StatusBarComponent,
         MouseListener {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(MessageLabel.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageLabel.class);
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Default status bar message. */
@@ -71,6 +77,8 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     private transient TimerTask messageTimer;
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
+    /** The event bus to post status messages on. */
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new message label.
@@ -78,22 +86,24 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * @param iconManager  Icon manager to retrieve icons from
      * @param config       Config to read settings from
      * @param parentWindow Parent window
+     * @param eventBus     The event bus to post events on.
      */
     @Inject
     public MessageLabel(
             @GlobalConfig final AggregateConfigProvider config,
             @GlobalConfig final IconManager iconManager,
-            @MainWindow final Window parentWindow) {
+            @MainWindow final Window parentWindow,
+            final EventBus eventBus) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
         this.iconManager = iconManager;
+        this.eventBus = eventBus;
         queue = new ConcurrentLinkedQueue<>();
         defaultMessage = new StatusMessage(null, "Ready.", null, -1, config);
         currentMessage = defaultMessage;
         label = new JLabel();
         historyLabel = new MessagePopup(this, parentWindow, iconManager);
         label.setText("Ready.");
-        label.setBorder(new SidelessEtchedBorder(
-                SidelessEtchedBorder.Side.RIGHT));
+        label.setBorder(new SidelessEtchedBorder(SidelessEtchedBorder.Side.RIGHT));
         label.addMouseListener(this);
         add(label, "grow, push");
         add(historyLabel, "grow, gapleft 0");
@@ -102,15 +112,16 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     /**
      * Sets the message for this message label.
      *
-     * @param message Message object to show
+     * @param event Event containing message object to show
      */
-    public void setMessage(final StatusMessage message) {
-        LOG.info("Adding message to queue {}", message);
-        queue.add(message);
+    @Subscribe
+    public void setMessage(final StatusBarMessageEvent event) {
+        LOG.info("Adding message to queue {}", event.getMessage());
+        queue.add(event.getMessage());
         LOG.debug("Queue size: {}", queue.size());
         if (queue.size() == 1) {
-            LOG.info("Showing only message {}", message);
-            currentMessage = message;
+            LOG.info("Showing only message {}", event.getMessage());
+            currentMessage = event.getMessage();
             updateCurrentMessage();
         }
     }
@@ -131,14 +142,14 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
                 }
                 label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
                         currentMessage.getMessage(), getWidth()));
-                if (messageTimer != null && (System.currentTimeMillis()
-                        - messageTimer.scheduledExecutionTime()) <= 0) {
+                if (messageTimer != null && System.currentTimeMillis()
+                        - messageTimer.scheduledExecutionTime() <= 0) {
                     LOG.debug("Cancelling message timer.");
                     messageTimer.cancel();
                 }
                 if (!defaultMessage.equals(currentMessage)) {
                     LOG.debug("Starting new message timer.");
-                    messageTimer = new MessageTimerTask(MessageLabel.this);
+                    messageTimer = new MessageTimerTask(eventBus);
                     new Timer("SwingStatusBar messageTimer").schedule(
                             messageTimer, new Date(System.currentTimeMillis()
                                     + 250 + currentMessage.getTimeout() * 1000L));
@@ -150,7 +161,8 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     /**
      * Removes the message from the status bar.
      */
-    public void clearMessage() {
+    @Subscribe
+    public void clearMessage(final StatusBarMessageClearEvent event) {
         LOG.info("Adding message to history {}", currentMessage);
         historyLabel.addMessage(currentMessage);
         LOG.debug("Queue size: {}", queue.size());
@@ -165,11 +177,6 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         updateCurrentMessage();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (currentMessage != null
@@ -179,41 +186,21 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
