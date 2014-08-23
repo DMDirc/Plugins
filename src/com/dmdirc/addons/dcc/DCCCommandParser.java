@@ -27,7 +27,7 @@ import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * DCC CommandParser.
@@ -47,7 +47,7 @@ public class DCCCommandParser extends GlobalCommandParser {
     public DCCCommandParser(
             final AggregateConfigProvider configManager,
             final CommandController commandController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(configManager, commandController, eventBus);
     }
 

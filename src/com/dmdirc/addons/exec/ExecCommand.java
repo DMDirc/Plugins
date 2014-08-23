@@ -34,7 +34,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.CommandUtils;
 import com.dmdirc.util.io.StreamReader;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class ExecCommand extends Command {
             "exec <command> [<parameters>] - executes an external program "
             + "and displays the output", CommandType.TYPE_GLOBAL);
     /** Event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -62,7 +62,7 @@ public class ExecCommand extends Command {
      * @param eventBus   The event bus to post errors to
      */
     @Inject
-    public ExecCommand(final CommandController controller, final EventBus eventBus) {
+    public ExecCommand(final CommandController controller, final MBassador eventBus) {
         super(controller);
         this.eventBus = eventBus;
     }

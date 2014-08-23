@@ -33,9 +33,8 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,7 +74,7 @@ public class ServerList implements ConfigProviderListener {
             final ServerManager serverManager,
             final IdentityController identityController,
             final IdentityFactory identityFactory,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.serverManager = serverManager;
         this.identityController = identityController;
         this.identityFactory = identityFactory;

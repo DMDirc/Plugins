@@ -29,7 +29,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 
@@ -46,7 +46,7 @@ public class PasteDialogFactory {
     private final AggregateConfigProvider config;
     private final PluginManager pluginManager;
     private final CommandController commandController;
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     @Inject
     public PasteDialogFactory(
@@ -54,7 +54,7 @@ public class PasteDialogFactory {
             @ClientModule.GlobalConfig final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.iconManager = iconManager;
         this.config = config;
         this.pluginManager = pluginManager;

@@ -41,15 +41,15 @@ import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Manages swing components and dependencies.
@@ -76,9 +76,9 @@ public class SwingManager {
     /** Link handler for swing links. */
     private final SwingLinkHandler linkHandler;
     /** Bus to listen on for events. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The event bus for this plugin. */
-    private final EventBus swingEventBus;
+    private final MBassador swingEventBus;
     /** The provider to use to create tree-based frame managers. */
     private final TreeFrameManagerProvider treeProvider;
     /** The provider to use to create button-based frame managers. */
@@ -128,8 +128,8 @@ public class SwingManager {
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
-            final EventBus eventBus,
-            @SwingEventBus final EventBus swingEventBus,
+            final MBassador eventBus,
+            @SwingEventBus final MBassador swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final ButtonBarProvider buttonProvider,
             final Provider<SwingWindowManager> swingWindowManager,
@@ -165,14 +165,14 @@ public class SwingManager {
         this.mainFrame.setWindowManager(ctrlTabManager);
         this.mainFrame.setStatusBar(statusBar.get());
         this.mainFrame.initComponents();
-        swingEventBus.register(mainFrame);
-        swingEventBus.register(ctrlTabManager);
+        swingEventBus.subscribe(mainFrame);
+        swingEventBus.subscribe(ctrlTabManager);
 
         windowManager.addListenerAndSync(windowFactory.get());
         statusBarManager.registerStatusBar(statusBar.get());
-        eventBus.register(this);
-        eventBus.register(mainFrame);
-        eventBus.register(linkHandler);
+        eventBus.subscribe(this);
+        eventBus.subscribe(mainFrame);
+        eventBus.subscribe(linkHandler);
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -198,13 +198,13 @@ public class SwingManager {
                 errorListDialogProvider.get().dispose();
             }
         });
-        swingEventBus.unregister(mainFrame);
-        swingEventBus.unregister(ctrlTabManager);
+        swingEventBus.unsubscribe(mainFrame);
+        swingEventBus.unsubscribe(ctrlTabManager);
         mainFrame.dispose();
         statusBarManager.unregisterStatusBar(statusBar.get());
-        eventBus.unregister(this);
-        eventBus.unregister(mainFrame);
-        eventBus.unregister(linkHandler);
+        eventBus.unsubscribe(this);
+        eventBus.unsubscribe(mainFrame);
+        eventBus.unsubscribe(linkHandler);
         uiInitialiser.unload();
     }
 
@@ -228,7 +228,7 @@ public class SwingManager {
         return buttonProvider;
     }
 
-    @Subscribe
+    @Handler
     public void showFirstRunWizard(final FirstRunEvent event) {
         if (!event.isHandled()) {
             firstRunExecutor.get().showWizardAndWait();
@@ -236,7 +236,7 @@ public class SwingManager {
         }
     }
 
-    @Subscribe
+    @Handler
     public void showURLDialog(final UnknownURLEvent event) {
         if (!event.isHandled()) {
             event.setHandled(true);
@@ -250,7 +250,7 @@ public class SwingManager {
         }
     }
 
-    @Subscribe
+    @Handler
     public void showFeedbackNag(final FeedbackNagEvent event) {
         UIUtilities.invokeLater(new Runnable() {
 

@@ -32,8 +32,8 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.Image;
 import java.awt.PopupMenu;
@@ -75,7 +75,7 @@ public class Apple implements InvocationHandler {
     /** The server manager to use to connect to URLs. */
     private final ServerManager serverManager;
     /** Event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of {@link Apple}.
@@ -91,7 +91,7 @@ public class Apple implements InvocationHandler {
     public Apple(
             @GlobalConfig final AggregateConfigProvider configManager,
             final ServerManager serverManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.configManager = configManager;
         this.serverManager = serverManager;
         this.eventBus = eventBus;
@@ -102,7 +102,7 @@ public class Apple implements InvocationHandler {
             try {
                 System.loadLibrary("DMDirc-Apple"); // NOPMD
                 registerOpenURLCallback();
-                eventBus.register(this);
+                eventBus.subscribe(this);
             } catch (UnsatisfiedLinkError ule) {
                 eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM,
                         ule, "Unable to load JNI library", ""));
@@ -444,7 +444,7 @@ public class Apple implements InvocationHandler {
      *
      * @param event The event describing the client opening.
      */
-    @Subscribe
+    @Handler
     public void handleClientOpened(final ClientOpenedEvent event) {
         synchronized (addresses) {
             clientOpened = true;

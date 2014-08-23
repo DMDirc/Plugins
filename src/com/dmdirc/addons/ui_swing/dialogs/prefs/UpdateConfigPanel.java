@@ -36,7 +36,7 @@ import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,7 +79,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** Controller to pass to the update checker. */
     private final IdentityController identityController;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Instantiates a new update config panel.
@@ -96,7 +96,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CachingUpdateManager updateManager,
             final IdentityController identityController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.userConfig = userConfig;
         this.globalConfig = globalConfig;
         this.updateManager = updateManager;

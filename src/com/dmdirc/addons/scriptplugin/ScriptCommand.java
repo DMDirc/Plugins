@@ -37,7 +37,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,7 +69,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     /** Script manager to handle scripts. */
     private final ScriptManager scriptManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -84,7 +84,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      */
     @Inject
     public ScriptCommand(final ScriptManager scriptManager,
-            final EventBus eventBus,
+            final MBassador eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,

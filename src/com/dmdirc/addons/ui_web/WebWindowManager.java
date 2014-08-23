@@ -32,7 +32,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,7 +81,7 @@ public class WebWindowManager implements FrameListener {
     /** A map of window IDs to their windows. */
     private final Map<String, WebWindow> windowsById = new HashMap<>();
     /** Event bus to post errors . */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new window manager for the specified controller.
@@ -91,7 +91,7 @@ public class WebWindowManager implements FrameListener {
      * @param eventBus      The event bus to post errors on
      */
     public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.controller = controller;
         this.eventBus = eventBus;
 

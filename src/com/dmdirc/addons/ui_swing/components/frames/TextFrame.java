@@ -63,8 +63,6 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -83,6 +81,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Implements a generic (internal) frame.
@@ -105,7 +105,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     /** Manager to use for building popups. */
     private final PopupManager popupManager;
     /** Bus to despatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
     /** Boolean to determine if this frame should be popped out of main client. */
@@ -167,12 +167,12 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         if (popout) {
             popoutPlaceholder = new DesktopPlaceHolderFrame();
             popoutFrame = new DesktopWindowFrame(this);
-            eventBus.register(popoutFrame);
+            eventBus.subscribe(popoutFrame);
             popoutFrame.display();
         } else if (popoutFrame != null) {
             popoutPlaceholder = null;
             popoutFrame.dispose();
-            eventBus.unregister(popoutFrame);
+            eventBus.unsubscribe(popoutFrame);
             popoutFrame = null;
         }
         // Call setActiveFrame again so the contents of the frame manager are updated.
@@ -546,7 +546,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         final SwingController controller;
         final Provider<Window> mainWindow;
         final PopupManager popupManager;
-        final EventBus eventBus;
+        final MBassador eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final PluginManager pluginManager;
@@ -561,7 +561,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
                 final SwingController controller,
                 @MainWindow final Provider<Window> mainWindow,
                 final PopupManager popupManager,
-                final EventBus eventBus,
+                final MBassador eventBus,
                 final PasteDialogFactory pasteDialog,
                 final PluginManager pluginManager,
                 @GlobalConfig final IconManager iconManager,

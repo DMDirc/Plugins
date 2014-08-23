@@ -30,19 +30,19 @@ import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 public class ParserDebugManager implements DebugInfoListener {
 
     /** Event bus to subscribe to events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers;
     /** URL Builder. */
@@ -54,7 +54,7 @@ public class ParserDebugManager implements DebugInfoListener {
     public ParserDebugManager(
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.eventBus = eventBus;
@@ -65,14 +65,14 @@ public class ParserDebugManager implements DebugInfoListener {
      * Adds action listener.
      */
     public void addActionListener() {
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     /**
      * Remove action listener.
      */
     public void removeActionListener() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
     }
 
     /**
@@ -146,7 +146,7 @@ public class ParserDebugManager implements DebugInfoListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
             final Parser parser = event.getConnection().getParser();
             if (registeredParsers.containsKey(parser)) {

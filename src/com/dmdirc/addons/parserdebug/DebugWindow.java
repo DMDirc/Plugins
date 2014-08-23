@@ -29,7 +29,7 @@ import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 
@@ -61,7 +61,7 @@ public class DebugWindow extends FrameContainer {
             final Parser parser,
             final Connection connection,
             final URLBuilder urlBuilder,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(connection.getWindowModel(), "raw", "Parser Debug", title,
                 connection.getWindowModel().getConfigManager(),
                 urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));

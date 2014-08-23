@@ -29,9 +29,6 @@ import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import javax.inject.Inject;
 
 import com.sun.jna.Native;
@@ -40,13 +37,15 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 public class WindowFlashingManager {
 
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Config binder. */
     private final ConfigBinder binder;
     /** Cached blink rate setting. */
@@ -70,7 +69,7 @@ public class WindowFlashingManager {
     public WindowFlashingManager(
             @GlobalConfig final AggregateConfigProvider config,
             final MainFrame mainFrame,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.mainFrame = mainFrame;
         this.eventBus = eventBus;
         binder = config.getBinder();
@@ -79,11 +78,11 @@ public class WindowFlashingManager {
     public void onLoad() {
         user32 = (User32) Native.loadLibrary("user32", User32.class);
         binder.bind(this, WindowFlashing.class);
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     public void onUnload() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         binder.unbind(this);
         user32 = null;
         NativeLibrary.getInstance("user32").dispose();
@@ -157,7 +156,7 @@ public class WindowFlashingManager {
         return returnValue;
     }
 
-    @Subscribe
+    @Handler
     public void handleFocusGained(final ClientFocusGainedEvent event) {
         if (mainFrame != null) {
             user32.FlashWindowEx(stopFlashObject());

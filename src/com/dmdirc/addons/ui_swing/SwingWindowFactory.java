@@ -37,7 +37,7 @@ import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,9 +64,9 @@ public class SwingWindowFactory implements FrameListener {
     /** Active window manager. */
     private final Provider<ActiveFrameManager> activeFrameManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The swing event bus. */
-    private final EventBus swingEventBus;
+    private final MBassador swingEventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -86,8 +86,8 @@ public class SwingWindowFactory implements FrameListener {
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
-            final EventBus eventBus,
-            @SwingEventBus final EventBus swingEventBus) {
+            final MBassador eventBus,
+            @SwingEventBus final MBassador swingEventBus) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;

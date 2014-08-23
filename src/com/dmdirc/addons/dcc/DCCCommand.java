@@ -49,7 +49,7 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.io.File;
@@ -81,7 +81,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -104,7 +104,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(controller);
         this.mainWindow = mainWindow;
         myPlugin = plugin;

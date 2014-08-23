@@ -29,7 +29,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -80,7 +80,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     @Inject
     public LicencesPanel(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final PluginManager pluginManager, final EventBus eventBus) {
+            final PluginManager pluginManager, final MBassador eventBus) {
         config = globalConfig;
         initComponents();
         new LicenceLoader(pluginManager.getPluginInfos(), list, listModel, eventBus).execute();

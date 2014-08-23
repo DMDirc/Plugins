@@ -33,7 +33,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -97,7 +97,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final InputTextFrame newParent,
             final String text,
             final Window parentWindow) {
@@ -126,7 +126,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      *
      * @param text text to show in the dialog
      */
-    private void initComponents(final EventBus eventBus, final String text) {
+    private void initComponents(final MBassador eventBus, final String text) {
         scrollPane = new JScrollPane();
         textField = new TextAreaInputField(iconManager, config, text);
         editButton = new JButton("Edit");

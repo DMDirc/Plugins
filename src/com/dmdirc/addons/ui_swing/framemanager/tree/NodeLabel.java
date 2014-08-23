@@ -33,7 +33,7 @@ import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.Styliser;
 
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -124,14 +124,14 @@ public class NodeLabel extends JPanel implements SelectionListener,
         }
     }
 
-    @Subscribe
+    @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
         if (equals(window)) {
             icon.setIcon(window.getIconManager().getIcon(event.getIcon()));
         }
     }
 
-    @Subscribe
+    @Handler
     public void nameChanged(final FrameNameChangedEvent event) {
         if (equals(window)) {
             text.setText(event.getName());

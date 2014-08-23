@@ -32,7 +32,7 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.SimpleInjector;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +64,7 @@ public class ComponentCreator {
     public Set<JComponent> initFrameComponents(
             final Object frame,
             final SwingController controller,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final URLBuilder urlBuilder,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();

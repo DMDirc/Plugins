@@ -37,7 +37,7 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -85,7 +85,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -104,7 +104,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.iconManager = iconManager;

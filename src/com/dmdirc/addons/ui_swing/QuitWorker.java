@@ -28,7 +28,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 import javax.swing.SwingWorker;
@@ -47,7 +47,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     /** The main frame to interact with. */
     private final MainFrame mainFrame;
     /** Bus to dispatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new {@link QuitWorker}.
@@ -62,7 +62,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
             final IdentityController identityController,
             final ServerManager serverManager,
             final MainFrame mainFrame,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.globalIdentity = identityController.getUserSettings();
         this.globalConfig = identityController.getGlobalConfiguration();
         this.serverManager = serverManager;

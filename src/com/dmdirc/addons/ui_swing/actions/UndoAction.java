@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.actions;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.event.ActionEvent;
 
@@ -43,7 +43,7 @@ public final class UndoAction extends AbstractAction {
     /** Undo manager. */
     private final UndoManager undoManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of UndoAction.
@@ -51,7 +51,7 @@ public final class UndoAction extends AbstractAction {
      * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public UndoAction(final EventBus eventBus, final UndoManager undoManager) {
+    public UndoAction(final MBassador eventBus, final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;

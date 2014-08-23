@@ -35,7 +35,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -74,7 +74,7 @@ public class TransferContainer extends FrameContainer implements
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     /** Event bus to post events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -91,7 +91,7 @@ public class TransferContainer extends FrameContainer implements
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
             final String targetNick, final Connection connection,
-            final URLBuilder urlBuilder, final EventBus eventBus) {
+            final URLBuilder urlBuilder, final MBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, urlBuilder, eventBus,

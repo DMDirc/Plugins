@@ -27,7 +27,7 @@ import com.dmdirc.addons.nowplaying.MediaSourceState;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,7 @@ import java.io.InputStreamReader;
 public class TitleMediaSource implements MediaSource {
 
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The command to use to get the title. */
     private final String command;
     /** The name of the player we're retrieving. */
@@ -52,7 +52,7 @@ public class TitleMediaSource implements MediaSource {
      * @param command  The command to be executed
      * @param name     The name of the media source
      */
-    public TitleMediaSource(final EventBus eventBus, final String command, final String name) {
+    public TitleMediaSource(final MBassador eventBus, final String command, final String name) {
         this.eventBus = eventBus;
         this.command = command;
         this.name = name;

@@ -45,9 +45,6 @@ import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
@@ -67,6 +64,9 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Manages open windows in the application in a tree style view.
@@ -95,9 +95,9 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Swing event bus. */
-    private final EventBus swingEventBus;
+    private final MBassador swingEventBus;
 
     /**
      * Creates a new instance of the TreeFrameManager.
@@ -119,8 +119,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
-            final EventBus eventBus,
-            @SwingEventBus final EventBus swingEventBus) {
+            final MBassador eventBus,
+            @SwingEventBus final MBassador swingEventBus) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();
@@ -178,13 +178,13 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
                 setColours();
 
-                swingEventBus.register(TreeFrameManager.this);
+                swingEventBus.subscribe(TreeFrameManager.this);
                 redoTreeView();
             }
         });
     }
 
-    @Subscribe
+    @Handler
     public void doAddWindow(final SwingWindowAddedEvent event) {
         final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();
@@ -198,7 +198,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
         }
     }
 
-    @Subscribe
+    @Handler
     public void doDeleteWindow(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
         UIUtilities.invokeAndWait(new Runnable() {
@@ -217,7 +217,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
                 synchronized (nodes) {
-                    eventBus.unregister(nodes.get(window.getContainer()).getLabel());
+                    eventBus.unsubscribe(nodes.get(window.getContainer()).getLabel());
                     nodes.remove(window.getContainer());
                 }
                 window.getContainer().removeNotificationListener(
@@ -239,7 +239,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @Override
             public void run() {
                 final NodeLabel label = new NodeLabel(window);
-                eventBus.register(label);
+                eventBus.subscribe(label);
                 final TreeViewNode node = new TreeViewNode(label, window);
                 synchronized (nodes) {
                     nodes.put(window, node);

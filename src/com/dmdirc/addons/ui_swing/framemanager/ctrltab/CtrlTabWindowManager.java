@@ -41,8 +41,8 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class CtrlTabWindowManager implements SelectionListener {
     /** Selection model for the tree scroller. */
     private final TreeSelectionModel selectionModel;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new ctrl tab window manager.
@@ -89,7 +89,7 @@ public class CtrlTabWindowManager implements SelectionListener {
             final SwingWindowFactory windowFactory,
             final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
@@ -119,7 +119,7 @@ public class CtrlTabWindowManager implements SelectionListener {
                                 KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
     }
 
-    @Subscribe
+    @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
         final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();
@@ -144,7 +144,7 @@ public class CtrlTabWindowManager implements SelectionListener {
         });
     }
 
-    @Subscribe
+    @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();

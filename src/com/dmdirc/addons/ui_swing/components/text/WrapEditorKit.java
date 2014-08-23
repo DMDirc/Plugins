@@ -13,7 +13,7 @@ import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
@@ -46,7 +46,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
     /** Associated Component. */
     private JEditorPane editorPane;
     /** Event bus to fire link click events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The window this editor kit is used in. */
     private final Window window;
 
@@ -57,7 +57,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
      * @param eventBus Event bus to raise hyperlink events on
      * @param window   Window as source for hyperlink events
      */
-    public WrapEditorKit(final boolean wrapping, final EventBus eventBus, final Window window) {
+    public WrapEditorKit(final boolean wrapping, final MBassador eventBus, final Window window) {
         this.window = window;
         this.eventBus = eventBus;
         wrap = wrapping;
