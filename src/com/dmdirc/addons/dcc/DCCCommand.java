@@ -49,8 +49,6 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Window;
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -58,6 +56,8 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * This command allows starting dcc chats/file transfers.
@@ -81,7 +81,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -104,7 +104,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(controller);
         this.mainWindow = mainWindow;
         myPlugin = plugin;
@@ -190,7 +190,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + " " + chat.getPort());
-            eventBus.post(new DccChatRequestSentEvent(connection, target));
+            eventBus.publish(new DccChatRequestSentEvent(connection, target));
             sendLine(origin, isSilent, "DCCChatStarting", target, chat.getHost(), chat.getPort());
             window.addLine("DCCChatStarting", target, chat.getHost(), chat.getPort());
         } else {
@@ -246,7 +246,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                         myPlugin.getDomain(), "send.forceturbo"));
                 send.setType(DCCTransfer.TransferType.SEND);
 
-                eventBus.post(new DccSendRequestEvent(connection, target, selectedFile.
+                eventBus.publish(new DccSendRequestEvent(connection, target, selectedFile.
                         getAbsolutePath()));
 
                 sendLine(origin, isSilent, FORMAT_OUTPUT,

@@ -31,12 +31,12 @@ import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.Collection;
 
 import javax.inject.Inject;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Listens for contact list related events.
@@ -46,7 +46,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
     /** The channel this listener is for. */
     private final Channel channel;
     /** Event bus to register listeners with. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new ContactListListener for the specified channel.
@@ -65,7 +65,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
     public void addListeners() {
         channel.addNicklistListener(this);
         channel.addCloseListener(this);
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
     public void removeListeners() {
         channel.removeNicklistListener(this);
         channel.removeCloseListener(this);
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
     }
 
     @Override
@@ -102,12 +102,12 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
         // Do nothing
     }
 
-    @Subscribe
+    @Handler
     public void handleUserAway(final ChannelUserAwayEvent event) {
         clientAdded(event.getUser());
     }
 
-    @Subscribe
+    @Handler
     public void handleUserBack(final ChannelUserBackEvent event) {
         clientAdded(event.getUser());
     }

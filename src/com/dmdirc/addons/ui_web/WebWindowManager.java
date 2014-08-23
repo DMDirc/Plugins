@@ -32,8 +32,6 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 
-import com.google.common.eventbus.EventBus;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +40,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Manages WebUI windows.
@@ -81,7 +81,7 @@ public class WebWindowManager implements FrameListener {
     /** A map of window IDs to their windows. */
     private final Map<String, WebWindow> windowsById = new HashMap<>();
     /** Event bus to post errors . */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new window manager for the specified controller.
@@ -91,7 +91,7 @@ public class WebWindowManager implements FrameListener {
      * @param eventBus      The event bus to post errors on
      */
     public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.controller = controller;
         this.eventBus = eventBus;
 
@@ -170,7 +170,7 @@ public class WebWindowManager implements FrameListener {
         if (IMPLEMENTATIONS.containsKey(window.getComponents())) {
             clazz = IMPLEMENTATIONS.get(window.getComponents());
         } else {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, null,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, null,
                     "Unable to create web window for components: " + window.getComponents(), ""));
             return;
         }
@@ -184,7 +184,7 @@ public class WebWindowManager implements FrameListener {
             windows.put(window, frame);
             windowsById.put(id, frame);
         } catch (ReflectiveOperationException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
                     "Unable to create window of type " + clazz.getCanonicalName() + " for web ui",
                     ""));
         }

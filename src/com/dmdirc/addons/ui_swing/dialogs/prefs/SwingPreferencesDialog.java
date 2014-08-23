@@ -37,8 +37,6 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,6 +57,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Allows the user to modify global client preferences.
@@ -85,7 +85,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -104,7 +104,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.iconManager = iconManager;
@@ -124,7 +124,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     prefsManager = dialogModelProvider.get();
                 } catch (IllegalArgumentException ex) {
                     mainPanel.setError(ex.getMessage());
-                    eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
                             "Unable to load the preferences dialog", ""));
                 }
                 return prefsManager;
@@ -141,7 +141,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
                     } catch (InterruptedException ex) {
                         //Ignore
                     } catch (ExecutionException ex) {
-                        eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+                        eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
                     }
                 }
             }

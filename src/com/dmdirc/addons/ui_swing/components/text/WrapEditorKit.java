@@ -13,8 +13,6 @@ import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 
-import com.google.common.eventbus.EventBus;
-
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -26,6 +24,8 @@ import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.ViewFactory;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * @author Stanislav Lapitsky
@@ -46,7 +46,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
     /** Associated Component. */
     private JEditorPane editorPane;
     /** Event bus to fire link click events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The window this editor kit is used in. */
     private final Window window;
 
@@ -57,7 +57,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
      * @param eventBus Event bus to raise hyperlink events on
      * @param window   Window as source for hyperlink events
      */
-    public WrapEditorKit(final boolean wrapping, final EventBus eventBus, final Window window) {
+    public WrapEditorKit(final boolean wrapping, final MBassador eventBus, final Window window) {
         this.window = window;
         this.eventBus = eventBus;
         wrap = wrapping;
@@ -124,15 +124,15 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
             Object target = characterElementAt(e).getAttributes().getAttribute(
                     IRCTextAttribute.HYPERLINK);
             if (target != null) {
-                eventBus.post(new LinkUrlClickedEvent(window, (String) target));
+                eventBus.publishAsync(new LinkUrlClickedEvent(window, (String) target));
             }
             target = characterElementAt(e).getAttributes().getAttribute(IRCTextAttribute.CHANNEL);
             if (target != null) {
-                eventBus.post(new LinkChannelClickedEvent(window, (String) target));
+                eventBus.publishAsync(new LinkChannelClickedEvent(window, (String) target));
             }
             target = characterElementAt(e).getAttributes().getAttribute(IRCTextAttribute.NICKNAME);
             if (target != null) {
-                eventBus.post(new LinkNicknameClickedEvent(window, (String) target));
+                eventBus.publishAsync(new LinkNicknameClickedEvent(window, (String) target));
             }
         }
     }

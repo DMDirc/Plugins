@@ -26,7 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.CommandController;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class TimerManager {
     /** Action controller. */
     private final ActionController actionController;
     /** Event bus to post events on . */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Have we registered our types already? */
     private static boolean registered;
     /** The timer to use for scheduling. */
@@ -59,7 +59,7 @@ public class TimerManager {
     @Inject
     public TimerManager(final CommandController commandController,
             final ActionController actionController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.commandController = commandController;
         this.actionController = actionController;
         this.eventBus = eventBus;

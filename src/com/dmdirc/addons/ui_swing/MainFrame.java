@@ -50,9 +50,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -67,6 +64,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Provider of frame managers. */
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -143,7 +143,7 @@ public class MainFrame extends JFrame implements WindowListener,
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
             final Provider<FrameManager> frameManagerProvider,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         checkOnEDT();
         this.apple = apple;
         this.lifecycleController = lifecycleController;
@@ -176,12 +176,12 @@ public class MainFrame extends JFrame implements WindowListener,
 
                 @Override
                 public void windowGainedFocus(final WindowEvent e) {
-                    eventBus.post(new ClientFocusGainedEvent());
+                    eventBus.publishAsync(new ClientFocusGainedEvent());
                 }
 
                 @Override
                 public void windowLostFocus(final WindowEvent e) {
-                    eventBus.post(new ClientFocusLostEvent());
+                    eventBus.publishAsync(new ClientFocusLostEvent());
                 }
             });
 
@@ -260,7 +260,7 @@ public class MainFrame extends JFrame implements WindowListener,
 
     @Override
     public void windowIconified(final WindowEvent windowEvent) {
-        eventBus.post(new ClientMinimisedEvent());
+        eventBus.publishAsync(new ClientMinimisedEvent());
     }
 
     /**
@@ -270,7 +270,7 @@ public class MainFrame extends JFrame implements WindowListener,
      */
     @Override
     public void windowDeiconified(final WindowEvent windowEvent) {
-        eventBus.post(new ClientUnminimisedEvent());
+        eventBus.publishAsync(new ClientUnminimisedEvent());
     }
 
     /**
@@ -587,7 +587,7 @@ public class MainFrame extends JFrame implements WindowListener,
         listeners.remove(SelectionListener.class, listener);
     }
 
-    @Subscribe
+    @Handler
     public void doWindowAdded(final SwingWindowAddedEvent event) {
         final TextFrame window = event.getChildWindow();
         if (activeFrame == null) {
@@ -595,7 +595,7 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    @Subscribe
+    @Handler
     public void doWindowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
         if (window == null) {
@@ -621,7 +621,7 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    @Subscribe
+    @Handler
     public void titleChanged(final FrameTitleChangedEvent event) {
         if (activeFrame != null && activeFrame.getContainer().equals(event.getContainer())) {
             setTitle(event.getTitle());

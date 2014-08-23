@@ -35,9 +35,6 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -47,6 +44,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Provides an MDI style bar for closing frames.
@@ -84,7 +84,7 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
             @GlobalConfig final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final EventBus eventBus) {
+            @SwingEventBus final MBassador eventBus) {
         this.activeFrameManager = activeFrameManager;
         config = globalConfig;
         configDomain = domain;
@@ -96,7 +96,7 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
         setLayout(new MigLayout("hmax 17, ins 1 0 0 0, fill"));
         add(closeButton, "w 17!, h 17!, right");
 
-        eventBus.register(this);
+        eventBus.subscribe(this);
 
         activeFrameManager.addSelectionListener(this);
         closeButton.addActionListener(this);
@@ -123,12 +123,12 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
         });
     }
 
-    @Subscribe
+    @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
         check();
     }
 
-    @Subscribe
+    @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         check();
     }

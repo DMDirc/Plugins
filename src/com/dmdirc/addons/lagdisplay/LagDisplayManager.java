@@ -41,9 +41,6 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.collections.RollingList;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +50,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Manages the lifecycle of the lag display plugin.
  */
@@ -60,7 +60,7 @@ import javax.inject.Singleton;
 public class LagDisplayManager implements ConfigChangeListener, SelectionListener {
 
     /** Event bus to receive events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** Status bar to add panels to. */
@@ -85,7 +85,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
 
     @Inject
     public LagDisplayManager(
-            final EventBus eventBus,
+            final MBassador eventBus,
             final ActiveFrameManager activeFrameManager,
             final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
@@ -105,14 +105,14 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         activeFrameManager.addSelectionListener(this);
         globalConfig.addChangeListener(domain, this);
         readConfig();
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     public void unload() {
         statusBar.removeComponent(panel);
         activeFrameManager.removeSelectionListener(this);
         globalConfig.removeListener(this);
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         panel = null;
     }
 
@@ -170,7 +170,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         panel.refreshDialog();
     }
 
-    @Subscribe
+    @Handler
     public void handleServerNumeric(final ServerNumericEvent event) {
         if (event.getNumeric() != 421) {
             return;
@@ -201,7 +201,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
         final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
@@ -215,7 +215,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
             panel.refreshDialog();
     }
 
-    @Subscribe
+    @Handler
     public void handleServerGotPing(final ServerGotpingEvent event) {
         if (event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
@@ -237,7 +237,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         panel.refreshDialog();
     }
 
-    @Subscribe
+    @Handler
     public void handleServerNoPing(final ServerNopingEvent event) {
         if (event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
@@ -258,7 +258,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         panel.refreshDialog();
     }
 
-    @Subscribe
+    @Handler
     public void HandleServerPingSent(final ServerPingsentEvent event) {
         if (!event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {

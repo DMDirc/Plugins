@@ -38,8 +38,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -59,6 +57,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Manages the window menu window list.
@@ -102,11 +103,11 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final EventBus swingEventBus) {
+            @SwingEventBus final MBassador swingEventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
-        swingEventBus.register(this);
+        swingEventBus.subscribe(this);
 
         menus = Collections.synchronizedMap(
                 new HashMap<FrameContainer, FrameContainerMenu>());
@@ -145,7 +146,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
         closeMenuItem.setEnabled(enabledMenuItems.get());
     }
 
-    @Subscribe
+    @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
         final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();
@@ -218,7 +219,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
         checkMenuItems();
     }
 
-    @Subscribe
+    @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();

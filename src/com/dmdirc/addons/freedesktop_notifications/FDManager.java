@@ -35,13 +35,14 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamReader;
 
 import com.google.common.base.Strings;
-import com.google.common.eventbus.EventBus;
 import com.google.common.html.HtmlEscapers;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.bus.MBassador;
 
 @Singleton
 public class FDManager implements ConfigChangeListener {
@@ -55,7 +56,7 @@ public class FDManager implements ConfigChangeListener {
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -71,7 +72,7 @@ public class FDManager implements ConfigChangeListener {
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
             final PluginFilesHelper filesHelper,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.domain = domain;
         this.config = config;
         this.userConfig = userConfig;
@@ -162,7 +163,7 @@ public class FDManager implements ConfigChangeListener {
             filesHelper.extractResourcesEndingWith(".py");
             filesHelper.extractResourcesEndingWith(".png");
         } catch (IOException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
                     "Unable to extract files for Free desktop notifications: " + ex.getMessage(),
                     ""));
         }

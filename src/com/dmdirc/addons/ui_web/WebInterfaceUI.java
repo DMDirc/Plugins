@@ -32,7 +32,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 
@@ -58,7 +58,7 @@ public class WebInterfaceUI implements UIController {
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to despatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
@@ -78,7 +78,7 @@ public class WebInterfaceUI implements UIController {
             @PluginDomain(WebInterfacePlugin.class) final String domain,
             final IdentityController identityController,
             final CommandController commandController,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final WindowManager coreWindowManager,
@@ -141,7 +141,7 @@ public class WebInterfaceUI implements UIController {
         return commandController;
     }
 
-    public EventBus getEventBus() {
+    public MBassador getEventBus() {
         return eventBus;
     }
 

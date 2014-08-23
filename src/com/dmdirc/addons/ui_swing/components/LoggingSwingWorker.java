@@ -25,11 +25,11 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.eventbus.EventBus;
-
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Logging swing worker.
@@ -39,14 +39,14 @@ import javax.swing.SwingWorker;
  */
 public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
 
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new logging swing worker.
      *
      * @param eventBus Event bus to post errors to.
      */
-    public LoggingSwingWorker(final EventBus eventBus) {
+    public LoggingSwingWorker(final MBassador eventBus) {
         this.eventBus = eventBus;
     }
 
@@ -60,7 +60,7 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            eventBus.post(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
         }
     }
 

@@ -53,9 +53,6 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
@@ -69,6 +66,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 
 /**
  * This plugin adds DCC to DMDirc.
@@ -95,7 +95,7 @@ public class DCCManager {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of this plugin.
@@ -128,7 +128,7 @@ public class DCCManager {
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
             final URLBuilder urlBuilder,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainWindow = mainWindow;
@@ -355,7 +355,7 @@ public class DCCManager {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleServerCtctpEvent(final ServerCtcpEvent event) {
         final boolean autoAccept = config.getOptionBool(getDomain(), "receive.autoaccept");
         final String[] ctcpData = event.getContent().split(" ");
@@ -399,7 +399,7 @@ public class DCCManager {
         if (dontAsk) {
             handleDCCChat(connection.getParser(), nickname, ctcpData);
         } else {
-            eventBus.post(new DccChatRequestEvent(connection, nickname));
+            eventBus.publish(new DccChatRequestEvent(connection, nickname));
             new ChatRequestDialog(mainWindow, this, connection, nickname, ctcpData).display();
         }
     }
@@ -510,7 +510,7 @@ public class DCCManager {
         if (DCCTransfer.findByToken(token) == null && !dontAsk) {
             if (token.isEmpty() || port.equals("0")) {
                 // Make sure this is not a reverse DCC Send that we no longer care about.
-                eventBus.post(new DccSendRequestEvent(connection, nickname, filename));
+                eventBus.publish(new DccSendRequestEvent(connection, nickname, filename));
                 new SendRequestDialog(mainWindow, this, token, ipLong, portInt, filename, size,
                         nickname, connection).display();
             }
@@ -661,7 +661,7 @@ public class DCCManager {
                 "receive.savelocation"));
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create download dir (file exists instead)", ""));
             }
         } else {
@@ -669,19 +669,19 @@ public class DCCManager {
                 dir.mkdirs();
                 dir.createNewFile();
             } catch (IOException ex) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.LOW, null,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create download dir", ""));
             }
         }
 
-        eventBus.register(this);
+        eventBus.subscribe(this);
     }
 
     /**
      * Called when this plugin is Unloaded.
      */
     public synchronized void onUnload() {
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         if (container != null) {
             container.close();
         }

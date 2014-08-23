@@ -30,9 +30,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 import java.awt.AWTException;
 import java.awt.Frame;
 import java.awt.MenuItem;
@@ -46,6 +43,9 @@ import java.awt.event.MouseListener;
 
 import javax.inject.Inject;
 
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
+
 public class SystrayManager implements ActionListener, MouseListener {
 
     /** Main frame instance. */
@@ -57,7 +57,7 @@ public class SystrayManager implements ActionListener, MouseListener {
     /** Icon manager to get images from. */
     private final IconManager iconManager;
     /** The event bus to listen to events on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The tray icon we're currently using. */
     private TrayIcon icon;
 
@@ -67,7 +67,7 @@ public class SystrayManager implements ActionListener, MouseListener {
             @PluginDomain(SystrayPlugin.class) final String domain,
             final MainFrame mainFrame,
             @GlobalConfig final IconManager iconManager,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.mainFrame = mainFrame;
@@ -92,7 +92,7 @@ public class SystrayManager implements ActionListener, MouseListener {
 
         try {
             SystemTray.getSystemTray().add(icon);
-            eventBus.register(this);
+            eventBus.subscribe(this);
         } catch (AWTException ex) {
             throw new IllegalStateException("Unable to load plugin", ex);
         }
@@ -100,7 +100,7 @@ public class SystrayManager implements ActionListener, MouseListener {
 
     public void unload() {
         SystemTray.getSystemTray().remove(icon);
-        eventBus.unregister(this);
+        eventBus.unsubscribe(this);
         icon = null;
     }
 
@@ -151,7 +151,7 @@ public class SystrayManager implements ActionListener, MouseListener {
         }
     }
 
-    @Subscribe
+    @Handler
     public void handleClientMinimised(final ClientMinimisedEvent event) {
         if (globalConfig.getOptionBool(domain, "autominimise")) {
             mainFrame.setVisible(false);

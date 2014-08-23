@@ -39,7 +39,7 @@ import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.util.validators.Validator;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -78,7 +78,7 @@ public final class PrefsComponentFactory {
     /** The colour manager to use for colour preferences. */
     private final ColourManager colourManager;
     /** The global event bus. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of PrefsComponentFactory.
@@ -89,7 +89,7 @@ public final class PrefsComponentFactory {
      */
     @Inject
     public PrefsComponentFactory(
-            final EventBus eventBus,
+            final MBassador eventBus,
             @GlobalConfig final IconManager iconManager,
             final ColourManager colourManager) {
         this.iconManager = iconManager;

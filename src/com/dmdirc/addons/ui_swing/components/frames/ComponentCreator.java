@@ -32,12 +32,12 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.SimpleInjector;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Utility class to create frame components.
@@ -64,7 +64,7 @@ public class ComponentCreator {
     public Set<JComponent> initFrameComponents(
             final Object frame,
             final SwingController controller,
-            final EventBus eventBus,
+            final MBassador eventBus,
             final URLBuilder urlBuilder,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();
@@ -93,7 +93,7 @@ public class ComponentCreator {
                 object = injector.createInstance(clazz);
             } catch (ClassNotFoundException | IllegalArgumentException ex) {
                 object = null;
-                eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
                         "Unable to create component: " + ex.getMessage(), ""));
             }
             if (object instanceof JComponent) {

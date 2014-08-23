@@ -33,10 +33,10 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
-import com.google.common.eventbus.EventBus;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
  * Creates DMDirc errors with the specified parameters.
@@ -44,7 +44,7 @@ import javax.inject.Provider;
 public class FakeError extends DebugCommand implements IntelligentCommand {
 
     /** The event bus to post errors on . */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -53,7 +53,7 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
      * @param eventBus        The event bus to post errors on
      */
     @Inject
-    public FakeError(final Provider<Debug> commandProvider, final EventBus eventBus) {
+    public FakeError(final Provider<Debug> commandProvider, final MBassador eventBus) {
         super(commandProvider);
         this.eventBus = eventBus;
     }
@@ -75,12 +75,12 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
         if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("user")) {
-            eventBus.post(new UserErrorEvent(getLevel(args.getArguments()),
+            eventBus.publishAsync(new UserErrorEvent(getLevel(args.getArguments()),
                     null, "Debug error message", ""));
         } else if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
                 && args.getArguments()[0].equals("app")) {
-            eventBus.post(new AppErrorEvent(getLevel(args.getArguments()),
+            eventBus.publishAsync(new AppErrorEvent(getLevel(args.getArguments()),
                     new IllegalArgumentException(), "Debug error message", ""));
         } else {
             showUsage(origin, args.isSilent(), getName(), getUsage());

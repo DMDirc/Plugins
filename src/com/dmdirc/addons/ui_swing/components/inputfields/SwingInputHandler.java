@@ -32,7 +32,7 @@ import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -49,7 +49,7 @@ import javax.swing.text.JTextComponent;
  */
 public class SwingInputHandler extends InputHandler implements KeyListener {
 
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of InputHandler. Adds listeners to the target that we need to operate.
@@ -67,7 +67,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final CommandController commandController,
             final CommandParser commandParser,
             final FrameContainer parentWindow,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
         this.eventBus = eventBus;
     }

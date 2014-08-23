@@ -36,7 +36,7 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -88,7 +88,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The event bus to post errors to. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -116,7 +116,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);

@@ -33,7 +33,7 @@ import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class ThemePanel extends AddonPanel {
             @GlobalConfig final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(parentWindow, workerFactory, eventBus);
         this.themeManager = themeManager;
         this.iconManager = iconManager;

@@ -29,8 +29,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 
-import com.google.common.eventbus.EventBus;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -39,13 +37,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import net.engio.mbassy.bus.MBassador;
+
 /**
  * The IdentdServer watches over the ident port when required
  */
 public final class IdentdServer implements Runnable {
 
     /** The event bus to post errors on. */
-    private final EventBus eventBus;
+    private final MBassador eventBus;
     /** The Thread in use for this server */
     private volatile Thread myThread = null;
     /** The current socket in use for this server */
@@ -70,7 +70,7 @@ public final class IdentdServer implements Runnable {
      * @param domain        This plugin's setting domain
      */
     @Inject
-    public IdentdServer(final EventBus eventBus,
+    public IdentdServer(final MBassador eventBus,
             final ServerManager serverManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain) {
@@ -95,7 +95,7 @@ public final class IdentdServer implements Runnable {
                 addClient(client);
             } catch (IOException e) {
                 if (myThread == thisThread) {
-                    eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, e,
+                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
                             "Accepting client failed: " + e.getMessage(), ""));
                 }
             }
@@ -149,7 +149,7 @@ public final class IdentdServer implements Runnable {
                 myThread = new Thread(this);
                 myThread.start();
             } catch (IOException e) {
-                eventBus.post(new UserErrorEvent(ErrorLevel.HIGH, e,
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
                         "Unable to start identd server: " + e.getMessage(), ""));
                 if (e.getMessage().equals("Permission denied")) {
                     failed = true;

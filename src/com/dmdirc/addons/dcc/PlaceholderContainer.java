@@ -28,7 +28,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
 
-import com.google.common.eventbus.EventBus;
+import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -58,7 +58,7 @@ public class PlaceholderContainer extends FrameContainer {
             final AggregateConfigProvider config,
             final Window parentWindow,
             final URLBuilder urlBuilder,
-            final EventBus eventBus) {
+            final MBassador eventBus) {
         super(null, "dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
