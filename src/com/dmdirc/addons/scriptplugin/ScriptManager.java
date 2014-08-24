@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
@@ -38,8 +39,6 @@ import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.engio.mbassy.bus.MBassador;
-
 public class ScriptManager {
 
     /** Script engine manager. */
@@ -49,12 +48,12 @@ public class ScriptManager {
     /** Store Script State Name,Engine */
     private final Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
     /** The event bus to post events to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public ScriptManager(final ScriptEngineManager scriptEngineManager,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
         this.eventBus = eventBus;

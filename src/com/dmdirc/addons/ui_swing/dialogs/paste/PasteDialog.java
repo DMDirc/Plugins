@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
@@ -32,8 +33,6 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -97,7 +96,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final InputTextFrame newParent,
             final String text,
             final Window parentWindow) {
@@ -126,7 +125,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      *
      * @param text text to show in the dialog
      */
-    private void initComponents(final MBassador eventBus, final String text) {
+    private void initComponents(final DMDircMBassador eventBus, final String text) {
         scrollPane = new JScrollPane();
         textField = new TextAreaInputField(iconManager, config, text);
         editButton = new JButton("Edit");

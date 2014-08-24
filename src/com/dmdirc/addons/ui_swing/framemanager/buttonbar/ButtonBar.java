@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.buttonbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -72,7 +73,6 @@ import javax.swing.SwingUtilities;
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -131,7 +131,7 @@ public final class ButtonBar implements FrameManager, ActionListener,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
             final ActiveFrameManager activeFrameManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.windowFactory = windowFactory;
         this.globalConfig = globalConfig;
         this.windowManager = windowManager;

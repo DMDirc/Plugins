@@ -55,7 +55,7 @@ import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -179,7 +179,7 @@ public class DialogModule {
             @MainWindow final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {

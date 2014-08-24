@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_web.uicomponents.WebInputWindow;
 import com.dmdirc.addons.ui_web.uicomponents.WebWindow;
@@ -40,8 +41,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 import javax.annotation.Nullable;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * Manages WebUI windows.
@@ -81,7 +80,7 @@ public class WebWindowManager implements FrameListener {
     /** A map of window IDs to their windows. */
     private final Map<String, WebWindow> windowsById = new HashMap<>();
     /** Event bus to post errors . */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new window manager for the specified controller.
@@ -91,7 +90,7 @@ public class WebWindowManager implements FrameListener {
      * @param eventBus      The event bus to post errors on
      */
     public WebWindowManager(final WebInterfaceUI controller, final WindowManager windowManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.controller = controller;
         this.eventBus = eventBus;
 

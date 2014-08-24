@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_web.uicomponents.WebStatusBar;
 import com.dmdirc.interfaces.CommandController;
@@ -31,8 +32,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.core.components.StatusBarManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 
@@ -58,7 +57,7 @@ public class WebInterfaceUI implements UIController {
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to despatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new WebInterfaceUI belonging to the specified plugin.
@@ -78,7 +77,7 @@ public class WebInterfaceUI implements UIController {
             @PluginDomain(WebInterfacePlugin.class) final String domain,
             final IdentityController identityController,
             final CommandController commandController,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final ServerManager serverManager,
             final PluginManager pluginManager,
             final WindowManager coreWindowManager,
@@ -141,7 +140,7 @@ public class WebInterfaceUI implements UIController {
         return commandController;
     }
 
-    public MBassador getEventBus() {
+    public DMDircMBassador getEventBus() {
         return eventBus;
     }
 

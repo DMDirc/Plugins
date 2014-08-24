@@ -23,13 +23,12 @@
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 
@@ -46,7 +45,7 @@ public class PasteDialogFactory {
     private final AggregateConfigProvider config;
     private final PluginManager pluginManager;
     private final CommandController commandController;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public PasteDialogFactory(
@@ -54,7 +53,7 @@ public class PasteDialogFactory {
             @ClientModule.GlobalConfig final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.iconManager = iconManager;
         this.config = config;
         this.pluginManager = pluginManager;

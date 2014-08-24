@@ -24,6 +24,7 @@ package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -42,8 +43,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
-
 @Singleton
 public class FDManager implements ConfigChangeListener {
 
@@ -56,7 +55,7 @@ public class FDManager implements ConfigChangeListener {
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -72,7 +71,7 @@ public class FDManager implements ConfigChangeListener {
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
             final PluginFilesHelper filesHelper,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.domain = domain;
         this.config = config;
         this.userConfig = userConfig;

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlists.service;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ParserFactory;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
@@ -32,8 +33,6 @@ import com.dmdirc.plugins.ExportedService;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceProvider;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -54,7 +53,7 @@ public class ServerListServiceProvider implements ServiceProvider {
     /** Plugin Manager */
     private final PluginManager pluginManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new server list service provider.
@@ -64,7 +63,7 @@ public class ServerListServiceProvider implements ServiceProvider {
      * @param eventBus      The event bus to post errors to
      */
     public ServerListServiceProvider(final PluginManager pluginManager, final ServerList serverList,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.serverList = serverList;
         this.pluginManager = pluginManager;
         this.eventBus = eventBus;

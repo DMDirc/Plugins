@@ -67,7 +67,7 @@ import javax.inject.Singleton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -95,7 +95,7 @@ public class DCCManager {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of this plugin.
@@ -128,7 +128,7 @@ public class DCCManager {
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
             final URLBuilder urlBuilder,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory) {
         this.mainWindow = mainWindow;

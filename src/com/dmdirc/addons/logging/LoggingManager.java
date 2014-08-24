@@ -83,7 +83,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -105,7 +105,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
             new HashMap<String, OpenFile>());
     private final URLBuilder urlBuilder;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
@@ -129,7 +129,7 @@ public class LoggingManager implements ConfigChangeListener {
     @Inject
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final WindowManager windowManager, final URLBuilder urlBuilder, final MBassador eventBus,
+            final WindowManager windowManager, final URLBuilder urlBuilder, final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
         this.domain = domain;
         this.config = globalConfig;

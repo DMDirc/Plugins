@@ -28,7 +28,7 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLBuilder;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.util.Collections;
 import java.util.Date;
@@ -52,7 +52,7 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     public FakeWriteableFrameContainer(
             final FrameContainer target,
             final MessageSinkManager messageSinkManager,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final URLBuilder urlBuilder) {
         super(target, target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), urlBuilder, target.getCommandParser(),

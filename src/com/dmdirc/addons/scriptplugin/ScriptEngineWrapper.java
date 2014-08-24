@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
@@ -37,15 +38,13 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Class to create script engines!
  */
 public class ScriptEngineWrapper {
 
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
     /** The File this script is from */
@@ -66,7 +65,7 @@ public class ScriptEngineWrapper {
      * @throws javax.script.ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
-            final MBassador eventBus, final String filename)
+            final DMDircMBassador eventBus, final String filename)
             throws FileNotFoundException, ScriptException {
         Preconditions.checkNotNull(filename, "File cannot be null");
         this.eventBus = eventBus;

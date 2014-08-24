@@ -54,7 +54,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -72,7 +72,7 @@ public class CtrlTabWindowManager implements SelectionListener {
     /** Selection model for the tree scroller. */
     private final TreeSelectionModel selectionModel;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new ctrl tab window manager.
@@ -89,7 +89,7 @@ public class CtrlTabWindowManager implements SelectionListener {
             final SwingWindowFactory windowFactory,
             final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));

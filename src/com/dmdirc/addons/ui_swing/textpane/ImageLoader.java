@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class ImageLoader extends LoggingSwingWorker<Image, Void> {
     private final BackgroundPainter painter;
 
     public ImageLoader(final URL imageURL, final BackgroundPainter painter,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(eventBus);
         this.imageURL = imageURL;
         this.painter = painter;

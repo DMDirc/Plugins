@@ -40,18 +40,18 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class ScriptPluginManager {
 
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     private final String scriptDir;
     private final ScriptManager scriptManager;
     private final TypedProperties globalVariables;
 
     @Inject
-    public ScriptPluginManager(final MBassador eventBus,
+    public ScriptPluginManager(final DMDircMBassador eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDir,
             final ScriptManager scriptManager,
             final ScriptEngineManager scriptEngineManager) {

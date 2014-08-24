@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -44,8 +45,6 @@ import javax.swing.UIManager;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * Loads a preferences panel for a specified preferences category in the background.
@@ -70,7 +69,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     /** Prefs component factory instance. */
     private final PrefsComponentFactory factory;
     /** The event bus to post the errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new preferences category loader.
@@ -81,7 +80,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      * @param category      Preferences Category to load
      */
     public PrefsCategoryLoader(final PrefsComponentFactory factory,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
         super(eventBus);

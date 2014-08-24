@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Logging swing worker.
@@ -39,14 +39,14 @@ import net.engio.mbassy.bus.MBassador;
  */
 public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
 
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new logging swing worker.
      *
      * @param eventBus Event bus to post errors to.
      */
-    public LoggingSwingWorker(final MBassador eventBus) {
+    public LoggingSwingWorker(final DMDircMBassador eventBus) {
         this.eventBus = eventBus;
     }
 

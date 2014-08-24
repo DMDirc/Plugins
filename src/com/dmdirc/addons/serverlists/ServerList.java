@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Precondition;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.io.ServerGroupReader;
@@ -32,8 +33,6 @@ import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -74,7 +73,7 @@ public class ServerList implements ConfigProviderListener {
             final ServerManager serverManager,
             final IdentityController identityController,
             final IdentityFactory identityFactory,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.serverManager = serverManager;
         this.identityController = identityController;
         this.identityFactory = identityFactory;

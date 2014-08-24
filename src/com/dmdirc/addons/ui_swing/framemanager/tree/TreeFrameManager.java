@@ -65,7 +65,7 @@ import javax.swing.tree.TreePath;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -95,9 +95,9 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Swing event bus. */
-    private final MBassador swingEventBus;
+    private final DMDircMBassador swingEventBus;
 
     /**
      * Creates a new instance of the TreeFrameManager.
@@ -119,8 +119,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
-            final MBassador eventBus,
-            @SwingEventBus final MBassador swingEventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();

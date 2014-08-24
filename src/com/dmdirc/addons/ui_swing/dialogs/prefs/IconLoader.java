@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
@@ -31,8 +32,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.Icon;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Loads an icon in the background and uses it for a category label once it has been loaded.
  */
@@ -41,7 +40,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
     /** Category this icon will be used for. */
     private final CategoryLabel label;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Icon to load. */
     private final String icon;
     /** Icon manager. */
@@ -56,7 +55,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
      * @param label       Label to load category for
      * @param icon        Icon to load
      */
-    public IconLoader(final IconManager iconManager, final MBassador eventBus,
+    public IconLoader(final IconManager iconManager, final DMDircMBassador eventBus,
             final CategoryLabel label, final String icon) {
         super(eventBus);
         this.iconManager = iconManager;

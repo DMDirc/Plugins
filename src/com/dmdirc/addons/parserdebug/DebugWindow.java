@@ -22,14 +22,13 @@
 
 package com.dmdirc.addons.parserdebug;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 
@@ -61,7 +60,7 @@ public class DebugWindow extends FrameContainer {
             final Parser parser,
             final Connection connection,
             final URLBuilder urlBuilder,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(connection.getWindowModel(), "raw", "Parser Debug", title,
                 connection.getWindowModel().getConfigManager(),
                 urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));

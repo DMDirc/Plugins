@@ -45,7 +45,7 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Custom event queue to add common functionality to certain components.
@@ -54,12 +54,12 @@ import net.engio.mbassy.bus.MBassador;
 public class DMDircEventQueue extends EventQueue {
 
     /** Event bus to dispatch events to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
 
     @Inject
-    public DMDircEventQueue(final MBassador eventBus, final Clipboard clipboard) {
+    public DMDircEventQueue(final DMDircMBassador eventBus, final Clipboard clipboard) {
         this.eventBus = eventBus;
         this.clipboard = clipboard;
     }

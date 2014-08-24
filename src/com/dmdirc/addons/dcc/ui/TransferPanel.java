@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc.ui;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.DCCTransferHandler;
 import com.dmdirc.addons.dcc.TransferContainer;
@@ -46,8 +47,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import net.miginfocom.swing.MigLayout;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * A panel for displaying the progress of DCC transfers.
@@ -78,7 +77,7 @@ public class TransferPanel extends JPanel implements ActionListener,
     /** The transfer that this window is showing. */
     private final DCCTransfer dcc;
     /** The event bus to post errors. */
-    private final MBassador errorBus;
+    private final DMDircMBassador errorBus;
 
     /**
      * Creates a new transfer window for the specified UI controller and owner.
@@ -86,7 +85,7 @@ public class TransferPanel extends JPanel implements ActionListener,
      * @param owner    The frame container that owns this frame
      * @param errorBus The event bus to post errors to
      */
-    public TransferPanel(final FrameContainer owner, final MBassador errorBus) {
+    public TransferPanel(final FrameContainer owner, final DMDircMBassador errorBus) {
         this.transferContainer = (TransferContainer) owner;
         this.errorBus = errorBus;
         dcc = transferContainer.getDCC();

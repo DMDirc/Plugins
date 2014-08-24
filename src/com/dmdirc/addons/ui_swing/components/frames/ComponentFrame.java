@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -49,7 +48,7 @@ public class ComponentFrame extends TextFrame {
     /** Parent controller. */
     private final SwingController controller;
     /** The global event bus. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of CustomFrame.
@@ -61,7 +60,7 @@ public class ComponentFrame extends TextFrame {
      * @param commandParser The parser to use to process commands.
      */
     public ComponentFrame(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final TextFrameDependencies deps,
             final URLBuilder urlBuilder,
             final FrameContainer owner,

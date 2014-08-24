@@ -42,7 +42,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -58,7 +58,7 @@ public class NickColourManager implements ConfigChangeListener {
     /** Plugin's setting domain. */
     private final String domain;
     /** Event bus to subscribe to events on . */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = new String[]{
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
@@ -71,7 +71,7 @@ public class NickColourManager implements ConfigChangeListener {
     @Inject
     public NickColourManager(final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final MBassador eventBus) {
+            @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;

@@ -31,7 +31,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Provides a media source for Linux players using the `xwininfo` command.
@@ -39,7 +39,7 @@ import net.engio.mbassy.bus.MBassador;
 public class TitleMediaSource implements MediaSource {
 
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The command to use to get the title. */
     private final String command;
     /** The name of the player we're retrieving. */
@@ -52,7 +52,7 @@ public class TitleMediaSource implements MediaSource {
      * @param command  The command to be executed
      * @param name     The name of the media source
      */
-    public TitleMediaSource(final MBassador eventBus, final String command, final String name) {
+    public TitleMediaSource(final DMDircMBassador eventBus, final String command, final String name) {
         this.eventBus = eventBus;
         this.command = command;
         this.name = name;

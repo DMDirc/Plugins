@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dimension;
 
@@ -60,7 +59,7 @@ public class CategoryLabel extends JLabel {
      * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @Nullable final JList<? extends PreferencesCategory> parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {

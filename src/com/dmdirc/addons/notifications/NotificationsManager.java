@@ -35,7 +35,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class NotificationsManager {
@@ -51,11 +51,11 @@ public class NotificationsManager {
     /** Plugin manager. */
     private final PluginManager pluginManager;
     /** Event bus to listen for events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public NotificationsManager(@PluginDomain(NotificationsPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final MBassador eventBus,
+            @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
         this.globalConfig = globalConfig;
