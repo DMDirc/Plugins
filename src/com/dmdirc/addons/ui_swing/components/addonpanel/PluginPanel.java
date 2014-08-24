@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -43,7 +44,6 @@ import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**

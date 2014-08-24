@@ -28,8 +28,6 @@ import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.interfaces.FrameCloseListener;
 
-import net.engio.mbassy.listener.Handler;
-
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -37,6 +35,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Frame that contains popped out windows

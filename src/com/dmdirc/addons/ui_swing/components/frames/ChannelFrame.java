@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -50,7 +51,6 @@ import javax.swing.JSplitPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**

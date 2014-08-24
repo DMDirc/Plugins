@@ -22,9 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 
 import java.awt.Image;
 import java.io.IOException;

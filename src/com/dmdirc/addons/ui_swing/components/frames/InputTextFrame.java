@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
@@ -60,8 +61,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import net.miginfocom.layout.PlatformDefaults;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Frame with an input field.

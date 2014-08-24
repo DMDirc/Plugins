@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.dcc.events.DccSendDatatransferedEvent;
@@ -41,8 +42,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * This class links DCC Send objects to a window.

@@ -22,12 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.resourcemanager.ResourceManager;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.io.BufferedReader;
 import java.io.IOException;

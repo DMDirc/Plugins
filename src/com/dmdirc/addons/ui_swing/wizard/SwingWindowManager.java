@@ -22,10 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.wizard;
 
-import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
-
 import com.dmdirc.DMDircMBassador;
-import net.engio.mbassy.listener.Handler;
+import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 
 import java.awt.Window;
 import java.awt.event.WindowEvent;
@@ -34,6 +32,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Manages all swing windows.

@@ -22,14 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Logging swing worker.

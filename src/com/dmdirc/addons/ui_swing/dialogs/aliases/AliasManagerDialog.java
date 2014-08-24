@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
@@ -32,8 +33,6 @@ import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Dimension;
 import java.awt.Window;

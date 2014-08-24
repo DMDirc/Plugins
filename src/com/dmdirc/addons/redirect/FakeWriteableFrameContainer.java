@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLBuilder;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.util.Collections;
 import java.util.Date;

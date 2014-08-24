@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -31,8 +32,6 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

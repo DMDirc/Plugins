@@ -23,6 +23,7 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -37,7 +38,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class NowPlayingManager {

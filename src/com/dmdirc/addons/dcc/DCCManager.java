@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
@@ -67,7 +68,6 @@ import javax.inject.Singleton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**

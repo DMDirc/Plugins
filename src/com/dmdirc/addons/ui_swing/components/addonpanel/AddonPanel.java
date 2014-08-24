@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
@@ -29,8 +30,6 @@ import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactor
 import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Window;
 

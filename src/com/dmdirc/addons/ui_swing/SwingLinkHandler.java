@@ -31,10 +31,10 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
 
-import net.engio.mbassy.listener.Handler;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Handles response to users clicking on links within the Swing UI.

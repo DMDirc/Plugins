@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.debug.commands;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
@@ -31,8 +32,6 @@ import com.dmdirc.events.FirstRunEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Opens the DMDirc first run wizard.

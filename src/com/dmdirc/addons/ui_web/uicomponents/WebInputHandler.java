@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_web.uicomponents;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
@@ -29,8 +30,6 @@ import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleter;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * An input handler for the web ui.
