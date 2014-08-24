@@ -37,8 +37,6 @@ import java.util.List;
 
 /**
  * This class handles a DCC transfer.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public class DCCTransfer extends DCC {
 

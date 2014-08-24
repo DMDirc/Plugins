@@ -33,8 +33,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * The AudioPlayer handles the playing of the audio
- *
- * @author Shane "Dataforce" Mc Cormack
  */
 public final class AudioPlayer implements Runnable {
 

@@ -26,8 +26,6 @@ import com.dmdirc.addons.dcc.io.DCCTransfer;
 
 /**
  * This interfaces allows DCC Transfer Windows to receive data from a DCCTransfer.
- *
- * @author Shane 'Dataforce' McCormack
  */
 public interface DCCTransferHandler {
 
