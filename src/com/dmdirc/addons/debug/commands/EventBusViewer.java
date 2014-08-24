@@ -32,7 +32,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.ClientLineAddedEvent;
 import com.dmdirc.events.DMDircEvent;
-import com.dmdirc.interfaces.FrameCloseListener;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -44,6 +44,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Listener;
+import net.engio.mbassy.listener.References;
 
 /**
  * Displays events passed on an event bus.
@@ -108,13 +110,13 @@ public class EventBusViewer extends DebugCommand {
         final DMDircMBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
         final WindowUpdater updater = new WindowUpdater(eventBus, window);
         eventBus.subscribe(updater);
-        window.addCloseListener(updater);
     }
 
     /**
      * Updates a custom window with details of each event received on an event bus.
      */
-    private static class WindowUpdater implements FrameCloseListener {
+    @Listener(references = References.Strong)
+    private static class WindowUpdater {
 
         private final DMDircMBassador eventBus;
         private final FrameContainer target;
@@ -122,6 +124,11 @@ public class EventBusViewer extends DebugCommand {
         WindowUpdater(final DMDircMBassador eventBus, final FrameContainer target) {
             this.eventBus = eventBus;
             this.target = target;
+        }
+
+        @Handler
+        public void handleFrameClosing(final FrameClosingEvent event) {
+            eventBus.unsubscribe(this);
         }
 
         @Handler
@@ -154,11 +161,6 @@ public class EventBusViewer extends DebugCommand {
             }
 
             target.addLine(FORMAT_OUTPUT, output.toString());
-        }
-
-        @Override
-        public void windowClosing(final FrameContainer window) {
-            eventBus.unsubscribe(this);
         }
 
     }
