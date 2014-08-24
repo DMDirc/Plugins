@@ -120,10 +120,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
     /**
      * Creates a new instance of ButtonBar.
      *
-     * @param windowFactory     The factory to use to retrieve window information.
-     * @param windowManager     The window manager to use to read window state.
-     * @param globalConfig      Global configuration to read settings from.
+     * @param windowFactory      The factory to use to retrieve window information.
+     * @param windowManager      The window manager to use to read window state.
+     * @param globalConfig       Global configuration to read settings from.
      * @param activeFrameManager The active window manager
+     * @param eventBus           The event bus to subscribe to events on
      */
     @Inject
     public ButtonBar(
