@@ -77,6 +77,7 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
      * @param iconManager        The manager to use to retrieve icons.
      * @param domain             The domain to read settings from under.
      * @param activeFrameManager Active frame manager.
+     * @param eventBus           The event bus to listen to events on.
      */
     @Inject
     public MDIBar(

@@ -160,6 +160,8 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
 
     /**
      * Removes the message from the status bar.
+     *
+     * @param event The message clear event to handle
      */
     @Handler
     public void clearMessage(final StatusBarMessageClearEvent event) {

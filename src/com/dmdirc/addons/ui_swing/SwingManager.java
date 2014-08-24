@@ -105,6 +105,7 @@ public class SwingManager {
      * @param urlDialogFactory        Factory to use to create URL dialogs.
      * @param linkHandler             The handler to use when users click links.
      * @param eventBus                The bus to listen on for events.
+     * @param swingEventBus           The swing event bus to listen on for swing events.
      * @param treeProvider            Provider to use for tree-based frame managers.
      * @param buttonProvider          Provider to use for button-based frame managers.
      * @param swingWindowManager      Swing window manager
