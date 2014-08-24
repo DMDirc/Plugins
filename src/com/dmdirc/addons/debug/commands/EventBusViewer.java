@@ -32,7 +32,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.ClientLineAddedEvent;
 import com.dmdirc.events.DMDircEvent;
-import com.dmdirc.interfaces.FrameCloseListener;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.Styliser;
@@ -108,13 +108,12 @@ public class EventBusViewer extends DebugCommand {
         final DMDircMBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
         final WindowUpdater updater = new WindowUpdater(eventBus, window);
         eventBus.subscribe(updater);
-        window.addCloseListener(updater);
     }
 
     /**
      * Updates a custom window with details of each event received on an event bus.
      */
-    private static class WindowUpdater implements FrameCloseListener {
+    private static class WindowUpdater {
 
         private final DMDircMBassador eventBus;
         private final FrameContainer target;
@@ -126,6 +125,10 @@ public class EventBusViewer extends DebugCommand {
 
         @Handler
         public void handleEvent(final DMDircEvent event) {
+            if (event instanceof FrameClosingEvent) {
+                eventBus.unsubscribe(this);
+                return;
+            }
             if (event instanceof ClientLineAddedEvent
                     && ((ClientLineAddedEvent) event).getFrameContainer() == target) {
                 // Don't add a line every time we add a line to our output window.
@@ -154,11 +157,6 @@ public class EventBusViewer extends DebugCommand {
             }
 
             target.addLine(FORMAT_OUTPUT, output.toString());
-        }
-
-        @Override
-        public void windowClosing(final FrameContainer window) {
-            eventBus.unsubscribe(this);
         }
 
     }
