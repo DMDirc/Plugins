@@ -24,11 +24,10 @@ package com.dmdirc.addons.contactlist;
 
 import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
-import com.dmdirc.interfaces.FrameCloseListener;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
@@ -41,7 +40,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * Listens for contact list related events.
  */
-public class ContactListListener implements NicklistListener, FrameCloseListener {
+public class ContactListListener implements NicklistListener {
 
     /** The channel this listener is for. */
     private final Channel channel;
@@ -64,7 +63,6 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
      */
     public void addListeners() {
         channel.addNicklistListener(this);
-        channel.addCloseListener(this);
         eventBus.subscribe(this);
     }
 
@@ -73,7 +71,6 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
      */
     public void removeListeners() {
         channel.removeNicklistListener(this);
-        channel.removeCloseListener(this);
         eventBus.unsubscribe(this);
     }
 
@@ -112,8 +109,8 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
         clientAdded(event.getUser());
     }
 
-    @Override
-    public void windowClosing(final FrameContainer window) {
+    @Handler
+    public void windowClosing(final FrameClosingEvent event) {
         removeListeners();
     }
 
