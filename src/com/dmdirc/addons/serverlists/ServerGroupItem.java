@@ -27,7 +27,6 @@ import java.net.URI;
 /**
  * An item which is included in a server group.
  *
- * @author chris
  * @since 0.6.4
  */
 public interface ServerGroupItem {

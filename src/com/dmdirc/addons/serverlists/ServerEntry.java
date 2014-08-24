@@ -31,7 +31,6 @@ import java.net.URI;
  * Describes an entry for a server within a {@link ServerGroup}.
  *
  * @since 0.6.4
- * @author chris
  */
 public class ServerEntry extends ServerGroupItemBase {
 

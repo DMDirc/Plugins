@@ -42,8 +42,6 @@ import java.util.Map;
 
 /**
  * Retrieves information from VLC using its HTTP interface.
- *
- * @author chris
  */
 public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
 

@@ -27,8 +27,6 @@ import com.dmdirc.addons.nowplaying.MediaSourceState;
 
 /**
  * Uses WindowsMediaSourcePlugin to retrieve now playing info.
- *
- * @author Shane
  */
 public class DllSource implements MediaSource {
 

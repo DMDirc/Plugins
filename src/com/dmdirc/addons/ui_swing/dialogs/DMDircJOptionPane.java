@@ -27,8 +27,6 @@ import javax.swing.JOptionPane;
 
 /**
  * Extension of JOptionPane to allow Word Wrapping.
- *
- * @author shane
  */
 public class DMDircJOptionPane extends JOptionPane {
 
