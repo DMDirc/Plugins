@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.injection;
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.Apple;
@@ -75,7 +76,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 
 /**
@@ -107,8 +107,8 @@ public class SwingModule {
     @Provides
     @Singleton
     @SwingEventBus
-    public MBassador getSwingEventBus() {
-        return new MBassador(BusConfiguration.Default());
+    public DMDircMBassador getSwingEventBus() {
+        return new DMDircMBassador(BusConfiguration.Default());
     }
 
     @Provides
@@ -141,7 +141,7 @@ public class SwingModule {
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
             final Provider<FrameManager> frameManagerProvider,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
 
             @Override
@@ -194,7 +194,7 @@ public class SwingModule {
     @Provides
     @Singleton
     public URLHandler getURLHandler(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ServerManager serverManager,
             final StatusBarManager statusBarManager) {
@@ -211,7 +211,7 @@ public class SwingModule {
             @UserConfig final ConfigProvider identity,
             final ActionManager actionManager,
             final PluginManager pluginManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
                 configManager, identity, pluginManager, eventBus);
     }

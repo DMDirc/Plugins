@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatMessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
-import com.dmdirc.events.DisplayableEvent;
 import com.dmdirc.events.EventUtils;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -36,8 +36,6 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.Arrays;
 
@@ -55,7 +53,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /** Other Nickname. */
     private final String otherNickname;
     /** Event bus to post events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
@@ -83,7 +81,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final TabCompleterFactory tabCompleterFactory,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(parent, title, "dcc-chat-inactive", configManager,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,
@@ -112,7 +110,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     @Override
     public void sendLine(final String line) {
         if (dccChat.isWriteable()) {
-            final DisplayableEvent event = new DccChatSelfmessageEvent(this, line);
+            final DccChatSelfmessageEvent event = new DccChatSelfmessageEvent(this, line);
             final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatSelfMessage");
             addLine(format, nickname, line);
             dccChat.sendLine(line);
@@ -123,14 +121,14 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
 
     @Override
     public void handleChatMessage(final DCCChat dcc, final String message) {
-        final DisplayableEvent event = new DccChatMessageEvent(this, otherNickname, message);
+        final DccChatMessageEvent event = new DccChatMessageEvent(this, otherNickname, message);
         final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatMessage");
         addLine(format, otherNickname, message);
     }
 
     @Override
     public void socketClosed(final DCCChat dcc) {
-        final DisplayableEvent event = new DccChatSocketclosedEvent(this);
+        final DccChatSocketclosedEvent event = new DccChatSocketclosedEvent(this);
         final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatInfo");
         addLine(format, "Socket closed");
         if (!isWindowClosing()) {
@@ -140,7 +138,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
 
     @Override
     public void socketOpened(final DCCChat dcc) {
-        final DisplayableEvent event = new DccChatSocketopenedEvent(this);
+        final DccChatSocketopenedEvent event = new DccChatSocketopenedEvent(this);
         final String format = EventUtils.postDisplayable(eventBus, event, "DCCChatInfo");
         addLine(format, "Socket opened");
         setIcon("dcc-chat-active");

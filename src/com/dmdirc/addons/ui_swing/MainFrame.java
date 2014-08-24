@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -65,7 +66,6 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements WindowListener,
     /** Provider of frame managers. */
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -143,7 +143,7 @@ public class MainFrame extends JFrame implements WindowListener,
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
             final Provider<FrameManager> frameManagerProvider,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         checkOnEDT();
         this.apple = apple;
         this.lifecycleController = lifecycleController;

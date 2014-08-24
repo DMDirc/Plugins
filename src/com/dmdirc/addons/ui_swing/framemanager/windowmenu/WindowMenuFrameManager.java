@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.SelectionListener;
@@ -58,7 +59,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -88,7 +88,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     private final AggregateConfigProvider globalConfig;
     private final String domain;
     /** The client event bus to subscribe to events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of WindowMenuFrameManager.
@@ -106,8 +106,8 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final MBassador swingEventBus,
-            final MBassador eventBus) {
+            @SwingEventBus final DMDircMBassador swingEventBus,
+            final DMDircMBassador eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;

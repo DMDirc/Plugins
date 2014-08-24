@@ -23,6 +23,7 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -43,7 +44,6 @@ import java.awt.event.MouseListener;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class SystrayManager implements ActionListener, MouseListener {
@@ -57,7 +57,7 @@ public class SystrayManager implements ActionListener, MouseListener {
     /** Icon manager to get images from. */
     private final IconManager iconManager;
     /** The event bus to listen to events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The tray icon we're currently using. */
     private TrayIcon icon;
 
@@ -67,7 +67,7 @@ public class SystrayManager implements ActionListener, MouseListener {
             @PluginDomain(SystrayPlugin.class) final String domain,
             final MainFrame mainFrame,
             @GlobalConfig final IconManager iconManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.mainFrame = mainFrame;

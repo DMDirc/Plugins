@@ -58,7 +58,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Allows the user to modify global client preferences.
@@ -85,7 +85,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of SwingPreferencesDialog.
@@ -104,7 +104,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.iconManager = iconManager;

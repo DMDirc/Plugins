@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.parserdebug;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.CallbackNotFoundException;
@@ -36,13 +37,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class ParserDebugManager implements DebugInfoListener {
 
     /** Event bus to subscribe to events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers;
     /** URL Builder. */
@@ -54,7 +54,7 @@ public class ParserDebugManager implements DebugInfoListener {
     public ParserDebugManager(
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.eventBus = eventBus;

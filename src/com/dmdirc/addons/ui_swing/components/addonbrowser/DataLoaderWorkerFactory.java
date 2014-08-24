@@ -23,13 +23,12 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.Downloader;
-
-import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 import javax.swing.JScrollPane;
@@ -45,7 +44,7 @@ public class DataLoaderWorkerFactory {
     private final InstallWorkerFactory workerFactory;
     private final UpdateManager updateManager;
     private final String tempDirectory;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public DataLoaderWorkerFactory(final Downloader downloader,
@@ -53,7 +52,7 @@ public class DataLoaderWorkerFactory {
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory) {
         this.downloader = downloader;
         this.globalConfig = globalConfig;

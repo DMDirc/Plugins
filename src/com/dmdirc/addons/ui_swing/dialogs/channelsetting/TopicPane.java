@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
@@ -30,7 +31,6 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -74,7 +74,7 @@ public class TopicPane extends JPanel implements ActionListener {
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
@@ -96,7 +96,7 @@ public class TopicPane extends JPanel implements ActionListener {
             final IconManager iconManager,
             final ServiceManager serviceManager,
             final CommandController commandController,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
                 channelWindow, clipboard, commandController, eventBus);
         topicHistoryPane = new TopicHistoryPane(channel);

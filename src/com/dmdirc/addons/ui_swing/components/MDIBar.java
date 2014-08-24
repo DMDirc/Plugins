@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -84,7 +84,7 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
             @GlobalConfig final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final MBassador eventBus) {
+            @SwingEventBus final DMDircMBassador eventBus) {
         this.activeFrameManager = activeFrameManager;
         config = globalConfig;
         configDomain = domain;

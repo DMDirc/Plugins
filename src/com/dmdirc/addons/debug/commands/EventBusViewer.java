@@ -24,6 +24,7 @@ package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.CustomWindow;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
@@ -42,7 +43,6 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -53,7 +53,7 @@ public class EventBusViewer extends DebugCommand {
     private final URLBuilder urlBuilder;
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
-    private final MBassador globalEventBus;
+    private final DMDircMBassador globalEventBus;
 
     /**
      * Creates a new instance of the command.
@@ -70,7 +70,7 @@ public class EventBusViewer extends DebugCommand {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final MBassador globalEventBus) {
+            final DMDircMBassador globalEventBus) {
         super(commandProvider);
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
@@ -105,7 +105,7 @@ public class EventBusViewer extends DebugCommand {
             windowManager.addWindow(origin, window);
         }
 
-        final MBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
+        final DMDircMBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
         final WindowUpdater updater = new WindowUpdater(eventBus, window);
         eventBus.subscribe(updater);
         window.addCloseListener(updater);
@@ -116,10 +116,10 @@ public class EventBusViewer extends DebugCommand {
      */
     private static class WindowUpdater implements FrameCloseListener {
 
-        private final MBassador eventBus;
+        private final DMDircMBassador eventBus;
         private final FrameContainer target;
 
-        WindowUpdater(final MBassador eventBus, final FrameContainer target) {
+        WindowUpdater(final DMDircMBassador eventBus, final FrameContainer target) {
             this.eventBus = eventBus;
             this.target = target;
         }

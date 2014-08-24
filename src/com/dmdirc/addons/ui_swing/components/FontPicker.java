@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
@@ -33,8 +34,6 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * System font picking component.
@@ -52,7 +51,7 @@ public class FontPicker extends JComboBox<Object> {
      * @param eventBus   The event bus to post errors to
      * @param fontFamily Font family
      */
-    public FontPicker(final MBassador eventBus, final String fontFamily) {
+    public FontPicker(final DMDircMBassador eventBus, final String fontFamily) {
         super(new DefaultComboBoxModel<>());
         this.fontFamily = fontFamily;
 

@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -58,7 +57,7 @@ public class PlaceholderContainer extends FrameContainer {
             final AggregateConfigProvider config,
             final Window parentWindow,
             final URLBuilder urlBuilder,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(null, "dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;

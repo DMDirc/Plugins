@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.debug.commands;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
@@ -36,15 +37,13 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Creates DMDirc errors with the specified parameters.
  */
 public class FakeError extends DebugCommand implements IntelligentCommand {
 
     /** The event bus to post errors on . */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -53,7 +52,7 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
      * @param eventBus        The event bus to post errors on
      */
     @Inject
-    public FakeError(final Provider<Debug> commandProvider, final MBassador eventBus) {
+    public FakeError(final Provider<Debug> commandProvider, final DMDircMBassador eventBus) {
         super(commandProvider);
         this.eventBus = eventBus;
     }

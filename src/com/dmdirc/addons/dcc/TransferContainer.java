@@ -42,7 +42,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * This class links DCC Send objects to a window.
@@ -74,7 +74,7 @@ public class TransferContainer extends FrameContainer implements
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     /** Event bus to post events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -91,7 +91,7 @@ public class TransferContainer extends FrameContainer implements
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config, final String title,
             final String targetNick, final Connection connection,
-            final URLBuilder urlBuilder, final MBassador eventBus) {
+            final URLBuilder urlBuilder, final DMDircMBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, urlBuilder, eventBus,

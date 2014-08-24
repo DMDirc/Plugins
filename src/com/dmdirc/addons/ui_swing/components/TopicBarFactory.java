@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -32,8 +33,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -57,7 +56,7 @@ public class TopicBarFactory {
     private final PluginManager pluginManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public TopicBarFactory(
@@ -68,7 +67,7 @@ public class TopicBarFactory {
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;

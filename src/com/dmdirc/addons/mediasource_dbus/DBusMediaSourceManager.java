@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.mediasource_dbus;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
@@ -37,8 +38,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Provides a media source for DBUS players.
  */
@@ -47,14 +46,14 @@ public class DBusMediaSourceManager {
     /** A map of discovered mpris sources. */
     private final Map<String, MediaSource> mprisSources;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The sources used by this media source. */
     private final List<MediaSource> sources;
     /** The path to qdbus. */
     private String qdbus;
 
     @Inject
-    public DBusMediaSourceManager(final MBassador eventBus) {
+    public DBusMediaSourceManager(final DMDircMBassador eventBus) {
         this.eventBus = eventBus;
         sources = new ArrayList<>();
         mprisSources = new HashMap<>();

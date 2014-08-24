@@ -23,6 +23,7 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandparser.BaseCommandInfo;
@@ -36,8 +37,6 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,7 +68,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     /** Script manager to handle scripts. */
     private final ScriptManager scriptManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -84,7 +83,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      */
     @Inject
     public ScriptCommand(final ScriptManager scriptManager,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -35,8 +36,6 @@ import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 
@@ -56,7 +55,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -71,7 +70,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandController controller,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
         this.urlBuilder = urlBuilder;

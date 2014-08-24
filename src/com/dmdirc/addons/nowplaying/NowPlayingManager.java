@@ -37,7 +37,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class NowPlayingManager {
@@ -47,7 +47,7 @@ public class NowPlayingManager {
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Event bus to subscribe to events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** This plugin's settings domain. */
     private final String domain;
     /** The sources that we know of. */
@@ -58,7 +58,7 @@ public class NowPlayingManager {
     private List<String> order;
 
     @Inject
-    public NowPlayingManager(final PluginManager pluginManager, final MBassador eventBus,
+    public NowPlayingManager(final PluginManager pluginManager, final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain) {
         this.pluginManager = pluginManager;

@@ -32,7 +32,7 @@ import com.dmdirc.events.FirstRunEvent;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Opens the DMDirc first run wizard.
@@ -40,7 +40,7 @@ import net.engio.mbassy.bus.MBassador;
 public class FirstRun extends DebugCommand {
 
     /** Event bus to trigger first run event on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -49,7 +49,7 @@ public class FirstRun extends DebugCommand {
      * @param eventBus        Event bus to trigger first run event on.
      */
     @Inject
-    public FirstRun(final Provider<Debug> commandProvider, final MBassador eventBus) {
+    public FirstRun(final Provider<Debug> commandProvider, final DMDircMBassador eventBus) {
         super(commandProvider);
 
         this.eventBus = eventBus;

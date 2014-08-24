@@ -32,7 +32,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Component;
 import java.util.Collections;
@@ -76,7 +76,7 @@ public class CategoryPanel extends JPanel {
     /** Prefs component factory. */
     private final PrefsComponentFactory factory;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new category panel.
@@ -87,7 +87,7 @@ public class CategoryPanel extends JPanel {
      */
     @Inject
     public CategoryPanel(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final PrefsComponentFactory factory,
             @GlobalConfig final IconManager iconManager) {
         this(eventBus, factory, iconManager, null);
@@ -102,7 +102,7 @@ public class CategoryPanel extends JPanel {
      * @param category    Initial category
      */
     public CategoryPanel(
-            final MBassador eventBus, final PrefsComponentFactory factory,
+            final DMDircMBassador eventBus, final PrefsComponentFactory factory,
             final IconManager iconManager,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));

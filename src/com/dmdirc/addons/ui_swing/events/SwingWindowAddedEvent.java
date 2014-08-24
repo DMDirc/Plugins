@@ -29,7 +29,7 @@ import com.google.common.base.Optional;
 /**
  * Event triggered when a swing window is added.
  */
-public class SwingWindowAddedEvent {
+public class SwingWindowAddedEvent extends SwingEvent {
 
     private final Optional<TextFrame> parentWindow;
     private final TextFrame childWindow;

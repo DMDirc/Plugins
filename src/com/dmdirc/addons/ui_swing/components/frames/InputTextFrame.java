@@ -61,7 +61,7 @@ import javax.swing.KeyStroke;
 
 import net.miginfocom.layout.PlatformDefaults;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Frame with an input field.
@@ -100,7 +100,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of InputFrame.

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
@@ -37,7 +38,6 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.datatransfer.Clipboard;
@@ -71,7 +71,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** label showing the number of characters left in a topic. */
     private JLabel topicLengthLabel;
     /** Topic text entry text area. */
@@ -95,7 +95,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     public TopicDisplayPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final CommandController commandController, final MBassador eventBus) {
+            final CommandController commandController, final DMDircMBassador eventBus) {
         this.clipboard = clipboard;
         this.channel = channel;
         this.parent = parent;
