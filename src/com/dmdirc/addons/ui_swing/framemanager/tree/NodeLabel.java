@@ -33,8 +33,6 @@ import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.messages.Styliser;
 
-import net.engio.mbassy.listener.Handler;
-
 import java.awt.Color;
 import java.awt.Font;
 
@@ -45,6 +43,8 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Node label.

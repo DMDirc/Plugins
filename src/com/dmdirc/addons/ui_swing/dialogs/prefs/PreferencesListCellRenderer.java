@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Component;
 import java.awt.Font;

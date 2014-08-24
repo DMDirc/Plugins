@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.updater.components.LauncherComponent;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

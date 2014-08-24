@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -65,7 +66,6 @@ import javax.swing.tree.TreePath;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -30,8 +31,6 @@ import com.dmdirc.interfaces.config.IdentityController;
 
 import javax.inject.Inject;
 import javax.swing.SwingWorker;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Worker which handles quitting the application on behalf of a {@link MainFrame}.

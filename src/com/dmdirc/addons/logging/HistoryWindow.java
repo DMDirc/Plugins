@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.logging;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -29,7 +30,6 @@ import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
 import com.google.common.base.Optional;
-import com.dmdirc.DMDircMBassador;
 
 import java.util.Arrays;
 

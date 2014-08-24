@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.exec;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -40,8 +41,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * A command which allows users execute scripts.

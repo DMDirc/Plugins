@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

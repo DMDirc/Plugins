@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.scriptplugin;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.PluginLoadedEvent;
@@ -40,7 +41,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class ScriptPluginManager {

@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -32,8 +33,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Window;
 import java.util.ArrayList;

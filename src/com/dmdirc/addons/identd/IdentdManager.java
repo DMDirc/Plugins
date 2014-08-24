@@ -23,6 +23,7 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerConnectingEvent;
@@ -35,7 +36,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class IdentdManager {

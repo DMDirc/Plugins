@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
@@ -54,8 +55,6 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;

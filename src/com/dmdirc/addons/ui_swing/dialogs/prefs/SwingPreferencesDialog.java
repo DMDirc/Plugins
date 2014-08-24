@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
@@ -57,8 +58,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Allows the user to modify global client preferences.

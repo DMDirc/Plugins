@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
@@ -36,8 +37,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Utility class to create frame components.

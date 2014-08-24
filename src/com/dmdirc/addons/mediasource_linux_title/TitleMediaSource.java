@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.mediasource_linux_title;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
 import com.dmdirc.events.UserErrorEvent;
@@ -30,8 +31,6 @@ import com.dmdirc.logger.ErrorLevel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import com.dmdirc.DMDircMBassador;
 
 /**
  * Provides a media source for Linux players using the `xwininfo` command.

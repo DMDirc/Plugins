@@ -23,13 +23,12 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-
-import com.dmdirc.DMDircMBassador;
 
 import java.awt.Font;
 import java.awt.Rectangle;

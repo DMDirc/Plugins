@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import static com.dmdirc.addons.ui_swing.components.frames.TextFrame.*;
+import static com.dmdirc.addons.ui_swing.components.frames.TextFrame.TextFrameDependencies;
 
 /**
  * Factory for {@link ServerFrame}s

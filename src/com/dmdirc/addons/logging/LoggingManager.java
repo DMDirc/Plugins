@@ -24,6 +24,7 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
@@ -83,7 +84,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**

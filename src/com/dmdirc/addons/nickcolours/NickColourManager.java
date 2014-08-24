@@ -24,6 +24,7 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -42,7 +43,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
