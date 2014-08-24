@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.StatusBarMessageClearEvent;
 
 import java.util.TimerTask;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * Timer task that clears a message label on completion.
@@ -34,14 +33,14 @@ import net.engio.mbassy.bus.MBassador;
 public class MessageTimerTask extends TimerTask {
 
     /** Event bus to post clear message on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new message timer task that clears a message label on completion.
      *
      * @param eventBus Event bus to post clear message on.
      */
-    public MessageTimerTask(final MBassador eventBus) {
+    public MessageTimerTask(final DMDircMBassador eventBus) {
         this.eventBus = eventBus;
     }
 
