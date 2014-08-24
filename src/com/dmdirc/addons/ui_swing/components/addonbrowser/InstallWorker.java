@@ -29,7 +29,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
             @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final AddonInfo info,
             final InstallerWindow window) {
         super(eventBus);

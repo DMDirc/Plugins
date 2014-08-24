@@ -23,6 +23,7 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -37,15 +38,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * The IdentdServer watches over the ident port when required
  */
 public final class IdentdServer implements Runnable {
 
     /** The event bus to post errors on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The Thread in use for this server */
     private volatile Thread myThread = null;
     /** The current socket in use for this server */
@@ -70,7 +69,7 @@ public final class IdentdServer implements Runnable {
      * @param domain        This plugin's setting domain
      */
     @Inject
-    public IdentdServer(final MBassador eventBus,
+    public IdentdServer(final DMDircMBassador eventBus,
             final ServerManager serverManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain) {

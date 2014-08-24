@@ -37,7 +37,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * Utility class to create frame components.
@@ -64,7 +64,7 @@ public class ComponentCreator {
     public Set<JComponent> initFrameComponents(
             final Object frame,
             final SwingController controller,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final URLBuilder urlBuilder,
             final FrameContainer owner) {
         final SimpleInjector injector = new SimpleInjector();

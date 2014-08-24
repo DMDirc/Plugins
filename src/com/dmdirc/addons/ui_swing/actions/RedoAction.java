@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
@@ -30,8 +31,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * Handles redo's on text components.
@@ -43,7 +42,7 @@ public final class RedoAction extends AbstractAction {
     /** Undo manager. */
     private final UndoManager undoManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of RedoAction.
@@ -51,7 +50,7 @@ public final class RedoAction extends AbstractAction {
      * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public RedoAction(final MBassador eventBus, final UndoManager undoManager) {
+    public RedoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;

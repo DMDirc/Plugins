@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.FileBrowser;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.OptionalJSpinner;
@@ -38,8 +39,6 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.util.validators.Validator;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -78,7 +77,7 @@ public final class PrefsComponentFactory {
     /** The colour manager to use for colour preferences. */
     private final ColourManager colourManager;
     /** The global event bus. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of PrefsComponentFactory.
@@ -89,7 +88,7 @@ public final class PrefsComponentFactory {
      */
     @Inject
     public PrefsComponentFactory(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @GlobalConfig final IconManager iconManager,
             final ColourManager colourManager) {
         this.iconManager = iconManager;

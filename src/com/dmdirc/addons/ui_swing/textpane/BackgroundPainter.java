@@ -28,7 +28,7 @@ import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.URLBuilder;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -70,7 +70,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      */
     private final AggregateConfigProvider configManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /**
      * Background image.
      */
@@ -93,7 +93,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     public BackgroundPainter(
             final AggregateConfigProvider configManager,
             final URLBuilder urlBuilder,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final String domain, final String imageKey,
             final String optionKey) {
         this.configManager = configManager;

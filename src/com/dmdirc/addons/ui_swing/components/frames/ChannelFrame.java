@@ -50,7 +50,7 @@ import javax.swing.JSplitPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -71,7 +71,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     /** Topic bar. */
     private TopicBar topicBar;
     /** Event bus to dispatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** The domain to read settings from. */

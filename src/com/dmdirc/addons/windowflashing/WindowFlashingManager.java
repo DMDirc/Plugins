@@ -23,6 +23,7 @@
 package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
@@ -37,7 +38,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class WindowFlashingManager {
@@ -45,7 +45,7 @@ public class WindowFlashingManager {
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Event bus. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Config binder. */
     private final ConfigBinder binder;
     /** Cached blink rate setting. */
@@ -69,7 +69,7 @@ public class WindowFlashingManager {
     public WindowFlashingManager(
             @GlobalConfig final AggregateConfigProvider config,
             final MainFrame mainFrame,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.mainFrame = mainFrame;
         this.eventBus = eventBus;
         binder = config.getBinder();

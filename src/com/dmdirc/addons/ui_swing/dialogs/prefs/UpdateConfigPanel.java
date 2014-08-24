@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.events.UserErrorEvent;
@@ -49,8 +50,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import net.miginfocom.swing.MigLayout;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * Updates configuration UI.
@@ -79,7 +78,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** Controller to pass to the update checker. */
     private final IdentityController identityController;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new update config panel.
@@ -96,7 +95,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CachingUpdateManager updateManager,
             final IdentityController identityController,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.userConfig = userConfig;
         this.globalConfig = globalConfig;
         this.updateManager = updateManager;

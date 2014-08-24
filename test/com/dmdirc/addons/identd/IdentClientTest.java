@@ -22,13 +22,12 @@
 
 package com.dmdirc.addons.identd;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class IdentClientTest {
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
     @Mock private AggregateConfigProvider config;
-    @Mock private MBassador eventBus;
+    @Mock private DMDircMBassador eventBus;
 
     protected IdentClient getClient() {
         final List<Server> servers = new ArrayList<>();

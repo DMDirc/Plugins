@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatRequestSentEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
@@ -57,8 +58,6 @@ import javax.inject.Inject;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * This command allows starting dcc chats/file transfers.
  */
@@ -81,7 +80,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /** The URL builder to use when finding icons. */
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of DCCCommand.
@@ -104,7 +103,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(controller);
         this.mainWindow = mainWindow;
         myPlugin = plugin;

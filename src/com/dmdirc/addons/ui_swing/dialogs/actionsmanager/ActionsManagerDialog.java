@@ -66,7 +66,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -86,7 +86,7 @@ public class ActionsManagerDialog extends StandardDialog implements
     /** Duplicate action group validator. */
     private final ValidatorChain<String> validator;
     /** Event bus to post events to and subscribe to events on. */
-    private final MBassador eventbus;
+    private final DMDircMBassador eventbus;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -125,7 +125,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     @Inject
     public ActionsManagerDialog(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final Apple apple,
             final MainFrame parentWindow,
             @UserConfig final ConfigProvider config,

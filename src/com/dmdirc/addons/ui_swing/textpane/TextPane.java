@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -31,8 +32,6 @@ import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -95,7 +94,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param frame        Parent Frame
      */
     public TextPane(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
             final TextFrame frame) {

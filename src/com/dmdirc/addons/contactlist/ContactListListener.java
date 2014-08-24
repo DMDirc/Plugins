@@ -23,6 +23,7 @@
 package com.dmdirc.addons.contactlist;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.events.ChannelUserAwayEvent;
@@ -35,7 +36,6 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -46,7 +46,7 @@ public class ContactListListener implements NicklistListener, FrameCloseListener
     /** The channel this listener is for. */
     private final Channel channel;
     /** Event bus to register listeners with. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new ContactListListener for the specified channel.

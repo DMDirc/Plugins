@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -51,7 +51,7 @@ public class PreferencesListCellRenderer extends JLabel implements
     /** Label map. */
     private final Map<PreferencesCategory, JLabel> labelMap;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new prefs list cell renderer.
@@ -60,7 +60,7 @@ public class PreferencesListCellRenderer extends JLabel implements
      * @param eventBus    The event bus to post errors to
      * @param numCats     Number of categories in the list
      */
-    public PreferencesListCellRenderer(final IconManager iconManager, final MBassador eventBus,
+    public PreferencesListCellRenderer(final IconManager iconManager, final DMDircMBassador eventBus,
             final int numCats) {
         labelMap = new HashMap<>();
         this.numCats = numCats;

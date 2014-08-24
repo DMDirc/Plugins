@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
-
-import net.engio.mbassy.bus.MBassador;
 
 import javax.inject.Inject;
 
@@ -40,14 +39,14 @@ public class InstallWorkerFactory {
     private final String pluginDirectory;
     private final String themeDirectory;
     private final PluginManager pluginManager;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public InstallWorkerFactory(final Downloader downloader,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.PLUGINS) final String pluginDirectory,
             @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.THEMES) final String themeDirectory,
-            final PluginManager pluginManager, final MBassador eventBus) {
+            final PluginManager pluginManager, final DMDircMBassador eventBus) {
         this.downloader = downloader;
         this.tempDirectory = tempDirectory;
         this.pluginDirectory = pluginDirectory;

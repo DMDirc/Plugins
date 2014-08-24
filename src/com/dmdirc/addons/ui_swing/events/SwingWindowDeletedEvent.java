@@ -29,7 +29,7 @@ import com.google.common.base.Optional;
 /**
  * Event triggered when a swing window is deleted.
  */
-public class SwingWindowDeletedEvent {
+public class SwingWindowDeletedEvent extends SwingEvent {
 
     private final Optional<TextFrame> parentWindow;
     private final TextFrame childWindow;

@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.AddonConfig;
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -40,8 +41,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.layout.PlatformDefaults;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Initialises swing and system UI settings.
  */
@@ -52,10 +51,10 @@ public class SwingUIInitialiser {
     private final ConfigProvider addonConfig;
     private final DialogKeyListener dialogKeyListener;
     private final DMDircEventQueue eventQueue;
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
-    public SwingUIInitialiser(final MBassador eventBus, final Apple apple,
+    public SwingUIInitialiser(final DMDircMBassador eventBus, final Apple apple,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @AddonConfig final ConfigProvider addonConfig,
             final DialogKeyListener dialogKeyListener,

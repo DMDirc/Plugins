@@ -43,7 +43,7 @@ import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -75,7 +75,7 @@ public class PluginPanel extends AddonPanel {
      */
     @Inject
     public PluginPanel(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @MainWindow final Window parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,

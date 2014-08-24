@@ -37,7 +37,7 @@ import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 import java.awt.Window;
@@ -82,7 +82,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
      */
     @Inject
     public InviteLabel(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             @GlobalConfig final IconManager iconManager,
             final ServerManager serverManager,
             final MainFrame mainFrame) {

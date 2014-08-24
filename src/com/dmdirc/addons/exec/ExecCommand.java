@@ -41,7 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 /**
  * A command which allows users execute scripts.
@@ -53,7 +53,7 @@ public class ExecCommand extends Command {
             "exec <command> [<parameters>] - executes an external program "
             + "and displays the output", CommandType.TYPE_GLOBAL);
     /** Event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -62,7 +62,7 @@ public class ExecCommand extends Command {
      * @param eventBus   The event bus to post errors to
      */
     @Inject
-    public ExecCommand(final CommandController controller, final MBassador eventBus) {
+    public ExecCommand(final CommandController controller, final DMDircMBassador eventBus) {
         super(controller);
         this.eventBus = eventBus;
     }

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -54,8 +55,6 @@ import javax.swing.text.StyleConstants;
 
 import net.miginfocom.swing.MigLayout;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Loads the addon data feed into the addon browser.
  */
@@ -86,7 +85,7 @@ public class DataLoaderWorker
     /** Downloader to download files. */
     private final Downloader downloader;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new data loader worker.
@@ -110,7 +109,7 @@ public class DataLoaderWorker
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final AddonTable table,
             final boolean download,
             final BrowserWindow browserWindow,

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -48,7 +49,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -76,9 +76,9 @@ public class SwingManager {
     /** Link handler for swing links. */
     private final SwingLinkHandler linkHandler;
     /** Bus to listen on for events. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The event bus for this plugin. */
-    private final MBassador swingEventBus;
+    private final DMDircMBassador swingEventBus;
     /** The provider to use to create tree-based frame managers. */
     private final TreeFrameManagerProvider treeProvider;
     /** The provider to use to create button-based frame managers. */
@@ -128,8 +128,8 @@ public class SwingManager {
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
-            final MBassador eventBus,
-            @SwingEventBus final MBassador swingEventBus,
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final ButtonBarProvider buttonProvider,
             final Provider<SwingWindowManager> swingWindowManager,

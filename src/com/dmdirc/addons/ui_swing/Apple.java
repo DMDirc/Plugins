@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
@@ -51,7 +52,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -75,7 +75,7 @@ public class Apple implements InvocationHandler {
     /** The server manager to use to connect to URLs. */
     private final ServerManager serverManager;
     /** Event bus. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of {@link Apple}.
@@ -91,7 +91,7 @@ public class Apple implements InvocationHandler {
     public Apple(
             @GlobalConfig final AggregateConfigProvider configManager,
             final ServerManager serverManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.configManager = configManager;
         this.serverManager = serverManager;
         this.eventBus = eventBus;

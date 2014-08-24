@@ -22,12 +22,11 @@
 
 package com.dmdirc.addons.time;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
-
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,7 +51,7 @@ public class TimedCommand extends TimerTask {
     /** The command controller to use when executing global commands. */
     private final CommandController commandController;
     /** Event bus to post events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of TimedCommand.
@@ -74,7 +73,7 @@ public class TimedCommand extends TimerTask {
             final int delay,
             final String command,
             final FrameContainer origin,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.commandController = commandController;
         this.timerKey = timerKey;
         this.repetitions = repetitions;

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.identd;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
@@ -35,15 +36,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * The IdentClient responds to an ident request.
  */
 public class IdentClient implements Runnable {
 
     /** The event bus to post errors on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The IdentdServer that owns this Client. */
     private final IdentdServer server;
     /** The Socket that we are in charge of. */
@@ -67,7 +66,7 @@ public class IdentClient implements Runnable {
      * @param config        Global config to read settings from
      * @param domain        This plugin's settings domain
      */
-    public IdentClient(final MBassador eventBus, final IdentdServer server, final Socket socket,
+    public IdentClient(final DMDircMBassador eventBus, final IdentdServer server, final Socket socket,
             final ServerManager serverManager, final AggregateConfigProvider config,
             final String domain) {
         this.eventBus = eventBus;

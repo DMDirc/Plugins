@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -53,8 +54,6 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
-
 /** First run wizard, used to initially setup the client for the user. */
 @Singleton
 public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
@@ -70,7 +69,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     /**
      * Instantiate the wizard.
@@ -89,7 +88,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
             @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.actionsDirectory = actionsDirectory;

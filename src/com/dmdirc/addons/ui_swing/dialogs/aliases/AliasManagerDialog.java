@@ -33,7 +33,7 @@ import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -58,7 +58,7 @@ public class AliasManagerDialog extends StandardDialog {
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
-            @GlobalConfig final IconManager iconManager, final MBassador eventBus) {
+            @GlobalConfig final IconManager iconManager, final DMDircMBassador eventBus) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
         setTitle("Alias Manager");

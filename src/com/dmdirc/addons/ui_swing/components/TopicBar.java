@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
@@ -40,7 +41,6 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import com.google.common.base.Optional;
-import net.engio.mbassy.bus.MBassador;
 
 import java.awt.Color;
 import java.awt.Window;
@@ -131,7 +131,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final Channel channel,
             final ChannelFrame window,
             final IconManager iconManager,
-            final MBassador eventBus) {
+            final DMDircMBassador eventBus) {
         this.channel = channel;
         this.domain = domain;
         this.colourManager = colourManager;

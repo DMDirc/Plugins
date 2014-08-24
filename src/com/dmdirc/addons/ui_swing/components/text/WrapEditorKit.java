@@ -7,6 +7,7 @@
 
 package com.dmdirc.addons.ui_swing.components.text;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
@@ -24,8 +25,6 @@ import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.ViewFactory;
-
-import net.engio.mbassy.bus.MBassador;
 
 /**
  * @author Stanislav Lapitsky
@@ -46,7 +45,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
     /** Associated Component. */
     private JEditorPane editorPane;
     /** Event bus to fire link click events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The window this editor kit is used in. */
     private final Window window;
 
@@ -57,7 +56,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
      * @param eventBus Event bus to raise hyperlink events on
      * @param window   Window as source for hyperlink events
      */
-    public WrapEditorKit(final boolean wrapping, final MBassador eventBus, final Window window) {
+    public WrapEditorKit(final boolean wrapping, final DMDircMBassador eventBus, final Window window) {
         this.window = window;
         this.eventBus = eventBus;
         wrap = wrapping;

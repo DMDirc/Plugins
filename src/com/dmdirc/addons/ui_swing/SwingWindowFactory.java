@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
@@ -48,8 +49,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
-
 /**
  * Handles creation of windows in the Swing UI.
  *
@@ -65,9 +64,9 @@ public class SwingWindowFactory implements FrameListener {
     /** Active window manager. */
     private final Provider<ActiveFrameManager> activeFrameManager;
     /** The event bus to post errors to. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** The swing event bus. */
-    private final MBassador swingEventBus;
+    private final DMDircMBassador swingEventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -87,8 +86,8 @@ public class SwingWindowFactory implements FrameListener {
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
-            final MBassador eventBus,
-            @SwingEventBus final MBassador swingEventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;

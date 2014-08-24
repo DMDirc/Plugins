@@ -35,7 +35,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.engio.mbassy.bus.MBassador;
+import com.dmdirc.DMDircMBassador;
 import net.engio.mbassy.listener.Handler;
 
 public class IdentdManager {
@@ -49,12 +49,12 @@ public class IdentdManager {
     /** Ident server. */
     private final IdentdServer server;
     /** Event bus to subscribe to events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public IdentdManager(@GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain,
-            final IdentdServer server, final MBassador eventBus) {
+            final IdentdServer server, final DMDircMBassador eventBus) {
         connections = new ArrayList<>();
         this.config = config;
         this.domain = domain;

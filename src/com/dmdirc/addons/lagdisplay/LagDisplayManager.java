@@ -23,6 +23,7 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Server;
 import com.dmdirc.ServerState;
@@ -50,7 +51,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -60,7 +60,7 @@ import net.engio.mbassy.listener.Handler;
 public class LagDisplayManager implements ConfigChangeListener, SelectionListener {
 
     /** Event bus to receive events on. */
-    private final MBassador eventBus;
+    private final DMDircMBassador eventBus;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** Status bar to add panels to. */
@@ -85,7 +85,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
 
     @Inject
     public LagDisplayManager(
-            final MBassador eventBus,
+            final DMDircMBassador eventBus,
             final ActiveFrameManager activeFrameManager,
             final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
