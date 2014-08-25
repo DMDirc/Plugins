@@ -198,6 +198,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         awayLabel = new AwayLabel(getContainer());
         eventBus.subscribe(awayLabel);
         typingLabel = new TypingLabel(getContainer());
+        eventBus.subscribe(typingLabel);
     }
 
     /**
