@@ -69,7 +69,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
     public boolean isEnabled() {
         try {
             return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
-        } catch (IllegalStateException ex) {
+        } catch (NullPointerException | IllegalStateException ex) {
             return false;
         }
     }
