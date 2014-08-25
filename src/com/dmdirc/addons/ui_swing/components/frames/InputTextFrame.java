@@ -196,6 +196,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
         awayLabel = new AwayLabel(getContainer());
+        eventBus.subscribe(awayLabel);
         typingLabel = new TypingLabel(getContainer());
     }
 
