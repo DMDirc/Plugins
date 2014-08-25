@@ -130,13 +130,6 @@ version:
             <zipfileset src="${plugins.lib}/main/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
         </jar>
 
-        <jar destfile="${plugins.dist}/ui_web.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/commons-lang.jar" includes="org/apache/**" excludes="**/*.html"/>
-            <zipfileset src="${plugins.lib}/main/jetty.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/main/jetty-util.jar" includes="org/mortbay/**"/>
-            <zipfileset src="${plugins.lib}/main/servlet-api.jar" includes="javax/servlet/**"/>
-        </jar>
-
         <jar destfile="${plugins.dist}/parser_irc.jar" update="true">
             <!-- TODO: this could also be a jar in the lib dir -->
             <fileset dir="${plugins.dmdirc.build.dir}">
