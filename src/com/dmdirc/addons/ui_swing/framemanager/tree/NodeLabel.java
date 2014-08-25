@@ -126,14 +126,14 @@ public class NodeLabel extends JPanel implements SelectionListener,
 
     @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
-        if (equals(window)) {
+        if (equals(event.getContainer())) {
             icon.setIcon(window.getIconManager().getIcon(event.getIcon()));
         }
     }
 
     @Handler
     public void nameChanged(final FrameNameChangedEvent event) {
-        if (equals(window)) {
+        if (equals(event.getContainer())) {
             text.setText(event.getName());
         }
     }
