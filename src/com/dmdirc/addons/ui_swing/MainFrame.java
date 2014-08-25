@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
@@ -41,11 +40,10 @@ import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientUnminimisedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
+import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.interfaces.LifecycleController;
-import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.ui.Colour;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
@@ -73,8 +71,8 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 /**
  * The main application frame.
  */
-public class MainFrame extends JFrame implements WindowListener,
-        ConfigChangeListener, NotificationListener, ActiveFrameManager {
+public class MainFrame extends JFrame implements WindowListener, ConfigChangeListener,
+        ActiveFrameManager {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
@@ -545,10 +543,6 @@ public class MainFrame extends JFrame implements WindowListener,
                 framePanel.setVisible(false);
                 framePanel.removeAll();
 
-                if (MainFrame.this.activeFrame != null) {
-                    MainFrame.this.activeFrame.getContainer()
-                            .removeNotificationListener(MainFrame.this);
-                }
                 MainFrame.this.activeFrame = activeFrame;
 
                 if (activeFrame == null) {
@@ -557,8 +551,6 @@ public class MainFrame extends JFrame implements WindowListener,
                 } else {
                     framePanel.add(activeFrame.getDisplayFrame(), "grow");
                     setTitle(activeFrame.getContainer().getTitle());
-                    activeFrame.getContainer().addNotificationListener(
-                            MainFrame.this);
                 }
 
                 framePanel.setVisible(true);
@@ -628,17 +620,11 @@ public class MainFrame extends JFrame implements WindowListener,
         }
     }
 
-    @Override
-    public void notificationSet(final FrameContainer window,
-            final Colour colour) {
-        if (activeFrame != null && activeFrame.getContainer().equals(window)) {
-            window.clearNotification();
+    @Handler
+    public void notificationSet(final NotificationSetEvent event) {
+        if (activeFrame != null && activeFrame.getContainer().equals(event.getWindow())) {
+            event.getWindow().clearNotification();
         }
-    }
-
-    @Override
-    public void notificationCleared(final FrameContainer window) {
-        //Ignore
     }
 
     @Override

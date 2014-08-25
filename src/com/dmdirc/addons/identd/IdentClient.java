@@ -91,11 +91,8 @@ public class IdentClient implements Runnable {
     @Override
     public void run() {
         final Thread thisThread = Thread.currentThread();
-        PrintWriter out = null;
-        BufferedReader in = null;
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             final String inputLine;
             if ((inputLine = in.readLine()) != null) {
                 out.println(getIdentResponse(inputLine, config));
@@ -106,8 +103,6 @@ public class IdentClient implements Runnable {
                         "ClientSocket Error: " + e.getMessage(), ""));
             }
         } finally {
-            StreamUtils.close(in);
-            StreamUtils.close(out);
             StreamUtils.close(socket);
             server.delClient(this);
         }
