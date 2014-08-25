@@ -161,7 +161,7 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
                 }
 
                 g.setColor(Color.BLACK);
-                g.drawRect(BORDER_SIZE, offset, HEX_HEIGHT, HEX_WIDTH);
+                g.drawRect(BORDER_SIZE, offset, HEX_WIDTH, HEX_HEIGHT);
 
                 g.drawRect(BORDER_SIZE * 2 + HEX_WIDTH, offset, 10, HEX_HEIGHT);
 

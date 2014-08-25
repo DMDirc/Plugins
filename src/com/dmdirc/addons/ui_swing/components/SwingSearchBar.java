@@ -226,7 +226,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     @Override
     public void search(final Direction direction, final String text,
             final boolean caseSensitive) {
-        boolean foundText;
         wrapIndicator.setVisible(false);
 
         final boolean up = Direction.UP == direction;
@@ -258,8 +257,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
             //found, select and return found
             textPane.setScrollBarPosition(result.getEndLine());
             textPane.setSelectedText(result);
-            foundText = true;
-            validator.setValidates(foundText);
+            validator.setValidates(true);
             searchBox.checkError();
         }
     }
