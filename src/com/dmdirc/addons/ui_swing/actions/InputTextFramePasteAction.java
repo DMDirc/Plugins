@@ -66,10 +66,11 @@ public final class InputTextFramePasteAction extends AbstractAction {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingNPE")
     public boolean isEnabled() {
         try {
             return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
-        } catch (IllegalStateException ex) {
+        } catch (NullPointerException | IllegalStateException ex) { //https://bugs.openjdk.java.net/browse/JDK-7000965
             return false;
         }
     }
