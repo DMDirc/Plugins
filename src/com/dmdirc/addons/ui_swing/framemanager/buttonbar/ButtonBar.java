@@ -26,6 +26,7 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
@@ -74,6 +75,7 @@ import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 /**
  * The button bar manager is a grid of buttons that presents a manager similar to that used by mIRC.
@@ -334,36 +336,24 @@ public final class ButtonBar implements FrameManager, ActionListener,
         return true;
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowAdded(final SwingWindowAddedEvent event) {
         final TextFrame window = event.getChildWindow();
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                addButton(window);
-                relayout();
-                window.getContainer().addNotificationListener(ButtonBar.this);
-            }
-        });
+        addButton(window);
+        relayout();
+        window.getContainer().addNotificationListener(ButtonBar.this);
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                window.getContainer().removeNotificationListener(ButtonBar.this);
-                if (buttons.containsKey(window)) {
-                    buttonPanel.setVisible(false);
-                    buttonPanel.remove(buttons.get(window));
-                    buttons.remove(window);
-                    buttonPanel.setVisible(true);
-                }
-            }
-        });
+        window.getContainer().removeNotificationListener(ButtonBar.this);
+        if (buttons.containsKey(window)) {
+            buttonPanel.setVisible(false);
+            buttonPanel.remove(buttons.get(window));
+            buttons.remove(window);
+            buttonPanel.setVisible(true);
+        }
     }
 
     @Override
@@ -449,32 +439,20 @@ public final class ButtonBar implements FrameManager, ActionListener,
         });
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void iconChanged(final FrameIconChangedEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final FrameToggleButton button = getButton(event.getContainer());
-                if (button != null) {
-                    button.setIcon(event.getContainer().getIconManager().getIcon(event.getIcon()));
-                }
-            }
-        });
+        final FrameToggleButton button = getButton(event.getContainer());
+        if (button != null) {
+            button.setIcon(event.getContainer().getIconManager().getIcon(event.getIcon()));
+        }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void nameChanged(final FrameNameChangedEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final FrameToggleButton button = getButton(event.getContainer());
-                if (button != null) {
-                    button.setText(event.getName());
-                }
-            }
-        });
+        final FrameToggleButton button = getButton(event.getContainer());
+        if (button != null) {
+            button.setText(event.getName());
+        }
     }
 
     /**

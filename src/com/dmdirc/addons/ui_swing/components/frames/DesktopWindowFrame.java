@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
@@ -37,6 +38,7 @@ import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 /**
  * Frame that contains popped out windows
@@ -96,30 +98,18 @@ public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
         });
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void iconChanged(final FrameIconChangedEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (event.getContainer().equals(windowWindow.getContainer())) {
-                    setIconImage(windowWindow.getIconManager().getImage(event.getIcon()));
-                }
-            }
-        });
+        if (event.getContainer().equals(windowWindow.getContainer())) {
+            setIconImage(windowWindow.getIconManager().getImage(event.getIcon()));
+        }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void titleChanged(final FrameTitleChangedEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (event.getContainer().equals(windowWindow.getContainer())) {
-                    setTitle(event.getTitle());
-                }
-            }
-        });
+        if (event.getContainer().equals(windowWindow.getContainer())) {
+            setTitle(event.getTitle());
+        }
     }
 
 }
