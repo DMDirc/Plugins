@@ -24,11 +24,13 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.AwayStateListener;
-import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import javax.swing.JLabel;
+
+import net.engio.mbassy.listener.Handler;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Simple panel to show when a user is away or not.
  */
 public class AwayLabel extends JLabel implements ConfigChangeListener,
-        AwayStateListener, FrameCloseListener {
+        AwayStateListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
@@ -65,8 +67,6 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
             setVisible(container.getConnection().isAway());
             container.getConnection().addAwayStateListener(this);
         }
-
-        container.addCloseListener(this);
     }
 
     @Override
@@ -110,9 +110,9 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         });
     }
 
-    @Override
-    public void windowClosing(final FrameContainer window) {
-        if (container.getConnection() != null) {
+    @Handler
+    public void windowClosing(final FrameClosingEvent event) {
+        if (event.getContainer().equals(container) && container.getConnection() != null) {
             container.getConnection().removeAwayStateListener(this);
         }
     }
