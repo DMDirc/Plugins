@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -65,7 +66,7 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final TextFrame frame = activeFrameManager.getActiveFrame();
         if (frame.getContainer().isWritable()) {

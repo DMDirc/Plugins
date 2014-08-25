@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -64,7 +65,7 @@ public class DockBounceCommand extends Command {
 
     @Override
     public void execute(
-            final FrameContainer origin,
+            @Nonnull final FrameContainer origin,
             final CommandArguments args,
             final CommandContext context) {
         apple.requestUserAttention(false);

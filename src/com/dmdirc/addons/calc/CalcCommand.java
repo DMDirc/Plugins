@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.text.ParseException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -57,7 +58,7 @@ public class CalcCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         try {
             int offset = 0;

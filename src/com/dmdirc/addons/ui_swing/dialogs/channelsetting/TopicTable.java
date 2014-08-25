@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.addons.ui_swing.components.renderers.TopicCellRenderer;
 
+import javax.annotation.Nonnull;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -61,7 +62,7 @@ public class TopicTable extends JTable {
     }
 
     @Override
-    public void setModel(final TableModel dataModel) {
+    public void setModel(@Nonnull final TableModel dataModel) {
         if (!(dataModel instanceof DefaultTableModel)) {
             throw new IllegalArgumentException(
                     "Data model must be of type DefaultTableModel");

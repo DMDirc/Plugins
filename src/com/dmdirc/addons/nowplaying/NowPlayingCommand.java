@@ -40,6 +40,7 @@ import com.dmdirc.ui.input.TabCompleter;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -80,7 +81,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0

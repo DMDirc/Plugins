@@ -35,6 +35,7 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -67,7 +68,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
 
         if (args.getArguments().length > 0) {

@@ -93,8 +93,8 @@ public class BackgroundPainter extends LayerUI<JComponent> {
             final AggregateConfigProvider configManager,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final String domain, final String imageKey,
-            final String optionKey) {
+            @Nonnull final String domain, @Nonnull final String imageKey,
+            @Nonnull final String optionKey) {
         this.configManager = configManager;
         this.urlBuilder = urlBuilder;
         this.domain = domain;
@@ -104,14 +104,17 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         configManager.getBinder().bind(this, BackgroundPainter.class);
     }
 
+    @Nonnull
     protected String getDomain() {
         return domain;
     }
 
+    @Nonnull
     protected String getImageKey() {
         return imageKey;
     }
 
+    @Nonnull
     protected String getOptionKey() {
         return optionKey;
     }

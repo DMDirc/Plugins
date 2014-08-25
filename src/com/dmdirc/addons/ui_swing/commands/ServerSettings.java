@@ -37,6 +37,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -66,7 +67,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         dialogProvider.displayOrRequestFocus(context.getSource().getConnection());
     }

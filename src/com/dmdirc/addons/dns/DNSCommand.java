@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -57,7 +58,7 @@ public class DNSCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "dns", "<IP|hostname>");

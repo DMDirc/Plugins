@@ -37,6 +37,7 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.util.URLBuilder;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -78,7 +79,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(

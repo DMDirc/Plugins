@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
+import javax.annotation.Nonnull;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.table.DefaultTableModel;
@@ -61,7 +62,7 @@ public class AddonTable extends JTable {
     }
 
     @Override
-    public void setModel(final TableModel dataModel) {
+    public void setModel(@Nonnull final TableModel dataModel) {
         if (!(dataModel instanceof DefaultTableModel)) {
             throw new IllegalArgumentException(
                     "Row sorter must be of type DefaultTableModel");

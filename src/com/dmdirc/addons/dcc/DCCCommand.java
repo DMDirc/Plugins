@@ -54,6 +54,7 @@ import java.awt.Window;
 import java.io.File;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -115,7 +116,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 1) {
             final String target = args.getArguments()[1];
