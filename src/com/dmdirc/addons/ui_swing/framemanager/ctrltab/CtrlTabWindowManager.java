@@ -146,7 +146,6 @@ public class CtrlTabWindowManager implements SelectionListener {
 
     @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
-        final TextFrame parent = event.getParentWindow().orNull();
         final TextFrame window = event.getChildWindow();
         UIUtilities.invokeAndWait(new Runnable() {
 
