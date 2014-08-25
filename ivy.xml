@@ -29,10 +29,6 @@
         <dependency org="org.igniterealtime.smack" name="smack" rev="3.+" conf="main->default" />
         <dependency org="org.igniterealtime.smack" name="smackx" rev="3.+" conf="main->default" />
 
-        <!-- Main - ui_web -->
-        <dependency org="org.mortbay.jetty" name="jetty" rev="6.+" conf="main->default" />
-        <dependency org="commons-lang" name="commons-lang" rev="latest.release" conf="main->default" />
-
         <!-- Main - windowflashing, sessionlock -->
         <dependency org="net.java.dev.jna" name="jna" rev="3.+" conf="main->default" />
         <dependency org="net.java.dev.jna" name="platform" rev="3.+" conf="main->default" />
