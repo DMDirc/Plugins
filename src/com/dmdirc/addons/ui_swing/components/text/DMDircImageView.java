@@ -50,11 +50,6 @@ public class DMDircImageView extends ImageView {
         this.urlBuilder = urlBuilder;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return URL to resource
-     */
     @Override
     public URL getImageURL() {
         final String src = (String) getElement().getAttributes().

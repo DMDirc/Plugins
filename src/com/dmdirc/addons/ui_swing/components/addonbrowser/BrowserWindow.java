@@ -193,11 +193,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
         loaderFactory.getDataLoaderWorker(list, download, this, scrollPane).execute();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         SwingUtilities.invokeLater(new Runnable() {

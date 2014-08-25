@@ -48,11 +48,6 @@ public class PreviousFrameAction extends AbstractAction {
         this.manager = manager;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param evt Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent evt) {
         manager.changeFocus(true);

@@ -50,11 +50,6 @@ class InviteAction extends AbstractAction {
         this.invite = invite;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         invite.accept();

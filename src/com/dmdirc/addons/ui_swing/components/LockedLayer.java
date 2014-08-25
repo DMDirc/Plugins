@@ -125,9 +125,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
         setLockedEffects(effects);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
@@ -136,9 +133,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
         c.addFocusListener(focusListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
@@ -324,13 +318,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
         firePropertyChange("lockedEffects", oldEffects, layerEffect);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param l Layer
-     *
-     * @return Layer effects
-     */
     @Override
     protected LayerEffect[] getLayerEffects(final JXLayer<? extends T> l) {
         if (isLocked()) {

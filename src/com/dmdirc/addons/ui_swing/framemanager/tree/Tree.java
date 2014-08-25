@@ -177,11 +177,6 @@ public class Tree extends JTree implements MouseMotionListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseDragged(final MouseEvent e) {
         if (dragSelect && dragButton) {
@@ -195,31 +190,16 @@ public class Tree extends JTree implements MouseMotionListener,
         manager.checkRollover(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseMoved(final MouseEvent e) {
         manager.checkRollover(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
@@ -234,32 +214,17 @@ public class Tree extends JTree implements MouseMotionListener,
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         dragButton = false;
         processMouseEvents(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         manager.checkRollover(null);
@@ -314,11 +279,6 @@ public class Tree extends JTree implements MouseMotionListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final TreeViewNode node = ((TreeViewNodeMenuItem) e.getSource()).

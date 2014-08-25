@@ -136,11 +136,6 @@ public class PerformTab extends JPanel implements ActionListener {
         performPanel.savePerform();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final PerformDescription perform = (PerformDescription) ((JComboBox) e.getSource()).

@@ -79,21 +79,11 @@ public class ResultsPanel extends JPanel implements TableModelListener,
         add(sp, "grow, push");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Table event model
-     */
     @Override
     public void tableChanged(final TableModelEvent e) {
         total.setText("Total: " + ((TableModel) e.getSource()).getRowCount());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (e.getClickCount() == 2) {

@@ -46,11 +46,6 @@ public class TextPaneCopyAction extends AbstractAction {
         this.textpane = textpane;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         textpane.copy((e.getModifiers() & ActionEvent.SHIFT_MASK)

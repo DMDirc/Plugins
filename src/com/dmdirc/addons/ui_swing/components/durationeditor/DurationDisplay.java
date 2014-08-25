@@ -136,11 +136,6 @@ public class DurationDisplay extends JPanel implements ActionListener,
         add(button, "");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final DurationEditor editor = new DurationEditor(window, iconManager, duration);
@@ -148,9 +143,6 @@ public class DurationDisplay extends JPanel implements ActionListener,
         editor.addDurationListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void durationUpdated(final int newDuration) {
         duration = newDuration;

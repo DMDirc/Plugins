@@ -155,11 +155,6 @@ public class ServerListDialog extends StandardDialog implements
         getCancelButton().addActionListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {

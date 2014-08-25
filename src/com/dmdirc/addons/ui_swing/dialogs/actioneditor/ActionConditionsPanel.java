@@ -147,11 +147,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
         list.setEnabled(enabled);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         list.addCondition(new ActionCondition(-1, null, null, ""));

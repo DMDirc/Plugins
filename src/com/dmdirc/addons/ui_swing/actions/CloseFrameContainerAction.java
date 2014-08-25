@@ -49,11 +49,6 @@ public final class CloseFrameContainerAction extends AbstractAction {
         this.frame = frame;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (frame != null) {

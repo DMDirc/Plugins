@@ -109,11 +109,6 @@ public class URLDialog extends StandardDialog implements ActionListener {
         getCancelButton().addActionListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {

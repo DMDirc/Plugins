@@ -73,11 +73,6 @@ public class InstallerWindow extends StandardDialog implements ActionListener {
         setIconImages(parentWindow.getIconImages());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param ae Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent ae) {
         dispose();

@@ -53,11 +53,6 @@ public final class NicknameCopyAction extends AbstractAction {
         this.nickname = nickname;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         clipboard.setContents(new StringSelection(nickname), null);

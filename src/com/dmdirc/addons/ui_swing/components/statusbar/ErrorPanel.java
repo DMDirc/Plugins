@@ -170,22 +170,12 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         return statusBar.get().isValid();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent mouseEvent) {
         super.mousePressed(mouseEvent);
         checkMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
@@ -195,33 +185,18 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         checkMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent mouseEvent) {
         super.mouseEntered(mouseEvent);
         checkMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent mouseEvent) {
         super.mouseExited(mouseEvent);
         checkMouseEvent(mouseEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
         super.mouseClicked(mouseEvent);
@@ -239,11 +214,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == show) {

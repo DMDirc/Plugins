@@ -246,11 +246,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e != null && e.getSource() == showFileChooser) {

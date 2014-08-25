@@ -125,11 +125,6 @@ public class TreeScroller implements MouseWheelListener {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse wheel event
-     */
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (e.getWheelRotation() < 0) {

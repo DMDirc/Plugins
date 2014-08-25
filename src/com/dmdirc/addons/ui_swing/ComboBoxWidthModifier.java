@@ -49,11 +49,6 @@ public class ComboBoxWidthModifier implements PopupMenuListener {
         scrollPane.setMaximumSize(size);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Popup menu event
-     */
     @Override
     public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
         //Ignore

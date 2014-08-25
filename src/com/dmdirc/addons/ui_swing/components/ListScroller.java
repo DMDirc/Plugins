@@ -89,11 +89,6 @@ public class ListScroller implements MouseWheelListener {
         new ListScroller(model, selectionModel); //NOPMD
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse wheel event
-     */
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (e.getWheelRotation() < 0) {

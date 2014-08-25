@@ -39,11 +39,6 @@ import net.miginfocom.swing.MigLayout;
  */
 public class TopicCellRenderer implements TableCellRenderer {
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return Returns the component for this cell
-     */
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected, final boolean hasFocus,

@@ -71,11 +71,6 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
         add(search, "");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         manager.startSearch(searchTerms.getText());

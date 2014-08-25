@@ -53,11 +53,6 @@ public final class HyperlinkCopyAction extends AbstractAction {
         this.hyperlink = hyperlink;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         clipboard.setContents(new StringSelection(hyperlink), null);

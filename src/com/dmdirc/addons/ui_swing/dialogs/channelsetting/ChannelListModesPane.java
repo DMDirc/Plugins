@@ -329,11 +329,6 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         updateModeCount();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param event Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent event) {
         if (listModesMenu.equals(event.getSource())) {
@@ -358,11 +353,6 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param event List selection event
-     */
     @Override
     public void valueChanged(final ListSelectionEvent event) {
         if (!event.getValueIsAdjusting()) {

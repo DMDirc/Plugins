@@ -179,11 +179,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
         connection.removeInviteListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         super.mouseClicked(e);
@@ -193,11 +188,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBa
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
