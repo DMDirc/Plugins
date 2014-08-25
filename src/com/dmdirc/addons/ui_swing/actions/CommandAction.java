@@ -60,11 +60,6 @@ public class CommandAction extends AbstractAction {
         this.command = command;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         for (String line : command.split("\n")) {

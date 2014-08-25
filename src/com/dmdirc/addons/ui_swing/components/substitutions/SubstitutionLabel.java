@@ -96,51 +96,26 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         addActionListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
@@ -153,11 +128,6 @@ public class SubstitutionLabel extends JButton implements MouseListener,
                         .toString()), null);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (previousComponent instanceof JTextComponent) {
@@ -166,21 +136,11 @@ public class SubstitutionLabel extends JButton implements MouseListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Focus event
-     */
     @Override
     public void focusGained(final FocusEvent e) {
         previousComponent = e.getOppositeComponent();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Focus event
-     */
     @Override
     public void focusLost(final FocusEvent e) {
         //Ignore

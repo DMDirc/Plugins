@@ -140,11 +140,6 @@ public class AddonInfoPanel extends JPanel implements ActionListener,
         listeners.getCallable(AddonToggleListener.class).addonToggled();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (addonToggle == null) {

@@ -146,11 +146,6 @@ public class NickColourPanel extends JPanel implements ActionListener,
         deleteButton.setEnabled(false);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final int row = table.getSelectedRow();

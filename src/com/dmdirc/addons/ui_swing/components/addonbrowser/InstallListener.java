@@ -53,11 +53,6 @@ public class InstallListener implements ActionListener {
         this.parentWindow = parentWindow;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final InstallerWindow installer = new InstallerWindow(parentWindow, info);

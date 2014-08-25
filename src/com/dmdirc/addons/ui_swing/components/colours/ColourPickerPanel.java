@@ -311,31 +311,16 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
         repaint(previewRect);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (showIrc && e.getY() > ircOffset && e.getY() < ircOffset + IRC_HEIGHT && e.getX()
@@ -362,51 +347,26 @@ public final class ColourPickerPanel extends JPanel implements MouseListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         // Do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseDragged(final MouseEvent e) {
         mouseMotion(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseMoved(final MouseEvent e) {
         mouseMotion(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (showHex) {

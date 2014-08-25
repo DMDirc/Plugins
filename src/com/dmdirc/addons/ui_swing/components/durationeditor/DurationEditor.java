@@ -159,10 +159,6 @@ public class DurationEditor extends StandardDialog implements ActionListener {
         setDefaultCloseOperation(DurationEditor.DISPOSE_ON_CLOSE);
     }
 
-    /** {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {

@@ -55,11 +55,6 @@ public final class InputFieldCopyAction extends AbstractAction {
         this.inputField = inputField;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         final String inputSelected = inputField.getSelectedText();

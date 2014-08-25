@@ -87,11 +87,6 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseMoved(final MouseEvent e) {
         if (editorPane == null) {
@@ -109,11 +104,6 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
         editorPane.setCursor(Cursor.getDefaultCursor());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         if (!SwingUtilities.isLeftMouseButton(e) || editorPane == null) {
@@ -136,51 +126,26 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse Event
-     */
     @Override
     public void mouseDragged(final MouseEvent e) {
         //Ignore

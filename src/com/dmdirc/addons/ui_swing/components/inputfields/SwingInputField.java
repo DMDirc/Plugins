@@ -446,11 +446,6 @@ public class SwingInputField extends JComponent implements InputField,
         });
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyTyped(final KeyEvent e) {
         for (final KeyListener listener : listeners.get(KeyListener.class)) {
@@ -458,11 +453,6 @@ public class SwingInputField extends JComponent implements InputField,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyPressed(final KeyEvent e) {
         for (final KeyListener listener : listeners.get(KeyListener.class)) {
@@ -470,11 +460,6 @@ public class SwingInputField extends JComponent implements InputField,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Key event
-     */
     @Override
     public void keyReleased(final KeyEvent e) {
         for (final KeyListener listener : listeners.get(KeyListener.class)) {

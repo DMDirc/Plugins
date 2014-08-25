@@ -49,11 +49,6 @@ public final class CopyAction extends AbstractAction {
         this.comp = comp;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         comp.copy();

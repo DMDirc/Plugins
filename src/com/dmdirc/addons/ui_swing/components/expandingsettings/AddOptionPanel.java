@@ -159,11 +159,6 @@ public class AddOptionPanel extends JPanel implements ActionListener {
         addOptionComboBox.requestFocusInWindow();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addOptionComboBox) {

@@ -105,11 +105,6 @@ public class SwingRestartDialog extends StandardDialog implements ActionListener
         setLocationRelativeTo(getOwner());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (getOkButton().equals(e.getSource())) {

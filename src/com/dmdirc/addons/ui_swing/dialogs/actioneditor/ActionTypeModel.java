@@ -70,11 +70,6 @@ public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param anObject Object to add
-     */
     @Override
     public void addElement(final Object anObject) {
         super.addElement(anObject);

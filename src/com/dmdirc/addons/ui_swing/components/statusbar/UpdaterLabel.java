@@ -90,11 +90,6 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
         label.setText(null);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mouseEvent Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);

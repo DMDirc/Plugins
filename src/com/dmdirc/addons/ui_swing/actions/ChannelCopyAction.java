@@ -53,11 +53,6 @@ public final class ChannelCopyAction extends AbstractAction {
         this.channel = channel;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         clipboard.setContents(new StringSelection(channel), null);

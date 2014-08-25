@@ -101,11 +101,6 @@ public class HelpMenu extends JMenu implements ActionListener {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {

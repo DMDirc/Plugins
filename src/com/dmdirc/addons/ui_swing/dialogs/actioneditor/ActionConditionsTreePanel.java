@@ -178,11 +178,6 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
 
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         rule.setEnabled(e.getSource().equals(customButton));

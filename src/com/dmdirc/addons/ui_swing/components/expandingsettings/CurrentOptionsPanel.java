@@ -135,11 +135,6 @@ public class CurrentOptionsPanel extends JPanel implements
         setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action performed
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void actionPerformed(final ActionEvent e) {

@@ -31,21 +31,11 @@ import javax.swing.filechooser.FileFilter;
  */
 public class ExecutableFileFilter extends FileFilter {
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param file File to check
-     */
     @Override
     public boolean accept(final File file) {
         return (file.isDirectory() || file.canExecute());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return Description
-     */
     @Override
     public String getDescription() {
         return "Executable files";

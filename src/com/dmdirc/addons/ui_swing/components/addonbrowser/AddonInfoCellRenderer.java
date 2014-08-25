@@ -34,11 +34,6 @@ import javax.swing.table.TableCellRenderer;
  */
 public class AddonInfoCellRenderer implements TableCellRenderer {
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return Returns the component for this cell
-     */
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected, final boolean hasFocus,

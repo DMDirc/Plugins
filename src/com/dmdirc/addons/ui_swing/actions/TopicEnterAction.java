@@ -46,11 +46,6 @@ public class TopicEnterAction extends AbstractAction {
         this.parent = parent;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         parent.save();

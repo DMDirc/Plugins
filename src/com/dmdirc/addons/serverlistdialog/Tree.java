@@ -134,11 +134,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
         addItemButton.addActionListener(this);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Tree selection event
-     */
     @Override
     public final void valueChanged(final TreeSelectionEvent e) {
         if (items.getSelectionPath() == null) {
@@ -180,11 +175,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
         //TODO when I let people remove groups...
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == addGroupButton) {

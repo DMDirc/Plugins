@@ -179,11 +179,6 @@ public class SwingUpdaterDialog extends StandardDialog implements
         add(getRightButton(), "right");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource().equals(getOkButton())) {

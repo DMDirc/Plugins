@@ -120,51 +120,26 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
                 .getChannelClients());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         processMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         processMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         processMouseEvent(e);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore

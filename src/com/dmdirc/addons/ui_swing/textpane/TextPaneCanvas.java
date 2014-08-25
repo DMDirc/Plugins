@@ -393,11 +393,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Adjustment event
-     */
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
         if (startLine != e.getValue()) {
@@ -406,11 +401,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseClicked(final MouseEvent e) {
         String clickedText;
@@ -557,11 +547,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         return end;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mousePressed(final MouseEvent e) {
         fireMouseEvents(getClickType(getClickPosition(e.getPoint(), false)),
@@ -571,11 +556,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseReleased(final MouseEvent e) {
         fireMouseEvents(getClickType(getClickPosition(e.getPoint(), false)),
@@ -596,11 +576,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseDragged(final MouseEvent e) {
         if (e.getModifiersEx() == MouseEvent.BUTTON1_DOWN_MASK) {
@@ -608,31 +583,16 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseEntered(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseExited(final MouseEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Mouse event
-     */
     @Override
     public void mouseMoved(final MouseEvent e) {
         checkForLink();
@@ -953,41 +913,21 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         return lastVisibleLine - firstVisibleLine;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Component event
-     */
     @Override
     public void componentResized(final ComponentEvent e) {
         recalc();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Component event
-     */
     @Override
     public void componentMoved(final ComponentEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Component event
-     */
     @Override
     public void componentShown(final ComponentEvent e) {
         //Ignore
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Component event
-     */
     @Override
     public void componentHidden(final ComponentEvent e) {
         //Ignore

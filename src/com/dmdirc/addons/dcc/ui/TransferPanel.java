@@ -119,11 +119,6 @@ public class TransferPanel extends JPanel implements ActionListener,
         add(button, "align right");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("Cancel")) {

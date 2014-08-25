@@ -99,11 +99,6 @@ public class WizardDialog extends StandardDialog implements ActionListener {
         setLocationRelativeTo(parentWindow);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == getOkButton()) {

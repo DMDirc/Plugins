@@ -99,9 +99,6 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected JPanel doInBackground() {
         return addCategory(category);

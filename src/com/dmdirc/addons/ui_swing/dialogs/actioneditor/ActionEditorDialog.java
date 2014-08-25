@@ -220,11 +220,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         add(getRightButton(), "right, sgx button");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource().equals(showSubstitutions)) {
@@ -245,9 +240,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void validate() {
         super.validate();
@@ -291,9 +283,6 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getSource().equals(name)) {

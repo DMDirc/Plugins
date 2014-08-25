@@ -177,11 +177,6 @@ public final class ErrorListDialog extends StandardDialog implements
         getContentPane().add(splitPane);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e List selection event
-     */
     @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
@@ -252,11 +247,6 @@ public final class ErrorListDialog extends StandardDialog implements
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Table model event
-     */
     @Override
     public void tableChanged(final TableModelEvent e) {
         if (tableModel.getRowCount() == 0) {

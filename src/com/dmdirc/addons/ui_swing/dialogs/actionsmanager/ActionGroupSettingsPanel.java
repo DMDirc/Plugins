@@ -169,11 +169,6 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param e Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         setVisible(false);
