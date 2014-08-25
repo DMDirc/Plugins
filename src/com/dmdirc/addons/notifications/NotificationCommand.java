@@ -36,6 +36,8 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 /**
  * Notification command, delegating notification to one of the registered notification commands as
  * preferred by the end user.
@@ -66,7 +68,7 @@ public class NotificationCommand extends Command implements
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0 && args.getArguments()[0]
                 .equalsIgnoreCase("--methods")) {

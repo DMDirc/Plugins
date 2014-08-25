@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.awt.Toolkit;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -55,7 +56,7 @@ public class BeepCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         Toolkit.getDefaultToolkit().beep();
     }

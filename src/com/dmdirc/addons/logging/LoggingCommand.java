@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -61,7 +62,7 @@ public class LoggingCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0) {
             if (args.getArguments()[0].equalsIgnoreCase("history")) {

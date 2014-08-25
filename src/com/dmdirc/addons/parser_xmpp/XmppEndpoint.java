@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.parser_xmpp;
 
+import javax.annotation.Nonnull;
+
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Mode;
 import org.jivesoftware.smack.packet.Presence.Type;
@@ -154,7 +156,7 @@ public class XmppEndpoint implements Comparable<XmppEndpoint> {
     }
 
     @Override
-    public int compareTo(final XmppEndpoint o) {
+    public int compareTo(@Nonnull final XmppEndpoint o) {
         return o.getPriority() - priority;
     }
 

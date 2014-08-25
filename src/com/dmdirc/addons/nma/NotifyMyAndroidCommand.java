@@ -33,6 +33,7 @@ import com.dmdirc.plugins.PluginDomain;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public class NotifyMyAndroidCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] parts = args.getArgumentsAsString().split("\\s+--\\s+", 2);
         LOG.trace("Split input: {}", (Object[]) parts);

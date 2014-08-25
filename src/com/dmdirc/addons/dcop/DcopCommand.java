@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -62,7 +63,7 @@ public class DcopCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String[] arguments = args.getArguments();
         if (arguments.length != 3) {

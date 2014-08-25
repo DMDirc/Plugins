@@ -27,6 +27,8 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 
+import javax.annotation.Nonnull;
+
 /**
  * An XMPP-specific channel client info object.
  */
@@ -68,7 +70,7 @@ public class XmppChannelClientInfo extends BaseChannelClientInfo {
     }
 
     @Override
-    public int compareTo(final ChannelClientInfo o) {
+    public int compareTo(@Nonnull final ChannelClientInfo o) {
         return 0; // TODO: Implement
     }
 

@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -58,7 +59,7 @@ public class ConditionalExecuteCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin, final CommandArguments args,
+    public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {
         final String cmdname = args.getWordsAsString(0, 0);
 

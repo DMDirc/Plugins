@@ -33,6 +33,7 @@ import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.parser.interfaces.Parser;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -71,7 +72,7 @@ public final class ParserDebugCommand extends Command {
      * @param context     The Context of this command execution
      */
     @Override
-    public void execute(final FrameContainer origin, final CommandArguments commandArgs,
+    public void execute(@Nonnull final FrameContainer origin, final CommandArguments commandArgs,
             final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 

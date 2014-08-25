@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -55,7 +56,7 @@ public class AudioCommand extends Command {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String filename = args.getArgumentsAsString();
         final File file = new File(filename);
