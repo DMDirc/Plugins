@@ -22,16 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
-import com.dmdirc.interfaces.FrameCloseListener;
 
 import java.awt.Point;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
@@ -43,7 +38,7 @@ import net.engio.mbassy.listener.Invoke;
 /**
  * Frame that contains popped out windows
  */
-public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
+public class DesktopWindowFrame extends JFrame {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -61,15 +56,6 @@ public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
         this.windowWindow = windowWindow;
         initialLocation = windowWindow.getLocationOnScreen();
 
-        addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosing(final WindowEvent e) {
-                windowWindow.setPopout(false);
-            }
-        });
-        windowWindow.getContainer().addCloseListener(this);
-
         setLayout(new MigLayout("fill, ins rel"));
         add(windowWindow, "grow");
         setPreferredSize(windowWindow.getSize());
@@ -85,17 +71,6 @@ public class DesktopWindowFrame extends JFrame implements FrameCloseListener {
         pack();
         setVisible(true);
         setLocation(initialLocation);
-    }
-
-    @Override
-    public void windowClosing(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                windowWindow.setPopout(false);
-            }
-        });
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
