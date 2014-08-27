@@ -69,6 +69,8 @@ import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -167,6 +169,13 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             popoutPlaceholder = new DesktopPlaceHolderFrame();
             popoutFrame = new DesktopWindowFrame(this);
             eventBus.subscribe(popoutFrame);
+            popoutFrame.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosing(final WindowEvent e) {
+                    setPopout(false);
+                }
+            });
             popoutFrame.display();
         } else if (popoutFrame != null) {
             popoutPlaceholder = null;
@@ -496,6 +505,9 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
 
             @Override
             public void run() {
+                if (popout) {
+                    setPopout(false);
+                }
                 setVisible(false);
                 getTextPane().close();
             }
