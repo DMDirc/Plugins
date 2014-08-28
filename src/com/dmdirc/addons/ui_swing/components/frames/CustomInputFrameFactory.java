@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
@@ -45,18 +46,24 @@ public class CustomInputFrameFactory implements SwingWindowFactory.WindowProvide
 
     private final Provider<TextFrameDependencies> dependencies;
     private final Provider<SwingInputField> inputFieldProvider;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public CustomInputFrameFactory(
+            final DMDircMBassador eventBus,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider) {
+        this.eventBus = eventBus;
         this.dependencies = dependencies;
         this.inputFieldProvider = inputFieldProvider;
     }
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
-        return new CustomInputFrame(dependencies.get(), inputFieldProvider, container);
+        final CustomInputFrame frame = new CustomInputFrame(dependencies.get(), inputFieldProvider,
+                container);
+        eventBus.subscribe(frame);
+        return frame;
     }
 
     @Override

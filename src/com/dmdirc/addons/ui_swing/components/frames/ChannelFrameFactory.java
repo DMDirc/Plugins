@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -56,15 +57,18 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     private final IdentityFactory identityFactory;
     private final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider;
     private final TopicBarFactory topicBarFactory;
+    private final DMDircMBassador eventBus;
 
     @Inject
     public ChannelFrameFactory(
+            final DMDircMBassador eventBus,
             @PluginDomain(SwingController.class) final String domain,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
             final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider,
             final TopicBarFactory topicBarFactory) {
+        this.eventBus = eventBus;
         this.domain = domain;
         this.dependencies = dependencies;
         this.inputFieldProvider = inputFieldProvider;
@@ -75,8 +79,10 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
-        return new ChannelFrame(domain, dependencies.get(), inputFieldProvider, identityFactory,
-                dialogProvider.get(), topicBarFactory, (Channel) container);
+        final ChannelFrame frame = new ChannelFrame(domain, dependencies.get(), inputFieldProvider,
+                identityFactory, dialogProvider.get(), topicBarFactory, (Channel) container);
+        eventBus.subscribe(frame);
+        return frame;
     }
 
     @Override
