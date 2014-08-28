@@ -22,14 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
-import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.tls.CertificateManager;
 import com.dmdirc.tls.CertificateProblemListener;
@@ -48,6 +48,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
@@ -169,16 +171,10 @@ public final class ServerFrame extends InputTextFrame implements
         }
     }
 
-    @Override
-    public void windowClosing(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                dialogProvider.dispose(connection);
-                ServerFrame.super.windowClosing(window);
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void windowClosing(final FrameClosingEvent event) {
+        dialogProvider.dispose(connection);
+        super.windowClosing(event);
     }
 
     @Override

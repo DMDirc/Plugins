@@ -24,8 +24,8 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
@@ -36,6 +36,7 @@ import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.events.ClientClosingEvent;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -268,18 +269,12 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         popupMenu.add(settingsMI);
     }
 
-    @Override
-    public void windowClosing(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                saveSplitPanePosition();
-                topicBar.close();
-                dialogProvider.dispose(channel);
-                ChannelFrame.super.windowClosing(window);
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void windowClosing(final FrameClosingEvent event) {
+        saveSplitPanePosition();
+        topicBar.close();
+        dialogProvider.dispose(channel);
+        super.windowClosing(event);
     }
 
     @Override

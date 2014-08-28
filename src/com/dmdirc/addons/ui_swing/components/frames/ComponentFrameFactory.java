@@ -55,7 +55,10 @@ public class ComponentFrameFactory {
     public ComponentFrame getComponentFrame(
             final FrameContainer owner,
             final CommandParser commandParser) {
-        return new ComponentFrame(eventBus, dependencies, urlBuilder, owner, commandParser);
+        final ComponentFrame frame = new ComponentFrame(eventBus, dependencies, urlBuilder, owner,
+                commandParser);
+        eventBus.subscribe(frame);
+        return frame;
     }
 
 }

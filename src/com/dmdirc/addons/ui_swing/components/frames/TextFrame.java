@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ChannelCopyAction;
@@ -53,11 +54,11 @@ import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.FrameCloseListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
@@ -85,11 +86,13 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Implements a generic (internal) frame.
  */
 public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.ui.Window,
-        ConfigChangeListener, TextPaneListener, FrameCloseListener {
+        ConfigChangeListener, TextPaneListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -138,8 +141,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         this.clipboard = deps.clipboard;
 
         final AggregateConfigProvider config = owner.getConfigManager();
-
-        owner.addCloseListener(this);
 
         initComponents(deps.textPaneFactory);
         setFocusable(true);
@@ -274,7 +275,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         getActionMap().put("homeAction", new TextPaneHomeAction(getTextPane()));
         getActionMap().put("endAction", new TextPaneEndAction(getTextPane()));
     }
-
+    
     @Override
     public FrameContainer getContainer() {
         return frameParent;
@@ -499,19 +500,15 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         }
     }
 
-    @Override
-    public void windowClosing(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (popout) {
-                    setPopout(false);
-                }
-                setVisible(false);
-                getTextPane().close();
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void windowClosing(final FrameClosingEvent event) {
+        if (event.getContainer().equals(getContainer())) {
+                    if (popout) {
+                        setPopout(false);
+                    }
+                    setVisible(false);
+                    getTextPane().close();
+        }
     }
 
     /**
@@ -541,7 +538,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     /** Disposes of this window, removing any listeners. */
     public void dispose() {
         frameParent.getConfigManager().removeListener(this);
-        frameParent.removeCloseListener(this);
     }
 
     /**
