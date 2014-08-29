@@ -38,7 +38,8 @@ import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
-import com.dmdirc.interfaces.NotificationListener;
+import com.dmdirc.events.NotificationClearedEvent;
+import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
@@ -80,9 +81,8 @@ import net.engio.mbassy.listener.Invoke;
 /**
  * The button bar manager is a grid of buttons that presents a manager similar to that used by mIRC.
  */
-public final class ButtonBar implements FrameManager, ActionListener,
-        ComponentListener, Serializable, NotificationListener,
-        MouseListener, ConfigChangeListener {
+public final class ButtonBar implements FrameManager, ActionListener, ComponentListener,
+        Serializable, MouseListener, ConfigChangeListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
@@ -341,13 +341,11 @@ public final class ButtonBar implements FrameManager, ActionListener,
         final TextFrame window = event.getChildWindow();
         addButton(window);
         relayout();
-        window.getContainer().addNotificationListener(ButtonBar.this);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
-        window.getContainer().removeNotificationListener(ButtonBar.this);
         if (buttons.containsKey(window)) {
             buttonPanel.setVisible(false);
             buttonPanel.remove(buttons.get(window));
@@ -388,31 +386,19 @@ public final class ButtonBar implements FrameManager, ActionListener,
         // Do nothing
     }
 
-    @Override
-    public void notificationSet(final FrameContainer window,
-            final Colour colour) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final FrameToggleButton button = getButton(window);
-                if (button != null) {
-                    button.setForeground(UIUtilities.convertColour(colour));
-                }
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void notificationSet(final NotificationSetEvent event) {
+        final FrameToggleButton button = getButton(event.getWindow());
+        if (button != null) {
+            button.setForeground(UIUtilities.convertColour(event.getColour()));
+        }
     }
 
-    @Override
-    public void notificationCleared(final FrameContainer window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO: Should this colour be configurable?
-                notificationSet(window, window.getNotification().or(Colour.BLACK));
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void notificationCleared(final NotificationClearedEvent event) {
+        // TODO: Should this colour be configurable?
+        notificationSet(new NotificationSetEvent(event.getWindow(),
+                event.getWindow().getNotification().or(Colour.BLACK)));
     }
 
     @Override
