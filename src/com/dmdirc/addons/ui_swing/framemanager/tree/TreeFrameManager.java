@@ -78,14 +78,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
-    /** display tree. */
-    private Tree tree;
-    /** data model. */
-    private TreeViewModel model;
     /** node storage, used for adding and deleting nodes correctly. */
     private final Map<FrameContainer, TreeViewNode> nodes;
-    /** Tree scroller. */
-    private TreeScroller scroller;
     /** Configuration manager. */
     private final AggregateConfigProvider config;
     /** Colour manager. */
@@ -100,6 +94,12 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     private final DMDircMBassador eventBus;
     /** Swing event bus. */
     private final DMDircMBassador swingEventBus;
+    /** display tree. */
+    private Tree tree;
+    /** data model. */
+    private TreeViewModel model;
+    /** Tree scroller. */
+    private TreeScroller scroller;
 
     /**
      * Creates a new instance of the TreeFrameManager.
@@ -114,15 +114,12 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * @param swingEventBus      The swing event bus
      */
     @Inject
-    public TreeFrameManager(
-            final WindowManager windowManager,
+    public TreeFrameManager(final WindowManager windowManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final ColourManager colourManager,
-            final ActiveFrameManager activeFrameManager,
+            final ColourManager colourManager, final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
-            final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final DMDircMBassador eventBus, @SwingEventBus final DMDircMBassador swingEventBus) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();
@@ -138,8 +135,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
                 tree = new Tree(TreeFrameManager.this, model, activeFrameManager, globalConfig,
                         windowFactory, domain);
-                tree.setCellRenderer(new TreeViewTreeCellRenderer(config, colourManager,
-                        TreeFrameManager.this));
+                tree.setCellRenderer(
+                        new TreeViewTreeCellRenderer(config, colourManager, TreeFrameManager.this));
                 tree.setVisible(true);
 
                 config.addChangeListener("treeview", TreeFrameManager.this);
@@ -169,8 +166,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             public void run() {
                 final JScrollPane scrollPane = new JScrollPane(tree);
                 scrollPane.setAutoscrolls(true);
-                scrollPane.setHorizontalScrollBarPolicy(
-                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
                 parent.setVisible(false);
                 parent.setLayout(new MigLayout("ins 0, fill"));
@@ -213,9 +209,9 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 }
                 final DefaultMutableTreeNode node = nodes.get(window.getContainer());
                 if (node.getLevel() == 0) {
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
-                            new IllegalArgumentException(),
-                            "delServer triggered for root node" + node.toString(), ""));
+                    eventBus.publishAsync(
+                            new UserErrorEvent(ErrorLevel.MEDIUM, new IllegalArgumentException(),
+                                    "delServer triggered for root node" + node.toString(), ""));
                 } else {
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
@@ -233,8 +229,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * @param parent Parent node
      * @param window Window to add
      */
-    public void addWindow(final TreeViewNode parent,
-            final FrameContainer window) {
+    public void addWindow(final TreeViewNode parent, final FrameContainer window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             @Override
@@ -254,8 +249,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 final Rectangle view = tree.getRowBounds(tree.getRowForPath(new TreePath(node.
                         getPath())));
                 if (view != null) {
-                    tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(),
-                            0, 0));
+                    tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(), 0, 0));
                 }
 
                 // TODO: Should this colour be configurable?
@@ -298,16 +292,12 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     /** Sets treeview colours. */
     private void setColours() {
-        tree.setBackground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        config.getOptionString(
-                                "treeview", "backgroundcolour",
-                                "ui", "backgroundcolour"), null)));
-        tree.setForeground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        config.getOptionString(
-                                "treeview", "foregroundcolour",
-                                "ui", "foregroundcolour"), null)));
+        tree.setBackground(UIUtilities.convertColour(colourManager.getColourFromString(
+                        config.getOptionString("treeview", "backgroundcolour", "ui",
+                                "backgroundcolour"), null)));
+        tree.setForeground(UIUtilities.convertColour(colourManager.getColourFromString(
+                        config.getOptionString("treeview", "foregroundcolour", "ui",
+                                "foregroundcolour"), null)));
 
         tree.repaint();
     }
@@ -330,8 +320,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @Override
             public void run() {
                 ((DefaultTreeModel) tree.getModel()).setRoot(null);
-                ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(
-                        null, null));
+                ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(null, null));
                 if (scroller != null) {
                     scroller.unregister();
                 }
@@ -367,8 +356,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
                 @Override
                 public void run() {
-                    final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel()).getPathToRoot(
-                            nodes.get(window.getContainer()));
+                    final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel())
+                            .getPathToRoot(nodes.get(window.getContainer()));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
                         tree.setTreePath(path);
@@ -381,30 +370,30 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void notificationSet(final NotificationSetEvent event) {
-                synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(event.getWindow());
-                    if (event.getWindow() != null && node != null) {
-                        final NodeLabel label = node.getLabel();
-                        if (label != null) {
-                            label.notificationSet(event);
-                            tree.repaint();
-                        }
-                    }
+        synchronized (nodes) {
+            final TreeViewNode node = nodes.get(event.getWindow());
+            if (event.getWindow() != null && node != null) {
+                final NodeLabel label = node.getLabel();
+                if (label != null) {
+                    label.notificationSet(event);
+                    tree.repaint();
                 }
+            }
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void notificationCleared(final NotificationClearedEvent event) {
-                synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(event.getWindow());
-                    if (event.getWindow() != null && node != null) {
-                        final NodeLabel label = node.getLabel();
-                        if (label != null) {
-                            label.notificationCleared(event);
-                            tree.repaint();
-                        }
-                    }
+        synchronized (nodes) {
+            final TreeViewNode node = nodes.get(event.getWindow());
+            if (event.getWindow() != null && node != null) {
+                final NodeLabel label = node.getLabel();
+                if (label != null) {
+                    label.notificationCleared(event);
+                    tree.repaint();
                 }
+            }
+        }
     }
 
 }
