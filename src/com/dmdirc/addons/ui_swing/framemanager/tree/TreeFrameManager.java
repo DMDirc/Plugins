@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -36,8 +37,9 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
+import com.dmdirc.events.NotificationClearedEvent;
+import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.interfaces.NotificationListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -67,12 +69,12 @@ import javax.swing.tree.TreePath;
 import net.miginfocom.swing.MigLayout;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 /**
  * Manages open windows in the application in a tree style view.
  */
-public class TreeFrameManager implements FrameManager, Serializable, ConfigChangeListener,
-        NotificationListener {
+public class TreeFrameManager implements FrameManager, Serializable, ConfigChangeListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
@@ -178,6 +180,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
                 setColours();
 
+                eventBus.subscribe(TreeFrameManager.this);
                 swingEventBus.subscribe(TreeFrameManager.this);
                 redoTreeView();
             }
@@ -220,8 +223,6 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     eventBus.unsubscribe(nodes.get(window.getContainer()).getLabel());
                     nodes.remove(window.getContainer());
                 }
-                window.getContainer().removeNotificationListener(
-                        TreeFrameManager.this);
             }
         });
     }
@@ -256,10 +257,10 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(),
                             0, 0));
                 }
-                window.addNotificationListener(TreeFrameManager.this);
 
                 // TODO: Should this colour be configurable?
-                node.getLabel().notificationSet(window, window.getNotification().or(Colour.BLACK));
+                node.getLabel().notificationSet(new NotificationSetEvent(window,
+                        window.getNotification().or(Colour.BLACK)));
                 node.getLabel().iconChanged(new FrameIconChangedEvent(window, window.getIcon()));
             }
         });
@@ -378,44 +379,32 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
         }
     }
 
-    @Override
-    public void notificationSet(final FrameContainer window, final Colour colour) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void notificationSet(final NotificationSetEvent event) {
                 synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window);
-                    if (window != null && node != null) {
+                    final TreeViewNode node = nodes.get(event.getWindow());
+                    if (event.getWindow() != null && node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {
-                            label.notificationSet(window, colour);
+                            label.notificationSet(event);
                             tree.repaint();
                         }
                     }
                 }
-            }
-        });
     }
 
-    @Override
-    public void notificationCleared(final FrameContainer window) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void notificationCleared(final NotificationClearedEvent event) {
                 synchronized (nodes) {
-                    final TreeViewNode node = nodes.get(window);
-                    if (window != null && node != null) {
+                    final TreeViewNode node = nodes.get(event.getWindow());
+                    if (event.getWindow() != null && node != null) {
                         final NodeLabel label = node.getLabel();
                         if (label != null) {
-                            label.notificationCleared(window);
+                            label.notificationCleared(event);
                             tree.repaint();
                         }
                     }
                 }
-            }
-        });
     }
 
 }

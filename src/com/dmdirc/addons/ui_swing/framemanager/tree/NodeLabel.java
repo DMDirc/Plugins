@@ -29,8 +29,8 @@ import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
-import com.dmdirc.interfaces.NotificationListener;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.events.NotificationClearedEvent;
+import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -49,8 +49,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * Node label.
  */
-public class NodeLabel extends JPanel implements SelectionListener,
-        NotificationListener {
+public class NodeLabel extends JPanel implements SelectionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -75,8 +74,6 @@ public class NodeLabel extends JPanel implements SelectionListener,
      * @param window Window for this node
      */
     public NodeLabel(final FrameContainer window) {
-        super();
-
         this.window = window;
 
         init();
@@ -109,19 +106,12 @@ public class NodeLabel extends JPanel implements SelectionListener,
         selected = equals(window.getContainer());
     }
 
-    @Override
-    public void notificationSet(final FrameContainer window,
-            final Colour colour) {
-        if (equals(window)) {
-            notificationColour = UIUtilities.convertColour(colour);
-        }
+    public void notificationSet(final NotificationSetEvent event) {
+            notificationColour = UIUtilities.convertColour(event.getColour());
     }
 
-    @Override
-    public void notificationCleared(final FrameContainer window) {
-        if (equals(window)) {
+    public void notificationCleared(final NotificationClearedEvent event) {
             notificationColour = null;
-        }
     }
 
     @Handler
