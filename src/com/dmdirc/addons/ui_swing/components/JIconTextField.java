@@ -71,12 +71,12 @@ public class JIconTextField extends JTextField {
     @Override
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        if (this.icon != null) {
+        if (this.icon == null) {
+            setMargin(new Insets(2, 2, 2, 2));
+        } else {
             final int x = getWidth() - dummyInsets.right - icon.getIconWidth();
             setMargin(new Insets(2, 2, 2, getWidth() - x));
             icon.paintIcon(this, g, x, ((getHeight() - icon.getIconHeight()) / 2));
-        } else {
-            setMargin(new Insets(2, 2, 2, 2));
         }
     }
 

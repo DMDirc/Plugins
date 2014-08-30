@@ -34,6 +34,7 @@ import javax.swing.AbstractListModel;
  *
  * @param <T> Generic type of the list
  */
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class GenericListModel<T> extends AbstractListModel<T> {
 
     /** A version number for this class. */

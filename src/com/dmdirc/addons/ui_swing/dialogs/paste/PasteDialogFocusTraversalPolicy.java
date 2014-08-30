@@ -62,8 +62,6 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
             return editButton;
         } else if (aComponent.equals(editButton)) {
             return sendButton;
-        } else if (aComponent.equals(sendButton)) {
-            return cancelButton;
         } else {
             return cancelButton;
         }

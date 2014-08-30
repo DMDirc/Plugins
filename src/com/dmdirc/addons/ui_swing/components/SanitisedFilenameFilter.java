@@ -32,14 +32,14 @@ import javax.swing.text.DocumentFilter;
 public class SanitisedFilenameFilter extends DocumentFilter {
 
     /** Invalid filename characters. */
-    private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-\\#\\&\\_]";
+    private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-#&_]";
 
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,
             final int offset, final String string, final AttributeSet attr)
             throws BadLocationException {
 
-        if (string != null && !string.isEmpty()) {
+        if ((string != null) && !string.isEmpty()) {
             replace(fb, offset, string.length(), string, attr);
         }
     }
