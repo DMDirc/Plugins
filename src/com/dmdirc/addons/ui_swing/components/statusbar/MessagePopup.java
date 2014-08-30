@@ -106,7 +106,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
      * @param message to add
      */
     public void addMessage(final StatusMessage message) {
-        synchronized (message) {
+        synchronized (messages) {
             messages.add(message);
         }
     }

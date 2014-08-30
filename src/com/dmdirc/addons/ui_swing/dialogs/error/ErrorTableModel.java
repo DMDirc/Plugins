@@ -66,7 +66,7 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
      * @param errors List of errors
      */
     public void setErrors(final List<ProgramError> errors) {
-        synchronized (errors) {
+        synchronized (this.errors) {
             this.errors.clear();
             this.errors.addAll(errors);
         }
