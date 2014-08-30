@@ -20,52 +20,36 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import com.dmdirc.interfaces.actions.ActionType;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Table for topics.
+ * Displays actions types and headers in a pretty fashion.
  */
-public class TopicTable extends JTable {
+public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public void setValue(final Object value) {
+        if (value == null) {
+            setText("");
+        } else if (value instanceof String && !((String) value).isEmpty()) {
+            setBackground(Color.GRAY);
+            setFont(getFont().deriveFont(Font.BOLD));
+            setText(value.toString());
+        } else if (value instanceof ActionType) {
+            setText(((ActionType) value).getName());
+        } else {
+            setText(value.toString());
         }
-        super.setModel(dataModel);
     }
 
 }

@@ -20,52 +20,54 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.text.JTextComponent;
 
 /**
- * Table for topics.
+ * Paste action.
  */
-public class TopicTable extends JTable {
+public final class PasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to paste with. */
+    private final Clipboard clipboard;
+    /** Text component to be acted upon. */
+    private final JTextComponent comp;
 
     /**
-     * Creates a new addon table.
+     * Instantiates a new paste action.
+     *
+     * @param clipboard Clipboard to paste with
+     * @param comp      Component to be acted upon
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
+    public PasteAction(final Clipboard clipboard, final JTextComponent comp) {
+        super("Paste");
+
+        this.clipboard = clipboard;
+        this.comp = comp;
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
+    public void actionPerformed(final ActionEvent e) {
+        comp.paste();
     }
 
     @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public boolean isEnabled() {
+        if (comp.isEditable() && comp.isEnabled()) {
+            final Transferable contents = clipboard.getContents(this);
+            return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        } else {
+            return false;
         }
-        super.setModel(dataModel);
     }
 
 }

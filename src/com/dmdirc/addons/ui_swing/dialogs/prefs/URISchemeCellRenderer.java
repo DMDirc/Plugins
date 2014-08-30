@@ -20,52 +20,36 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import javax.annotation.Nonnull;
+import java.awt.Component;
+import java.net.URI;
+
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Table for topics.
+ * URI Scheme cell renderer.
  */
-public class TopicTable extends JTable {
+public class URISchemeCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus,
+            final int row, final int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                row, column);
+        if (value instanceof URI) {
+            setValue(((URI) value).getScheme());
+        } else {
+            setValue(value.toString());
         }
-        super.setModel(dataModel);
+
+        return this;
     }
 
 }

@@ -20,52 +20,35 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import com.dmdirc.FrameContainerComparator;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * Table for topics.
+ * A comparator that proxies TextFrame comparisons to a Frame container comparator if appropriate.
  */
-public class TopicTable extends JTable {
+public class TextFrameComparator implements Comparator<TextFrame>,
+        Serializable {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Comparator to proxy compares to. */
+    private final FrameContainerComparator comparator = new FrameContainerComparator();
 
     /**
-     * Creates a new addon table.
+     * Compares two frame containers names.
+     *
+     * @param item1 The first container to compare
+     * @param item2 The second container to compare
+     *
+     * @return -1 if item1 is before item2, 0 if they're equal, +1 if item1 is after item2.
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
-        }
-        super.setModel(dataModel);
+    public int compare(final TextFrame item1, final TextFrame item2) {
+        return comparator.compare(item1.getContainer(), item2.getContainer());
     }
 
 }

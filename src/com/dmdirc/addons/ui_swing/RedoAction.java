@@ -20,52 +20,52 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.logger.ErrorLevel;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
 /**
- * Table for topics.
+ * Handles redo's on text components.
  */
-public class TopicTable extends JTable {
+public final class RedoAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Undo manager. */
+    private final UndoManager undoManager;
+    /** The event bus to post errors to. */
+    private final DMDircMBassador eventBus;
 
     /**
-     * Creates a new addon table.
+     * Creates a new instance of RedoAction.
+     *
+     * @param eventBus    The event bus to post errors to
+     * @param undoManager UndoManager to use for this redo action
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
+    public RedoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
+        super("Undo");
+
+        this.undoManager = undoManager;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public void actionPerformed(final ActionEvent evt) {
+        try {
+            if (undoManager.canRedo()) {
+                undoManager.redo();
+            }
+        } catch (CannotUndoException ex) {
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to redo", ""));
         }
-        super.setModel(dataModel);
     }
 
 }

@@ -20,52 +20,24 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import java.util.Arrays;
+
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Table for topics.
+ * Renders an array as an inline string.
  */
-public class TopicTable extends JTable {
+public final class ArrayCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
-        }
-        super.setModel(dataModel);
+    public void setValue(final Object value) {
+        final String response = Arrays.toString((String[]) value);
+        setText(response.substring(1, response.length() - 1));
     }
 
 }

@@ -20,52 +20,42 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 
 /**
- * Table for topics.
+ * Nickname copy action.
  */
-public class TopicTable extends JTable {
+public final class NicknameCopyAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
+    /** Nickname to be copied. */
+    private final String nickname;
 
     /**
-     * Creates a new addon table.
+     * Instantiates a new nickname copy action.
+     *
+     * @param clipboard Clipboard to copy from
+     * @param nickname  Nickname to be copied
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
+    public NicknameCopyAction(final Clipboard clipboard, final String nickname) {
+        super("Copy Nickname");
+
+        this.clipboard = clipboard;
+        this.nickname = nickname;
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
-        }
-        super.setModel(dataModel);
+    public void actionPerformed(final ActionEvent e) {
+        clipboard.setContents(new StringSelection(nickname), null);
     }
 
 }

@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
-import com.dmdirc.addons.ui_swing.components.renderers.ReorderableJListCellRenderer;
-
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;

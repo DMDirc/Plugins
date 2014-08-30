@@ -22,56 +22,33 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
-import com.dmdirc.addons.ui_swing.components.PackingTable;
+import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 
-/**
- * Table listing ProgramErrors in the client.
- */
-public class ErrorTable extends PackingTable {
+/** List cell renderer for dates. */
+public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = 3994014806819705247L;
-    /** Icon manager. */
+    private static final long serialVersionUID = 1;
+    /** Icon manager to get icons from. */
     private final IconManager iconManager;
 
     /**
-     * Table listing ProgramErrors in the client.
+     * Creates a new renderer.
      *
      * @param iconManager Icon manager
-     * @param tableModel  Table model
-     * @param scrollPane  Parent scrollpane
      */
-    public ErrorTable(final IconManager iconManager,
-            final ErrorTableModel tableModel, final JScrollPane scrollPane) {
-        super(tableModel, scrollPane, true);
+    public ErrorLevelIconCellRenderer(final IconManager iconManager) {
         this.iconManager = iconManager;
-
-        setAutoCreateRowSorter(true);
-        setAutoCreateColumnsFromModel(true);
-        setColumnSelectionAllowed(false);
-        setCellSelectionEnabled(false);
-        setDragEnabled(false);
-        setFillsViewportHeight(false);
-        setRowSelectionAllowed(true);
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        getRowSorter().toggleSortOrder(0);
-        getTableHeader().setReorderingAllowed(false);
     }
 
     @Override
-    public TableCellRenderer getCellRenderer(final int row,
-            final int column) {
-        switch (column) {
-            case 2:
-                return new ErrorLevelIconCellRenderer(iconManager);
-            default:
-                return super.getCellRenderer(row, column);
-        }
+    public void setValue(final Object value) {
+        setHorizontalAlignment(JLabel.CENTER);
+        setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
     }
 
 }

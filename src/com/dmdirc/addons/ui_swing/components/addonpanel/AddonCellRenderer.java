@@ -20,52 +20,48 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import javax.annotation.Nonnull;
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 /**
- * Table for topics.
+ * Handles the rendering of the JTable used for plugin and theme management.
  */
-public class TopicTable extends JTable {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
-
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
+public class AddonCellRenderer implements TableCellRenderer {
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
+        if (value instanceof AddonCell) {
+            final AddonCell label = (AddonCell) value;
 
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
+            if (isSelected) {
+                label.setBackground(table.getSelectionBackground());
+            } else {
+                label.setBackground(table.getBackground());
+            }
 
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
+            final int height = label.getPreferredSize().height;
+            if (table.getRowHeight(row) != height) {
+                table.setRowHeight(row, height);
+            }
 
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+            if (label.isToggled()) {
+                label.setForeground(Color.BLACK);
+            } else {
+                label.setForeground(Color.GRAY);
+            }
+
+            return label;
+        } else {
+            return new JLabel(value.toString());
         }
-        super.setModel(dataModel);
     }
 
 }

@@ -20,52 +20,51 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.ui.Window;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 
 /**
- * Table for topics.
+ * Executes a command.
  */
-public class TopicTable extends JTable {
+public class CommandAction extends AbstractAction {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
+    /** Command parser. */
+    private final CommandParser parser;
+    /** Window. */
+    private final transient Window window;
+    /** Command. */
+    private final String command;
 
     /**
-     * Creates a new addon table.
+     * Creates a new instance of CommandAction.
+     *
+     * @param parser  Command parser
+     * @param window  Window
+     * @param name    Command name
+     * @param command Command to execute
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
+    public CommandAction(final CommandParser parser, final Window window,
+            final String name, final String command) {
+        super(name);
+
+        this.parser = parser;
+        this.window = window;
+        this.command = command;
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public void actionPerformed(final ActionEvent e) {
+        for (String line : command.split("\n")) {
+            parser.parseCommand(window.getContainer(), line);
         }
-        super.setModel(dataModel);
     }
 
 }

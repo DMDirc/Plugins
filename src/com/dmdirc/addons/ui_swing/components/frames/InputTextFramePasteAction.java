@@ -20,52 +20,52 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 
 /**
- * Table for topics.
+ * Paste action for input frames.
  */
-public class TopicTable extends JTable {
+public final class InputTextFramePasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to paste from. */
+    private final Clipboard clipboard;
+    /** Text component to be acted upon. */
+    private final InputTextFrame inputFrame;
 
     /**
-     * Creates a new addon table.
+     * Instantiates a new paste action.
+     *
+     * @param clipboard Clipboard to paste from
+     * @param inputFrame Component to be acted upon
      */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
+    public InputTextFramePasteAction(final Clipboard clipboard, final InputTextFrame inputFrame) {
+        super("Paste");
+
+        this.clipboard = clipboard;
+        this.inputFrame = inputFrame;
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
+    public void actionPerformed(final ActionEvent e) {
+        inputFrame.doPaste();
     }
 
     @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    @SuppressWarnings("PMD.AvoidCatchingNPE")
+    public boolean isEnabled() {
+        try {
+            return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
+        } catch (NullPointerException | IllegalStateException ex) { //https://bugs.openjdk.java.net/browse/JDK-7000965
+            return false;
         }
-        super.setModel(dataModel);
     }
 
 }

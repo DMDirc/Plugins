@@ -20,52 +20,38 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
+package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import javax.annotation.Nonnull;
+import com.dmdirc.updater.UpdateComponent;
+
+import java.awt.Component;
+
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Table for topics.
+ * Update Component table cell renderer.
  */
-public class TopicTable extends JTable {
+public class UpdateComponentTableCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+        if (value == null) {
+            setValue("Unknown");
+        } else if (value instanceof UpdateComponent) {
+            setValue(((UpdateComponent) value).getFriendlyName());
+        } else {
+            setValue(value.toString());
         }
-        super.setModel(dataModel);
+
+        return this;
     }
 
 }

@@ -22,50 +22,49 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import javax.annotation.Nonnull;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import com.dmdirc.parser.common.ChannelListModeItem;
+
+import java.awt.Component;
+import java.util.Date;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.ListCellRenderer;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * Table for topics.
+ * Extended list mode cell renderer.
  */
-public class TopicTable extends JTable {
+public class ExtendedListModeCellRenderer extends JPanel implements
+        ListCellRenderer<ChannelListModeItem> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
-
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
+    public Component getListCellRendererComponent(final JList<? extends ChannelListModeItem> list,
+            final ChannelListModeItem value, final int index, final boolean isSelected,
+            final boolean cellHasFocus) {
 
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
+        removeAll();
+        setLayout(new MigLayout("fill, ins 0"));
 
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+        } else {
+            setBackground(list.getBackground());
         }
-        super.setModel(dataModel);
+
+        add(new JLabel(value.getItem()), "split 2, growx, pushx, gapleft 3");
+        add(new JLabel(new Date(value.getTime() * 1000).toString()),
+                "right, wrap, gapright 3");
+        add(new JLabel(value.getOwner()), "growx, pushx, wrap, gapleft 3");
+        add(new JSeparator(), "growx, pushx");
+
+        return this;
     }
 
 }

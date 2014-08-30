@@ -22,50 +22,42 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import javax.annotation.Nonnull;
+import java.awt.Component;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * Table for topics.
+ * Topic list cell renderer.
  */
-public class TopicTable extends JTable {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
-
-    /**
-     * Creates a new addon table.
-     */
-    public TopicTable() {
-        super(new DefaultTableModel(0, 1));
-        setTableHeader(null);
-    }
+public class TopicCellRenderer implements TableCellRenderer {
 
     @Override
-    public boolean isCellEditable(final int row, final int column) {
-        return false;
-    }
-
-    @Override
-    public TableCellRenderer getCellRenderer(final int row, final int column) {
-        return new TopicCellRenderer();
-    }
-
-    @Override
-    public DefaultTableModel getModel() {
-        return (DefaultTableModel) super.getModel();
-    }
-
-    @Override
-    public void setModel(@Nonnull final TableModel dataModel) {
-        if (!(dataModel instanceof DefaultTableModel)) {
-            throw new IllegalArgumentException(
-                    "Data model must be of type DefaultTableModel");
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected, final boolean hasFocus,
+            final int row, final int column) {
+        final JPanel panel;
+        if (value instanceof TopicLabel) {
+            final TopicLabel label = (TopicLabel) value;
+            panel = label;
+            if (isSelected) {
+                label.setBackground(UIManager.getColor(
+                        "Table.selectionBackground"));
+            } else {
+                label.setBackground(UIManager.getColor(
+                        "Table.background"));
+            }
+        } else {
+            panel = new JPanel(new MigLayout());
+            panel.add(new JLabel(value.toString()));
         }
-        super.setModel(dataModel);
+        table.setRowHeight(row, panel.getPreferredSize().height);
+        return panel;
     }
 
 }
