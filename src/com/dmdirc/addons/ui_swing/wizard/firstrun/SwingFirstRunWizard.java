@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -99,11 +98,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
                 ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
-        if (Apple.isAppleUI()) {
-            wizardDialog.setMinimumSize(new Dimension(400, 500));
-        } else {
-            wizardDialog.setMinimumSize(new Dimension(400, 500));
-        }
+        wizardDialog.setMinimumSize(new Dimension(400, 500));
     }
 
     @Override

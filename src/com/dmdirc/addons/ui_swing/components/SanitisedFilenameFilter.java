@@ -32,7 +32,7 @@ import javax.swing.text.DocumentFilter;
 public class SanitisedFilenameFilter extends DocumentFilter {
 
     /** Invalid filename characters. */
-    private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-\\#\\&\\_]";
+    private static final String INVALID_CHARS = "^[^\\w\\.\\s\\-#&_]";
 
     @Override
     public void insertString(final DocumentFilter.FilterBypass fb,

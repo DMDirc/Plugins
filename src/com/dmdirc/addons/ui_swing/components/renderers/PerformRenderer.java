@@ -55,10 +55,10 @@ public class PerformRenderer extends DMDircListCellRenderer<PerformDescription> 
         final String type = value.getType().toString();
         String friendlyText = type + " perform (" + target + ") ";
 
-        if (profile != null) {
-            friendlyText += "This profile (" + profile + ")";
-        } else {
+        if (profile == null) {
             friendlyText += "Any profile";
+        } else {
+            friendlyText += "This profile (" + profile + ")";
         }
         label.setText(friendlyText);
     }

@@ -75,10 +75,10 @@ public class WizardDialog extends StandardDialog implements ActionListener {
     @Override
     public void display() {
         wizard.display();
-        if (parentWindow != null) {
-            setLocationRelativeTo(parentWindow);
-        } else {
+        if (parentWindow == null) {
             CoreUIUtils.centreWindow(this);
+        } else {
+            setLocationRelativeTo(parentWindow);
         }
         addWindowListener(new WindowAdapter() {
 

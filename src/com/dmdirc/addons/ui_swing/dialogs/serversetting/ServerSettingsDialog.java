@@ -165,26 +165,25 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
     /** Saves the settings from this dialog. */
     public void saveSettings() {
-        if (connection.getState() != ServerState.CONNECTED) {
-            new StandardQuestionDialog(getOwner(),
-                    ModalityType.MODELESS,
-                    "Server has been disconnected.", "Any changes you have "
-                    + "made will be lost, are you sure you want to close this " + "dialog?") {
-                        private static final long serialVersionUID = 1;
-
-                        @Override
-                        public boolean save() {
-                            ServerSettingsDialog.this.dispose();
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            //Ignore
-                        }
-                    }.display();
-        } else {
+        if (connection.getState() == ServerState.CONNECTED) {
             closeAndSave();
+        } else {
+            new StandardQuestionDialog(getOwner(), ModalityType.MODELESS,
+                    "Server has been disconnected.", "Any changes you have " +
+                    "made will be lost, are you sure you want to close this " + "dialog?") {
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean save() {
+                    ServerSettingsDialog.this.dispose();
+                    return true;
+                }
+
+                @Override
+                public void cancelled() {
+                    //Ignore
+                }
+            }.display();
         }
     }
 
