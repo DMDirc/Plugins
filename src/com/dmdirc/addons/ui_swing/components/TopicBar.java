@@ -56,10 +56,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -141,7 +142,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         updateOptions();
         errorIcon = new JLabel(iconManager.getIcon("input-error"));
         topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
-        ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
+        ((AbstractDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
         topicText.getActionMap().put("paste-from-clipboard",
@@ -160,8 +161,8 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         handler.setTabCompleter(channel.getTabCompleter());
 
         final JScrollPane sp = new JScrollPane(topicText);
-        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         setLayout(new MigLayout("fillx, ins 0, hidemode 3"));
         add(sp, "growx, pushx");
@@ -367,7 +368,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      */
     private void applyAttributes() {
         setAttributes();
-        ((DefaultStyledDocument) topicText.getDocument())
+        ((StyledDocument) topicText.getDocument())
                 .setCharacterAttributes(0, Integer.MAX_VALUE, as, true);
     }
 
@@ -445,7 +446,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         cancelTopicEdit();
         if ("showfulltopic".equals(key)) {
             topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
-            ((DefaultStyledDocument) topicText.getDocument()).setDocumentFilter(
+            ((AbstractDocument) topicText.getDocument()).setDocumentFilter(
                     new NewlinesDocumentFilter());
             topicChanged(channel, null);
         }
