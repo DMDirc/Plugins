@@ -20,35 +20,52 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.ui.IconManager;
 
-import javax.swing.JLabel;
-import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.event.ActionEvent;
 
-/** List cell renderer for dates. */
-public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
+import javax.swing.AbstractAction;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
-    /** Serial version UID. */
+/**
+ * Handles redo's on text components.
+ */
+public final class RedoAction extends AbstractAction {
+
+    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Icon manager to get icons from. */
-    private final IconManager iconManager;
+    /** Undo manager. */
+    private final UndoManager undoManager;
+    /** The event bus to post errors to. */
+    private final DMDircMBassador eventBus;
 
     /**
-     * Creates a new renderer.
+     * Creates a new instance of RedoAction.
      *
-     * @param iconManager Icon manager
+     * @param eventBus    The event bus to post errors to
+     * @param undoManager UndoManager to use for this redo action
      */
-    public ErrorLevelIconCellRenderer(final IconManager iconManager) {
-        this.iconManager = iconManager;
+    public RedoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
+        super("Undo");
+
+        this.undoManager = undoManager;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public void setValue(final Object value) {
-        setHorizontalAlignment(JLabel.CENTER);
-        setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
+    public void actionPerformed(final ActionEvent evt) {
+        try {
+            if (undoManager.canRedo()) {
+                undoManager.redo();
+            }
+        } catch (CannotUndoException ex) {
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to redo", ""));
+        }
     }
 
 }

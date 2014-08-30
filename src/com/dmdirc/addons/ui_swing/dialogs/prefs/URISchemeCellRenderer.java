@@ -20,36 +20,36 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.interfaces.actions.ActionType;
+import java.awt.Component;
+import java.net.URI;
 
-import java.awt.Color;
-import java.awt.Font;
-
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Displays actions types and headers in a pretty fashion.
+ * URI Scheme cell renderer.
  */
-public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer {
+public class URISchemeCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     @Override
-    public void setValue(final Object value) {
-        if (value == null) {
-            setText("");
-        } else if (value instanceof String && !((String) value).isEmpty()) {
-            setBackground(Color.GRAY);
-            setFont(getFont().deriveFont(Font.BOLD));
-            setText(value.toString());
-        } else if (value instanceof ActionType) {
-            setText(((ActionType) value).getName());
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus,
+            final int row, final int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                row, column);
+        if (value instanceof URI) {
+            setValue(((URI) value).getScheme());
         } else {
-            setText(value.toString());
+            setValue(value.toString());
         }
+
+        return this;
     }
 
 }

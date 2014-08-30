@@ -20,42 +20,35 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
+import com.dmdirc.FrameContainerComparator;
 
-import javax.swing.AbstractAction;
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * hyperlink copy action.
+ * A comparator that proxies TextFrame comparisons to a Frame container comparator if appropriate.
  */
-public final class HyperlinkCopyAction extends AbstractAction {
+public class TextFrameComparator implements Comparator<TextFrame>,
+        Serializable {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Clipboard to copy from. */
-    private final Clipboard clipboard;
-    /** hyperlink to be copied. */
-    private final String hyperlink;
+    /** Comparator to proxy compares to. */
+    private final FrameContainerComparator comparator = new FrameContainerComparator();
 
     /**
-     * Instantiates a new hyperlink copy action.
+     * Compares two frame containers names.
      *
-     * @param clipboard Clipboard to copy from
-     * @param hyperlink hyperlink to be copied
+     * @param item1 The first container to compare
+     * @param item2 The second container to compare
+     *
+     * @return -1 if item1 is before item2, 0 if they're equal, +1 if item1 is after item2.
      */
-    public HyperlinkCopyAction(final Clipboard clipboard, final String hyperlink) {
-        super("Copy hyperlink");
-
-        this.clipboard = clipboard;
-        this.hyperlink = hyperlink;
-    }
-
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        clipboard.setContents(new StringSelection(hyperlink), null);
+    public int compare(final TextFrame item1, final TextFrame item2) {
+        return comparator.compare(item1.getContainer(), item2.getContainer());
     }
 
 }

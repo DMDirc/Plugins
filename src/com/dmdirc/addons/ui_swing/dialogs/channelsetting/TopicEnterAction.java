@@ -20,37 +20,33 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.actions.ActionCondition;
-import com.dmdirc.actions.CoreActionComparison;
+import java.awt.event.ActionEvent;
 
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.AbstractAction;
 
-/**
- * Renders an action condition in plain english.
- */
-public final class ActionConditionCellRenderer extends DefaultTableCellRenderer {
+/** Closes and saves the topic when enter is pressed. */
+public class TopicEnterAction extends AbstractAction {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 1;
+    /** Parent pane. */
+    private final ChannelSettingsDialog parent;
+
+    /**
+     * Creates a new topic enter action with the associated parent.
+     *
+     * @param parent Parent dialog
+     */
+    public TopicEnterAction(final ChannelSettingsDialog parent) {
+        super("TopicEnterAction");
+        this.parent = parent;
+    }
 
     @Override
-    public void setValue(final Object value) {
-        if (value == null) {
-            setText("Any");
-            return;
-        }
-
-        final ActionCondition condition = (ActionCondition) value;
-
-        if (condition.getComparison() == CoreActionComparison.INT_EQUALS
-                || condition.getComparison() == CoreActionComparison.INT_GREATER
-                || condition.getComparison() == CoreActionComparison.INT_LESS) {
-            setText(condition.getComparison().getName() + " " + condition.getTarget());
-        } else {
-            setText(value.toString());
-        }
+    public void actionPerformed(final ActionEvent e) {
+        parent.save();
     }
 
 }

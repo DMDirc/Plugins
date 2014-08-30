@@ -20,36 +20,44 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import java.awt.Component;
-import java.net.URI;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * URI Scheme cell renderer.
+ * Topic list cell renderer.
  */
-public class URISchemeCellRenderer extends DefaultTableCellRenderer {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
+public class TopicCellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(final JTable table,
-            final Object value, final boolean isSelected,
-            final boolean hasFocus,
+            final Object value, final boolean isSelected, final boolean hasFocus,
             final int row, final int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                row, column);
-        if (value instanceof URI) {
-            setValue(((URI) value).getScheme());
+        final JPanel panel;
+        if (value instanceof TopicLabel) {
+            final TopicLabel label = (TopicLabel) value;
+            panel = label;
+            if (isSelected) {
+                label.setBackground(UIManager.getColor(
+                        "Table.selectionBackground"));
+            } else {
+                label.setBackground(UIManager.getColor(
+                        "Table.background"));
+            }
         } else {
-            setValue(value.toString());
+            panel = new JPanel(new MigLayout());
+            panel.add(new JLabel(value.toString()));
         }
-
-        return this;
+        table.setRowHeight(row, panel.getPreferredSize().height);
+        return panel;
     }
 
 }

@@ -20,42 +20,51 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.ui.Window;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 /**
- * Channel copy action.
+ * Executes a command.
  */
-public final class ChannelCopyAction extends AbstractAction {
+public class CommandAction extends AbstractAction {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 1;
-    /** Clipboard to copy from. */
-    private final Clipboard clipboard;
-    /** channel to be copied. */
-    private final String channel;
+    private static final long serialVersionUID = 2;
+    /** Command parser. */
+    private final CommandParser parser;
+    /** Window. */
+    private final transient Window window;
+    /** Command. */
+    private final String command;
 
     /**
-     * Instantiates a new channel copy action.
+     * Creates a new instance of CommandAction.
      *
-     * @param clipboard Clipboard to copy from
-     * @param channel channel to be copied
+     * @param parser  Command parser
+     * @param window  Window
+     * @param name    Command name
+     * @param command Command to execute
      */
-    public ChannelCopyAction(final Clipboard clipboard, final String channel) {
-        super("Copy channel");
+    public CommandAction(final CommandParser parser, final Window window,
+            final String name, final String command) {
+        super(name);
 
-        this.clipboard = clipboard;
-        this.channel = channel;
+        this.parser = parser;
+        this.window = window;
+        this.command = command;
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        clipboard.setContents(new StringSelection(channel), null);
+        for (String line : command.split("\n")) {
+            parser.parseCommand(window.getContainer(), line);
+        }
     }
 
 }

@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
-import com.dmdirc.addons.ui_swing.actions.PasteAction;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 import com.dmdirc.events.ClientKeyPressedEvent;
 

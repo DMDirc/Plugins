@@ -20,50 +20,55 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.addons.ui_swing.components.addonpanel.AddonCell;
-
-import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Handles the rendering of the JTable used for plugin and theme management.
+ * URI Scheme cell renderer.
  */
-public class AddonCellRenderer implements TableCellRenderer {
+public class URIHandlerCellRenderer extends DefaultTableCellRenderer {
+
+    /** A version number for this class. */
+    private static final long serialVersionUID = 1;
 
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,
-            final boolean hasFocus, final int row, final int column) {
-        if (value instanceof AddonCell) {
-            final AddonCell label = (AddonCell) value;
-
-            if (isSelected) {
-                label.setBackground(table.getSelectionBackground());
-            } else {
-                label.setBackground(table.getBackground());
-            }
-
-            final int height = label.getPreferredSize().height;
-            if (table.getRowHeight(row) != height) {
-                table.setRowHeight(row, height);
-            }
-
-            if (label.isToggled()) {
-                label.setForeground(Color.BLACK);
-            } else {
-                label.setForeground(Color.GRAY);
-            }
-
-            return label;
-        } else {
-            return new JLabel(value.toString());
+            final boolean hasFocus,
+            final int row, final int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                row, column);
+        if (!(value instanceof String)) {
+            setValue(value.toString());
+            return this;
         }
+
+        String handler = (String) value;
+        switch (handler) {
+            case "DMDIRC":
+                handler = "Handle internally (irc links only).";
+                break;
+            case "BROWSER":
+                handler = "Use browser (or system registered handler).";
+                break;
+            case "MAIL":
+                handler = "Use mail client.";
+                break;
+            case "":
+                handler = "No handler.";
+                break;
+            default:
+                handler = "Custom command: " + handler;
+                break;
+        }
+
+        setValue(handler);
+
+        return this;
     }
 
 }

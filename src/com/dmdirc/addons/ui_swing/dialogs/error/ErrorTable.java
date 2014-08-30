@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.error;
 
 import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.components.renderers.ErrorLevelIconCellRenderer;
 import com.dmdirc.ui.IconManager;
 
 import javax.swing.JScrollPane;

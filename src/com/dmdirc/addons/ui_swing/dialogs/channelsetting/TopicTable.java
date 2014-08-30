@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.addons.ui_swing.components.renderers.TopicCellRenderer;
-
 import javax.annotation.Nonnull;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;

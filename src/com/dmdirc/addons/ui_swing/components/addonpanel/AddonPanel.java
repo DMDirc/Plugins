@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
-import com.dmdirc.addons.ui_swing.components.renderers.AddonCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
 

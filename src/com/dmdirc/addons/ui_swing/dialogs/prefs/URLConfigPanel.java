@@ -26,8 +26,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
-import com.dmdirc.addons.ui_swing.components.renderers.URIHandlerCellRenderer;
-import com.dmdirc.addons.ui_swing.components.renderers.URISchemeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.prefs.PreferencesInterface;

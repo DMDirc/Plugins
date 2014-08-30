@@ -20,38 +20,48 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.updater.UpdateComponent;
-
+import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 /**
- * Update Component table cell renderer.
+ * Handles the rendering of the JTable used for plugin and theme management.
  */
-public class UpdateComponentTableCellRenderer extends DefaultTableCellRenderer {
-
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
+public class AddonCellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(final JTable table,
             final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        if (value instanceof AddonCell) {
+            final AddonCell label = (AddonCell) value;
 
-        if (value == null) {
-            setValue("Unknown");
-        } else if (value instanceof UpdateComponent) {
-            setValue(((UpdateComponent) value).getFriendlyName());
+            if (isSelected) {
+                label.setBackground(table.getSelectionBackground());
+            } else {
+                label.setBackground(table.getBackground());
+            }
+
+            final int height = label.getPreferredSize().height;
+            if (table.getRowHeight(row) != height) {
+                table.setRowHeight(row, height);
+            }
+
+            if (label.isToggled()) {
+                label.setForeground(Color.BLACK);
+            } else {
+                label.setForeground(Color.GRAY);
+            }
+
+            return label;
         } else {
-            setValue(value.toString());
+            return new JLabel(value.toString());
         }
-
-        return this;
     }
 
 }

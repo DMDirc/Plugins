@@ -20,45 +20,51 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
+import com.dmdirc.parser.common.ChannelListModeItem;
+
+import java.awt.Component;
 import java.util.Date;
 
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.ListCellRenderer;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
- * List cell renderer for dates.
+ * Extended list mode cell renderer.
  */
-public final class DateCellRenderer extends DefaultTableCellRenderer {
+public class ExtendedListModeCellRenderer extends JPanel implements
+        ListCellRenderer<ChannelListModeItem> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     @Override
-    public void setValue(final Object value) {
-        setText(duration((new Date().getTime() - ((Date) value).getTime()) / 1000));
-    }
+    public Component getListCellRendererComponent(final JList<? extends ChannelListModeItem> list,
+            final ChannelListModeItem value, final int index, final boolean isSelected,
+            final boolean cellHasFocus) {
 
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = secondsInput / 3600;
-        final long minutes = secondsInput / 60 % 60;
-        //final long seconds = secondsInput % 60;
+        removeAll();
+        setLayout(new MigLayout("fill, ins 0"));
 
-        if (hours > 0) {
-            result.append(hours).append("h ");
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+        } else {
+            setBackground(list.getBackground());
         }
 
-        result.append(minutes).append("m");
+        add(new JLabel(value.getItem()), "split 2, growx, pushx, gapleft 3");
+        add(new JLabel(new Date(value.getTime() * 1000).toString()),
+                "right, wrap, gapright 3");
+        add(new JLabel(value.getOwner()), "growx, pushx, wrap, gapleft 3");
+        add(new JSeparator(), "growx, pushx");
 
-        return result.toString();
+        return this;
     }
 
 }

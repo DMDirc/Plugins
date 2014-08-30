@@ -20,54 +20,24 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
-import javax.swing.AbstractAction;
-import javax.swing.text.JTextComponent;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Paste action.
+ * Renders an array as an inline string.
  */
-public final class PasteAction extends AbstractAction {
+public final class ArrayCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Clipboard to paste with. */
-    private final Clipboard clipboard;
-    /** Text component to be acted upon. */
-    private final JTextComponent comp;
-
-    /**
-     * Instantiates a new paste action.
-     *
-     * @param clipboard Clipboard to paste with
-     * @param comp      Component to be acted upon
-     */
-    public PasteAction(final Clipboard clipboard, final JTextComponent comp) {
-        super("Paste");
-
-        this.clipboard = clipboard;
-        this.comp = comp;
-    }
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        comp.paste();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        if (comp.isEditable() && comp.isEnabled()) {
-            final Transferable contents = clipboard.getContents(this);
-            return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-        } else {
-            return false;
-        }
+    public void setValue(final Object value) {
+        final String response = Arrays.toString((String[]) value);
+        setText(response.substring(1, response.length() - 1));
     }
 
 }

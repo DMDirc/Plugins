@@ -20,41 +20,35 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.error;
 
-import com.dmdirc.interfaces.actions.ActionComparison;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.ui.IconManager;
 
 import javax.swing.JLabel;
-import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 
-/**
- * Renders an action comparison in plain English.
- */
-public final class ActionComparisonCellRenderer extends DMDircListCellRenderer<Object> {
+/** List cell renderer for dates. */
+public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
 
-    /**
-     * A version number for this class.
-     */
+    /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Icon manager to get icons from. */
+    private final IconManager iconManager;
 
     /**
-     * Creates a new instance of this renderer.
+     * Creates a new renderer.
      *
-     * @param renderer Parent renderer
+     * @param iconManager Icon manager
      */
-    public ActionComparisonCellRenderer(final ListCellRenderer<? super Object> renderer) {
-        super(renderer);
+    public ErrorLevelIconCellRenderer(final IconManager iconManager) {
+        this.iconManager = iconManager;
     }
 
     @Override
-    protected void renderValue(final JLabel label, final Object value,
-            final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-        if (value == null) {
-            label.setText("Any");
-        } else {
-            label.setText(((ActionComparison) value).getName());
-        }
+    public void setValue(final Object value) {
+        setHorizontalAlignment(JLabel.CENTER);
+        setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
     }
 
 }

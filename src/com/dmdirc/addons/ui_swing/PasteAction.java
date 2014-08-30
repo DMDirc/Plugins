@@ -20,35 +20,54 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.text.JTextComponent;
 
-/** Closes and saves the topic when enter is pressed. */
-public class TopicEnterAction extends AbstractAction {
+/**
+ * Paste action.
+ */
+public final class PasteAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Parent pane. */
-    private final ChannelSettingsDialog parent;
+    /** Clipboard to paste with. */
+    private final Clipboard clipboard;
+    /** Text component to be acted upon. */
+    private final JTextComponent comp;
 
     /**
-     * Creates a new topic enter action with the associated parent.
+     * Instantiates a new paste action.
      *
-     * @param parent Parent dialog
+     * @param clipboard Clipboard to paste with
+     * @param comp      Component to be acted upon
      */
-    public TopicEnterAction(final ChannelSettingsDialog parent) {
-        super("TopicEnterAction");
-        this.parent = parent;
+    public PasteAction(final Clipboard clipboard, final JTextComponent comp) {
+        super("Paste");
+
+        this.clipboard = clipboard;
+        this.comp = comp;
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        parent.save();
+        comp.paste();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        if (comp.isEditable() && comp.isEnabled()) {
+            final Transferable contents = clipboard.getContents(this);
+            return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        } else {
+            return false;
+        }
     }
 
 }

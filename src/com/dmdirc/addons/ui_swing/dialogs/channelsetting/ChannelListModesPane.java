@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.renderers.ExtendedListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;

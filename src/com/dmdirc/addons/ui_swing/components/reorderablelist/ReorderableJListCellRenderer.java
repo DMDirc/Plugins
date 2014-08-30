@@ -20,9 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
-
-import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
+package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
 import java.awt.Component;
 

@@ -26,8 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.components.renderers.UpdateComponentTableCellRenderer;
-import com.dmdirc.addons.ui_swing.components.renderers.UpdateStatusTableCellRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;

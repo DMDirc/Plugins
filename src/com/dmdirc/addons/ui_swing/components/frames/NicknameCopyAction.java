@@ -20,36 +20,42 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainerComparator;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
 
-import java.io.Serializable;
-import java.util.Comparator;
+import javax.swing.AbstractAction;
 
 /**
- * A comparator that proxies TextFrame comparisons to a Frame container comparator if appropriate.
+ * Nickname copy action.
  */
-public class TextFrameComparator implements Comparator<TextFrame>,
-        Serializable {
+public final class NicknameCopyAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Comparator to proxy compares to. */
-    private final FrameContainerComparator comparator = new FrameContainerComparator();
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
+    /** Nickname to be copied. */
+    private final String nickname;
 
     /**
-     * Compares two frame containers names.
+     * Instantiates a new nickname copy action.
      *
-     * @param item1 The first container to compare
-     * @param item2 The second container to compare
-     *
-     * @return -1 if item1 is before item2, 0 if they're equal, +1 if item1 is after item2.
+     * @param clipboard Clipboard to copy from
+     * @param nickname  Nickname to be copied
      */
+    public NicknameCopyAction(final Clipboard clipboard, final String nickname) {
+        super("Copy Nickname");
+
+        this.clipboard = clipboard;
+        this.nickname = nickname;
+    }
+
     @Override
-    public int compare(final TextFrame item1, final TextFrame item2) {
-        return comparator.compare(item1.getContainer(), item2.getContainer());
+    public void actionPerformed(final ActionEvent e) {
+        clipboard.setContents(new StringSelection(nickname), null);
     }
 
 }

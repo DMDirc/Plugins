@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
@@ -33,9 +33,9 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 /**
- * Handles redo's on text components.
+ * Handles undo's on text components.
  */
-public final class RedoAction extends AbstractAction {
+public final class UndoAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -45,12 +45,12 @@ public final class RedoAction extends AbstractAction {
     private final DMDircMBassador eventBus;
 
     /**
-     * Creates a new instance of RedoAction.
+     * Creates a new instance of UndoAction.
      *
      * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public RedoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
+    public UndoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;
@@ -60,11 +60,11 @@ public final class RedoAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent evt) {
         try {
-            if (undoManager.canRedo()) {
-                undoManager.redo();
+            if (undoManager.canUndo()) {
+                undoManager.undo();
             }
         } catch (CannotUndoException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to redo", ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to undo", ""));
         }
     }
 
