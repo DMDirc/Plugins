@@ -48,7 +48,6 @@ import java.awt.event.ActionListener;
 import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JSplitPane;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -121,24 +120,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     }
 
     /**
-     * Retrieves this channel frame's nicklist component.
-     *
-     * @return This channel's nicklist
-     */
-    public NickList getNickList() {
-        return nicklist;
-    }
-
-    /**
-     * Returns the topic bar for this channel frame.
-     *
-     * @return Topic bar or null if none exists
-     */
-    public TopicBar getTopicBar() {
-        return topicBar;
-    }
-
-    /**
      * Initialises the components in this frame.
      *
      * @param topicBarFactory The factory to use to produce topic bars.
@@ -180,15 +161,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         if (actionEvent.getSource() == settingsMI) {
             dialogProvider.displayOrRequestFocus((Channel) getContainer());
         }
-    }
-
-    /**
-     * Returns the splitpane.
-     *
-     * @return nicklist JSplitPane
-     */
-    public JSplitPane getSplitPane() {
-        return splitPane;
     }
 
     @Override
@@ -258,7 +230,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getConnection().getState().equals(ServerState.CONNECTED)) {
+        if (channel.getConnection().getState() == ServerState.CONNECTED) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);

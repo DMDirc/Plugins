@@ -22,18 +22,16 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Query;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.util.Collection;
-
-import javax.inject.Inject;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -42,27 +40,26 @@ import net.engio.mbassy.listener.Handler;
  */
 public class ContactListListener implements NicklistListener {
 
-    /** The channel this listener is for. */
-    private final Channel channel;
+    /** The group chat this listener is for. */
+    private final GroupChat groupChat;
     /** Event bus to register listeners with. */
     private final DMDircMBassador eventBus;
 
     /**
-     * Creates a new ContactListListener for the specified channel.
+     * Creates a new ContactListListener for the specified group chat.
      *
-     * @param channel The channel to show a contact list for
+     * @param groupChat The group chat to show a contact list for
      */
-    @Inject
-    public ContactListListener(final Channel channel) {
-        this.channel = channel;
-        this.eventBus = channel.getEventBus();
+    public ContactListListener(final GroupChat groupChat) {
+        this.groupChat = groupChat;
+        this.eventBus = groupChat.getEventBus();
     }
 
     /**
      * Adds all necessary listeners for this contact list listener to function.
      */
     public void addListeners() {
-        channel.addNicklistListener(this);
+        groupChat.addNicklistListener(this);
         eventBus.subscribe(this);
     }
 
@@ -70,7 +67,7 @@ public class ContactListListener implements NicklistListener {
      * Removes the listeners added by {@link #addListeners()}.
      */
     public void removeListeners() {
-        channel.removeNicklistListener(this);
+        groupChat.removeNicklistListener(this);
         eventBus.unsubscribe(this);
     }
 
@@ -88,7 +85,7 @@ public class ContactListListener implements NicklistListener {
 
     @Override
     public void clientAdded(final ChannelClientInfo client) {
-        final Query query = channel.getConnection().
+        final Query query = groupChat.getConnection().
                 getQuery(client.getClient().getNickname(), false);
 
         query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
