@@ -27,6 +27,7 @@ import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.interfaces.actions.ActionType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -39,27 +40,17 @@ public class ActionTableModel extends AbstractTableModel {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Action list. */
-    private List<Action> actions;
-
-    /**
-     * Instantiates a new table model.
-     */
-    public ActionTableModel() {
-        this(new ArrayList<Action>());
-    }
+    private final List<Action> actions;
 
     /**
      * Instantiates a new table model.
      *
      * @param actions Actions to show
      */
-    public ActionTableModel(final List<Action> actions) {
-        super();
-
-        if (actions == null) {
-            this.actions = new ArrayList<>();
-        } else {
-            this.actions = actions;
+    public ActionTableModel(final Collection<Action> actions) {
+        this.actions = new ArrayList<>();
+        if (actions != null) {
+            actions.addAll(actions);
         }
     }
 
@@ -152,10 +143,9 @@ public class ActionTableModel extends AbstractTableModel {
      */
     public void setActionGroup(final ActionGroup group) {
         synchronized (actions) {
-            if (group == null) {
-                actions = new ArrayList<>();
-            } else {
-                actions = group.getActions();
+            actions.clear();
+            if (group != null) {
+                actions.addAll(group.getActions());
             }
             fireTableDataChanged();
         }
