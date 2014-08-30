@@ -20,50 +20,51 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.actions;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.interfaces.ui.Window;
-
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 /**
- * Executes a command.
+ * Paste action for input frames.
  */
-public class CommandAction extends AbstractAction {
+public final class InputTextFramePasteAction extends AbstractAction {
 
     /** A version number for this class. */
-    private static final long serialVersionUID = 2;
-    /** Command parser. */
-    private final CommandParser parser;
-    /** Window. */
-    private final transient Window window;
-    /** Command. */
-    private final String command;
+    private static final long serialVersionUID = 1;
+    /** Clipboard to paste from. */
+    private final Clipboard clipboard;
+    /** Text component to be acted upon. */
+    private final InputTextFrame inputFrame;
 
     /**
-     * Creates a new instance of CommandAction.
+     * Instantiates a new paste action.
      *
-     * @param parser  Command parser
-     * @param window  Window
-     * @param name    Command name
-     * @param command Command to execute
+     * @param clipboard Clipboard to paste from
+     * @param inputFrame Component to be acted upon
      */
-    public CommandAction(final CommandParser parser, final Window window,
-            final String name, final String command) {
-        super(name);
+    public InputTextFramePasteAction(final Clipboard clipboard, final InputTextFrame inputFrame) {
+        super("Paste");
 
-        this.parser = parser;
-        this.window = window;
-        this.command = command;
+        this.clipboard = clipboard;
+        this.inputFrame = inputFrame;
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        for (String line : command.split("\n")) {
-            parser.parseCommand(window.getContainer(), line);
+        inputFrame.doPaste();
+    }
+
+    @Override
+    @SuppressWarnings("PMD.AvoidCatchingNPE")
+    public boolean isEnabled() {
+        try {
+            return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
+        } catch (NullPointerException | IllegalStateException ex) { //https://bugs.openjdk.java.net/browse/JDK-7000965
+            return false;
         }
     }
 

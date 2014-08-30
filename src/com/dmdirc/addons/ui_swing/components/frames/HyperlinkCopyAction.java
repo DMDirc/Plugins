@@ -20,7 +20,42 @@
  * SOFTWARE.
  */
 
+package com.dmdirc.addons.ui_swing.components.frames;
+
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
 /**
- * Actions for the UI.
+ * hyperlink copy action.
  */
-package com.dmdirc.addons.ui_swing.actions;
+public final class HyperlinkCopyAction extends AbstractAction {
+
+    /** A version number for this class. */
+    private static final long serialVersionUID = 1;
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
+    /** hyperlink to be copied. */
+    private final String hyperlink;
+
+    /**
+     * Instantiates a new hyperlink copy action.
+     *
+     * @param clipboard Clipboard to copy from
+     * @param hyperlink hyperlink to be copied
+     */
+    public HyperlinkCopyAction(final Clipboard clipboard, final String hyperlink) {
+        super("Copy hyperlink");
+
+        this.clipboard = clipboard;
+        this.hyperlink = hyperlink;
+    }
+
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        clipboard.setContents(new StringSelection(hyperlink), null);
+    }
+
+}

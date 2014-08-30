@@ -20,55 +20,36 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.actionsmanager;
 
-import java.awt.Component;
+import com.dmdirc.interfaces.actions.ActionType;
 
-import javax.swing.JTable;
+import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * URI Scheme cell renderer.
+ * Displays actions types and headers in a pretty fashion.
  */
-public class URIHandlerCellRenderer extends DefaultTableCellRenderer {
+public final class ActionTypeTableCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     @Override
-    public Component getTableCellRendererComponent(final JTable table,
-            final Object value, final boolean isSelected,
-            final boolean hasFocus,
-            final int row, final int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                row, column);
-        if (!(value instanceof String)) {
-            setValue(value.toString());
-            return this;
+    public void setValue(final Object value) {
+        if (value == null) {
+            setText("");
+        } else if (value instanceof String && !((String) value).isEmpty()) {
+            setBackground(Color.GRAY);
+            setFont(getFont().deriveFont(Font.BOLD));
+            setText(value.toString());
+        } else if (value instanceof ActionType) {
+            setText(((ActionType) value).getName());
+        } else {
+            setText(value.toString());
         }
-
-        String handler = (String) value;
-        switch (handler) {
-            case "DMDIRC":
-                handler = "Handle internally (irc links only).";
-                break;
-            case "BROWSER":
-                handler = "Use browser (or system registered handler).";
-                break;
-            case "MAIL":
-                handler = "Use mail client.";
-                break;
-            case "":
-                handler = "No handler.";
-                break;
-            default:
-                handler = "Custom command: " + handler;
-                break;
-        }
-
-        setValue(handler);
-
-        return this;
     }
 
 }

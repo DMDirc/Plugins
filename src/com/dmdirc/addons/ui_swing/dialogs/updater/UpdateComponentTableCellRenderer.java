@@ -20,49 +20,36 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.parser.common.ChannelListModeItem;
+import com.dmdirc.updater.UpdateComponent;
 
 import java.awt.Component;
-import java.util.Date;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.ListCellRenderer;
-
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * Extended list mode cell renderer.
+ * Update Component table cell renderer.
  */
-public class ExtendedListModeCellRenderer extends JPanel implements
-        ListCellRenderer<ChannelListModeItem> {
+public class UpdateComponentTableCellRenderer extends DefaultTableCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
 
     @Override
-    public Component getListCellRendererComponent(final JList<? extends ChannelListModeItem> list,
-            final ChannelListModeItem value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
+    public Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        removeAll();
-        setLayout(new MigLayout("fill, ins 0"));
-
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
+        if (value == null) {
+            setValue("Unknown");
+        } else if (value instanceof UpdateComponent) {
+            setValue(((UpdateComponent) value).getFriendlyName());
         } else {
-            setBackground(list.getBackground());
+            setValue(value.toString());
         }
-
-        add(new JLabel(value.getItem()), "split 2, growx, pushx, gapleft 3");
-        add(new JLabel(new Date(value.getTime() * 1000).toString()),
-                "right, wrap, gapright 3");
-        add(new JLabel(value.getOwner()), "growx, pushx, wrap, gapleft 3");
-        add(new JSeparator(), "growx, pushx");
 
         return this;
     }

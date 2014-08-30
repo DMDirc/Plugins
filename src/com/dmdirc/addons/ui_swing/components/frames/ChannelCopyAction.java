@@ -20,24 +20,42 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.ui_swing.components.frames;
 
-import java.util.Arrays;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
 
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.AbstractAction;
 
 /**
- * Renders an array as an inline string.
+ * Channel copy action.
  */
-public final class ArrayCellRenderer extends DefaultTableCellRenderer {
+public final class ChannelCopyAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Clipboard to copy from. */
+    private final Clipboard clipboard;
+    /** channel to be copied. */
+    private final String channel;
+
+    /**
+     * Instantiates a new channel copy action.
+     *
+     * @param clipboard Clipboard to copy from
+     * @param channel channel to be copied
+     */
+    public ChannelCopyAction(final Clipboard clipboard, final String channel) {
+        super("Copy channel");
+
+        this.clipboard = clipboard;
+        this.channel = channel;
+    }
 
     @Override
-    public void setValue(final Object value) {
-        final String response = Arrays.toString((String[]) value);
-        setText(response.substring(1, response.length() - 1));
+    public void actionPerformed(final ActionEvent e) {
+        clipboard.setContents(new StringSelection(channel), null);
     }
 
 }

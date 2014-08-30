@@ -27,7 +27,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
-import com.dmdirc.addons.ui_swing.actions.TopicEnterAction;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
