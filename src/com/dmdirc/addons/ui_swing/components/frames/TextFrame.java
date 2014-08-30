@@ -325,6 +325,9 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
                 case HYPERLINK:
                     eventBus.publishAsync(new LinkUrlClickedEvent(this, clicktype.getValue()));
                     break;
+                case NORMAL:
+                    //Ignore normal clicks
+                    break;
             }
         }
     }

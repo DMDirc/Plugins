@@ -87,9 +87,7 @@ public class AliasManagerLinker {
                     return;
                 }
                 final int index = commandList.getSelectedIndex();
-                if (index == -1) {
-                    model.setSelectedAlias(Optional.<Alias>absent());
-                } else if (commandModel.getSize() == 0) {
+                if (index == -1 || commandModel.getSize() == 0) {
                     model.setSelectedAlias(Optional.<Alias>absent());
                 } else if (index >= commandModel.getSize()) {
                     model.setSelectedAlias(Optional.fromNullable(commandModel.

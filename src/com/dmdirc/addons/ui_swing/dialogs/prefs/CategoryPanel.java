@@ -207,13 +207,15 @@ public class CategoryPanel extends JPanel {
     public void setCategory(final PreferencesCategory category) {
         this.category = category;
 
-        if (category != null) {
-            tooltip.setWarning(category.getWarning());
-        } else {
+        if (category == null) {
             tooltip.setWarning(null);
+        } else {
+            tooltip.setWarning(category.getWarning());
         }
 
-        if (!panels.containsKey(category)) {
+        if (panels.containsKey(category)) {
+            categoryLoaded(category);
+        } else {
             UIUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
@@ -223,8 +225,6 @@ public class CategoryPanel extends JPanel {
 
             worker = new PrefsCategoryLoader(factory, eventBus, this, category);
             worker.execute();
-        } else {
-            categoryLoaded(category);
         }
     }
 
