@@ -29,7 +29,7 @@ import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
-import com.dmdirc.events.EventUtils;
+import com.dmdirc.util.EventUtils;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.messages.MessageSinkManager;
