@@ -22,7 +22,11 @@
 
 package com.dmdirc.addons.dcc.events;
 
+import com.dmdirc.events.DisplayProperty;
+import com.dmdirc.events.DisplayPropertyMap;
 import com.dmdirc.events.DisplayableEvent;
+
+import com.google.common.base.Optional;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -33,6 +37,8 @@ public abstract class DccDisplayableEvent extends DccEvent implements Displayabl
 
     /** The display format to use for this event. */
     private final AtomicReference<String> displayFormatRef = new AtomicReference<>("");
+    /** The properties associated with this event. */
+    private final DisplayPropertyMap properties = new DisplayPropertyMap();
 
     @Override
     public String getDisplayFormat() {
@@ -41,6 +47,17 @@ public abstract class DccDisplayableEvent extends DccEvent implements Displayabl
 
     @Override
     public void setDisplayFormat(final String format) {
-        this.displayFormatRef.set(format);
+        displayFormatRef.set(format);
     }
+
+    @Override
+    public <T> void setDisplayProperty(final DisplayProperty<T> property, final T value) {
+        properties.put(property, value);
+    }
+
+    @Override
+    public <T> Optional<T> getDisplayProperty(final DisplayProperty<T> property) {
+        return properties.get(property);
+    }
+
 }
