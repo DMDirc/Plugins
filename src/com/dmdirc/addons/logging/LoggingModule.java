@@ -27,8 +27,8 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.io.File;
@@ -60,7 +60,7 @@ public class LoggingModule {
     @Directory(LOGS_DIRECTORY)
     public String getLogsDirectory(
             @UserConfig final ConfigProvider userConfig,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
+            @GlobalConfig final ReadOnlyConfigProvider globalConfig,
             @Directory(DirectoryType.BASE) final String baseDirectory,
             @PluginDomain(LoggingPlugin.class) final String domain) {
         if (!userConfig.hasOptionString(domain, "general.directory")) {

@@ -65,12 +65,12 @@ public class LoggingCommand extends Command implements IntelligentCommand {
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0) {
-            if (args.getArguments()[0].equalsIgnoreCase("history")) {
+            if ("history".equalsIgnoreCase(args.getArguments()[0])) {
                 if (!manager.showHistory(origin)) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR,
                             "Unable to open history for this window.");
                 }
-            } else if (args.getArguments()[0].equalsIgnoreCase("help")) {
+            } else if ("help".equalsIgnoreCase(args.getArguments()[0])) {
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
                         + " history          - Open the history of this window, if available.");
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
