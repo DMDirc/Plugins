@@ -34,6 +34,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 /**
  * Shows information about all connected servers.
@@ -84,9 +85,9 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
             for (final Server server : servers) {
                 panel.add(new JLabel(server.getName()));
                 panel.add(new JLabel(server.getState() == ServerState.CONNECTED
-                        ? server.getNetwork() : "---", JLabel.CENTER), "grow");
+                        ? server.getNetwork() : "---", SwingConstants.CENTER), "grow");
                 panel.add(new JLabel(server.getState() == ServerState.CONNECTED
-                        ? manager.getTime(server) : "---", JLabel.RIGHT), "grow, wrap");
+                        ? manager.getTime(server) : "---", SwingConstants.RIGHT), "grow, wrap");
             }
         }
     }

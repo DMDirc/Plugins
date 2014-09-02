@@ -32,6 +32,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -80,8 +81,6 @@ public class PingHistoryPanel extends JPanel {
         g.drawLine(1, getHeight() - 2, getWidth() - 1, getHeight() - 2);
         g.setFont(g.getFont().deriveFont(10f));
 
-        float lastX = -1;
-        float lastY = -1;
         final float pixelsperpointX = (getWidth() - 3)
                 / (float) (history.getList().size() == 1 ? 1
                 : history.getList().size() - 1);
@@ -94,8 +93,10 @@ public class PingHistoryPanel extends JPanel {
         long last1 = -1;
         long last2 = -1;
         final List<Long> list = history.getList();
-        final List<Rectangle> rects = new ArrayList<>();
+        final Collection<Rectangle> rects = new ArrayList<>();
 
+        float lastX = -1;
+        float lastY = -1;
         for (int i = 0; i < list.size(); i++) {
             final Long value = list.get(i);
 

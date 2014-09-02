@@ -90,14 +90,14 @@ public class IdentdPlugin extends BasePlugin {
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 domain, "general.useUsername", "Use connection "
                 + "username rather than system username", "If this is enabled,"
-                + " the username for the connection will be used rather than " + "'" + System.
-                getProperty("user.name") + "'",
+                + " the username for the connection will be used rather than '"
+                + System.getProperty("user.name") + '\'',
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 domain, "general.useNickname", "Use connection "
                 + "nickname rather than system username", "If this is enabled, "
-                + "the nickname for the connection will be used rather than " + "'" + System.
-                getProperty("user.name") + "'",
+                + "the nickname for the connection will be used rather than '"
+                + System.getProperty("user.name") + '\'',
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 domain, "general.useCustomName", "Use custom name" + " all the time",

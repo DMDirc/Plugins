@@ -25,11 +25,9 @@ package com.dmdirc.addons.lagdisplay;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.Server;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.events.ServerGotpingEvent;
@@ -65,8 +63,6 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
     private final DMDircMBassador eventBus;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
-    /** Status bar to add panels to. */
-    private final SwingStatusBar statusBar;
     private final Provider<LagDisplayPanel> panelProvider;
     /** The settings domain to use. */
     private final String domain;
@@ -86,16 +82,13 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
     private LagDisplayPanel panel;
 
     @Inject
-    public LagDisplayManager(
-            final DMDircMBassador eventBus,
+    public LagDisplayManager(final DMDircMBassador eventBus,
             final ActiveFrameManager activeFrameManager,
-            final SwingStatusBar statusBar,
             final Provider<LagDisplayPanel> panelProvider,
             @PluginDomain(LagDisplayPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
         this.eventBus = eventBus;
         this.activeFrameManager = activeFrameManager;
-        this.statusBar = statusBar;
         this.panelProvider = panelProvider;
         this.domain = domain;
         this.globalConfig = globalConfig;
@@ -177,7 +170,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         if (event.getNumeric() != 421) {
             return;
         }
-        final boolean useAlternate = ((Server) event.getConnection()).getConfigManager()
+        final boolean useAlternate = ((FrameContainer) event.getConnection()).getConfigManager()
                 .getOptionBool(domain, "usealternate");
         final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
@@ -230,7 +223,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         final String value = formatTime(event.getPing());
 
         getHistory(event.getConnection()).add(event.getPing());
-        pings.put((event.getConnection()), value);
+        pings.put(event.getConnection(), value);
 
         if (isActive) {
             panel.getComponent().setText(value);
@@ -249,7 +242,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();
         final boolean isActive = active != null && event.getConnection().equals(active.
                 getConnection());
-        final String value = formatTime(event.getPing()) + "+";
+        final String value = formatTime(event.getPing()) + '+';
 
         pings.put(event.getConnection(), value);
 
