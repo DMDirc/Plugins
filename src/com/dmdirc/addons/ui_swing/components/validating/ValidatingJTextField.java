@@ -80,7 +80,6 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      */
     public ValidatingJTextField(final Image icon, final String text,
             final Validator<String> validator) {
-        super();
         this.validator = validator;
         errorIcon = new ImageIcon(icon);
         setText(text);

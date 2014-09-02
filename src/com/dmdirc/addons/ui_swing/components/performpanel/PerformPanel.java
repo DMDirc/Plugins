@@ -92,7 +92,6 @@ public class PerformPanel extends JPanel {
             final AggregateConfigProvider config,
             final PerformWrapper performWrapper,
             final Collection<PerformDescription> performs) {
-        super();
 
         this.performWrapper = performWrapper;
 

@@ -46,7 +46,6 @@ public class VetoableComboBoxModel<T> extends DefaultComboBoxModel<T> {
      * Constructs an empty DefaultComboBoxModel object.
      */
     public VetoableComboBoxModel() {
-        super();
     }
 
     /**

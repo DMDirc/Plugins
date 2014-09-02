@@ -61,7 +61,6 @@ public class AddonCell extends JPanel implements AddonToggleListener {
      * @param iconManager Icon manager to retrieve icons from
      */
     public AddonCell(final AddonToggle info, final IconManager iconManager) {
-        super();
 
         this.iconManager = iconManager;
         this.info = info;

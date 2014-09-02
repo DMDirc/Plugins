@@ -40,7 +40,6 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
     private final JLabel label = new JLabel("???");
 
     public WindowStatusPanel() {
-        super();
 
         setBorder(BorderFactory.createEtchedBorder());
         setLayout(new MigLayout("ins 0 rel 0 rel, aligny center"));

@@ -35,7 +35,6 @@ import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteListener;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
@@ -56,8 +55,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
-public class InviteLabel extends StatusbarPopupPanel<JLabel> implements StatusBarComponent,
-        InviteListener, ActionListener, SelectionListener {
+public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteListener, ActionListener, SelectionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;

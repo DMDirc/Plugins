@@ -75,7 +75,6 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      */
     public ActionNamePanel(final IconManager iconManager, final String name,
             final String group) {
-        super();
 
         if (name == null) {
             this.existingName = "";

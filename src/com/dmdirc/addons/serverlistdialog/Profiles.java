@@ -63,7 +63,6 @@ public class Profiles extends JPanel implements ServerListListener {
      * @param identityController Controller to use to get profiles.
      */
     public Profiles(final ServerListModel model, final IdentityController identityController) {
-        super();
 
         this.model = model;
         this.identityController = identityController;

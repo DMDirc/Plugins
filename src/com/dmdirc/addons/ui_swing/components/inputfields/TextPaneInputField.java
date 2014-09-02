@@ -73,7 +73,6 @@ public class TextPaneInputField extends JEditorPane implements InputField,
             final AggregateConfigProvider globalConfig,
             final ColourManager colourManager,
             final IconManager iconManager) {
-        super();
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;

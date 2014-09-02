@@ -44,7 +44,6 @@ public class IgnoreListModel extends AbstractListModel<String> {
      * @param ignoreList Ignorelist backing this model
      */
     public IgnoreListModel(final IgnoreList ignoreList) {
-        super();
 
         this.ignoreList = ignoreList;
         isSimple = ignoreList.canConvert();

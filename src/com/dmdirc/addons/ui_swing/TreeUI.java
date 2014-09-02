@@ -63,7 +63,6 @@ public class TreeUI extends MetalTreeUI implements PropertyChangeListener {
      * @param component Component to create UI Delegate for
      */
     public TreeUI(final JTree component) {
-        super();
         component.addPropertyChangeListener(this);
     }
 

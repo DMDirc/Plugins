@@ -43,7 +43,6 @@ public class TextPaneEndAction extends AbstractAction {
      * @param textpane Textpane
      */
     public TextPaneEndAction(final TextPane textpane) {
-        super();
 
         this.textpane = textpane;
     }

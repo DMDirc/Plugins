@@ -82,7 +82,6 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      */
     public ActionGroupSettingsPanel(final PrefsComponentFactory factory,
             final ActionGroup group, final Window window) {
-        super();
 
         this.factory = factory;
         this.window = window;

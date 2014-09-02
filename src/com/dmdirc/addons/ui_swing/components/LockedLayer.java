@@ -120,7 +120,6 @@ public class LockedLayer<T extends JComponent> extends AbstractBufferedLayerUI<T
      * @see #setLockedEffects(LayerEffect...)
      */
     public LockedLayer(final LayerEffect... effects) {
-        super();
 
         setLockedEffects(effects);
     }

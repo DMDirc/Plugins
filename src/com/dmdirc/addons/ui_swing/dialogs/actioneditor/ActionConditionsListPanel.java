@@ -98,7 +98,6 @@ public class ActionConditionsListPanel extends JPanel implements
             final ActionType trigger,
             final List<ActionConditionDisplayPanel> conditions,
             final ActionConditionsTreePanel treePanel) {
-        super();
 
         validations = new HashMap<>();
 

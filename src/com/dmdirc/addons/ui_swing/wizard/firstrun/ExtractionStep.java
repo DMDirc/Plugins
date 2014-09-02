@@ -40,7 +40,6 @@ public abstract class ExtractionStep extends Step {
 
     /** Creates a new instance of StepOne. */
     public ExtractionStep() {
-        super();
 
         plugins = new JCheckBox("Install core plugins?");
         actions = new JCheckBox("Install core actions?");

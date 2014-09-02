@@ -50,7 +50,6 @@ public class WindowsMediaSourcePlugin extends BasePlugin
      * @param pluginInfo This plugin's plugin info
      */
     public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
-        super();
         this.filesHelper = new PluginFilesHelper(pluginInfo);
         sources = new ArrayList<>();
         sources.add(new DllSource(this, "Winamp", true));

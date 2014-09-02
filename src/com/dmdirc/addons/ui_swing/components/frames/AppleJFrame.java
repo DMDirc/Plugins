@@ -44,7 +44,6 @@ public class AppleJFrame extends JFrame {
     public AppleJFrame(
             final Apple apple,
             final MainFrame parentWindow) {
-        super();
         apple.setMenuBar(parentWindow.getJMenuBar());
         setJMenuBar(parentWindow.getJMenuBar());
     }

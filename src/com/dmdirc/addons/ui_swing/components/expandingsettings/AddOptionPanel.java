@@ -62,7 +62,6 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      * @param parent Parent settings panel.
      */
     protected AddOptionPanel(final SettingsPanel parent) {
-        super();
 
         this.parent = parent;
 

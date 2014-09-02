@@ -70,7 +70,6 @@ public class ActionTriggersListPanel extends JPanel {
      */
     public ActionTriggersListPanel(final IconManager iconManager,
             final List<ActionType> triggers) {
-        super();
 
         this.iconManager = iconManager;
         this.triggers = new ArrayList<>(triggers);

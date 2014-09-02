@@ -87,7 +87,6 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
      */
     public IgnoreListPanel(final IconManager iconManager,
             final Connection connection, final Window parentWindow) {
-        super();
 
         this.iconManager = iconManager;
         this.connection = connection;

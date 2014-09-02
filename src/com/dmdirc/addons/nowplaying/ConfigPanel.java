@@ -95,7 +95,6 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
             final ConfigProvider userSettings,
             final String domain,
             final List<String> sources) {
-        super();
         this.manager = manager;
         this.globalConfig = globalConfig;
         this.userSettings = userSettings;

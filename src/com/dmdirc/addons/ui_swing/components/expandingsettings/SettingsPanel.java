@@ -84,7 +84,6 @@ public class SettingsPanel extends JPanel {
      */
     public SettingsPanel(final IconManager iconManager, final PrefsComponentFactory compFactory,
             final String infoText, final boolean padding) {
-        super();
 
         this.compFactory = compFactory;
 

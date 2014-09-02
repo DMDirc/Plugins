@@ -62,7 +62,6 @@ class SidelessEtchedBorder extends EtchedBorder {
      * @param side Which side do you wish to leave out
      */
     public SidelessEtchedBorder(final Side side) {
-        super();
         this.side = side;
     }
 

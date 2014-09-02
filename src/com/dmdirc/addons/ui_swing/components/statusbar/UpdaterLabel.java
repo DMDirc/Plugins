@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -45,8 +44,7 @@ import javax.swing.JLabel;
 /**
  * Updater label is responsible for handling the display of updates in the status bar.
  */
-public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
-        StatusBarComponent, UpdateManagerListener {
+public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements UpdateManagerListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;

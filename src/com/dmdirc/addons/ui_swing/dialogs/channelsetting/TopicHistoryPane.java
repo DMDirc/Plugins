@@ -64,7 +64,6 @@ public class TopicHistoryPane extends JPanel implements ListSelectionListener {
      * @param channel Parent channel
      */
     public TopicHistoryPane(final Channel channel) {
-        super();
 
         topicHistory.getSelectionModel().addListSelectionListener(this);
         topicHistory.getSelectionModel().setSelectionMode(

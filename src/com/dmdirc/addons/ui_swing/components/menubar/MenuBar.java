@@ -66,7 +66,6 @@ public class MenuBar extends JMenuBar {
             final WindowMenuFrameManager windowMenu,
             final HelpMenu helpMenu,
             final MDIBar mdiBar) {
-        super();
 
         setLayout(new MigLayout("ins 0, fillx"));
 

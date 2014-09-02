@@ -86,7 +86,6 @@ public class ColourChooser extends JPanel implements ActionListener {
             final ColourManager colourManager, final IconManager iconManager,
             final String initialColour, final boolean ircColours,
             final boolean hexColours) {
-        super();
 
         this.colourManager = colourManager;
         this.iconManager = iconManager;

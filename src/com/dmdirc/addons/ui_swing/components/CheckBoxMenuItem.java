@@ -46,7 +46,6 @@ public class CheckBoxMenuItem extends JCheckBoxMenuItem {
      * @see JCheckBoxMenuItem#JCheckBoxMenuItem()
      */
     public CheckBoxMenuItem() {
-        super();
         getModel().addChangeListener(new StayOpenListener());
     }
 

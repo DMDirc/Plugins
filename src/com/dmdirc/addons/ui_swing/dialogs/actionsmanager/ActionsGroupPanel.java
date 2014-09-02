@@ -87,7 +87,6 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             final ActionEditorDialogFactory editorDialogFactory,
             final ActionsManagerDialog parent,
             final ActionGroup group) {
-        super();
 
         this.editorDialogFactory = editorDialogFactory;
         this.parent = parent;

@@ -40,7 +40,6 @@ public final class DMDircUndoableEditListener implements UndoableEditListener {
      * @param undoManager UndoManager to use for this listener
      */
     public DMDircUndoableEditListener(final UndoManager undoManager) {
-        super();
 
         this.undoManager = undoManager;
     }

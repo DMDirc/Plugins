@@ -49,7 +49,6 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
      */
     public PasteDialogFocusTraversalPolicy(final JButton cancelButton,
             final JButton editButton, final JButton sendButton) {
-        super();
 
         this.cancelButton = cancelButton;
         this.editButton = editButton;
