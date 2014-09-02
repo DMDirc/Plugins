@@ -54,7 +54,7 @@ public final class IdentdServer implements Runnable {
     /** Server manager. */
     private final ServerManager serverManager;
     /** Have we failed to start this server previously? */
-    private boolean failed = false;
+    private boolean failed;
     /** Global configuration to read plugin's from. */
     private final AggregateConfigProvider config;
     /** This plugin's config settings domain. */
@@ -134,7 +134,7 @@ public final class IdentdServer implements Runnable {
      * @return True if the server is running
      */
     public boolean isRunning() {
-        return (myThread != null);
+        return myThread != null;
     }
 
     /**
@@ -150,7 +150,7 @@ public final class IdentdServer implements Runnable {
             } catch (IOException e) {
                 eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
                         "Unable to start identd server: " + e.getMessage(), ""));
-                if (e.getMessage().equals("Permission denied")) {
+                if ("Permission denied".equals(e.getMessage())) {
                     failed = true;
                 }
             }

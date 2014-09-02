@@ -27,6 +27,7 @@ import com.dmdirc.ServerManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.io.StreamUtils;
 
@@ -117,7 +118,7 @@ public class IdentClient implements Runnable {
      *
      * @return the ident response for the given line
      */
-    protected String getIdentResponse(final String input, final AggregateConfigProvider config) {
+    protected String getIdentResponse(final String input, final ReadOnlyConfigProvider config) {
         final String unescapedInput = unescapeString(input);
         final String[] bits = unescapedInput.replaceAll("\\s+", "").split(",", 2);
         if (bits.length < 2) {
@@ -149,7 +150,6 @@ public class IdentClient implements Runnable {
 
         final String osName = System.getProperty("os.name").toLowerCase();
         final String os;
-        final String username;
 
         final String customSystem = config.getOption(domain, "advanced.customSystem");
         if (config.getOptionBool(domain, "advanced.useCustomSystem") && customSystem
@@ -179,6 +179,7 @@ public class IdentClient implements Runnable {
         }
 
         final String customName = config.getOption(domain, "general.customName");
+        final String username;
         if (config.getOptionBool(domain, "general.useCustomName") && customName
                 != null && !customName.isEmpty() && customName.length() < 513) {
             username = customName;
