@@ -303,10 +303,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void doHighlight(final int line, final int chars,
             final TextLayout layout, final Graphics2D g,
             final float drawPosY, final float drawPosX) {
-        int selectionStartLine;
-        int selectionStartChar;
-        int selectionEndLine;
-        int selectionEndChar;
+        final int selectionStartLine;
+        final int selectionStartChar;
+        final int selectionEndLine;
+        final int selectionEndChar;
 
         if (selection.getStartLine() > selection.getEndLine()) {
             // Swap both
@@ -331,8 +331,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
         //Does this line need highlighting?
         if (selectionStartLine <= line && selectionEndLine >= line) {
-            int firstChar;
-            int lastChar;
+            final int firstChar;
+            final int lastChar;
 
             // Determine the first char we care about
             if (selectionStartLine < line || selectionStartChar < chars) {
@@ -403,7 +403,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        String clickedText;
+        final String clickedText;
         final int start;
         final int end;
 

@@ -46,9 +46,9 @@ public class ResultsPanel extends JPanel implements TableModelListener,
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Group list manager to perform searches on. */
-    private GroupListManager manager;
+    private final GroupListManager manager;
     /** Size label. */
-    private JLabel total;
+    private final JLabel total;
     /** Results table. */
     private PackingTable table;
     /** Results table model. */

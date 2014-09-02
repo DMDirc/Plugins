@@ -197,7 +197,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
                     @Override
                     public JComponent call() {
-                        JComponent option = factory.getComponent(setting);
+                        final JComponent option = factory.getComponent(setting);
                         option.setToolTipText(null);
                         return option;
                     }

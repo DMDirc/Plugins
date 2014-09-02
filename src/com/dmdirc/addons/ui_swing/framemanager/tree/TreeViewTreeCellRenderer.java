@@ -110,7 +110,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         if (label == null) {
             return new JLabel("Label == null");
         }
-        boolean bold;
+        final boolean bold;
         Color background = tree.getBackground();
         Color foreground = tree.getForeground();
 

@@ -536,7 +536,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
         final Chat chat = chats.get(parseHostmask(host)[0]);
 
-        ChatState newState;
+        final ChatState newState;
 
         switch (state) {
             case ENTERED_TEXT:
@@ -660,7 +660,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
         @Override
         public void stateChanged(final Chat chat, final ChatState cs) {
-            CompositionState state;
+            final CompositionState state;
 
             switch (cs) {
                 case paused:

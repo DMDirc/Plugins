@@ -177,7 +177,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
         if (event.getNumeric() != 421) {
             return;
         }
-        boolean useAlternate = ((Server) event.getConnection()).getConfigManager()
+        final boolean useAlternate = ((Server) event.getConnection()).getConfigManager()
                 .getOptionBool(domain, "usealternate");
         final TextFrame activeFrame = activeFrameManager.getActiveFrame();
         final FrameContainer active = activeFrame == null ? null : activeFrame.getContainer();

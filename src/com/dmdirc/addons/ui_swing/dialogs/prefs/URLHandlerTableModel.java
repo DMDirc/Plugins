@@ -42,9 +42,9 @@ public class URLHandlerTableModel extends AbstractTableModel {
     /** Config Manager. */
     private final AggregateConfigProvider configManager;
     /** Data list. */
-    private List<URI> uris;
+    private final List<URI> uris;
     /** Handlers list. */
-    private List<String> handlers;
+    private final List<String> handlers;
 
     /**
      * Instantiates a new table model.

@@ -52,9 +52,9 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
     /** Action name field. */
     private ValidatingJTextField name;
     /** Action group. */
-    private ActionGroup group;
+    private final ActionGroup group;
     /** Icon manager. */
-    private IconManager iconManager;
+    private final IconManager iconManager;
 
     /**
      * Instantiates the panel.

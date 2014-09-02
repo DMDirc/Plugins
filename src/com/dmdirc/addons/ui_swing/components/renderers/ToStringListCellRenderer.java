@@ -49,7 +49,7 @@ public class ToStringListCellRenderer<E> extends MethodListCellRenderer<E> {
     }
 
     private static <E> Method getMethod(final Class<? super E> type) {
-        Method readMethod;
+        final Method readMethod;
         try {
             readMethod = type.getMethod("toString");
         } catch (NoSuchMethodException | SecurityException ex1) {

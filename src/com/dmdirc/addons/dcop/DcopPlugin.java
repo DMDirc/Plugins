@@ -61,9 +61,9 @@ public final class DcopPlugin extends BaseCommandPlugin {
     public static List<String> getDcopResult(final String command) {
         final ArrayList<String> result = new ArrayList<>();
 
-        InputStreamReader reader;
-        BufferedReader input;
-        Process process;
+        final InputStreamReader reader;
+        final BufferedReader input;
+        final Process process;
 
         try {
             process = Runtime.getRuntime().exec(command);

@@ -40,7 +40,7 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
     /** use one touch expandable? */
     private boolean useOneTouchExpandable;
     /** Global config manager. */
-    private AggregateConfigProvider config;
+    private final AggregateConfigProvider config;
 
     /** Orientation type . */
     public enum Orientation {

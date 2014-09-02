@@ -43,7 +43,7 @@ public class PackingTable extends JTable {
     /** Scrollpane. */
     private final JScrollPane scrollPane;
     /** Should the last column fit text (true), or fit viewport (false). */
-    private boolean lastColumnFit;
+    private final boolean lastColumnFit;
     /** Border padding. */
     private final int padding = (int) PlatformDefaults.getUnitValueX("related").
             getValue();

@@ -60,7 +60,7 @@ public class Benchmark extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        long[] results = new long[10];
+        final long[] results = new long[10];
 
         for (int i = 0; i < results.length; i++) {
             final long start = System.nanoTime();
