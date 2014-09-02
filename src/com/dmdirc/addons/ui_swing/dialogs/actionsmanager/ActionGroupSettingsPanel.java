@@ -56,9 +56,9 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
     /** Button to Component map. */
     private Map<JButton, PreferencesSetting> settingMap;
     /** Parent dialog. */
-    private Window window;
+    private final Window window;
     /** Prefs component factory. */
-    private PrefsComponentFactory factory;
+    private final PrefsComponentFactory factory;
 
     /**
      * Initialises a new action group information panel.

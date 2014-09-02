@@ -196,7 +196,7 @@ public class DCCManager {
                 final JFileChooser jc = KFileChooser.getFileChooser(config,
                         DCCManager.this,
                         config.getOption(getDomain(), "receive.savelocation"));
-                int result;
+                final int result;
                 if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
                     result = JFileChooser.APPROVE_OPTION;
                 } else {
@@ -211,7 +211,7 @@ public class DCCManager {
                 }
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
-                    TransferContainer container = new TransferContainer(DCCManager.this, send,
+                    final TransferContainer container = new TransferContainer(DCCManager.this, send,
                             config, "*Receive: " + nickname, nickname, null, urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     send.setToken(token);
@@ -237,7 +237,7 @@ public class DCCManager {
                         }
                     }
                 } else {
-                    TransferContainer container = new TransferContainer(DCCManager.this, send,
+                    final TransferContainer container = new TransferContainer(DCCManager.this, send,
                             config, "Receive: " + nickname, nickname, null, urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     if (resume) {
@@ -405,8 +405,8 @@ public class DCCManager {
     }
 
     void handleDCCChat(final Parser parser, final String nickname, final String[] ctcpData) {
-        long ipAddress;
-        int port;
+        final long ipAddress;
+        final int port;
         try {
             ipAddress = Long.parseLong(ctcpData[2]);
             port = Integer.parseInt(ctcpData[3]);
@@ -495,8 +495,8 @@ public class DCCManager {
                 && !ctcpData[i + 1].equals("T")) ? ctcpData[++i] : "";
 
         // Ignore incorrect ports, or non-numeric IP/Port
-        long ipLong;
-        int portInt;
+        final long ipLong;
+        final int portInt;
         try {
             portInt = Integer.parseInt(port);
             if (portInt > 65535 || portInt < 0) {

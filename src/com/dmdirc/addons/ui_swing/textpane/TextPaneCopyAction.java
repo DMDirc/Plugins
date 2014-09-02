@@ -34,7 +34,7 @@ public class TextPaneCopyAction extends AbstractAction {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** TextPane instance. */
-    private TextPane textpane;
+    private final TextPane textpane;
 
     /**
      * Instantiates a new action.

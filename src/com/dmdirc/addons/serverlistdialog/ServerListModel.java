@@ -160,7 +160,7 @@ public class ServerListModel {
      * @return Perform description for the active sever group item
      */
     public PerformDescription getSelectedItemPerformDescription() {
-        PerformDescription perform;
+        final PerformDescription perform;
         if (activeItem instanceof ServerEntry) {
             perform = new PerformDescription(PerformType.SERVER, activeItem
                     .getName());

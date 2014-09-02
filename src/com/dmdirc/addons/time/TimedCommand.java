@@ -105,7 +105,7 @@ public class TimedCommand extends TimerTask {
 
     @Override
     public void run() {
-        CommandParser parser;
+        final CommandParser parser;
         if (origin == null) {
             parser = new GlobalCommandParser(origin.getConfigManager(), commandController, eventBus);
         } else {

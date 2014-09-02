@@ -236,8 +236,8 @@ public class VlcMediaSourcePlugin extends BasePlugin implements MediaSource {
      */
     private boolean fetchInformation() {
         information.clear();
-        List<String> res;
-        List<String> res2;
+        final List<String> res;
+        final List<String> res2;
 
         try {
             final String host = identityController.getGlobalConfiguration()

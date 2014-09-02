@@ -51,13 +51,13 @@ public abstract class StandardInputDialog extends StandardDialog {
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Validator. */
-    private Validator<String> validator;
+    private final Validator<String> validator;
     /** Text field. */
     private ValidatingJTextField textField;
     /** Blurb label. */
     private TextLabel blurb;
     /** Message. */
-    private String message;
+    private final String message;
     /** The icon manager to use for validating text fields. */
     private final IconManager iconManager;
     /** Are we saving? */

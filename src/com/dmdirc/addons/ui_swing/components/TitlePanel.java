@@ -39,7 +39,7 @@ public class TitlePanel extends JPanel {
     /** A version number for this class. */
     private static final long serialVersionUID = -4026633984970698130L;
     /** Title label. */
-    private JLabel title;
+    private final JLabel title;
 
     /**
      * Instantiates a new title panel.

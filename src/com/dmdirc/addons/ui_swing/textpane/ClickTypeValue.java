@@ -27,8 +27,8 @@ package com.dmdirc.addons.ui_swing.textpane;
  */
 public class ClickTypeValue {
 
-    private ClickType clickType;
-    private String value;
+    private final ClickType clickType;
+    private final String value;
 
     /**
      * Instantiates a new click type with the specified type and value.

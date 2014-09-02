@@ -47,9 +47,9 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
     /** Substitions list. */
     protected List<SubstitutionLabel> substitutions;
     /** Description. */
-    private String description;
+    private final String description;
     /** Seperator alignment. */
-    private Alignment alignment;
+    private final Alignment alignment;
 
     /** Separator alignment enum. */
     public enum Alignment {

@@ -140,8 +140,8 @@ public class TreeScroller implements MouseWheelListener {
      * @param direction true = up, false = down.
      */
     public void changeFocus(final boolean direction) {
-        DefaultMutableTreeNode thisNode;
-        DefaultMutableTreeNode nextNode;
+        final DefaultMutableTreeNode thisNode;
+        final DefaultMutableTreeNode nextNode;
 
         if (rootNode == null) {
             //no root node or root node not visible

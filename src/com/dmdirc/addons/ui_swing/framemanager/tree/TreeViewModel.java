@@ -63,7 +63,7 @@ public class TreeViewModel extends DefaultTreeModel {
      */
     public final void insertNodeInto(final TreeViewNode newChild,
             final TreeViewNode parent) {
-        int index;
+        final int index;
         index = getIndex(newChild, parent);
         insertNodeInto(newChild, parent, index);
     }

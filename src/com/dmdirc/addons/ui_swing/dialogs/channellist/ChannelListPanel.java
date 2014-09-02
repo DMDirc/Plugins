@@ -38,11 +38,11 @@ public class ChannelListPanel extends JPanel {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Search terms. */
-    private SearchTermsPanel searchTerms;
+    private final SearchTermsPanel searchTerms;
     /** Search results. */
-    private ResultsPanel results;
+    private final ResultsPanel results;
     /** Group list manager to show results/perform searching. */
-    private GroupListManager manager;
+    private final GroupListManager manager;
 
     /**
      * Creates a new panel to perform a group list search on a server.

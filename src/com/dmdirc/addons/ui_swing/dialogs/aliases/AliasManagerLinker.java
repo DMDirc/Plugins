@@ -304,7 +304,7 @@ public class AliasManagerLinker {
         model.addListener(new AliasDialogModelAdapter() {
 
             @Override
-            public void selectedAliasEdited(String name, int minArgs, String sub) {
+            public void selectedAliasEdited(final String name, final int minArgs, final String sub) {
                 okButton.setEnabled(model.isSelectedAliasValid());
             }
 

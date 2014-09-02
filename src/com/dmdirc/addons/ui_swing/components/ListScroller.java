@@ -104,7 +104,7 @@ public class ListScroller implements MouseWheelListener {
      * @param direction true = up, false = down.
      */
     public void changeFocus(final boolean direction) {
-        int index;
+        final int index;
 
         //are we going up or down?
         if (direction) {
@@ -125,7 +125,7 @@ public class ListScroller implements MouseWheelListener {
      * @return next index
      */
     private int changeFocusUp(final int index) {
-        int nextIndex;
+        final int nextIndex;
 
         if (index == 0 || index == -1) {
             nextIndex = model.getSize() - 1;
@@ -144,7 +144,7 @@ public class ListScroller implements MouseWheelListener {
      * @return next index
      */
     private int changeFocusDown(final int index) {
-        int nextIndex;
+        final int nextIndex;
 
         if (index == model.getSize() - 1) {
             nextIndex = 0;

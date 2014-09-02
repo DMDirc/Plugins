@@ -189,7 +189,7 @@ public class KFileChooser extends JFileChooser {
             params.add(getCurrentDirectory().getPath());
         }
 
-        KDialogProcess kdp;
+        final KDialogProcess kdp;
         try {
             kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();
@@ -238,7 +238,7 @@ public class KFileChooser extends JFileChooser {
             params.add(getCurrentDirectory().getPath());
         }
 
-        KDialogProcess kdp;
+        final KDialogProcess kdp;
         try {
             kdp = new KDialogProcess(params.toArray(new String[params.size()]));
             kdp.waitFor();

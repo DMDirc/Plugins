@@ -73,7 +73,7 @@ public final class ParamModePanel extends JPanel implements ActionListener {
         this.mode = thisMode;
         this.originalValue = value;
         String text;
-        String tooltip;
+        final String tooltip;
         if (config.hasOptionString("server", "mode" + mode)) {
             tooltip = "Mode " + mode + ": " + config.getOption("server", "mode" + mode);
         } else {

@@ -196,8 +196,8 @@ public class NewServerLinker {
         model.addListener(new NewServerDialogModelAdapter() {
 
             @Override
-            public void selectedProfileChanged(Optional<ConfigProvider> oldProfile,
-                    Optional<ConfigProvider> newProfile) {
+            public void selectedProfileChanged(final Optional<ConfigProvider> oldProfile,
+                    final Optional<ConfigProvider> newProfile) {
                 edit.setEnabled(model.isProfileListValid()
                         && model.getSelectedProfile().isPresent());
             }

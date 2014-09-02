@@ -129,7 +129,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 final String script = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
                 try {
-                    ScriptEngineWrapper wrapper;
+                    final ScriptEngineWrapper wrapper;
                     if (globalConfig.hasOptionString(domain, "eval.baseFile")) {
                         final String baseFile = scriptDirectory + '/'
                                 + globalConfig.getOption(domain, "eval.baseFile");

@@ -499,7 +499,7 @@ public class LoggingManager implements ConfigChangeListener {
             finalLine.append(line);
         }
 
-        BufferedWriter out;
+        final BufferedWriter out;
         try {
             if (openFiles.containsKey(filename)) {
                 final OpenFile of = openFiles.get(filename);
@@ -568,7 +568,7 @@ public class LoggingManager implements ConfigChangeListener {
     protected String getLogFile(final Object object) {
         final StringBuffer directory = getLogDirectory();
         final StringBuffer file = new StringBuffer();
-        String md5String;
+        final String md5String;
         if (object == null) {
             file.append("null.log");
             md5String = "";
@@ -767,7 +767,7 @@ public class LoggingManager implements ConfigChangeListener {
      * @return True if the history is available, false otherwise
      */
     protected boolean showHistory(final FrameContainer target) {
-        Object component;
+        final Object component;
 
         if (target instanceof Channel) {
             component = ((Channel) target).getChannelInfo();
@@ -788,7 +788,7 @@ public class LoggingManager implements ConfigChangeListener {
             return false;
         }
 
-        ReverseFileReader reader;
+        final ReverseFileReader reader;
 
         try {
             reader = new ReverseFileReader(log);

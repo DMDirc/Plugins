@@ -95,9 +95,9 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
     public static List<String> getInfo() {
         final ArrayList<String> result = new ArrayList<>();
 
-        InputStreamReader reader;
-        BufferedReader input;
-        Process process;
+        final InputStreamReader reader;
+        final BufferedReader input;
+        final Process process;
 
         try {
             final String[] command = new String[]{"/bin/bash", "-c",

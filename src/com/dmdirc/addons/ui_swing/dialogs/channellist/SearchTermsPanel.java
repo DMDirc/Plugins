@@ -42,9 +42,9 @@ public class SearchTermsPanel extends JPanel implements ActionListener,
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Group list manager to perform searches on. */
-    private GroupListManager manager;
+    private final GroupListManager manager;
     /** Search terms input field. */
-    private JTextField searchTerms;
+    private final JTextField searchTerms;
     /** Search button. */
     private JButton search;
 

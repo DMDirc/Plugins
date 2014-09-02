@@ -149,7 +149,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      * @return boolean success
      */
     public boolean remove(final ChannelClientInfo client) {
-        boolean returnValue;
+        final boolean returnValue;
 
         returnValue = nicknames.remove(client);
         rerender();
@@ -165,7 +165,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      * @return ChannelClientInfo client removed
      */
     public ChannelClientInfo remove(final int index) {
-        ChannelClientInfo returnValue;
+        final ChannelClientInfo returnValue;
 
         returnValue = nicknames.remove(index);
         rerender();
