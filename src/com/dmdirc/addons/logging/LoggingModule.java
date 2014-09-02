@@ -58,6 +58,7 @@ public class LoggingModule {
 
     @Provides
     @Directory(LOGS_DIRECTORY)
+    @SuppressWarnings("TypeMayBeWeakened")
     public String getLogsDirectory(
             @UserConfig final ConfigProvider userConfig,
             @GlobalConfig final AggregateConfigProvider globalConfig,

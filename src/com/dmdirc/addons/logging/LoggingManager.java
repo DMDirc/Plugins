@@ -46,6 +46,7 @@ import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -439,7 +440,7 @@ public class LoggingManager implements ConfigChangeListener {
             }
         } else if (colour.length() == 6) {
             try {
-                Color.decode("#" + colour);
+                Color.decode('#' + colour);
                 res = String.format("%c%s%s%1$c", Styliser.CODE_HEXCOLOUR, colour, line);
             } catch (NumberFormatException ex) { /* Do Nothing */ }
         }
@@ -499,8 +500,8 @@ public class LoggingManager implements ConfigChangeListener {
             finalLine.append(line);
         }
 
-        final BufferedWriter out;
         try {
+            final BufferedWriter out;
             if (openFiles.containsKey(filename)) {
                 final OpenFile of = openFiles.get(filename);
                 of.lastUsedTime = System.currentTimeMillis();
@@ -599,8 +600,8 @@ public class LoggingManager implements ConfigChangeListener {
                 directory.append(File.separatorChar);
             }
 
-            if (!new File(directory.toString()).exists() && !(new File(directory.toString())).
-                    mkdirs()) {
+            if (!new File(directory.toString()).exists()
+                    && !new File(directory.toString()).mkdirs()) {
                 eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
                         "Unable to create date dirs", ""));
             }
@@ -612,13 +613,11 @@ public class LoggingManager implements ConfigChangeListener {
         }
         file.append(".log");
 
-        return directory.toString() + file.toString();
+        return directory + file.toString();
     }
 
     /**
      * Sanitises the log file directory.
-     *
-     * @param directory String buffer to use for result
      *
      * @return Log directory
      */
@@ -650,7 +649,7 @@ public class LoggingManager implements ConfigChangeListener {
         boolean prependNetwork = false;
 
         // Check dir exists
-        final File dir = new File(directory.toString() + network + System.getProperty(
+        final File dir = new File(directory + network + System.getProperty(
                 "file.separator"));
         if (dir.exists() && !dir.isDirectory()) {
             eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
@@ -681,7 +680,7 @@ public class LoggingManager implements ConfigChangeListener {
      */
     protected static String sanitise(final String name) {
         // Replace illegal chars with
-        return name.replaceAll("[^\\w\\.\\s\\-\\#\\&\\_]", "_");
+        return name.replaceAll("[^\\w\\.\\s\\-#&_]", "_");
     }
 
     /**
@@ -698,33 +697,6 @@ public class LoggingManager implements ConfigChangeListener {
             return new BigInteger(1, m.digest()).toString(16);
         } catch (NoSuchAlgorithmException e) {
             return "";
-        }
-    }
-
-    /**
-     * Get name to display for client.
-     *
-     * @param client The client to get the display name for
-     *
-     * @return name to display
-     */
-    protected String getDisplayName(final ClientInfo client) {
-        return getDisplayName(client, "");
-    }
-
-    /**
-     * Get name to display for client.
-     *
-     * @param client       The client to get the display name for
-     * @param overrideNick Nickname to display instead of real nickname
-     *
-     * @return name to display
-     */
-    protected String getDisplayName(final ClientInfo client, final String overrideNick) {
-        if (overrideNick.isEmpty()) {
-            return (client == null) ? "Unknown Client" : client.getNickname();
-        } else {
-            return overrideNick;
         }
     }
 
@@ -749,7 +721,7 @@ public class LoggingManager implements ConfigChangeListener {
      */
     protected String getDisplayName(final ChannelClientInfo channelClient, final String overrideNick) {
         if (channelClient == null) {
-            return (overrideNick.isEmpty()) ? "Unknown Client" : overrideNick;
+            return overrideNick.isEmpty() ? "Unknown Client" : overrideNick;
         } else if (overrideNick.isEmpty()) {
             return channelmodeprefix ? channelClient.toString() : channelClient.getClient().
                     getNickname();
@@ -772,8 +744,8 @@ public class LoggingManager implements ConfigChangeListener {
         if (target instanceof Channel) {
             component = ((Channel) target).getChannelInfo();
         } else if (target instanceof Query) {
-            final Parser parser = ((Query) target).getConnection().getParser();
-            component = parser.getClient(((Query) target).getHost());
+            final Parser parser = target.getConnection().getParser();
+            component = parser.getClient(((PrivateChat) target).getHost());
         } else if (target instanceof Connection) {
             component = ((Connection) target).getParser();
         } else {
