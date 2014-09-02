@@ -66,7 +66,6 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      */
     public NicklistListModel(final AggregateConfigProvider config,
             final List<ChannelClientInfo> newNicknames) {
-        super();
 
         this.config = config;
 

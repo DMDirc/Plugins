@@ -153,7 +153,7 @@ public class IdentClient implements Runnable {
 
         final String customSystem = config.getOption(domain, "advanced.customSystem");
         if (config.getOptionBool(domain, "advanced.useCustomSystem") && customSystem
-                != null && customSystem.length() > 0 && customSystem.length() < 513) {
+                != null && !customSystem.isEmpty() && customSystem.length() < 513) {
             os = customSystem;
         } else {
             // Tad excessive maybe, but complete!
@@ -180,7 +180,7 @@ public class IdentClient implements Runnable {
 
         final String customName = config.getOption(domain, "general.customName");
         if (config.getOptionBool(domain, "general.useCustomName") && customName
-                != null && customName.length() > 0 && customName.length() < 513) {
+                != null && !customName.isEmpty() && customName.length() < 513) {
             username = customName;
         } else if (connection != null && config.getOptionBool(domain, "general.useNickname")) {
             username = connection.getParser().getLocalClient().getNickname();

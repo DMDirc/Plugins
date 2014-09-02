@@ -93,7 +93,6 @@ public class SwingInputField extends JComponent implements InputField,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @GlobalConfig final IconManager iconManager,
             final ColourManager colourManager) {
-        super();
 
         this.parentWindow = mainWindow;
         this.globalConfig = globalConfig;

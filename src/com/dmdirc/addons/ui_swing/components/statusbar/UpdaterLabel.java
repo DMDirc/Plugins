@@ -45,8 +45,7 @@ import javax.swing.JLabel;
 /**
  * Updater label is responsible for handling the display of updates in the status bar.
  */
-public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements
-        StatusBarComponent, UpdateManagerListener {
+public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements UpdateManagerListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;

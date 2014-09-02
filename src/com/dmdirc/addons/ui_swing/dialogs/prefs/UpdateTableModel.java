@@ -55,7 +55,6 @@ public class UpdateTableModel extends AbstractTableModel {
     public UpdateTableModel(
             final CachingUpdateManager updateManager,
             final Collection<UpdateComponent> updates) {
-        super();
 
         this.updates = new ArrayList<>(updates);
         this.enabled = new HashMap<>();

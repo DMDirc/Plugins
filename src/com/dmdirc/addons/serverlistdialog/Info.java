@@ -64,7 +64,6 @@ public class Info extends JPanel implements HyperlinkListener,
      * @param urlHandler A {@link URLHandler} to use to open links
      */
     public Info(final ServerListModel model, final URLHandler urlHandler) {
-        super();
 
         this.urlHandler = urlHandler;
         this.model = model;

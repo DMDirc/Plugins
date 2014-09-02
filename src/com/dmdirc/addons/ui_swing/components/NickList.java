@@ -73,7 +73,6 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      * @param config Config
      */
     public NickList(final ChannelFrame frame, final AggregateConfigProvider config) {
-        super();
         this.frame = frame;
         this.config = config;
         this.colourManager = new ColourManager(config);

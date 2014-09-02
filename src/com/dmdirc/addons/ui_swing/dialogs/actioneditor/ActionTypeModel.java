@@ -54,7 +54,6 @@ public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
      * @param typeGroups The action type groups to use
      */
     public ActionTypeModel(final FontMetrics fm, final MapList<String, ActionType> typeGroups) {
-        super();
 
         this.fm = fm;
 

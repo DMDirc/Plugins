@@ -59,7 +59,6 @@ public class CurrentOptionsPanel extends JPanel implements
      * @param parent      Parent settings panel.
      */
     protected CurrentOptionsPanel(final IconManager iconManager, final SettingsPanel parent) {
-        super();
 
         this.iconManager = iconManager;
         this.parent = parent;

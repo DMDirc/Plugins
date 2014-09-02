@@ -61,7 +61,7 @@ public class ActionResponsePanel extends JPanel {
      * @param config      Config
      */
     public ActionResponsePanel(final IconManager iconManager, final AggregateConfigProvider config) {
-        super();
+
 
         initComponents(iconManager, config);
         addListeners();

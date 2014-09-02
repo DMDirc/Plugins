@@ -45,7 +45,6 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      * Instantiates an empty generic list model.
      */
     public GenericListModel() {
-        super();
 
         this.list = Collections.synchronizedList(new ArrayList<T>());
     }
@@ -56,7 +55,6 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      * @param list Data to be included in the model
      */
     public GenericListModel(final List<T> list) {
-        super();
 
         this.list = Collections.synchronizedList(new ArrayList<>(list));
     }

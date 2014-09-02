@@ -64,7 +64,6 @@ public class URLHandlerTableModel extends AbstractTableModel {
      */
     public URLHandlerTableModel(final AggregateConfigProvider configManager,
             final List<URI> uris, final List<String> handlers) {
-        super();
 
         this.configManager = configManager;
         this.uris = uris;

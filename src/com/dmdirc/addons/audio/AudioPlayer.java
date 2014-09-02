@@ -37,7 +37,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public final class AudioPlayer implements Runnable {
 
     /** The AudioType enum */
-    public static enum AudioType {
+    public enum AudioType {
 
         WAV, INVALID
 

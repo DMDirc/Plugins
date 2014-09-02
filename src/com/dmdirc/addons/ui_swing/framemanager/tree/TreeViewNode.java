@@ -45,7 +45,6 @@ public class TreeViewNode extends DefaultMutableTreeNode {
      * @param window Node window
      */
     public TreeViewNode(final NodeLabel label, final FrameContainer window) {
-        super();
 
         this.label = label;
         this.window = window;

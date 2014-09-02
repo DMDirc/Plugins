@@ -49,7 +49,6 @@ public class DcopMediaSourcePlugin extends BasePlugin
      * @param pluginManager Plugin manager to retrieve services from
      */
     public DcopMediaSourcePlugin(final PluginManager pluginManager) {
-        super();
         this.pluginManager = pluginManager;
         sources = new ArrayList<>();
         sources.add(new AmarokSource(this));

@@ -66,7 +66,6 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
             final ConfigProvider userSettings,
             final String domain,
             final List<String> methods) {
-        super();
 
         if (methods == null) {
             this.methods = new LinkedList<>();

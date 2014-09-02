@@ -84,7 +84,6 @@ public class OptionalJSpinner extends JPanel implements ActionListener,
      * @param enabled Initial selected state
      */
     public OptionalJSpinner(final SpinnerModel model, final boolean enabled) {
-        super();
 
         checkbox = new JCheckBox("", enabled);
         spinner = new JSpinner(model);

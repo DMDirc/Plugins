@@ -78,7 +78,6 @@ public class Tree extends JPanel implements TreeSelectionListener,
      */
     public Tree(final IconManager iconManager, final ServerListModel model,
             final Window parentWindow) {
-        super();
 
         this.iconManager = iconManager;
         this.model = model;

@@ -43,7 +43,6 @@ public final class ProfileStep extends Step {
      * Creates a new instance of StepOne.
      */
     public ProfileStep() {
-        super();
         setLayout(new MigLayout("fillx, wrap 1"));
 
         profile = new JCheckBox("Launch profile manager?");

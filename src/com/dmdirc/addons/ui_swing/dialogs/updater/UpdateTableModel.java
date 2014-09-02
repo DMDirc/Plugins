@@ -62,7 +62,6 @@ public class UpdateTableModel extends AbstractTableModel implements UpdateStatus
      */
     public UpdateTableModel(final CachingUpdateManager updateManager,
             final List<UpdateComponent> updates) {
-        super();
 
         this.updateManager = updateManager;
         this.updateManager.addUpdateStatusListener(this);

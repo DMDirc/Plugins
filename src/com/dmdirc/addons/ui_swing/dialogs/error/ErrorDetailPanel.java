@@ -70,7 +70,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
      * @param error Error to be displayed
      */
     public ErrorDetailPanel(final ProgramError error) {
-        super();
 
         this.error = error;
 

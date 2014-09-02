@@ -119,7 +119,6 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             final IconManager iconManager,
             final Channel channel,
             final Window parentWindow) {
-        super();
 
         this.globalConfig = checkNotNull(globalConfig);
         this.userConfig = checkNotNull(userConfig);

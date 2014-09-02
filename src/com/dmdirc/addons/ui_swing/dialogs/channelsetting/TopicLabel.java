@@ -67,7 +67,6 @@ public class TopicLabel extends JPanel {
      * @since 0.6.3
      */
     public TopicLabel(final Channel channel, final Topic topic) {
-        super();
 
         if (topic == null) {
             throw new IllegalArgumentException();

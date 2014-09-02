@@ -89,7 +89,7 @@ public class ServerListModel {
      * @return true iif there are server groups
      */
     public boolean hasItems() {
-        return list.getServerGroups().size() > 0;
+        return !list.getServerGroups().isEmpty();
     }
 
     /**

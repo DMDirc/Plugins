@@ -62,7 +62,6 @@ public class FileBrowser extends JPanel implements ActionListener {
      */
     public FileBrowser(final IconManager iconManager,
             final PreferencesSetting setting, final int type) {
-        super();
 
         fileChooser.setFileSelectionMode(type);
 

@@ -72,7 +72,6 @@ public class PerformTab extends JPanel implements ActionListener {
             final AggregateConfigProvider config,
             final PerformWrapper wrapper,
             final Connection connection) {
-        super();
 
         this.wrapper = wrapper;
         this.connection = connection;

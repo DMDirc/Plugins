@@ -100,7 +100,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @param document IRCDocument to be displayed
      */
     public TextPaneCanvas(final TextPane parent, final IRCDocument document) {
-        super();
         this.document = document;
         textPane = parent;
         this.manager = parent.getWindow().getContainer().getConfigManager();

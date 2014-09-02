@@ -49,7 +49,6 @@ public class ReorderableJListCellRenderer<T> implements ListCellRenderer<T> {
      * @param parent Parent list
      */
     public ReorderableJListCellRenderer(final ReorderableJList<T> parent) {
-        super();
 
         this.parent = parent;
     }
