@@ -100,7 +100,6 @@ public abstract class SubstitutionsPanel<T> extends JPanel {
      */
     public SubstitutionsPanel(final String description,
             final Alignment alignment, final T type) {
-        super();
 
         this.description = description;
         this.alignment = alignment;

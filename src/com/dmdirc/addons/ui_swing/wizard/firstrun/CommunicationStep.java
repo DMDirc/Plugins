@@ -49,7 +49,6 @@ public final class CommunicationStep extends Step {
      * Creates a new instance of SetupStep.
      */
     public CommunicationStep() {
-        super();
 
         initComponents();
         layoutComponents();

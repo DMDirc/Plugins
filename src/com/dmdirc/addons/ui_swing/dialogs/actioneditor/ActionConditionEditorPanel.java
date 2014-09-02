@@ -75,7 +75,6 @@ public class ActionConditionEditorPanel extends JPanel implements
      */
     public ActionConditionEditorPanel(final ActionCondition condition,
             final ActionType trigger) {
-        super();
 
         this.condition = condition;
         this.trigger = trigger;

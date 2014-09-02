@@ -46,7 +46,6 @@ public class JIconTextField extends JTextField {
     private String message;
 
     public JIconTextField() {
-        super();
         this.icon = null;
         this.dummyInsets = UIManager.getBorder("TextField.border").getBorderInsets(new JTextField());
         ToolTipManager.sharedInstance().registerComponent(this);

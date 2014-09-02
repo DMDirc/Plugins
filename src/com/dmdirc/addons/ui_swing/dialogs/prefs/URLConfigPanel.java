@@ -105,7 +105,6 @@ public class URLConfigPanel extends JPanel implements
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @UserConfig final ConfigProvider userConfig,
             @GlobalConfig final IconManager iconManager) {
-        super();
 
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;

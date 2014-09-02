@@ -45,7 +45,6 @@ public class WizardFrame extends JFrame {
      * @param steps Steps for the wizard
      */
     public WizardFrame(final String title, final List<Step> steps) {
-        super();
 
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

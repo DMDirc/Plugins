@@ -43,7 +43,6 @@ public class TypedProperties extends Properties {
      * Creates an empty property list with no default values.
      */
     public TypedProperties() {
-        super();
     }
 
     /**

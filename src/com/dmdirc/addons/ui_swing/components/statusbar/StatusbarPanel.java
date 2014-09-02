@@ -77,7 +77,6 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      */
     public StatusbarPanel(final T label, final Border nonSelectedBorder,
             final Border selectedBorder) {
-        super();
 
         this.label = label;
         this.nonSelectedBorder = nonSelectedBorder;

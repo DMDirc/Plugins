@@ -44,7 +44,6 @@ public class SortedListModel<T> extends DefaultListModel<T> {
      * @param comparator Comparator
      */
     public SortedListModel(final Comparator<T> comparator) {
-        super();
 
         this.comparator = comparator;
     }

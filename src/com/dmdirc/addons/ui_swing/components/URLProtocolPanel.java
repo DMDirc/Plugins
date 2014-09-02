@@ -95,7 +95,6 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
             final ConfigProvider userSettings,
             final URI url,
             final boolean useInsets) {
-        super();
 
         this.globalConfig = globalConfig;
         this.userSettings = userSettings;

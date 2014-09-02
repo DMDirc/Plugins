@@ -42,7 +42,6 @@ public class TextPanePageDownAction extends AbstractAction {
      * @param textpane Textpane
      */
     public TextPanePageDownAction(final TextPane textpane) {
-        super();
 
         this.textpane = textpane;
     }

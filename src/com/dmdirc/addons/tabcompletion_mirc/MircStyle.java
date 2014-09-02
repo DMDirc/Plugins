@@ -79,7 +79,7 @@ public class MircStyle implements TabCompletionStyle {
             } else {
                 Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
 
-                if (word.length() > 0 && window instanceof Channel
+                if (!word.isEmpty() && window instanceof Channel
                         && ((Channel) window)
                         .getChannelInfo().getName().startsWith(word)) {
                     target = ((Channel) window).getChannelInfo().getName();

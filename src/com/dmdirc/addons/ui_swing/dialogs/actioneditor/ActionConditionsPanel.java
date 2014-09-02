@@ -81,7 +81,6 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      */
     public ActionConditionsPanel(final IconManager iconManager,
             final ActionType trigger) {
-        super();
 
         this.iconManager = iconManager;
         initComponents();

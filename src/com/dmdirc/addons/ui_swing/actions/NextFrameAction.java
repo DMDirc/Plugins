@@ -44,7 +44,6 @@ public class NextFrameAction extends AbstractAction {
      * @param manager Tree scroller to scroll with
      */
     public NextFrameAction(final TreeScroller manager) {
-        super();
         this.manager = manager;
     }
 

@@ -56,7 +56,6 @@ public final class ActionGroupInformationPanel extends JPanel {
      * @param group Action group
      */
     public ActionGroupInformationPanel(final ActionGroup group) {
-        super();
 
         this.group = group;
 

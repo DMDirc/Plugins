@@ -38,7 +38,6 @@ public class XScrollablePanel extends JPanel implements Scrollable {
 
     /** Creates a new scrollable panel. */
     public XScrollablePanel() {
-        super();
     }
 
     /**

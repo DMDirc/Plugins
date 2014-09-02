@@ -62,7 +62,6 @@ public class KFileChooser extends JFileChooser {
      * @param plugin The plugin that owns this KFileChooser
      */
     private KFileChooser(final AggregateConfigProvider config, final DCCManager plugin) {
-        super();
 
         this.plugin = plugin;
         this.config = config;

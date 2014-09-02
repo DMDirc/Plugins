@@ -88,7 +88,7 @@ public class DurationDisplay extends JPanel implements ActionListener,
      * @since 0.6
      */
     public DurationDisplay(final Window window, final IconManager iconManager, final long duration) {
-        super();
+
 
         this.window = window;
         this.iconManager = iconManager;

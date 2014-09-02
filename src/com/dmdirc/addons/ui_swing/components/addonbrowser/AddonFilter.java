@@ -58,7 +58,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
             final ButtonModel notinstalledBox, final ButtonModel pluginsBox,
             final ButtonModel themesBox, final ButtonModel actionsBox,
             final JTextField searchBox) {
-        super();
 
         this.verifiedBox = verifiedBox;
         this.unverifiedBox = unverifiedBox;

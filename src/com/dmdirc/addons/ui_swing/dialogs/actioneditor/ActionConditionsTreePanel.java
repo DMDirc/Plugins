@@ -78,7 +78,6 @@ public class ActionConditionsTreePanel extends JPanel implements ActionListener,
      * @param iconManager Icon manager
      */
     public ActionConditionsTreePanel(final IconManager iconManager) {
-        super();
 
         this.iconManager = iconManager;
         initComponents();

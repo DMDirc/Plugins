@@ -69,7 +69,6 @@ public final class ParamModePanel extends JPanel implements ActionListener {
             final String thisMode,
             final boolean state,
             final String value) {
-        super();
         this.mode = thisMode;
         this.originalValue = value;
         String text;

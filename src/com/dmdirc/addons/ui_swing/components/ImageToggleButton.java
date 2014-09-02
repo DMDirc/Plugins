@@ -69,7 +69,6 @@ public class ImageToggleButton extends JToggleButton {
      */
     public ImageToggleButton(final String actionCommand, final Icon icon,
             final Icon rolloverIcon, final Icon pressedIcon) {
-        super();
 
         setIcon(icon);
         setRolloverIcon(rolloverIcon);

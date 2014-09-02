@@ -64,7 +64,6 @@ public class SubstitutionLabel extends JButton implements MouseListener,
      * @param substitution Action substitition
      */
     public SubstitutionLabel(final Substitution substitution) {
-        super();
 
         this.substitution = substitution;
 

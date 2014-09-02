@@ -79,7 +79,6 @@ public class WizardPanel extends JPanel implements ActionListener {
      * @param steps Steps for the wizard
      */
     public WizardPanel(final String title, final List<Step> steps) {
-        super();
 
         stepListeners = new ListenerList();
         this.steps = new ArrayList<>(steps);

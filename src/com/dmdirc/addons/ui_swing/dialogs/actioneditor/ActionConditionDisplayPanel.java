@@ -72,7 +72,6 @@ public class ActionConditionDisplayPanel extends JPanel implements
      */
     public ActionConditionDisplayPanel(final IconManager iconManager,
             final ActionCondition condition, final ActionType trigger) {
-        super();
 
         this.trigger = trigger;
         this.condition = new ActionCondition(condition.getArg(),

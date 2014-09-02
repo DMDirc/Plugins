@@ -90,7 +90,6 @@ public class DCCTransfer extends DCC {
      * @param blockSize Block size to use
      */
     public DCCTransfer(final int blockSize) {
-        super();
         this.blockSize = blockSize;
         synchronized (TRANSFERS) {
             TRANSFERS.add(this);

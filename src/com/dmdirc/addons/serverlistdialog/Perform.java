@@ -62,7 +62,6 @@ public class Perform extends JPanel implements ServerListListener {
             final AggregateConfigProvider globalConfig,
             final PerformWrapper wrapper,
             final ServerListModel model) {
-        super();
 
         this.model = model;
         performPanel = new PerformPanel(iconManager, globalConfig, wrapper);
