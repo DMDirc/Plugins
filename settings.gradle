@@ -1,0 +1,5 @@
+rootDir.eachDir() { File dir ->
+  if (new File(dir, "src").directory) {
+    include dir.name
+  }
+}

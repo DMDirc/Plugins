@@ -2,164 +2,39 @@
 <project name="DMDirc Plugins" default="default" basedir=".">
     <description>Builds, packages and tests DMDirc plugins.</description>
 
-    <property name="plugins.src" location="src"/>
-    <property name="plugins.build" location="build"/>
-    <property name="plugins.build.classes" location="${plugins.build}/classes"/>
-    <property name="plugins.build.metadata" location="${plugins.build}/metadata"/>
-    <property name="plugins.dist" location="dist"/>
-    <property name="plugins.lib" location="lib"/>
-    <property name="plugins.source.level" value="1.7"/>
-    <property name="plugins.target.level" value="1.7"/>
+    <!-- Resolve the relative directory -->
+    <property name="dmdircOutput" location="${plugins.dmdirc.build.dir}"/>
 
-    <import file="build-ivy.xml" />
-    <import file="build-tests.xml"/>
+    <target name="init-dependencies"/>
 
-    <condition property="plugins.need.antlib">
-       <not>
-           <typefound name="foreach"/>
-       </not>
-    </condition>
-
-    <target name="-init-taskdefs" depends="init-dependencies,-init-paths,-init-antlib,-init-git-describe">
+    <target name="compile">
+        <exec executable="gradle" dir=".">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="compile"/>
+        </exec>
     </target>
 
-    <target name="-init-antlib" if="plugins.need.antlib">
-        <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="plugins.classpath"/>
-    </target>
+    <target name="jar">
+        <exec executable="gradle" dir=".">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="jar"/>
+        </exec>
 
-    <target name="-init-git-describe">
-        <taskdef name="git-describe" classname="org.mdonoughe.JGitDescribeTask" classpathref="plugins.classpath"/>
-    </target>
-
-    <target name="-init-paths">
-      <path id="plugins.classpath">
-         <pathelement path="${plugins.dmdirc.build.dir}"/>
-         <fileset dir="${plugins.lib}" includes="**/*.jar"/>
-      </path>
-
-      <condition property="plugins.dmdirc.exists">
-         <available classname="com.dmdirc.Main" classpathref="plugins.classpath"/>
-      </condition>
-    </target>
-
-    <target name="-check-dmdirc-jar" unless="plugins.dmdirc.exists">
-       <fail>DMDirc class files not found. Please put DMDirc on the classpath or specify the 'plugins.dmdirc.build.dir' property.</fail>
-    </target>
-
-    <target name="-init-compile" depends="init-dependencies,-init-paths,-check-dmdirc-jar">
-       <mkdir dir="${plugins.build}"/>
-       <mkdir dir="${plugins.build.classes}"/>
-       <mkdir dir="${plugins.build.metadata}"/>
-    </target>
-
-    <target name="compile" depends="-init-compile">
-       <javac srcdir="${plugins.src}" destdir="${plugins.build.classes}"
-              classpathref="plugins.classpath" includeantruntime="false"
-              debug="true" deprecation="true"
-              source="${plugins.source.level}"
-              target="${plugins.target.level}">
-           <compilerarg value="-Xlint:all"/>
-           <compilerarg value="-Xmaxwarns"/>
-           <compilerarg value="1000"/>
-           <compilerarg value="-Xmaxerrs"/>
-           <compilerarg value="1000"/>
-       </javac>
-
-       <copy todir="${plugins.build.classes}">
-          <fileset dir="${plugins.src}">
-             <exclude name="**/*.java"/>
-             <exclude name="**/plugin.config"/>
-          </fileset>
-       </copy>
-    </target>
-
-    <target name="jar" depends="-package,-add-libs"/>
-
-    <target name="-package" depends="-init-taskdefs,compile">
-        <for param="configfile">
-            <fileset dir="${plugins.src}" includes="**/plugin.config"/>
-            <sequential>
-                <local name="plugin.src.dir"/>
-                <local name="plugin.build.dir"/>
-                <local name="plugin.name"/>
-                <local name="plugin.jar"/>
-                <local name="plugin.version"/>
-
-                <dirname file="@{configfile}" property="plugin.src.dir"/>
-                <basename file="${plugin.src.dir}" property="plugin.name"/>
-                <property name="plugin.jar" value="${plugins.dist}/${plugin.name}.jar"/>
-
-                <if>
-                    <not>
-                        <uptodate targetfile="${plugin.jar}">
-                            <srcfiles dir="${plugin.src.dir}" includes="*"/>
-                        </uptodate>
-                    </not>
-                    <then>
-                        <propertyregex property="plugin.build.dir" input="${plugin.src.dir}" regexp="\Q${plugins.src}\E/?(.*)" replace="\1"/>
-
-                        <copy todir="${plugins.build.metadata}/${plugin.name}/META-INF">
-                            <fileset file="@{configfile}"/>
-                            <fileset dir="${plugin.src.dir}" includes="identities/** licences/**"/>
-                        </copy>
-
-                        <git-describe dir=".git" property="plugin.version" subdir="${plugin.src.dir}" />
-
-                        <echo file="${plugins.build.metadata}/${plugin.name}/META-INF/plugin.config" append="true">
-version:
-  number=${plugin.version}
-</echo>
-
-                        <jar destfile="${plugin.jar}">
-                            <fileset dir="${plugins.build.classes}" includes="${plugin.build.dir}/**"/>
-                            <fileset dir="${plugins.build.metadata}/${plugin.name}" includes="META-INF/**"/>
-                        </jar>
-
-                        <echo>Built ${plugin.name} plugin version ${plugin.version}</echo>
-                    </then>
-                </if>
-            </sequential>
-        </for>
-    </target>
-
-    <target name="-add-libs">
-        <jar destfile="${plugins.dist}/ui_swing.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/miglayout-swing.jar" includes="net/miginfocom/swing/**"/>
-            <zipfileset src="${plugins.lib}/main/miglayout-core.jar" includes="net/miginfocom/layout/**"/>
-            <zipfileset src="${plugins.lib}/main/menuscroller.jar" includes="darrylbu/util/**"/>
-            <zipfileset src="${plugins.lib}/main/jxlayer.jar" includes="org/jdesktop/jxlayer/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/parser_irc.jar" update="true">
-            <!-- TODO: this could also be a jar in the lib dir -->
-            <fileset dir="${plugins.dmdirc.build.dir}">
-                <include name="com/dmdirc/parser/irc/**/*.class"/>
+        <mkdir dir="dist"/>
+        <copy todir="dist" flatten="true">
+            <fileset dir=".">
+                <include name="*/build/libs/*.jar"/>
             </fileset>
-        </jar>
-
-        <jar destfile="${plugins.dist}/parser_xmpp.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/smack.jar" includes="org/**"/>
-            <zipfileset src="${plugins.lib}/main/smackx.jar" includes="org/** com/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/windowflashing.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/**"/>
-            <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/**"/>
-        </jar>
-
-        <jar destfile="${plugins.dist}/sessionlock.jar" update="true">
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/*"/>
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/ptr/*"/>
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32/**"/>
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32-amd64/**"/>
-            <zipfileset src="${plugins.lib}/main/jna.jar" includes="com/sun/jna/win32-x86/**"/>
-            <zipfileset src="${plugins.lib}/main/platform.jar" includes="com/sun/jna/platform/win32/**"/>
-            <zipfileset src="${plugins.lib}/main/locksupport.jar" includes="com/greboid/**"/>
-        </jar>
+        </copy>
     </target>
 
     <target name="clean">
-       <delete dir="${plugins.build}"/>
-       <delete dir="${plugins.dist}"/>
+        <exec executable="gradle" dir=".">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="clean"/>
+        </exec>
     </target>
 </project>
