@@ -1,0 +1,4 @@
+dependencies {
+  bundle group: 'org.igniterealtime.smack', name: 'smack', version: '3.+'
+  bundle group: 'org.igniterealtime.smack', name: 'smackx', version: '3.+'
+}

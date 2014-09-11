@@ -1,0 +1,6 @@
+dependencies {
+  bundle group: 'com.miglayout', name: 'miglayout-swing', version: '4.+'
+  bundle group: 'org.swinglabs', name: 'jxlayer', version: '3.+'
+  bundle group: 'com.greboid.libraries', name: 'menuscroller', version: 'latest.release'
+  compile project(':serverlists')
+}
