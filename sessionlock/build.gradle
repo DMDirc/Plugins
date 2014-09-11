@@ -1,0 +1,5 @@
+dependencies {
+  bundle group: 'net.java.dev.jna', name: 'jna', version: '3.+'
+  bundle group: 'net.java.dev.jna', name: 'platform', version: '3.+'
+  bundle group: 'com.greboid.libraries', name: 'locksupport', version: 'latest.release'
+}

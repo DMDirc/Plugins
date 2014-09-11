@@ -1,0 +1,5 @@
+jar {
+    from ('../../../build/production/parser/') {
+        include 'com/dmdirc/parser/irc/**'
+    }
+}

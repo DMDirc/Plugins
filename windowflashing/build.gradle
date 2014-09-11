@@ -1,0 +1,5 @@
+dependencies {
+  compile project(':ui_swing')
+  bundle group: 'net.java.dev.jna', name: 'jna', version: '3.+'
+  bundle group: 'net.java.dev.jna', name: 'platform', version: '3.+'
+}
