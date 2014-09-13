@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.util.TreeSet;
 
@@ -60,21 +61,16 @@ public class ActionResponsePanel extends JPanel {
      * @param iconManager Icon manager
      * @param config      Config
      */
-    public ActionResponsePanel(final IconManager iconManager, final AggregateConfigProvider config) {
-
-
-        initComponents(iconManager, config);
+    public ActionResponsePanel(final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory, final AggregateConfigProvider config) {
+        initComponents(iconManager, colourManagerFactory, config);
         addListeners();
         layoutComponents();
     }
 
-    /**
-     * Initialises the components.
-     *
-     * @param controller Swing controller
-     */
-    private void initComponents(final IconManager iconManager, final AggregateConfigProvider config) {
-        response = new TextAreaInputField(iconManager, config, "");
+    private void initComponents(final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory, final AggregateConfigProvider config) {
+        response = new TextAreaInputField(iconManager, colourManagerFactory, config, "");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
         formatter = new JComboBox<>(new DefaultComboBoxModel<String>());

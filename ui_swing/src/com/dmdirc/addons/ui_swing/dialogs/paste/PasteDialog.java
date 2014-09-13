@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -99,7 +100,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             final DMDircMBassador eventBus,
             final InputTextFrame newParent,
             final String text,
-            final Window parentWindow) {
+            final Window parentWindow,
+            final ColourManagerFactory colourManagerFactory) {
         super(parentWindow, ModalityType.MODELESS);
 
         parent = newParent;
@@ -109,7 +111,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         this.pluginManager = pluginManager;
         this.commandController = commandController;
 
-        initComponents(eventBus, text);
+        initComponents(eventBus, text, colourManagerFactory);
         initListeners();
 
         setFocusTraversalPolicy(new PasteDialogFocusTraversalPolicy(
@@ -125,9 +127,10 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      *
      * @param text text to show in the dialog
      */
-    private void initComponents(final DMDircMBassador eventBus, final String text) {
+    private void initComponents(final DMDircMBassador eventBus, final String text,
+            final ColourManagerFactory colourManagerFactory) {
         scrollPane = new JScrollPane();
-        textField = new TextAreaInputField(iconManager, config, text);
+        textField = new TextAreaInputField(iconManager, colourManagerFactory, config, text);
         editButton = new JButton("Edit");
         infoLabel = new TextLabel();
 

@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import javax.annotation.Nonnull;
@@ -57,6 +58,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
+    private final ColourManagerFactory colourManagerFactory;
 
     /**
      * Creates a new instance of this command.
@@ -71,11 +73,13 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandController controller,
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
+        this.colourManagerFactory = colourManagerFactory;
     }
 
     @Override
@@ -83,7 +87,8 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target, messageSinkManager, eventBus, urlBuilder), args.getArgumentsAsString());
+                target, messageSinkManager, eventBus, urlBuilder, colourManagerFactory),
+                args.getArgumentsAsString());
     }
 
     @Override

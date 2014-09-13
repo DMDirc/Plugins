@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Desktop;
@@ -88,12 +89,13 @@ public class TransferContainer extends FrameContainer implements
      * @param eventBus   The bus to dispatch events on.
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
-            final AggregateConfigProvider config, final String title,
+            final AggregateConfigProvider config,
+            final ColourManagerFactory colourManagerFactory, final String title,
             final String targetNick, final Connection connection,
             final URLBuilder urlBuilder, final DMDircMBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, config, urlBuilder, eventBus,
+                title, title, config, colourManagerFactory, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

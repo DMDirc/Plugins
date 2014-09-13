@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -83,7 +84,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
             final Connection connection,
-            final Window parentWindow) {
+            final Window parentWindow,
+            final ColourManagerFactory colourManagerFactory) {
         super(parentWindow, ModalityType.MODELESS);
         this.connection = connection;
         this.performWrapper = performWrapper;
@@ -92,7 +94,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         setTitle("Server settings");
         setResizable(false);
 
-        initComponents(parentWindow, connection.getWindowModel().getConfigManager(), compFactory);
+        initComponents(parentWindow, connection.getWindowModel().getConfigManager(), compFactory,
+                colourManagerFactory);
         initListeners();
     }
 
@@ -106,7 +109,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     private void initComponents(
             final Window parentWindow,
             final AggregateConfigProvider config,
-            final PrefsComponentFactory compFactory) {
+            final PrefsComponentFactory compFactory,
+            final ColourManagerFactory colourManagerFactory) {
         orderButtons(new JButton(), new JButton());
 
         tabbedPane = new JTabbedPane();
@@ -116,8 +120,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         ignoreList = new IgnoreListPanel(connection.getWindowModel().getIconManager(),
                 connection, parentWindow);
 
-        performPanel = new PerformTab(connection.getWindowModel().getIconManager(), config,
-                performWrapper, connection);
+        performPanel = new PerformTab(connection.getWindowModel().getIconManager(),
+                colourManagerFactory, config, performWrapper, connection);
 
         settingsPanel = new SettingsPanel(connection.getWindowModel().getIconManager(), compFactory,
                 "These settings are specific to this network, any settings specified here will "

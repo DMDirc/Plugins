@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import com.google.common.base.Optional;
 
@@ -94,7 +95,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     public TopicDisplayPane(final Channel channel, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final CommandController commandController, final DMDircMBassador eventBus) {
+            final CommandController commandController, final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         this.clipboard = clipboard;
         this.channel = channel;
         this.parent = parent;
@@ -102,7 +104,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         this.channelWindow = channelWindow;
         this.eventBus = eventBus;
 
-        initComponents(iconManager, channel.getConfigManager(), serviceManager, commandController);
+        initComponents(iconManager, channel.getConfigManager(), serviceManager, commandController,
+                colourManagerFactory);
         addListeners();
         layoutComponents();
 
@@ -113,9 +116,10 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
             final IconManager iconManager,
             final AggregateConfigProvider config,
             final ServiceManager serviceManager,
-            final CommandController commandController) {
+            final CommandController commandController,
+            final ColourManagerFactory colourManagerFactory) {
         topicLengthLabel = new JLabel();
-        topicText = new TextAreaInputField(iconManager, config, 100, 4);
+        topicText = new TextAreaInputField(iconManager, colourManagerFactory, config, 100, 4);
         topicWho = new TextLabel();
         topicWho.setOpaque(false);
 

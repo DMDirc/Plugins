@@ -52,6 +52,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Window;
@@ -76,6 +77,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class DCCManager {
 
+    private final ColourManagerFactory colourManagerFactory;
     /** Our DCC Container window. */
     private PlaceholderContainer container;
     /** Config manager to read settings from. */
@@ -130,7 +132,8 @@ public class DCCManager {
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final GlobalCommandParser commandParser,
-            @Directory(DirectoryType.BASE) final String baseDirectory) {
+            @Directory(DirectoryType.BASE) final String baseDirectory,
+            final ColourManagerFactory colourManagerFactory) {
         this.mainWindow = mainWindow;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
@@ -140,6 +143,7 @@ public class DCCManager {
         this.config = globalConfig;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
+        this.colourManagerFactory = colourManagerFactory;
 
         windowFactory.registerImplementation(
                 new SwingWindowFactory.WindowProvider() {
@@ -212,7 +216,8 @@ public class DCCManager {
                 final boolean resume = handleResume(jc);
                 if (reverse && !token.isEmpty()) {
                     final TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "*Receive: " + nickname, nickname, null, urlBuilder, eventBus);
+                            config, colourManagerFactory, "*Receive: " + nickname, nickname, null,
+                            urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     send.setToken(token);
                     if (resume) {
@@ -238,7 +243,8 @@ public class DCCManager {
                     }
                 } else {
                     final TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, "Receive: " + nickname, nickname, null, urlBuilder, eventBus);
+                            config, colourManagerFactory, "Receive: " + nickname, nickname, null,
+                            urlBuilder, eventBus);
                     windowManager.addWindow(getContainer(), container);
                     if (resume) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
@@ -420,6 +426,7 @@ public class DCCManager {
                 getContainer(),
                 chat,
                 config,
+                colourManagerFactory,
                 commandController,
                 "Chat: " + nickname,
                 myNickname,
@@ -649,7 +656,8 @@ public class DCCManager {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, mainWindow, urlBuilder, eventBus);
+        container = new PlaceholderContainer(this, config, colourManagerFactory, mainWindow,
+                urlBuilder, eventBus);
         windowManager.addWindow(container);
     }
 

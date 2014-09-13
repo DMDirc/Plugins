@@ -35,6 +35,7 @@ import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
@@ -56,6 +57,7 @@ public class EventBusViewer extends DebugCommand {
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
     private final DMDircMBassador globalEventBus;
+    private final ColourManagerFactory colourManagerFactory;
 
     /**
      * Creates a new instance of the command.
@@ -72,12 +74,14 @@ public class EventBusViewer extends DebugCommand {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
-            final DMDircMBassador globalEventBus) {
+            final DMDircMBassador globalEventBus,
+            final ColourManagerFactory colourManagerFactory) {
         super(commandProvider);
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.globalEventBus = globalEventBus;
+        this.colourManagerFactory = colourManagerFactory;
     }
 
     @Override
@@ -98,12 +102,12 @@ public class EventBusViewer extends DebugCommand {
 
         final CustomWindow window;
         if (isGlobal) {
-            window = new CustomWindow("Event bus", "Event bus", globalConfig,
-                    urlBuilder, globalEventBus);
+            window = new CustomWindow("Event bus", "Event bus", globalConfig, urlBuilder,
+                    globalEventBus, colourManagerFactory);
             windowManager.addWindow(window);
         } else {
-            window = new CustomWindow("Event bus", "Event bus", origin,
-                    urlBuilder);
+            window = new CustomWindow("Event bus", "Event bus", origin, urlBuilder,
+                    colourManagerFactory);
             windowManager.addWindow(origin, window);
         }
 
