@@ -23,7 +23,7 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;

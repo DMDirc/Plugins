@@ -27,7 +27,7 @@ import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 
 import com.google.common.base.Optional;
 
