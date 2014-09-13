@@ -24,7 +24,6 @@ package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.addons.ui_swing.components.renderers.ServerGroupTreeRenderer;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Rectangle;
