@@ -55,6 +55,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -156,12 +157,13 @@ public class DialogModule {
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
             final PerformWrapper performWrapper,
-            @MainWindow final Window parentWindow) {
+            @MainWindow final Window parentWindow,
+            final ColourManagerFactory colourManagerFactory) {
         return new KeyedDialogProvider<Connection, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Connection key) {
                 return new ServerSettingsDialog(preferencesManager, compFactory, performWrapper,
-                        key, parentWindow);
+                        key, parentWindow, colourManagerFactory);
             }
         };
     }
@@ -178,13 +180,14 @@ public class DialogModule {
             @MainWindow final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
-                        userConfig, serviceManager, preferencesManager,
-                        compFactory, key, parentWindow, clipboard, commandController, eventBus);
+                        userConfig, serviceManager, preferencesManager, compFactory, key,
+                        parentWindow, clipboard, commandController, eventBus, colourManagerFactory);
             }
         };
     }

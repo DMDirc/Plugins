@@ -66,6 +66,10 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     private static final long serialVersionUID = 6;
     /** Frame parent. */
     private final TextFrame parent;
+    /** Colour Manager. */
+    private final ColourManager colourManager;
+    /** Config to read from. */
+    private final AggregateConfigProvider config;
     /** Close button. */
     private ImageButton<Object> closeButton;
     /** Next match button. */
@@ -92,10 +96,13 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
      * @param iconManager Icon manager to retrieve icons from
      */
     public SwingSearchBar(final TextFrame newParent,
-            final IconManager iconManager) {
+            final IconManager iconManager,
+            final ColourManager colourManager) {
         listeners = new ListenerList();
 
         this.parent = newParent;
+        this.config = parent.getContainer().getConfigManager();
+        this.colourManager = colourManager;
 
         getInputMap(JComponent.WHEN_FOCUSED).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "searchAction");
@@ -394,7 +401,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** Sets the colours used in this document. */
     private void setColours() {
         final AggregateConfigProvider config = parent.getContainer().getConfigManager();
-        final ColourManager colourManager = new ColourManager(config);
 
         searchBox.setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(

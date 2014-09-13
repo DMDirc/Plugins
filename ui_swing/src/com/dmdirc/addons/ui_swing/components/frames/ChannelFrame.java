@@ -40,6 +40,7 @@ import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -109,7 +110,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         this.dialogProvider = dialogProvider;
         this.channel = owner;
 
-        initComponents(topicBarFactory);
+        initComponents(topicBarFactory, deps.colourManagerFactory);
 
         globalConfig.addChangeListener("ui", "channelSplitPanePosition", this);
         globalConfig.addChangeListener(domain, "shownicklist", this);
@@ -123,12 +124,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      * Initialises the components in this frame.
      *
      * @param topicBarFactory The factory to use to produce topic bars.
+     * @param colourManagerFactory The colour manager factory
      */
-    private void initComponents(final TopicBarFactory topicBarFactory) {
+    private void initComponents(final TopicBarFactory topicBarFactory,
+            final ColourManagerFactory colourManagerFactory) {
         topicBar = topicBarFactory.getTopicBar((Channel) getContainer(), this,
                 getContainer().getIconManager());
 
-        nicklist = new NickList(this, getContainer().getConfigManager());
+        nicklist = new NickList(this, getContainer().getConfigManager(), colourManagerFactory);
         settingsMI = new JMenuItem("Settings");
         settingsMI.addActionListener(this);
 

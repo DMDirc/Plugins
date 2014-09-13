@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -88,6 +89,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final CommandController commandController;
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
+    /** Colour manager factory. */
+    private final ColourManagerFactory colourManagerFactory;
 
     /**
      * Creates a new instance of ChannelSettingsDialog.
@@ -115,7 +118,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -126,6 +130,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.clipboard = clipboard;
         this.commandController = checkNotNull(commandController);
         this.eventBus = eventBus;
+        this.colourManagerFactory = colourManagerFactory;
 
         identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
                 channel.getChannelInfo().getName());
@@ -167,7 +172,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private void initTopicTab() {
         topicModesPane = new TopicPane(channel, channel.getIconManager(),
                 commandController, serviceManager,
-                this, channelWindow, clipboard, eventBus);
+                this, channelWindow, clipboard, eventBus, colourManagerFactory);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 

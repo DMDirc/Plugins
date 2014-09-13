@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -94,6 +95,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      */
     public ActionEditorDialog(
             final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory,
@@ -108,7 +110,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         this.action = null;
         this.actionFactory = actionFactory;
 
-        initComponents(iconManager, config, subsFactory);
+        initComponents(iconManager, config, subsFactory, colourManagerFactory);
         addListeners();
         doComponents();
         layoutComponents();
@@ -128,6 +130,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      */
     public ActionEditorDialog(
             final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory,
@@ -142,7 +145,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         this.action = action;
         this.actionFactory = actionFactory;
 
-        initComponents(iconManager, config, subsFactory);
+        initComponents(iconManager, config, subsFactory, colourManagerFactory);
         addListeners();
         doComponents();
         layoutComponents();
@@ -179,11 +182,12 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
 
     /** Initialises the components. */
     private void initComponents(final IconManager iconManager,
-            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory) {
+            final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
+            final ColourManagerFactory colourManagerFactory) {
         orderButtons(new JButton(), new JButton());
         name = new ActionNamePanel(iconManager, "", group);
         triggers = new ActionTriggersPanel(iconManager);
-        response = new ActionResponsePanel(iconManager, config);
+        response = new ActionResponsePanel(iconManager, colourManagerFactory, config);
         conditions = new ActionConditionsPanel(iconManager);
         substitutions = new ActionSubstitutionsPanel(subsFactory);
         advanced = new ActionAdvancedPanel();

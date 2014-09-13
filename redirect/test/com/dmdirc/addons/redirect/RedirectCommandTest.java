@@ -34,6 +34,7 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.messages.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import com.dmdirc.DMDircMBassador;
@@ -66,6 +67,7 @@ public class RedirectCommandTest {
     @Mock private WindowManager windowManager;
     @Mock private URLBuilder urlBuilder;
     @Mock private DMDircMBassador eventBus;
+    @Mock private ColourManagerFactory colourManagerFactory;
 
     @Before
     public void setup() {
@@ -92,7 +94,7 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand(commandController, messageSinkManager,
-                urlBuilder, eventBus);
+                urlBuilder, eventBus, colourManagerFactory);
 
         command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
                 new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));

@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
@@ -54,8 +55,10 @@ public class HistoryWindow extends FrameContainer {
             final FrameContainer parent,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory,
             final int numLines) {
-        super(parent, "raw", title, title, parent.getConfigManager(), urlBuilder, eventBus,
+        super(parent, "raw", title, title, parent.getConfigManager(), colourManagerFactory,
+                urlBuilder, eventBus,
                 Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(
