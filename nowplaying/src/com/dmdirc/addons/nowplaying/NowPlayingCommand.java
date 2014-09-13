@@ -35,7 +35,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.input.TabCompleter;
+import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -181,7 +181,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
         });
 
         if (arg == 0) {
-            final AdditionalTabTargets res = TabCompleter.
+            final AdditionalTabTargets res = TabCompleterUtils.
                     getIntelligentResults(arg, context, 0);
             res.add("--sources");
             res.add("--source");
@@ -197,14 +197,14 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
             return res;
         } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
-            final AdditionalTabTargets res = TabCompleter
+            final AdditionalTabTargets res = TabCompleterUtils
                     .getIntelligentResults(arg, context, 2);
             res.addAll(subsList);
             return res;
         } else {
-            final AdditionalTabTargets res = TabCompleter
-                    .getIntelligentResults(arg, context, context
-                            .getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+            final AdditionalTabTargets res = TabCompleterUtils
+                    .getIntelligentResults(arg, context,
+                            context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
             res.addAll(subsList);
             return res;
         }
