@@ -33,7 +33,7 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.util.ArrayList;

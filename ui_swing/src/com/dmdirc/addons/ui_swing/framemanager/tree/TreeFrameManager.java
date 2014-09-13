@@ -44,7 +44,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 

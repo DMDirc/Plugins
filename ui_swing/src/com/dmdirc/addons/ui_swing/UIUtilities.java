@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
 import java.awt.Font;

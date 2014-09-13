@@ -43,7 +43,7 @@ import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.ui.Colour;
+import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.WindowManager;
 
 import com.google.common.base.Optional;
