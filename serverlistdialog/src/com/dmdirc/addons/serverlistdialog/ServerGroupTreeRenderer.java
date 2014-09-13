@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.components.renderers;
+package com.dmdirc.addons.serverlistdialog;
 
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 
