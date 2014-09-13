@@ -26,7 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.input.TabCompleterResult;
+import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
@@ -63,7 +63,7 @@ public class MircStyle implements TabCompletionStyle {
         final String word = original.substring(start, end);
         final String target;
         if (word.equals(lastWord)) {
-            final TabCompleterResult res = tabCompleter.complete(tabString, additional);
+            final TabCompletionMatches res = tabCompleter.complete(tabString, additional);
             Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
             // We're continuing to tab through
             target = res.getResults().get((res.getResults().indexOf(lastWord) + (shiftPressed ? -1
@@ -71,7 +71,7 @@ public class MircStyle implements TabCompletionStyle {
                     .getResults().size());
         } else {
             // New tab target
-            final TabCompleterResult res = tabCompleter.complete(word, additional);
+            final TabCompletionMatches res = tabCompleter.complete(word, additional);
 
             if (res.getResultCount() == 0) {
                 Toolkit.getDefaultToolkit().beep();
