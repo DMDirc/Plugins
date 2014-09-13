@@ -27,6 +27,7 @@ import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -61,10 +62,11 @@ public class Perform extends JPanel implements ServerListListener {
             final IconManager iconManager,
             final AggregateConfigProvider globalConfig,
             final PerformWrapper wrapper,
-            final ServerListModel model) {
+            final ServerListModel model,
+            final ColourManagerFactory colourManagerFactory) {
 
         this.model = model;
-        performPanel = new PerformPanel(iconManager, globalConfig, wrapper);
+        performPanel = new PerformPanel(iconManager, colourManagerFactory, globalConfig, wrapper);
 
         addListeners();
         if (model.getSelectedItemPerformDescription() != null) {

@@ -40,7 +40,6 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
-import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -71,8 +70,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private static final long serialVersionUID = 3;
     /** Config provider for this frame. */
     private final AggregateConfigProvider config;
-    /** Colour manager for this frame. */
-    private final ColourManager colourManager;
     /** Input field panel. */
     protected JPanel inputPanel;
     /** The InputHandler for our input field. */
@@ -114,7 +111,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         super(owner, owner.getCommandParser(), deps);
 
         config = owner.getConfigManager();
-        colourManager = new ColourManager(config);
         parentWindow = deps.mainWindow;
         pluginManager = deps.pluginManager;
         pasteDialogFactory = deps.pasteDialog;

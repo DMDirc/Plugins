@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import com.google.common.base.Optional;
 
@@ -74,7 +75,8 @@ public class TopicPane extends JPanel implements ActionListener {
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
@@ -84,7 +86,7 @@ public class TopicPane extends JPanel implements ActionListener {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel(iconManager, serviceManager, commandController, eventBus);
+        initTopicsPanel(iconManager, serviceManager, commandController, eventBus, colourManagerFactory);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -96,9 +98,10 @@ public class TopicPane extends JPanel implements ActionListener {
             final IconManager iconManager,
             final ServiceManager serviceManager,
             final CommandController commandController,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
-                channelWindow, clipboard, commandController, eventBus);
+                channelWindow, clipboard, commandController, eventBus, colourManagerFactory);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

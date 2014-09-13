@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,6 +70,7 @@ public class PerformTab extends JPanel implements ActionListener {
      */
     public PerformTab(
             final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
             final PerformWrapper wrapper,
             final Connection connection) {
@@ -77,7 +79,7 @@ public class PerformTab extends JPanel implements ActionListener {
         this.connection = connection;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        initComponents(iconManager, config);
+        initComponents(iconManager, colourManagerFactory, config);
         addListeners();
     }
 
@@ -88,6 +90,7 @@ public class PerformTab extends JPanel implements ActionListener {
      * @param config      Config to read settings from
      */
     private void initComponents(final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config) {
         setLayout(new MigLayout("fill"));
 
@@ -119,7 +122,8 @@ public class PerformTab extends JPanel implements ActionListener {
         performList.add(serverPerform);
         performList.add(serverProfilePerform);
 
-        performPanel = new PerformPanel(iconManager, config, wrapper, performList);
+        performPanel = new PerformPanel(iconManager, colourManagerFactory, config, wrapper,
+                performList);
         performPanel.switchPerform(networkPerform);
         add(performPanel, "grow, push");
 

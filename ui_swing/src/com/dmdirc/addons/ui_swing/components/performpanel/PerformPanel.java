@@ -27,6 +27,7 @@ import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -71,9 +72,11 @@ public class PerformPanel extends JPanel {
      */
     public PerformPanel(
             final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
             final PerformWrapper performWrapper) {
-        this(iconManager, config, performWrapper, Collections.<PerformDescription>emptyList());
+        this(iconManager, colourManagerFactory, config, performWrapper,
+                Collections.<PerformDescription>emptyList());
     }
 
     /**
@@ -89,6 +92,7 @@ public class PerformPanel extends JPanel {
      */
     public PerformPanel(
             final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
             final PerformWrapper performWrapper,
             final Collection<PerformDescription> performs) {
@@ -99,7 +103,7 @@ public class PerformPanel extends JPanel {
             addPerform(perform);
         }
         setLayout(new MigLayout("ins 0, fill"));
-        performSpace = new TextAreaInputField(iconManager, config, "");
+        performSpace = new TextAreaInputField(iconManager, colourManagerFactory, config, "");
         add(new JScrollPane(performSpace), "grow, push");
     }
 

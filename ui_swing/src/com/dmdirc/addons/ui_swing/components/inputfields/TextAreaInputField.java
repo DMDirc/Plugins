@@ -27,6 +27,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,8 @@ public class TextAreaInputField extends JTextArea implements InputField,
     protected ColourPickerDialog colourPicker;
     /** Icon manager. */
     private final IconManager iconManager;
+    /** Colour manager. */
+    private final ColourManager colourManager;
     /** Global config. */
     private final AggregateConfigProvider config;
 
@@ -61,10 +64,12 @@ public class TextAreaInputField extends JTextArea implements InputField,
      * @param columns     The number of columns to use
      */
     public TextAreaInputField(final IconManager iconManager,
-            final AggregateConfigProvider config, final int rows, final int columns) {
+            final ColourManagerFactory colourManagerFactory, final AggregateConfigProvider config,
+            final int rows, final int columns) {
         super(rows, columns);
         this.iconManager = iconManager;
         this.config = config;
+        colourManager = colourManagerFactory.getColourManager(config);
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -77,10 +82,12 @@ public class TextAreaInputField extends JTextArea implements InputField,
      * @param text        The text to contain initially
      */
     public TextAreaInputField(final IconManager iconManager,
+            final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config, final String text) {
         super(text);
         this.iconManager = iconManager;
         this.config = config;
+        colourManager = colourManagerFactory.getColourManager(config);
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addPropertyChangeListener(this);
     }
@@ -99,7 +106,7 @@ public class TextAreaInputField extends JTextArea implements InputField,
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (config.getOptionBool("general", "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(TextAreaInputField.this,
-                    new ColourManager(config), iconManager, irc, hex);
+                    colourManager, iconManager, irc, hex);
             colourPicker.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent actionEvent) {

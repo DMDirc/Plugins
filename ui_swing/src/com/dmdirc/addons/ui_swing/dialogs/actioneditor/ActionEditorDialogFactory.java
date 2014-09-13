@@ -29,6 +29,7 @@ import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,31 +44,34 @@ public class ActionEditorDialogFactory {
     private final AggregateConfigProvider config;
     private final ActionSubstitutorFactory subsFactory;
     private final ActionFactory actionFactory;
+    private final ColourManagerFactory colourManagerFactory;
 
     @Inject
     public ActionEditorDialogFactory(
             @ClientModule.GlobalConfig final IconManager iconManager,
             @ClientModule.GlobalConfig final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
-            final ActionFactory actionFactory) {
+            final ActionFactory actionFactory,
+            final ColourManagerFactory colourManagerFactory) {
         this.iconManager = iconManager;
         this.config = config;
         this.subsFactory = subsFactory;
         this.actionFactory = actionFactory;
+        this.colourManagerFactory = colourManagerFactory;
     }
 
     public ActionEditorDialog getActionEditorDialog(
             final ActionsManagerDialog parentWindow,
             final String group) {
-        return new ActionEditorDialog(iconManager, config, subsFactory, actionFactory,
-                parentWindow, group);
+        return new ActionEditorDialog(iconManager, colourManagerFactory, config, subsFactory,
+                actionFactory, parentWindow, group);
     }
 
     public ActionEditorDialog getActionEditorDialog(
             final ActionsManagerDialog parentWindow,
             final Action action) {
-        return new ActionEditorDialog(iconManager, config, subsFactory, actionFactory,
-                parentWindow, action);
+        return new ActionEditorDialog(iconManager, colourManagerFactory, config, subsFactory,
+                actionFactory, parentWindow, action);
     }
 
 }
