@@ -60,6 +60,7 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Point;
 import java.awt.Window;
@@ -94,6 +95,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
     protected final FrameContainer frameParent;
+    /** Colour manager. */
+    protected final ColourManager colourManager;
     /** Frame output pane. */
     private TextPane textPane;
     /** search bar. */
@@ -135,10 +138,11 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         this.eventBus = deps.eventBus;
         this.commandParser = commandParser;
         this.clipboard = deps.clipboard;
+        this.colourManager = deps.colourManagerFactory.getColourManager(owner.getConfigManager());
 
         final AggregateConfigProvider config = owner.getConfigManager();
 
-        initComponents(deps.textPaneFactory);
+        initComponents(deps.textPaneFactory, colourManager);
         setFocusable(true);
 
         getTextPane().addTextPaneListener(this);
@@ -225,10 +229,11 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     /**
      * Initialises the components for this frame.
      */
-    private void initComponents(final TextPaneFactory textPaneFactory) {
+    private void initComponents(final TextPaneFactory textPaneFactory,
+            final ColourManager colourManager) {
         setTextPane(textPaneFactory.getTextPane(this));
 
-        searchBar = new SwingSearchBar(this, iconManager);
+        searchBar = new SwingSearchBar(this, iconManager, colourManager);
         searchBar.setVisible(false);
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -523,7 +528,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      * Updates colour settings from their config values.
      */
     private void updateColours() {
-        final ColourManager colourManager = new ColourManager(getContainer().getConfigManager());
         getTextPane().setForeground(UIUtilities.convertColour(
                 colourManager.getColourFromString(
                         getContainer().getConfigManager().getOptionString(
@@ -560,6 +564,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         final ActiveFrameManager activeFrameManager;
         final Clipboard clipboard;
         final CommandController commandController;
+        final ColourManagerFactory colourManagerFactory;
 
         @Inject
         public TextFrameDependencies(
@@ -574,7 +579,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
                 @GlobalConfig final AggregateConfigProvider globalConfig,
                 final ActiveFrameManager activeFrameManager,
                 final Clipboard clipboard,
-                final CommandController commandController) {
+                final CommandController commandController,
+                final ColourManagerFactory colourManagerFactory) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainWindow = mainWindow;
@@ -587,6 +593,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             this.activeFrameManager = activeFrameManager;
             this.clipboard = clipboard;
             this.commandController = commandController;
+            this.colourManagerFactory = colourManagerFactory;
         }
 
     }

@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -72,10 +73,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
      * @param frame  Frame
      * @param config Config
      */
-    public NickList(final ChannelFrame frame, final AggregateConfigProvider config) {
+    public NickList(final ChannelFrame frame, final AggregateConfigProvider config,
+            final ColourManagerFactory colourManagerFactory) {
         this.frame = frame;
         this.config = config;
-        this.colourManager = new ColourManager(config);
+        this.colourManager = colourManagerFactory.getColourManager(config);
 
         nickList = new JList<>();
 

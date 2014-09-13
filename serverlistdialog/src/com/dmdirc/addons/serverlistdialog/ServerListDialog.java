@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.color.ColorSpace;
@@ -99,7 +100,8 @@ public class ServerListDialog extends StandardDialog implements
             final ServerListModel serverListModel,
             @MainWindow final Window parentWindow,
             final Settings settingsPanel,
-            final IdentityController identityController) {
+            final IdentityController identityController,
+            final ColourManagerFactory colourManagerFactory) {
         super(parentWindow, ModalityType.MODELESS);
 
         setTitle("Server List");
@@ -121,7 +123,8 @@ public class ServerListDialog extends StandardDialog implements
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
                         null)));
         profileLayer = new JXLayer<>(new Profiles(model, identityController), profileLock);
-        performLayer = new JXLayer<>(new Perform(iconManager, globalConfig, performWrapper, model),
+        performLayer = new JXLayer<>(new Perform(iconManager, globalConfig, performWrapper, model,
+                colourManagerFactory),
                 performLock);
         settingsLayer = new JXLayer<>(settingsPanel, settingsLock);
         infoLayer = new JXLayer<>(new Info(model, urlHandler), infoLock);

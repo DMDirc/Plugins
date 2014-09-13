@@ -29,6 +29,7 @@ import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.EventUtils;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -74,6 +75,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             @Nullable final FrameContainer parent,
             final DCCChat dcc,
             final AggregateConfigProvider configManager,
+            final ColourManagerFactory colourManagerFactory,
             final CommandController commandController,
             final String title,
             final String nick,
@@ -82,7 +84,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
-        super(parent, title, "dcc-chat-inactive", configManager,
+        super(parent, title, "dcc-chat-inactive", configManager, colourManagerFactory,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,
                 tabCompleterFactory,

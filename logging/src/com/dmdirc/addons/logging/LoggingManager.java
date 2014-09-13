@@ -56,6 +56,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
@@ -108,6 +109,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final URLBuilder urlBuilder;
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
+    private final ColourManagerFactory colourManagerFactory;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
     /** Cached boolean settings. */
@@ -131,13 +133,15 @@ public class LoggingManager implements ConfigChangeListener {
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager, final URLBuilder urlBuilder, final DMDircMBassador eventBus,
-            @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider) {
+            @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
+            final ColourManagerFactory colourManagerFactory) {
         this.domain = domain;
         this.config = globalConfig;
         this.windowManager = windowManager;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
+        this.colourManagerFactory = colourManagerFactory;
     }
 
     public void load() {
@@ -769,7 +773,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
 
         final HistoryWindow window = new HistoryWindow("History", reader, target, urlBuilder,
-                eventBus, historyLines);
+                eventBus, colourManagerFactory, historyLines);
         windowManager.addWindow(target, window);
 
         return true;

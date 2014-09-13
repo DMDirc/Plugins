@@ -27,6 +27,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Dialog.ModalityType;
@@ -55,10 +56,11 @@ public class PlaceholderContainer extends FrameContainer {
     public PlaceholderContainer(
             final DCCManager plugin,
             final AggregateConfigProvider config,
+            final ColourManagerFactory colourManagerFactory,
             final Window parentWindow,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
-        super(null, "dcc", "DCCs", "DCCs", config, urlBuilder, eventBus,
+        super(null, "dcc", "DCCs", "DCCs", config, colourManagerFactory, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;

@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.messages.MessageSinkManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.util.URLBuilder;
 
@@ -52,10 +53,11 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final FrameContainer target,
             final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus,
-            final URLBuilder urlBuilder) {
+            final URLBuilder urlBuilder,
+            final ColourManagerFactory colourManagerFactory) {
         super(target, target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), urlBuilder, target.getCommandParser(),
-                target.getTabCompleter(), messageSinkManager, eventBus,
+                target.getConfigManager(), colourManagerFactory, urlBuilder,
+                target.getCommandParser(), target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;
     }

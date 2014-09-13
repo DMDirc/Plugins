@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
@@ -60,9 +61,10 @@ public class DebugWindow extends FrameContainer {
             final Parser parser,
             final Connection connection,
             final URLBuilder urlBuilder,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final ColourManagerFactory colourManagerFactory) {
         super(connection.getWindowModel(), "raw", "Parser Debug", title,
-                connection.getWindowModel().getConfigManager(),
+                connection.getWindowModel().getConfigManager(), colourManagerFactory,
                 urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;
