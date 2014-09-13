@@ -25,11 +25,12 @@ package com.dmdirc.addons.tabcompletion_bash;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.input.TabCompleterResult;
+import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
 import java.awt.Toolkit;
+import java.util.Locale;
 
 public class BashStyle implements TabCompletionStyle {
 
@@ -60,7 +61,7 @@ public class BashStyle implements TabCompletionStyle {
             final int end, final boolean shiftPressed,
             final AdditionalTabTargets additional) {
         final String word = original.substring(start, end);
-        final TabCompleterResult res = tabCompleter.complete(word, additional);
+        final TabCompletionMatches res = tabCompleter.complete(word, additional);
 
         if (start == lastPosition && word.equals(lastWord)) {
             tabCount++;
@@ -85,7 +86,7 @@ public class BashStyle implements TabCompletionStyle {
         } else {
             // Multiple results
 
-            final String sub = res.getBestSubstring();
+            final String sub = getBestSubstring(res);
             if (sub.equalsIgnoreCase(word) && tabCount >= 2) {
                 window.addLine("tabCompletion", res.toString());
 
@@ -96,6 +97,36 @@ public class BashStyle implements TabCompletionStyle {
                         start + sub.length());
             }
         }
+    }
+
+    /**
+     * Returns the longest substring that matches all results.
+     *
+     * @return longest possible substring matching all results
+     */
+    private String getBestSubstring(final TabCompletionMatches res) {
+        if (res.getResultCount() == 0) {
+            return "";
+        }
+
+        final boolean caseSensitive = window.getConfigManager()
+                .getOptionBool("tabcompletion", "casesensitive");
+
+        String substring = res.getResults().get(0);
+        for (String entry : res.getResults()) {
+            if (caseSensitive) {
+                while (!entry.startsWith(substring)) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+            } else {
+                while (!entry.toLowerCase(Locale.getDefault()).startsWith(
+                        substring.toLowerCase(Locale.getDefault()))) {
+                    substring = substring.substring(0, substring.length() - 1);
+                }
+            }
+        }
+
+        return substring;
     }
 
 }
