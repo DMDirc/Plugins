@@ -8,7 +8,7 @@
     <target name="init-dependencies"/>
 
     <target name="compile">
-        <exec executable="gradle" dir=".">
+        <exec executable="gradle" dir="." failonerror="true">
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="compileJava"/>
@@ -16,7 +16,7 @@
     </target>
 
     <target name="jar">
-        <exec executable="gradle" dir=".">
+        <exec executable="gradle" dir="." failonerror="true">
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="jar"/>
@@ -31,7 +31,7 @@
     </target>
 
     <target name="clean">
-        <exec executable="gradle" dir=".">
+        <exec executable="gradle" dir="." failonerror="true">
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="clean"/>
