@@ -45,7 +45,6 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -82,6 +81,7 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -364,7 +364,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelOpened(final ChannelOpenedEvent event) {
-        final String filename = getLogFile(event.getChannel());
+        final String filename = getLogFile(event.getChannel().getName());
 
         if (autobackbuffer) {
             showBackBuffer(event.getChannel(), filename);
@@ -376,7 +376,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelClosed(final ChannelClosedEvent event) {
-        final String filename = getLogFile(event.getChannel());
+        final String filename = getLogFile(event.getChannel().getName());
 
         appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
         if (openFiles.containsKey(filename)) {
@@ -566,20 +566,20 @@ public class LoggingManager implements ConfigChangeListener {
     /**
      * Get the name of the log file for a specific object.
      *
-     * @param object Object to get name for
+     * @param descriptor Description of the object to get a log file for.
      *
      * @return the name of the log file to use for this object.
      */
-    protected String getLogFile(final Object object) {
+    protected String getLogFile(@Nullable final String descriptor) {
         final StringBuffer directory = getLogDirectory();
         final StringBuffer file = new StringBuffer();
         final String md5String;
-        if (object == null) {
+        if (descriptor == null) {
             file.append("null.log");
             md5String = "";
         } else {
-            file.append(sanitise(object.toString().toLowerCase()));
-            md5String = object.toString();
+            file.append(sanitise(descriptor.toLowerCase()));
+            md5String = descriptor;
         }
         return getPath(directory, file, md5String);
     }
@@ -743,21 +743,19 @@ public class LoggingManager implements ConfigChangeListener {
      * @return True if the history is available, false otherwise
      */
     protected boolean showHistory(final FrameContainer target) {
-        final Object component;
+        final String descriptor;
 
         if (target instanceof Channel) {
-            component = ((Channel) target).getChannelInfo();
+            descriptor = ((Channel) target).getName();
         } else if (target instanceof Query) {
             final Parser parser = target.getConnection().getParser();
-            component = parser.getClient(((PrivateChat) target).getHost());
-        } else if (target instanceof Connection) {
-            component = ((Connection) target).getParser();
+            descriptor = parser.getClient(((PrivateChat) target).getHost()).getNickname();
         } else {
             // Unknown component
             return false;
         }
 
-        final String log = getLogFile(component);
+        final String log = getLogFile(descriptor);
 
         if (!new File(log).exists()) {
             // File doesn't exist
