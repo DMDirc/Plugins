@@ -28,6 +28,9 @@ subprojects {
             java {
                 srcDir 'test'
             }
+            resources {
+                srcDir 'test-res'
+            }
         }
     }
 
