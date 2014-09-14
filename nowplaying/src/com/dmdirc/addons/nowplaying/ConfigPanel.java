@@ -145,9 +145,8 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
 
         previewPanel = panel;
 
-        add(new NowPlayingSubsitutionPanel(Arrays.asList(new String[]{"app",
-            "title", "artist", "album", "bitrate", "format", "length",
-            "time", "state"})), "growx");
+        add(new NowPlayingSubsitutionPanel(Arrays.asList("app", "title", "artist", "album",
+                "bitrate", "format", "length", "time", "state")), "growx");
         schedulePreviewUpdate();
     }
 

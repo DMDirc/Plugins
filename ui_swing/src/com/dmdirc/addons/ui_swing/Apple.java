@@ -309,7 +309,7 @@ public class Apple implements InvocationHandler {
                     new Class<?>[]{listenerClass}, this);
 
             final Method method = getApplication().getClass().getMethod(handlerMethod,
-                    new Class<?>[]{listenerClass});
+                    listenerClass);
             method.invoke(getApplication(), listener);
 
             return true;

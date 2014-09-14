@@ -67,9 +67,7 @@ public class ServerListServiceProvider implements ServiceProvider {
         this.serverList = serverList;
         this.pluginManager = pluginManager;
         this.eventBus = eventBus;
-        this.services = Arrays.asList(new Service[]{
-            pluginManager.getService("parser", "serverlist", true)
-        });
+        this.services = Arrays.asList(pluginManager.getService("parser", "serverlist", true));
     }
 
     /**
