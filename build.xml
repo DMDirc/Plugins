@@ -11,7 +11,7 @@
         <exec executable="gradle" dir="." failonerror="true">
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
-            <arg value="compile"/>
+            <arg value="compileJava"/>
         </exec>
     </target>
 
@@ -40,6 +40,12 @@
 
     <target name="with.clover"/>
 
-    <target name="compile-for-tests" depends="compile"/>
+    <target name="compile-for-tests" depends="compile">
+        <exec executable="gradle" dir="." failonerror="true">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="compileTestJava"/>
+        </exec>
+    </target>
 
 </project>
