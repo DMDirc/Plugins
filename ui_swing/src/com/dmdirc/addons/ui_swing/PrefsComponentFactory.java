@@ -90,7 +90,7 @@ public final class PrefsComponentFactory {
     public PrefsComponentFactory(
             final DMDircMBassador eventBus,
             @GlobalConfig final IconManager iconManager,
-            final ColourManager colourManager) {
+            @GlobalConfig final ColourManager colourManager) {
         this.iconManager = iconManager;
         this.colourManager = colourManager;
         this.eventBus = eventBus;
