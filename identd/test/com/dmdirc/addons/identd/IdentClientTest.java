@@ -23,7 +23,6 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.Server;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -47,7 +46,7 @@ public class IdentClientTest {
 
     @Mock private AggregateConfigProvider acp;
     @Mock private ConnectionManager sm;
-    @Mock private Server server;
+    @Mock private Connection connection;
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
     @Mock private AggregateConfigProvider config;
@@ -55,10 +54,10 @@ public class IdentClientTest {
 
     protected IdentClient getClient() {
         final List<Connection> servers = new ArrayList<>();
-        servers.add(server);
+        servers.add(connection);
 
         when(sm.getConnections()).thenReturn(servers);
-        when(server.getParser()).thenReturn(parser);
+        when(connection.getParser()).thenReturn(parser);
         when(parser.getLocalPort()).thenReturn(60);
         when(parser.getLocalClient()).thenReturn(client);
         when(client.getNickname()).thenReturn("nickname");
