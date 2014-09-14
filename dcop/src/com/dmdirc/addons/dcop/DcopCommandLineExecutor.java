@@ -46,25 +46,20 @@ public class DcopCommandLineExecutor implements DcopExecutor {
             final String app,
             final String object,
             final String function) {
-        final ArrayList<String> result = new ArrayList<>();
-
-        final InputStreamReader reader;
-        final BufferedReader input;
-        final Process process;
+        final List<String> result = new ArrayList<>();
 
         try {
-            process = Runtime.getRuntime().exec(new String[]{"dcop", app, object, function});
+            final Process process =
+                    Runtime.getRuntime().exec(new String[]{"dcop", app, object, function});
 
-            reader = new InputStreamReader(process.getInputStream());
-            input = new BufferedReader(reader);
-
-            String line;
-            while ((line = input.readLine()) != null) {
-                result.add(line);
+            try (InputStreamReader reader = new InputStreamReader(process.getInputStream());
+                    BufferedReader input = new BufferedReader(reader)) {
+                String line;
+                while ((line = input.readLine()) != null) {
+                    result.add(line);
+                }
             }
 
-            reader.close();
-            input.close();
             process.destroy();
         } catch (IOException ex) {
             // Do nothing
