@@ -22,13 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
@@ -104,11 +101,11 @@ public class DataLoaderWorker
      */
     public DataLoaderWorker(
             final Downloader downloader,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
+            final String tempDirectory,
             final DMDircMBassador eventBus,
             final AddonTable table,
             final boolean download,
