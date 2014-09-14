@@ -88,7 +88,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
      */
     public NickColourPanel(
             final Window parentWindow, final IconManager iconManager,
-            final ColourManager colourManager, final ConfigProvider userSettings,
+            final ColourManager colourManager,
+            final ConfigProvider userSettings,
             final AggregateConfigProvider config, final String domain) {
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;

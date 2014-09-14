@@ -56,7 +56,8 @@ public class NickColourPlugin extends BasePlugin {
     private NickColourManager nickColourManager;
 
     public NickColourPlugin(final PluginInfo pluginInfo, final SwingController controller,
-            final IconManager iconManager, final ColourManager colourManager) {
+            final IconManager iconManager,
+            final ColourManager colourManager) {
         this.pluginInfo = pluginInfo;
         this.mainWindow = controller.getMainFrame();
         this.iconManager = iconManager;

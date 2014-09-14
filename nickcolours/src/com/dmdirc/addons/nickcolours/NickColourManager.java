@@ -69,7 +69,7 @@ public class NickColourManager implements ConfigChangeListener {
     private boolean setnicklist;
 
     @Inject
-    public NickColourManager(final ColourManager colourManager,
+    public NickColourManager(@GlobalConfig final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus) {
         this.domain = domain;

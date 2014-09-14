@@ -32,7 +32,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -52,7 +52,7 @@ public class TopicBarFactory {
     private final Provider<Window> parentWindow;
     private final AggregateConfigProvider globalConfig;
     private final String domain;
-    private final ColourManager colourManager;
+    private final ColourManagerFactory colourManagerFactory;
     private final PluginManager pluginManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
@@ -63,7 +63,7 @@ public class TopicBarFactory {
             @MainWindow final Provider<Window> parentWindow,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
-            final ColourManager colourManager,
+            final ColourManagerFactory colourManagerFactory,
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
@@ -71,7 +71,7 @@ public class TopicBarFactory {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;
-        this.colourManager = colourManager;
+        this.colourManagerFactory = colourManagerFactory;
         this.pluginManager = pluginManager;
         this.clipboard = clipboard;
         this.commandController = commandController;
@@ -82,8 +82,10 @@ public class TopicBarFactory {
             final Channel channel,
             final ChannelFrame window,
             final IconManager iconManager) {
-        return new TopicBar(parentWindow.get(), globalConfig, domain, colourManager, pluginManager,
-                clipboard, commandController, channel, window, iconManager, eventBus);
+        return new TopicBar(parentWindow.get(), globalConfig, domain,
+                colourManagerFactory.getColourManager(channel.getConfigManager()),
+                pluginManager, clipboard, commandController, channel, window, iconManager,
+                eventBus);
     }
 
 }

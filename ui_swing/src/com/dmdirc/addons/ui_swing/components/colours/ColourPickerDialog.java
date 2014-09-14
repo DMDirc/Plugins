@@ -74,7 +74,8 @@ public class ColourPickerDialog extends JDialog {
      * @since 0.6
      */
     public ColourPickerDialog(final Component centerObject,
-            final ColourManager colourManager, final IconManager iconManager,
+            final ColourManager colourManager,
+            final IconManager iconManager,
             final boolean showIRC, final boolean showHex, final Window window) {
         super(window, ModalityType.MODELESS);
         this.centerObject = centerObject;
