@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.ClientModule;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
@@ -55,7 +56,7 @@ public class OsdManager {
     private final String domain;
 
     public OsdManager(final Window mainFrame, final IdentityController identityController,
-            final OsdPlugin plugin, final ColourManager colourManager,
+            final OsdPlugin plugin, @ClientModule.GlobalConfig final ColourManager colourManager,
             final PluginInfo pluginInfo) {
         this.mainFrame = mainFrame;
         this.identityController = identityController;

@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.osd;
 
+import com.dmdirc.ClientModule;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.config.prefs.CategoryChangeListener;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -90,7 +91,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
             final PluginInfo pluginInfo,
             final IdentityController identityController,
             final CommandController commandController,
-            final ColourManager colourManager) {
+            @ClientModule.GlobalConfig final ColourManager colourManager) {
         this.pluginInfo = pluginInfo;
         this.identityController = identityController;
         this.colourManager = colourManager;

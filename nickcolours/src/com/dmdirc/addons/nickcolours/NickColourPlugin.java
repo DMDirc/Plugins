@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.dmdirc.ClientModule;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -56,7 +57,8 @@ public class NickColourPlugin extends BasePlugin {
     private NickColourManager nickColourManager;
 
     public NickColourPlugin(final PluginInfo pluginInfo, final SwingController controller,
-            final IconManager iconManager, final ColourManager colourManager) {
+            final IconManager iconManager,
+            @ClientModule.GlobalConfig final ColourManager colourManager) {
         this.pluginInfo = pluginInfo;
         this.mainWindow = controller.getMainFrame();
         this.iconManager = iconManager;

@@ -116,7 +116,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     @Inject
     public TreeFrameManager(final WindowManager windowManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final ColourManager colourManager, final ActiveFrameManager activeFrameManager,
+            @GlobalConfig final ColourManager colourManager, final ActiveFrameManager
+            activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
             final DMDircMBassador eventBus, @SwingEventBus final DMDircMBassador swingEventBus) {

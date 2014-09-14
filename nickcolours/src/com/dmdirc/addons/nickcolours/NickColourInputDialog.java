@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.dmdirc.ClientModule;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.ui.IconManager;
@@ -76,7 +77,7 @@ public class NickColourInputDialog extends StandardDialog
      */
     public NickColourInputDialog(
             final Window parentWindow,
-            final ColourManager colourManager,
+            @ClientModule.GlobalConfig final ColourManager colourManager,
             final IconManager iconManager,
             final NickColourPanel panel, final int row,
             final String nickname, final String network,
@@ -106,7 +107,7 @@ public class NickColourInputDialog extends StandardDialog
      */
     public NickColourInputDialog(
             final Window parentWindow,
-            final ColourManager colourManager,
+            @ClientModule.GlobalConfig final ColourManager colourManager,
             final IconManager iconManager,
             final NickColourPanel panel) {
         this(parentWindow, colourManager, iconManager, panel, -1, "", "", "", "");
