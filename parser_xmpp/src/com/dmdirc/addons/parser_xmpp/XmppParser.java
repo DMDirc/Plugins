@@ -124,7 +124,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
         LOG.debug(
                 "XMPP parser created with query string {}, parsed fake channel = {}, priority = {}",
-                new Object[]{address.getQuery(), useFakeChannel, priority});
+                address.getQuery(), useFakeChannel, priority);
     }
 
     @Override

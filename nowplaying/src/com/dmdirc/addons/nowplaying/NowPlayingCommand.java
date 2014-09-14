@@ -175,10 +175,8 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
 
-        final List<String> subsList = Arrays.asList(new String[]{
-            "$artist", "$title", "$album", "$app", "$bitrate", "$format",
-            "$length", "$state", "$time"
-        });
+        final List<String> subsList = Arrays.asList("$artist", "$title", "$album", "$app",
+                "$bitrate", "$format", "$length", "$state", "$time");
 
         if (arg == 0) {
             final AdditionalTabTargets res = TabCompleterUtils.

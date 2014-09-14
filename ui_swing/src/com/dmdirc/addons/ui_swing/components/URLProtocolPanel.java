@@ -129,12 +129,8 @@ public class URLProtocolPanel extends JPanel implements ActionListener,
         optionType.add(mail);
         optionType.add(custom);
 
-        subsPanel = new URLSubstitutionsPanel(Arrays.asList(new String[]{
-            "url",
-            "fragment", "host", "path", "port", "query", "protocol",
-            "username",
-            "password"
-        }));
+        subsPanel = new URLSubstitutionsPanel(Arrays.asList("url", "fragment", "host", "path",
+                "port", "query", "protocol", "username", "password"));
         subsPanel.setVisible(custom.isSelected());
 
         updateSelection();
