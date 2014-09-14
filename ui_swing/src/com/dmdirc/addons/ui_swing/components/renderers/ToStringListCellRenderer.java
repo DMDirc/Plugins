@@ -45,7 +45,7 @@ public class ToStringListCellRenderer<E> extends MethodListCellRenderer<E> {
      */
     public ToStringListCellRenderer(final ListCellRenderer<? super E> parentRenderer,
             final Class<? super E> type) {
-        super(parentRenderer, ToStringListCellRenderer.<E>getMethod(type));
+        super(parentRenderer, ToStringListCellRenderer.getMethod(type));
     }
 
     private static <E> Method getMethod(final Class<? super E> type) {

@@ -147,7 +147,7 @@ public class DataLoaderWorker
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
                 loadingPanel.add(new TextLabel("Unable to download feeds: " + ex.getMessage()));
-                return Collections.<AddonInfo>emptyList();
+                return Collections.emptyList();
             }
         }
 
@@ -157,7 +157,7 @@ public class DataLoaderWorker
         try {
             data.read();
         } catch (final IOException | InvalidConfigFileException ex) {
-            return Collections.<AddonInfo>emptyList();
+            return Collections.emptyList();
         }
 
         final List<AddonInfo> list = new ArrayList<>();
@@ -177,10 +177,10 @@ public class DataLoaderWorker
         try {
             data = get();
         } catch (final InterruptedException ex) {
-            data = Collections.<AddonInfo>emptyList();
+            data = Collections.emptyList();
         } catch (final ExecutionException ex) {
             eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
-            data = Collections.<AddonInfo>emptyList();
+            data = Collections.emptyList();
         }
         final int selectedRow;
         if (table.getRowCount() > 0 && table.getSelectedRow() > 0) {

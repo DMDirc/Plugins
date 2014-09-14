@@ -196,7 +196,7 @@ public class ProfileManagerModel {
     public void setSelectedProfile(final Object selectedProfile) {
         if (selectedProfile != null
                 && !profiles.isEmpty()
-                && profiles.contains((Profile) selectedProfile)) {
+                && profiles.contains(selectedProfile)) {
             upadateSelectedProfile((Profile) selectedProfile);
         }
         pcs.firePropertyChange("selectedprofile", null, null);
@@ -316,7 +316,7 @@ public class ProfileManagerModel {
     public void setSelectedNickname(final Object selectedNickname) {
         if (selectedProfile != null
                 && selectedNickname instanceof String
-                && selectedProfile.getNicknames().contains((String) selectedNickname)) {
+                && selectedProfile.getNicknames().contains(selectedNickname)) {
             this.selectedNickname = (String) selectedNickname;
             pcs.firePropertyChange("selectednickname", null, null);
         }

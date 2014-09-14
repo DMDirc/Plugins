@@ -7,7 +7,6 @@ package com.dmdirc.addons.ui_swing.components.text;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
-import javax.swing.text.GlyphView;
 import javax.swing.text.LabelView;
 import javax.swing.text.View;
 
@@ -61,7 +60,7 @@ public class WrapLabelView extends LabelView {
                 final int index = getDocument().getText(p0, p1 - p0)
                         .indexOf("\r");
                 if (index >= 0) {
-                    return (GlyphView) createFragment(p0, p0 + index + 1);
+                    return createFragment(p0, p0 + index + 1);
                 }
             } catch (BadLocationException ex) {
                 //should never happen
