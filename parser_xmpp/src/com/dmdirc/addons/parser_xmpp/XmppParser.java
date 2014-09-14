@@ -286,7 +286,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
     @Override
     public List<String> getServerInformationLines() {
-        return Collections.<String>emptyList(); // TODO
+        return Collections.emptyList(); // TODO
     }
 
     @Override

@@ -746,7 +746,7 @@ public class LoggingManager implements ConfigChangeListener {
         final String descriptor;
 
         if (target instanceof Channel) {
-            descriptor = ((Channel) target).getName();
+            descriptor = target.getName();
         } else if (target instanceof Query) {
             final Parser parser = target.getConnection().getParser();
             descriptor = parser.getClient(((PrivateChat) target).getHost()).getNickname();

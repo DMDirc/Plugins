@@ -159,11 +159,11 @@ public class NowPlayingManager {
     private void removePlugin(final PluginInfo target) {
         final Plugin targetPlugin = target.getPlugin();
         if (targetPlugin instanceof MediaSource) {
-            sources.remove((MediaSource) targetPlugin);
+            sources.remove(targetPlugin);
         }
 
         if (targetPlugin instanceof MediaSourceManager) {
-            managers.remove((MediaSourceManager) targetPlugin);
+            managers.remove(targetPlugin);
         }
     }
 
