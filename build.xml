@@ -8,7 +8,15 @@
     <target name="init-dependencies"/>
 
     <target name="compile">
-        <exec executable="gradle" dir="." failonerror="true">
+        <exec executable="gradlew" dir="." failonerror="true" resolveexecutable="true" osfamily="unix">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="compileJava"/>
+        </exec>
+
+        <exec executable="cmd" dir="." failonerror="true" osfamily="windows">
+            <arg value="/c"/>
+            <arg value="gradlew.bat"/>
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="compileJava"/>
@@ -16,7 +24,15 @@
     </target>
 
     <target name="jar">
-        <exec executable="gradle" dir="." failonerror="true">
+        <exec executable="gradlew" dir="." failonerror="true" resolveexecutable="true" osfamily="unix">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="jar"/>
+        </exec>
+
+        <exec executable="cmd" dir="." failonerror="true" osfamily="windows">
+            <arg value="/c"/>
+            <arg value="gradlew.bat"/>
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="jar"/>
@@ -31,7 +47,15 @@
     </target>
 
     <target name="clean">
-        <exec executable="gradle" dir="." failonerror="true">
+        <exec executable="gradlew" dir="." failonerror="true" resolveexecutable="true" osfamily="unix">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="clean"/>
+        </exec>
+
+        <exec executable="cmd" dir="." failonerror="true" osfamily="windows">
+            <arg value="/c"/>
+            <arg value="gradlew.bat"/>
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="clean"/>
@@ -41,7 +65,15 @@
     <target name="with.clover"/>
 
     <target name="compile-for-tests" depends="compile">
-        <exec executable="gradle" dir="." failonerror="true">
+        <exec executable="gradlew" dir="." failonerror="true" resolveexecutable="true" osfamily="unix">
+            <arg value="-PdmdircOutput=${dmdircOutput}"/>
+            <arg value="--parallel"/>
+            <arg value="compileTestJava"/>
+        </exec>
+
+        <exec executable="cmd" dir="." failonerror="true" osfamily="windows">
+            <arg value="/c"/>
+            <arg value="gradlew.bat"/>
             <arg value="-PdmdircOutput=${dmdircOutput}"/>
             <arg value="--parallel"/>
             <arg value="compileTestJava"/>
