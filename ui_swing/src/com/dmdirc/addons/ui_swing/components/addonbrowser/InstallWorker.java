@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
 
@@ -56,9 +54,9 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
 
     public InstallWorker(
             final Downloader downloader,
-            @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
-            @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
-            @Directory(DirectoryType.THEMES) final String themeDirectory,
+            final String tempDirectory,
+            final String pluginDirectory,
+            final String themeDirectory,
             final PluginManager pluginManager,
             final DMDircMBassador eventBus,
             final AddonInfo info,
