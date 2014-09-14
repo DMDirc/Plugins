@@ -29,15 +29,17 @@ import com.dmdirc.interfaces.CommandController;
 
 import com.google.common.collect.Sets;
 
+import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.dmdirc.harness.CommandArgsMatcher.eqLine;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.never;
@@ -95,7 +97,8 @@ public class DebugTest {
         debug.execute(container, arguments, commandContext);
 
         verify(container, never()).addLine(anyString(), anyString());
-        verify(debugCommand).execute(same(container), eqLine("/test"), same(commandContext));
+        verify(debugCommand).execute(same(container), eqLine("/test"),
+                same(commandContext));
     }
 
     /** Checks the debug command executes a subcommand with args. */
@@ -110,7 +113,32 @@ public class DebugTest {
         debug.execute(container, arguments, commandContext);
 
         verify(container, never()).addLine(anyString(), anyString());
-        verify(debugCommand).execute(same(container), eqLine("/test 1 2 3"), same(commandContext));
+        verify(debugCommand).execute(same(container), eqLine("/test 1 2 3"),
+                same(commandContext));
+    }
+
+    private static class CommandArgsMatcher extends ArgumentMatcher<CommandArguments> {
+
+        private final String text;
+
+        public CommandArgsMatcher(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public boolean matches(final Object item) {
+            return text.equals(((CommandArguments) item).getLine());
+        }
+
+        @Override
+        public void describeTo(final Description description) {
+            description.appendText("eqLine(\"" + text + "\")");
+        }
+
+    }
+
+    public static CommandArguments eqLine(final String line) {
+        return argThat(new CommandArgsMatcher(line));
     }
 
 }
