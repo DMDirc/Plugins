@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
+import com.dmdirc.interfaces.ConnectionManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,19 +38,19 @@ public class ServerInfoDialogFactory {
 
     private final LagDisplayManager manager;
     private final MainFrame mainFrame;
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
 
     @Inject
     public ServerInfoDialogFactory(final LagDisplayManager manager, final MainFrame mainFrame,
-            final ServerManager serverManager) {
+            final ConnectionManager connectionManager) {
         this.manager = manager;
         this.mainFrame = mainFrame;
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
     }
 
     public ServerInfoDialog getServerInfoDialog(
             final StatusbarPanel<JLabel> parent) {
-        return new ServerInfoDialog(manager, parent, mainFrame, serverManager);
+        return new ServerInfoDialog(manager, parent, mainFrame, connectionManager);
     }
 
 }

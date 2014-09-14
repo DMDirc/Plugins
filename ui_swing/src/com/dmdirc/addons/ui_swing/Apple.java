@@ -24,10 +24,10 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.InvalidURIException;
@@ -73,7 +73,7 @@ public class Apple implements InvocationHandler {
     /** Whether the CLIENT_OPENED action has been called or not. */
     private boolean clientOpened = false;
     /** The server manager to use to connect to URLs. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** Event bus. */
     private final DMDircMBassador eventBus;
 
@@ -84,16 +84,16 @@ public class Apple implements InvocationHandler {
      * This will attempt to load the native library and register the URL open callback.
      *
      * @param configManager Config manager
-     * @param serverManager The server manager to use to connect to URLs.
+     * @param connectionManager The server manager to use to connect to URLs.
      * @param eventBus      The bus to listen for events on.
      */
     @Inject
     public Apple(
             @GlobalConfig final AggregateConfigProvider configManager,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final DMDircMBassador eventBus) {
         this.configManager = configManager;
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.eventBus = eventBus;
     }
 
@@ -444,7 +444,7 @@ public class Apple implements InvocationHandler {
         synchronized (addresses) {
             clientOpened = true;
             for (final URI addr : addresses) {
-                serverManager.connectToAddress(addr);
+                connectionManager.connectToAddress(addr);
             }
             addresses.clear();
         }
@@ -515,7 +515,7 @@ public class Apple implements InvocationHandler {
                     Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
                 }
 
-                serverManager.connectToAddress(uri);
+                connectionManager.connectToAddress(uri);
             } else {
                 addresses.add(uri);
             }

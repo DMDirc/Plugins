@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
+import com.dmdirc.interfaces.ConnectionManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +45,7 @@ public class HelpMenu extends JMenu implements ActionListener {
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Server manager to use to join dev chat. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** Provider of feedback dialogs. */
     private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
     /** Provider of about dialogs. */
@@ -54,17 +54,17 @@ public class HelpMenu extends JMenu implements ActionListener {
     /**
      * Instantiates a new help menu.
      *
-     * @param serverManager          The manager to use to join dev chat.
+     * @param connectionManager          The manager to use to join dev chat.
      * @param feedbackDialogProvider Provider of feedback dialogs.
      * @param aboutDialogProvider    Provider of about dialogs.
      */
     @Inject
     public HelpMenu(
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final DialogProvider<FeedbackDialog> feedbackDialogProvider,
             final DialogProvider<AboutDialog> aboutDialogProvider) {
         super("Help");
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.feedbackDialogProvider = feedbackDialogProvider;
         this.aboutDialogProvider = aboutDialogProvider;
         setMnemonic('h');
@@ -108,7 +108,7 @@ public class HelpMenu extends JMenu implements ActionListener {
                 aboutDialogProvider.displayOrRequestFocus();
                 break;
             case "JoinDevChat":
-                serverManager.joinDevChat();
+                connectionManager.joinDevChat();
                 break;
             case "feedback":
                 feedbackDialogProvider.displayOrRequestFocus();
