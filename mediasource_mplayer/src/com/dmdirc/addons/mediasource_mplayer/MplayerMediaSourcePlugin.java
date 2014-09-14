@@ -93,30 +93,25 @@ public class MplayerMediaSourcePlugin extends BasePlugin implements MediaSource 
      * @return Information about the currently playing track
      */
     public static List<String> getInfo() {
-        final ArrayList<String> result = new ArrayList<>();
-
-        final InputStreamReader reader;
-        final BufferedReader input;
-        final Process process;
+        final List<String> result = new ArrayList<>();
 
         try {
-            final String[] command = new String[]{"/bin/bash", "-c",
+            final String[] command = {"/bin/bash", "-c",
                 "/usr/bin/lsof -c gmplayer |"
                 + " grep -Ev '/dev|/lib|/var|/usr|/SYS|DIR|/tmp|pipe|socket|"
                 + "\\.xession|fontconfig' | tail -n 1 | sed -r 's/ +/ /g' |"
                 + " cut -d ' ' -f 9- | sed -r 's/^.*\\/(.*?)$/\\1/'"};
-            process = Runtime.getRuntime().exec(command);
+            final Process process = Runtime.getRuntime().exec(command);
 
-            reader = new InputStreamReader(process.getInputStream());
-            input = new BufferedReader(reader);
+            try (InputStreamReader reader = new InputStreamReader(process.getInputStream());
+                    BufferedReader input = new BufferedReader(reader)) {
 
-            String line;
-            while ((line = input.readLine()) != null) {
-                result.add(line);
+                String line;
+                while ((line = input.readLine()) != null) {
+                    result.add(line);
+                }
             }
 
-            reader.close();
-            input.close();
             process.destroy();
         } catch (IOException ex) {
             ex.printStackTrace();

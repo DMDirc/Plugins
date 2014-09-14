@@ -59,26 +59,20 @@ public final class DcopPlugin extends BaseCommandPlugin {
     @Exported
     @Deprecated
     public static List<String> getDcopResult(final String command) {
-        final ArrayList<String> result = new ArrayList<>();
-
-        final InputStreamReader reader;
-        final BufferedReader input;
-        final Process process;
+        final List<String> result = new ArrayList<>();
 
         try {
-            process = Runtime.getRuntime().exec(command);
+            final Process process = Runtime.getRuntime().exec(command);
 
-            reader = new InputStreamReader(process.getInputStream());
-            input = new BufferedReader(reader);
+            try (InputStreamReader reader = new InputStreamReader(process.getInputStream());
+                    BufferedReader input = new BufferedReader(reader)) {
+                String line;
 
-            String line;
-
-            while ((line = input.readLine()) != null) {
-                result.add(line);
+                while ((line = input.readLine()) != null) {
+                    result.add(line);
+                }
             }
 
-            reader.close();
-            input.close();
             process.destroy();
         } catch (IOException ex) {
             // Do nothing

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -85,7 +86,7 @@ public final class AudioPlayer implements Runnable {
      */
     public static boolean isValid(final File file) {
         final AudioType type = getAudioType(file);
-        return (type != AudioType.INVALID);
+        return type != AudioType.INVALID;
     }
 
     /**
@@ -96,14 +97,11 @@ public final class AudioPlayer implements Runnable {
      * @return AudioType for this file.
      */
     public static AudioType getAudioType(final File file) {
-        AudioType type;
-        try {
-            AudioSystem.getAudioInputStream(file);
-            type = AudioType.WAV;
+        try (AudioInputStream unused = AudioSystem.getAudioInputStream(file)) {
+            return AudioType.WAV;
         } catch (UnsupportedAudioFileException | IOException e) {
-            type = AudioType.INVALID;
+            return AudioType.INVALID;
         }
-        return type;
     }
 
     /**
