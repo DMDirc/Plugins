@@ -40,7 +40,11 @@ public class ServerListDialogPlugin extends BasePlugin {
         super.onUnload();
 
         controller.removeMenu();
-        controller = null;
+    }
+
+    @Override
+    public void onLoad() {
+        controller.addMenu();
     }
 
     @Override
@@ -49,7 +53,6 @@ public class ServerListDialogPlugin extends BasePlugin {
         setObjectGraph(graph.plus(new ServerListModule()));
 
         controller = getObjectGraph().get(ServerListController.class);
-        controller.addMenu();
     }
 
 }
