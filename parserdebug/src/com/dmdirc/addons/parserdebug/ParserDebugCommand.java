@@ -76,7 +76,7 @@ public final class ParserDebugCommand extends Command {
             final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 
-        final Parser parser = ((ServerCommandContext) context).getServer().getParser();
+        final Parser parser = ((ServerCommandContext) context).getConnection().getParser();
 
         if (parser == null) {
             sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
