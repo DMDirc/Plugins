@@ -23,9 +23,9 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.ServerManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
@@ -51,7 +51,7 @@ public class IdentClient implements Runnable {
     /** The Thread in use for this client. */
     private volatile Thread thread;
     /** Server manager. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider config;
     /** This plugin's settings domain. */
@@ -63,17 +63,17 @@ public class IdentClient implements Runnable {
      * @param eventBus      The event bus to post errors on
      * @param server        The server that owns this
      * @param socket        The socket we are handing
-     * @param serverManager Server manager to retrieve servers from
+     * @param connectionManager Server manager to retrieve servers from
      * @param config        Global config to read settings from
      * @param domain        This plugin's settings domain
      */
     public IdentClient(final DMDircMBassador eventBus, final IdentdServer server, final Socket socket,
-            final ServerManager serverManager, final AggregateConfigProvider config,
+            final ConnectionManager connectionManager, final AggregateConfigProvider config,
             final String domain) {
         this.eventBus = eventBus;
         this.server = server;
         this.socket = socket;
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.config = config;
         this.domain = domain;
     }
@@ -239,7 +239,7 @@ public class IdentClient implements Runnable {
      * @return The server instance listening on the given port
      */
     protected Connection getConnectionByPort(final int port) {
-        for (Connection connection : serverManager.getServers()) {
+        for (Connection connection : connectionManager.getConnections()) {
             if (connection.getParser().getLocalPort() == port) {
                 return connection;
             }

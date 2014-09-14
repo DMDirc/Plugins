@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Server manager to retrieve servers from. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
 
     /**
      * Creates a new ServerInfoDialog.
@@ -56,23 +56,23 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
      * @param manager       The {@link LagDisplayManager} we're using for info
      * @param parent        The {@link JPanel} to use for positioning
      * @param mainFrame     The frame that will own this dialog.
-     * @param serverManager The manager to use to iterate servers.
+     * @param connectionManager The manager to use to iterate servers.
      */
     public ServerInfoDialog(
             final LagDisplayManager manager,
             final StatusbarPanel<JLabel> parent,
             final MainFrame mainFrame,
-            final ServerManager serverManager) {
+            final ConnectionManager connectionManager) {
         super(parent, mainFrame);
 
         this.manager = manager;
         this.mainFrame = mainFrame;
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
     }
 
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Connection> connections = serverManager.getServers();
+        final List<Connection> connections = connectionManager.getConnections();
 
         if (connections.isEmpty()) {
             panel.add(new JLabel("No open servers."));

@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.ServerManager;
 import com.dmdirc.events.ClientClosingEvent;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -42,7 +42,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     /** The config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** The server manager to use to disconnect all servers. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** The main frame to interact with. */
     private final MainFrame mainFrame;
     /** Bus to dispatch events on. */
@@ -52,19 +52,19 @@ public class QuitWorker extends SwingWorker<Void, Void> {
      * Creates a new {@link QuitWorker}.
      *
      * @param identityController The identity controller to use to read/write settings.
-     * @param serverManager      The server manager to use to disconnect all servers.
+     * @param connectionManager      The server manager to use to disconnect all servers.
      * @param mainFrame          The main frame to interact with.
      * @param eventBus           Bus to dispatch events on.
      */
     @Inject
     public QuitWorker(
             final IdentityController identityController,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final MainFrame mainFrame,
             final DMDircMBassador eventBus) {
         this.globalIdentity = identityController.getUserSettings();
         this.globalConfig = identityController.getGlobalConfiguration();
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.mainFrame = mainFrame;
         this.eventBus = eventBus;
     }
@@ -72,7 +72,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     @Override
     protected Void doInBackground() {
         eventBus.publishAsync(new ClientClosingEvent());
-        serverManager.closeAll(globalConfig.getOption("general", "closemessage"));
+        connectionManager.closeAll(globalConfig.getOption("general", "closemessage"));
         globalIdentity.setOption("ui", "frameManagerSize",
                 String.valueOf(mainFrame.getFrameManagerSize()));
         return null;

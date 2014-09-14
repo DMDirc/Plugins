@@ -24,8 +24,8 @@ package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.ServerManager;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
@@ -52,7 +52,7 @@ public final class IdentdServer implements Runnable {
     /** Arraylist of all the clients we have */
     private final List<IdentClient> clientList = new ArrayList<>();
     /** Server manager. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** Have we failed to start this server previously? */
     private boolean failed;
     /** Global configuration to read plugin's from. */
@@ -64,17 +64,17 @@ public final class IdentdServer implements Runnable {
      * Create the IdentdServer.
      *
      * @param eventBus      The event bus to post errors on
-     * @param serverManager Server manager to iterate over servers
+     * @param connectionManager Server manager to iterate over servers
      * @param config        Global config
      * @param domain        This plugin's setting domain
      */
     @Inject
     public IdentdServer(final DMDircMBassador eventBus,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain) {
         this.eventBus = eventBus;
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.config = config;
         this.domain = domain;
     }
@@ -89,7 +89,7 @@ public final class IdentdServer implements Runnable {
             try {
                 final Socket clientSocket = serverSocket.accept();
                 final IdentClient client = new IdentClient(eventBus, this, clientSocket,
-                        serverManager, config, domain);
+                        connectionManager, config, domain);
                 client.start();
                 addClient(client);
             } catch (IOException e) {

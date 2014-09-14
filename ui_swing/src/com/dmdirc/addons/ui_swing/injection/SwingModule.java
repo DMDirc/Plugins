@@ -26,7 +26,6 @@ import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.ServerManager;
 import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -54,6 +53,7 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -200,9 +200,9 @@ public class SwingModule {
     public URLHandler getURLHandler(
             final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final StatusBarManager statusBarManager) {
-        return new URLHandler(eventBus, globalConfig, serverManager, statusBarManager);
+        return new URLHandler(eventBus, globalConfig, connectionManager, statusBarManager);
     }
 
     @Provides
