@@ -25,7 +25,11 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 import com.dmdirc.addons.ui_swing.components.MDIBar;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
+import com.google.common.base.Optional;
+
 import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,6 +51,8 @@ public class MenuBar extends JMenuBar {
     private static final long serialVersionUID = 1;
     /** Normal menu count. */
     private final int menuItemCount;
+    /** Stores a list of tokens used to remove added menu items. */
+    private final Map<String, JMenuItem> menuItems;
 
     /**
      * Instantiates a new menu bar.
@@ -66,7 +72,7 @@ public class MenuBar extends JMenuBar {
             final WindowMenuFrameManager windowMenu,
             final HelpMenu helpMenu,
             final MDIBar mdiBar) {
-
+        menuItems = new HashMap<>();
         setLayout(new MigLayout("ins 0, fillx"));
 
         add(serverMenu);
@@ -98,20 +104,53 @@ public class MenuBar extends JMenuBar {
      * @param menuItem   Menu item to add
      */
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
+        Optional<JMenu> menu = getParentMenuItem(parentMenu);
+        if (!menu.isPresent()) {
+            menu = Optional.fromNullable(new JMenu(parentMenu));
+            add(menu.get());
+        }
+        menu.get().add(menuItem, 0);
+    }
+
+    public void removeMenuItem(final String parentMenu, final String childItem) {
+        Optional<JMenu> menu = getParentMenuItem(parentMenu);
+        if (menu.isPresent()) {
+            Optional<JMenuItem> menuItem = getChildItem(menu.get(), childItem);
+            if (menuItem.isPresent()) {
+                menu.get().remove(menuItem.get());
+            }
+        }
+    }
+
+    private Optional<JMenu> getParentMenuItem(final String name) {
         JMenu menu = null;
         for (int i = 0; i < getMenuCount(); i++) {
             menu = getMenu(i);
-            if (menu != null && menu.getText().equals(parentMenu)) {
+            if (menu != null && menu.getText().equals(name)) {
                 break;
             }
             menu = null;
         }
-        if (menu == null) {
-            menu = new JMenu(parentMenu);
-            add(menu);
-        }
+        return Optional.fromNullable(menu);
+    }
 
-        menu.add(menuItem, 0);
+    private Optional<JMenuItem> getChildItem(final JMenu menu, final String name) {
+        Component child = null;
+        for (int i = 0; i < menu.getMenuComponentCount(); i++) {
+            child = menu.getMenuComponent(i);
+            if (child instanceof JMenuItem) {
+                final JMenuItem childMenu = (JMenuItem) child;
+                if (childMenu != null && childMenu.getText().equals(name)) {
+                    break;
+                }
+            }
+            child = null;
+        }
+        if (child instanceof JMenuItem) {
+            return Optional.fromNullable((JMenuItem) child);
+        } else {
+            return Optional.absent();
+        }
     }
 
 }

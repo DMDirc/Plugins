@@ -61,7 +61,7 @@ public class ServerListController {
      * Removes the 'Server lists' menu item from the app's main menu.
      */
     public void removeMenu() {
-        // TODO: Add ability to remove items to MenuBar, remove the server list item when unloaded.
+        menuBar.removeMenuItem("Server", "Server lists");
     }
 
     /**
