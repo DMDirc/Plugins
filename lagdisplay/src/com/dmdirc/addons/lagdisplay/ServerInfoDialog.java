@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
+import com.dmdirc.interfaces.Connection;
 
 import java.util.List;
 
@@ -72,9 +72,9 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
 
     @Override
     protected void initContent(final JPanel panel) {
-        final List<Server> servers = serverManager.getServers();
+        final List<Connection> connections = serverManager.getServers();
 
-        if (servers.isEmpty()) {
+        if (connections.isEmpty()) {
             panel.add(new JLabel("No open servers."));
         } else {
             if (manager.shouldShowGraph()) {
@@ -82,12 +82,14 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
                 panel.add(new JSeparator(), "span, grow, wrap");
             }
 
-            for (final Server server : servers) {
-                panel.add(new JLabel(server.getName()));
-                panel.add(new JLabel(server.getState() == ServerState.CONNECTED
-                        ? server.getNetwork() : "---", SwingConstants.CENTER), "grow");
-                panel.add(new JLabel(server.getState() == ServerState.CONNECTED
-                        ? manager.getTime(server) : "---", SwingConstants.RIGHT), "grow, wrap");
+            for (Connection connection : connections) {
+                panel.add(new JLabel(connection.getAddress()));
+                panel.add(new JLabel(
+                        connection.getState() == ServerState.CONNECTED
+                                ? connection.getNetwork() : "---",
+                        SwingConstants.CENTER), "grow");
+                panel.add(new JLabel(connection.getState() == ServerState.CONNECTED
+                        ? manager.getTime(connection) : "---", SwingConstants.RIGHT), "grow, wrap");
             }
         }
     }
