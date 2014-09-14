@@ -1,5 +1,3 @@
-jar {
-    from ('../../../build/production/parser/') {
-        include 'com/dmdirc/parser/irc/**'
-    }
+dependencies {
+    bundle group: 'com.dmdirc.parser', name: 'irc', version: '+', changing: true
 }
