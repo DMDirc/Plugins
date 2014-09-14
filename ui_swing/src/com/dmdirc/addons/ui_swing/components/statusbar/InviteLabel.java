@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -34,6 +33,7 @@ import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.ui.IconManager;
 
@@ -75,14 +75,14 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
      *
      * @param eventBus      The event bus to subscribe to events on
      * @param iconManager   The manager to retrieve the invite icon from.
-     * @param serverManager The manager to use to iterate servers.
+     * @param connectionManager The manager to use to iterate servers.
      * @param mainFrame     Main frame
      */
     @Inject
     public InviteLabel(
             final DMDircMBassador eventBus,
             @GlobalConfig final IconManager iconManager,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final MainFrame mainFrame) {
         super(new JLabel());
 
@@ -99,7 +99,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
         accept.setActionCommand("acceptAll");
         accept.addActionListener(this);
 
-        for (final Connection connection : serverManager.getServers()) {
+        for (final Connection connection : connectionManager.getConnections()) {
             connection.addInviteListener(this);
         }
 

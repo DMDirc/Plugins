@@ -24,10 +24,10 @@ package com.dmdirc.addons.serverlists;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Precondition;
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.io.ServerGroupReader;
 import com.dmdirc.addons.serverlists.io.ServerGroupWriter;
 import com.dmdirc.addons.serverlists.service.ServerListServiceProvider;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProviderListener;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -52,7 +52,7 @@ public class ServerList implements ConfigProviderListener {
     /** A list of all known groups. */
     private final Map<ServerGroup, ServerGroupWriter> groups = new HashMap<>();
     /** ServerManager that ServerEntrys use to create servers */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
     /** The factory to create new identities with. */
@@ -62,7 +62,7 @@ public class ServerList implements ConfigProviderListener {
      * Creates a new ServerList and loads groups and servers.
      *
      * @param pluginManager      Plugin Manager to use.
-     * @param serverManager      Server Manager to use.
+     * @param connectionManager      Server Manager to use.
      * @param identityController The controller to read/write settings with.
      * @param identityFactory    The factory to create new identities with.
      * @param eventBus           The event bus to post errors to
@@ -70,11 +70,11 @@ public class ServerList implements ConfigProviderListener {
     @Inject
     public ServerList(
             final PluginManager pluginManager,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final IdentityController identityController,
             final IdentityFactory identityFactory,
             final DMDircMBassador eventBus) {
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.identityController = identityController;
         this.identityFactory = identityFactory;
 
@@ -162,7 +162,7 @@ public class ServerList implements ConfigProviderListener {
     public void configProviderAdded(final ConfigProvider configProvider) {
         try {
             final ServerGroupReader reader
-                    = new ServerGroupReader(serverManager, identityController, configProvider);
+                    = new ServerGroupReader(connectionManager, identityController, configProvider);
             addServerGroup(reader.read(), reader.getWriter());
         } catch (IllegalArgumentException ex) {
             // Silently ignore

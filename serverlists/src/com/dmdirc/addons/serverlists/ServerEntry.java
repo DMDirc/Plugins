@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.IdentityController;
 
 import java.net.URI;
@@ -39,13 +39,13 @@ public class ServerEntry extends ServerGroupItemBase {
     /** The group that owns this entry. */
     private final ServerGroup group;
     /** The manager to use to create new servers. */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
 
     /**
      * Creates a new server entry.
      *
      * @param identityController The controller to read/write settings with.
-     * @param serverManager      The server manager to connect to servers with.
+     * @param connectionManager      The server manager to connect to servers with.
      * @param group              The group that owns this entry
      * @param name               The name of this server
      * @param address            The address of this server
@@ -53,12 +53,12 @@ public class ServerEntry extends ServerGroupItemBase {
      */
     public ServerEntry(
             final IdentityController identityController,
-            final ServerManager serverManager,
+            final ConnectionManager connectionManager,
             final ServerGroup group, final String name,
             final URI address, final String profile) {
         super(identityController);
 
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         setName(name);
         setProfile(profile);
         this.address = address;
@@ -97,7 +97,7 @@ public class ServerEntry extends ServerGroupItemBase {
 
     @Override
     public void connect() {
-        serverManager.connectToAddress(address, getProfileIdentity());
+        connectionManager.connectToAddress(address, getProfileIdentity());
     }
 
     @Override

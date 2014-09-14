@@ -24,8 +24,8 @@ package com.dmdirc.addons.identd;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Server;
-import com.dmdirc.ServerManager;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 public class IdentClientTest {
 
     @Mock private AggregateConfigProvider acp;
-    @Mock private ServerManager sm;
+    @Mock private ConnectionManager sm;
     @Mock private Server server;
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
@@ -57,7 +57,7 @@ public class IdentClientTest {
         final List<Connection> servers = new ArrayList<>();
         servers.add(server);
 
-        when(sm.getServers()).thenReturn(servers);
+        when(sm.getConnections()).thenReturn(servers);
         when(server.getParser()).thenReturn(parser);
         when(parser.getLocalPort()).thenReturn(60);
         when(parser.getLocalClient()).thenReturn(client);

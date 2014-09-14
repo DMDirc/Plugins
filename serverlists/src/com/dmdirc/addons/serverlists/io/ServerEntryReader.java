@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.serverlists.io;
 
-import com.dmdirc.ServerManager;
 import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
@@ -40,15 +40,15 @@ import java.net.URISyntaxException;
 public class ServerEntryReader {
 
     /** ServerManager that ServerEntrys use to create servers */
-    private final ServerManager serverManager;
+    private final ConnectionManager connectionManager;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
     /** The identity to read entries from. */
     private final ConfigProvider identity;
 
-    public ServerEntryReader(final ServerManager serverManager,
+    public ServerEntryReader(final ConnectionManager connectionManager,
             final IdentityController identityController, final ConfigProvider identity) {
-        this.serverManager = serverManager;
+        this.connectionManager = connectionManager;
         this.identityController = identityController;
         this.identity = identity;
     }
@@ -75,7 +75,7 @@ public class ServerEntryReader {
         final String serverName = identity.getOption(name, "name");
         final URI serverURI = new URI(identity.getOption(name, "address"));
 
-        return new ServerEntry(identityController, serverManager, group, serverName, serverURI, null);
+        return new ServerEntry(identityController, connectionManager, group, serverName, serverURI, null);
     }
 
 }
