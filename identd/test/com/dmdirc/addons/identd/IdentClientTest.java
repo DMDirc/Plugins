@@ -25,6 +25,7 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Server;
 import com.dmdirc.ServerManager;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
@@ -53,7 +54,7 @@ public class IdentClientTest {
     @Mock private DMDircMBassador eventBus;
 
     protected IdentClient getClient() {
-        final List<Server> servers = new ArrayList<>();
+        final List<Connection> servers = new ArrayList<>();
         servers.add(server);
 
         when(sm.getServers()).thenReturn(servers);
