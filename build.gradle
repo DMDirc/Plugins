@@ -39,11 +39,16 @@ subprojects {
         maven {
             url 'http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/'
         }
+        maven {
+            url 'http://nexus.dmdirc.com/nexus/content/repositories/snapshots/'
+        }
+        maven {
+            url 'http://nexus.dmdirc.com/nexus/content/repositories/releases/'
+        }
     }
 
     dependencies {
-        compile files("$dmdircOutput")
-        compile fileTree(dir: '../../../lib/bundled/', include: '*.jar')
+        compile group: 'com.dmdirc', name: 'client', version: '+', changing: true
 
         compile group: 'com.google.code.findbugs', name: 'jsr305', version: '2.+'
         compile group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.1'
