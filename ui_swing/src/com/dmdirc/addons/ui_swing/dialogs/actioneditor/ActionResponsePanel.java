@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
+import java.util.Collection;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
@@ -37,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
@@ -75,13 +77,12 @@ public class ActionResponsePanel extends JPanel {
         response.setRows(4);
         formatter = new JComboBox<>(new DefaultComboBoxModel<String>());
 
-        final DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) formatter.
-                getModel();
+        final MutableComboBoxModel<String> model =
+                (MutableComboBoxModel<String>) formatter.getModel();
         model.addElement("No change");
         model.addElement("No response");
 
-        final TreeSet<String> formatters = new TreeSet<>(
-                String.CASE_INSENSITIVE_ORDER);
+        final Collection<String> formatters = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         formatters.addAll(config.getOptions("formatter").keySet());
 
         for (final String format : formatters) {
@@ -110,7 +111,7 @@ public class ActionResponsePanel extends JPanel {
      *
      * @param response new response
      */
-    public void setResponse(final String[] response) {
+    public void setResponse(final String... response) {
         final StringBuilder sb = new StringBuilder();
         for (String responseLine : response) {
             responseLine = responseLine.replace("\n", "\\n");

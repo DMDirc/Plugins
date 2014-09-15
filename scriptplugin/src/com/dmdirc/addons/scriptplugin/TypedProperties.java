@@ -99,10 +99,10 @@ public class TypedProperties extends Properties {
      */
     @Override
     public String getProperty(final String key) {
-        if (!caseSensitive) {
-            return super.getProperty(key.toLowerCase());
-        } else {
+        if (caseSensitive) {
             return super.getProperty(key);
+        } else {
+            return super.getProperty(key.toLowerCase());
         }
     }
 
@@ -116,10 +116,10 @@ public class TypedProperties extends Properties {
      */
     @Override
     public String getProperty(final String key, final String fallback) {
-        if (!caseSensitive) {
-            return super.getProperty(key.toLowerCase(), fallback);
-        } else {
+        if (caseSensitive) {
             return super.getProperty(key, fallback);
+        } else {
+            return super.getProperty(key.toLowerCase(), fallback);
         }
     }
 
@@ -370,7 +370,7 @@ public class TypedProperties extends Properties {
             return fallback;
         } else {
             final String[] bits = res.split("\n");
-            final ArrayList<String> result = new ArrayList<>();
+            final List<String> result = new ArrayList<>();
             Collections.addAll(result, bits);
             return result;
         }
@@ -382,7 +382,7 @@ public class TypedProperties extends Properties {
      * @param key   key for property
      * @param value Value for property
      */
-    public void setListProperty(final String key, final List<String> value) {
+    public void setListProperty(final String key, final Iterable<String> value) {
         final StringBuilder val = new StringBuilder();
         final String lf = "\n";
         boolean first = true;
