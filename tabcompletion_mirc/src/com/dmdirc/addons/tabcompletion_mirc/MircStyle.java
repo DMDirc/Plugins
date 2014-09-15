@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.tabcompletion_mirc;
 
+import com.google.common.collect.Lists;
+
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -32,6 +34,7 @@ import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
 import java.awt.Toolkit;
 import java.util.Collections;
+import java.util.List;
 
 public class MircStyle implements TabCompletionStyle {
 
@@ -64,27 +67,27 @@ public class MircStyle implements TabCompletionStyle {
         final String target;
         if (word.equals(lastWord)) {
             final TabCompletionMatches res = tabCompleter.complete(tabString, additional);
-            Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
+            final List<String> results = Lists.newArrayList(res.getResults());
+            Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
             // We're continuing to tab through
-            target = res.getResults().get((res.getResults().indexOf(lastWord) + (shiftPressed ? -1
-                    : 1) + res.getResults().size()) % res
-                    .getResults().size());
+            target = results.get((results.indexOf(lastWord) + (shiftPressed ? -1: 1) + results.size()) % results.size());
         } else {
             // New tab target
             final TabCompletionMatches res = tabCompleter.complete(word, additional);
+            final List<String> results = Lists.newArrayList(res.getResults());
 
             if (res.getResultCount() == 0) {
                 Toolkit.getDefaultToolkit().beep();
                 return null;
             } else {
-                Collections.sort(res.getResults(), String.CASE_INSENSITIVE_ORDER);
+                Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
 
                 if (!word.isEmpty() && window instanceof Channel
                         && ((Channel) window)
                         .getChannelInfo().getName().startsWith(word)) {
                     target = ((Channel) window).getChannelInfo().getName();
                 } else {
-                    target = res.getResults().get(0);
+                    target = results.get(0);
                 }
                 tabString = word;
             }
