@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public class DBusMediaSourceManager {
             }
         }
 
-        return sources;
+        return Collections.unmodifiableList(sources);
     }
 
     /**
@@ -133,7 +134,7 @@ public class DBusMediaSourceManager {
      * @return The output of the specified command
      */
     protected List<String> getInfo(final String... args) {
-        final ArrayList<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
         Process process = null;
         try {
             process = Runtime.getRuntime().exec(args);
@@ -162,7 +163,7 @@ public class DBusMediaSourceManager {
      *
      * @return A map corresponding to the specified dictionary
      */
-    protected Map<String, String> parseDictionary(final List<String> lines) {
+    protected Map<String, String> parseDictionary(final Iterable<String> lines) {
         final Map<String, String> res = new HashMap<>();
 
         for (String line : lines) {

@@ -43,8 +43,8 @@ import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.util.colours.Colour;
 
 import com.google.common.base.Optional;
 
@@ -58,9 +58,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -147,8 +147,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setMinimumSize(new Dimension(0, BUTTON_HEIGHT
-                + ((int) PlatformDefaults.getUnitValueX("related")
-                .getValue()) * 2));
+                + (int) PlatformDefaults.getUnitValueX("related").getValue() * 2));
 
         position = FramemanagerPosition.getPosition(
                 globalConfig.getOption("ui", "framemanagerPosition"));
@@ -205,7 +204,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
                 parent.add(scrollPane);
                 parent.addComponentListener(ButtonBar.this);
                 ButtonBar.this.buttonWidth = position.isHorizontal()
-                        ? 150 : (parent.getWidth() / NUM_CELLS);
+                        ? 150 : parent.getWidth() / NUM_CELLS;
                 initButtons(windowManager.getRootWindows());
 
                 final TextFrame activeFrame = activeFrameManager.getActiveFrame();
@@ -226,20 +225,16 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
      *
      * @since 0.6.4
      */
-    private void initButtons(
-            final Collection<FrameContainer> windowCollection) {
-        TextFrame window;
-        TextFrame parentWindow;
+    private void initButtons(final Iterable<FrameContainer> windowCollection) {
         for (FrameContainer frame : windowCollection) {
-            window = windowFactory.getSwingWindow(frame);
-            parentWindow = windowFactory.getSwingWindow(frame.getParent().orNull());
+            final TextFrame window = windowFactory.getSwingWindow(frame);
+            final TextFrame parentWindow = windowFactory.getSwingWindow(frame.getParent().orNull());
             if (window != null) {
                 windowAdded(new SwingWindowAddedEvent(Optional.fromNullable(parentWindow), window));
             }
 
             if (!frame.getChildren().isEmpty()) {
-                final ArrayList<FrameContainer> childList = new ArrayList<>(frame.getChildren());
-                initButtons(childList);
+                initButtons(new ArrayList<>(frame.getChildren()));
             }
         }
     }
@@ -270,21 +265,16 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
      *
      * @since 0.6.4
      */
-    private void displayButtons(
-            final Collection<FrameContainer> windowCollection) {
-        FrameToggleButton button;
+    private void displayButtons(final Iterable<FrameContainer> windowCollection) {
         for (FrameContainer window : windowCollection) {
-            button = getButton(window);
+            final FrameToggleButton button = getButton(window);
             if (button != null) {
-                button.setPreferredSize(
-                        new Dimension(buttonWidth, BUTTON_HEIGHT));
+                button.setPreferredSize(new Dimension(buttonWidth, BUTTON_HEIGHT));
                 buttonPanel.add(button);
                 if (!window.getChildren().isEmpty()) {
-                    final ArrayList<FrameContainer> childList
-                            = new ArrayList<>(window.getChildren());
+                    final List<FrameContainer> childList = new ArrayList<>(window.getChildren());
                     if (sortChildWindows) {
-                        Collections.sort(childList,
-                                new FrameContainerComparator());
+                        Collections.sort(childList, new FrameContainerComparator());
                     }
                     displayButtons(childList);
                 }
@@ -299,7 +289,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
         buttonPanel.setVisible(false);
         buttonPanel.removeAll();
 
-        final ArrayList<FrameContainer> windowList = new ArrayList<>(windowManager.getRootWindows());
+        final List<FrameContainer> windowList = new ArrayList<>(windowManager.getRootWindows());
         if (sortRootWindows) {
             Collections.sort(windowList, new FrameContainerComparator());
         }
@@ -367,7 +357,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
 
     @Override
     public void componentResized(final ComponentEvent e) {
-        buttonWidth = position.isHorizontal() ? 150 : (parent.getWidth() / NUM_CELLS);
+        buttonWidth = position.isHorizontal() ? 150 : parent.getWidth() / NUM_CELLS;
         relayout();
     }
 
@@ -408,8 +398,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
             @Override
             public void run() {
                 activeWindow = window;
-                FrameToggleButton button;
-                button = getButton(selected);
+                FrameToggleButton button = getButton(selected);
                 if (selected != null && button != null) {
                     button.setSelected(false);
                 }
