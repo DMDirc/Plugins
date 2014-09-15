@@ -34,10 +34,10 @@ import static org.junit.Assert.*;
 @RunWith(Parameterized.class)
 public class IpToLongTest {
     
-    private String stringip;
-    private long longip;
+    private final String stringip;
+    private final long longip;
 
-    public IpToLongTest(String stringip, Long longip) {
+    public IpToLongTest(final String stringip, final Long longip) {
         this.stringip = stringip;
         this.longip = longip;
     }
