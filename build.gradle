@@ -1,6 +1,4 @@
 // DMDirc plugins build script
-//
-// Run with -PdmdircOutput=/path/to/DMDirc/classes/
 
 import org.mdonoughe.JGitDescribeTask
 
