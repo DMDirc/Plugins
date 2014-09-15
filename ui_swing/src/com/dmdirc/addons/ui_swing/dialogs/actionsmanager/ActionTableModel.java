@@ -26,6 +26,8 @@ import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
 import com.dmdirc.interfaces.actions.ActionType;
 
+import com.google.common.base.Preconditions;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,9 +50,10 @@ public class ActionTableModel extends AbstractTableModel {
      * @param actions Actions to show
      */
     public ActionTableModel(final Collection<Action> actions) {
+        Preconditions.checkNotNull(actions);
         this.actions = new ArrayList<>();
         if (actions != null) {
-            actions.addAll(actions);
+            this.actions.addAll(actions);
         }
     }
 
