@@ -97,6 +97,8 @@ public class LoggingManager implements ConfigChangeListener {
     /** Date format used for "File Opened At" log. */
     private static final DateFormat OPENED_AT_FORMAT = new SimpleDateFormat(
             "EEEE MMMM dd, yyyy - HH:mm:ss");
+    /** Object for synchronising access to the date forma.t */
+    private static final Object FORMAT_LOCK = new Object();
     /** This plugin's plugin info. */
     private final String domain;
     /** Global config. */
@@ -220,9 +222,11 @@ public class LoggingManager implements ConfigChangeListener {
             showBackBuffer(event.getQuery(), filename);
         }
 
-        appendLine(filename, "*** Query opened at: %s", OPENED_AT_FORMAT.format(new Date()));
-        appendLine(filename, "*** Query with User: %s", event.getQuery().getHost());
-        appendLine(filename, "");
+        synchronized (FORMAT_LOCK) {
+            appendLine(filename, "*** Query opened at: %s", OPENED_AT_FORMAT.format(new Date()));
+            appendLine(filename, "*** Query with User: %s", event.getQuery().getHost());
+            appendLine(filename, "");
+        }
     }
 
     @Handler
@@ -230,7 +234,11 @@ public class LoggingManager implements ConfigChangeListener {
         final Parser parser = event.getQuery().getConnection().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
         final String filename = getLogFile(client);
-        appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+
+        synchronized (FORMAT_LOCK) {
+            appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+        }
+
         if (openFiles.containsKey(filename)) {
             StreamUtils.close(openFiles.get(filename).writer);
             openFiles.remove(filename);
@@ -370,15 +378,20 @@ public class LoggingManager implements ConfigChangeListener {
             showBackBuffer(event.getChannel(), filename);
         }
 
-        appendLine(filename, "*** Channel opened at: %s", OPENED_AT_FORMAT.format(new Date()));
-        appendLine(filename, "");
+        synchronized (FORMAT_LOCK) {
+            appendLine(filename, "*** Channel opened at: %s", OPENED_AT_FORMAT.format(new Date()));
+            appendLine(filename, "");
+        }
     }
 
     @Handler
     public void handleChannelClosed(final ChannelClosedEvent event) {
         final String filename = getLogFile(event.getChannel().getName());
 
-        appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+        synchronized (FORMAT_LOCK) {
+            appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
+        }
+
         if (openFiles.containsKey(filename)) {
             StreamUtils.close(openFiles.get(filename).writer);
             openFiles.remove(filename);

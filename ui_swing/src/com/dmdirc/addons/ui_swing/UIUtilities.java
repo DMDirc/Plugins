@@ -206,7 +206,7 @@ public final class UIUtilities {
             } catch (InterruptedException ex) {
                 //Ignore
             } catch (InvocationTargetException ex) {
-                throw new RuntimeException(ex);
+                throw new RuntimeException(ex); // NOPMD
             }
         }
     }
@@ -229,7 +229,7 @@ public final class UIUtilities {
                 return task.get();
             }
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex); // NOPMD
         }
     }
 

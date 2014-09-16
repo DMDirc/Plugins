@@ -208,14 +208,14 @@ public class MPRISSource implements MediaSource {
                 result.append('0');
             }
 
-            result.append(hours).append(":");
+            result.append(hours).append(':');
         }
 
         if (minutes < 10) {
             result.append('0');
         }
 
-        result.append(minutes).append(":");
+        result.append(minutes).append(':');
 
         if (seconds < 10) {
             result.append('0');

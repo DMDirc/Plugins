@@ -136,7 +136,7 @@ public class DllSource implements MediaSource {
         final long seconds = (secondsInput % 60);
 
         if (hours > 0) {
-            result.append(hours).append(":");
+            result.append(hours).append(':');
         }
         result.append(String.format("%0,2d:%0,2d", minutes, seconds));
 

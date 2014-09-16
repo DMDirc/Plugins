@@ -154,11 +154,11 @@ public class ConditionalExecuteCommandTest {
         verifyNoCommandExecuted();
     }
 
-    private void execute(String line) {
+    private void execute(final String line) {
         command.execute(container, new CommandArguments(commandController, line), context);
     }
 
-    private void verifyCommandExecuted(String command) {
+    private void verifyCommandExecuted(final String command) {
         verify(commandParser).parseCommand(same(container), eq(command));
     }
 
@@ -166,7 +166,7 @@ public class ConditionalExecuteCommandTest {
         verify(commandParser, never()).parseCommand(same(container), anyString());
     }
 
-    private void verifyErrorOutput(String substring) {
+    private void verifyErrorOutput(final String substring) {
         verify(container).addLine(eq("commandError"), contains(substring));
     }
 

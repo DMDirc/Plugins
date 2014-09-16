@@ -164,7 +164,7 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
 
             for (ChannelClientInfo value : values) {
                 if (builder.length() > 0) {
-                    builder.append("\n");
+                    builder.append('\n');
                 }
 
                 builder.append(value.getClient().getNickname());

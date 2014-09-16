@@ -132,11 +132,11 @@ public class NoatunSource implements MediaSource {
         final long seconds = secondsInput % 60;
 
         if (hours > 0) {
-            result.append(hours).append(":");
+            result.append(hours).append(':');
         }
 
-        result.append(minutes).append(":");
-        result.append(seconds).append(":");
+        result.append(minutes).append(':');
+        result.append(seconds).append(':');
 
         return result.toString();
     }

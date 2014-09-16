@@ -37,7 +37,7 @@ public class EvaluatorTest {
     private final String input;
     private final float output;
 
-    public EvaluatorTest(String input, String output) {
+    public EvaluatorTest(final String input, final String output) {
         this.input = input;
         this.output = Float.parseFloat(output);
     }

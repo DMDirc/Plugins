@@ -4,6 +4,7 @@ import org.mdonoughe.JGitDescribeTask
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'pmd'
 
     configurations {
         bundle
@@ -71,6 +72,11 @@ subprojects {
         ext.version = jgit.getDescription()
         def targetFile = new File("$buildDir", 'plugin.config')
         targetFile << "\n\nversion:\n  number=${version}\n"
+    }
+
+    pmd {
+        ruleSets = []
+        ruleSetFiles = files("$rootDir/etc/pmd/full.xml")
     }
 
     jar {

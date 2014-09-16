@@ -161,7 +161,7 @@ public class TransferContainer extends FrameContainer implements
         if (percentageInTitle) {
             final StringBuilder title = new StringBuilder();
             if (dcc.isListenSocket()) {
-                title.append("*");
+                title.append('*');
             }
             title.append(dcc.getType() == DCCTransfer.TransferType.SEND
                     ? "Sending: " : "Receiving: ");

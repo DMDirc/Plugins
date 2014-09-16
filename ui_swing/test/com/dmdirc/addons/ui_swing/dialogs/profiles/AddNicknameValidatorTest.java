@@ -41,7 +41,7 @@ public class AddNicknameValidatorTest {
         final ProfileManagerModel model = mock(ProfileManagerModel.class);
         when(model.getNicknames()).thenReturn(Arrays.asList(
                 new String[]{"nickname1", "nickname2",}));
-        AddNicknameValidator instance = new AddNicknameValidator(model);
+        final AddNicknameValidator instance = new AddNicknameValidator(model);
         assertTrue(instance.validate("nickname1").isFailure());
     }
 
@@ -53,7 +53,7 @@ public class AddNicknameValidatorTest {
         final ProfileManagerModel model = mock(ProfileManagerModel.class);
         when(model.getNicknames()).thenReturn(Arrays.asList(
                 new String[]{"nickname1", "nickname2",}));
-        AddNicknameValidator instance = new AddNicknameValidator(model);
+        final AddNicknameValidator instance = new AddNicknameValidator(model);
         assertFalse(instance.validate("nickname").isFailure());
     }
 }

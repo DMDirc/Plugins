@@ -260,7 +260,7 @@ public class TransferPanel extends JPanel implements ActionListener,
 
         if (hours > 0) {
             result.append(hours);
-            result.append(":");
+            result.append(':');
         }
         result.append(String.format("%0,2d:%0,2d", minutes, seconds));
 

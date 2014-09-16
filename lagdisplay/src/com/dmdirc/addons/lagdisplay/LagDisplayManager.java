@@ -254,7 +254,7 @@ public class LagDisplayManager implements ConfigChangeListener, SelectionListene
     }
 
     @Handler
-    public void HandleServerPingSent(final ServerPingsentEvent event) {
+    public void handleServerPingSent(final ServerPingsentEvent event) {
         if (!event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
             return;
