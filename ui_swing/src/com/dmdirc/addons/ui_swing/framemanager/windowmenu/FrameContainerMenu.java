@@ -87,7 +87,7 @@ public class FrameContainerMenu extends JMenu implements ActionListener, Selecti
 
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window.getContainer())) {
                     setIcon(window.getIconManager().getIcon(event.getIcon()));
                 }
             }
@@ -100,7 +100,7 @@ public class FrameContainerMenu extends JMenu implements ActionListener, Selecti
 
             @Override
             public void run() {
-                if ((frame != null && window != null) && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window.getContainer())) {
                     setText(event.getName());
                 }
             }
