@@ -87,7 +87,7 @@ public class FrameContainerMenuItem extends JMenuItem implements ActionListener,
 
             @Override
             public void run() {
-                if (frame != null && window != null && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window.getContainer())) {
                     setIcon(window.getIconManager().getIcon(event.getIcon()));
                 }
             }
@@ -100,7 +100,7 @@ public class FrameContainerMenuItem extends JMenuItem implements ActionListener,
 
             @Override
             public void run() {
-                if (frame != null && window != null && frame.equals(window)) {
+                if (frame != null && window != null && frame.equals(window.getContainer())) {
                     setText(Styliser.stipControlCodes(event.getName()));
                 }
             }
