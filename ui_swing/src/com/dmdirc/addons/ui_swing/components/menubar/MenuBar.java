@@ -52,7 +52,7 @@ public class MenuBar extends JMenuBar {
     /** Normal menu count. */
     private final int menuItemCount;
     /** Stores a list of tokens used to remove added menu items. */
-    private final Map<String, JMenuItem> menuItems;
+    private final Map<String, JMenuItem> menuItems; // NOPMD
 
     /**
      * Instantiates a new menu bar.

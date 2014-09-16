@@ -70,8 +70,7 @@ public class ProfileManagerModelTest {
         when(configProvider.getOption("profile", "realname")).thenReturn(prefix + "realname");
         when(configProvider.getOption("profile", "ident")).thenReturn(prefix + "ident");
 
-        final Profile profile = new Profile(identityFactory, configProvider);
-        return profile;
+        return new Profile(identityFactory, configProvider);
     }
 
     private ProfileManagerModel createModel() {
@@ -82,7 +81,7 @@ public class ProfileManagerModelTest {
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         final List<ConfigProvider> identities = Collections.emptyList();
         manager = mock(IdentityController.class);
         when(manager.getProvidersByType("profile")).thenReturn(identities);
@@ -106,7 +105,7 @@ public class ProfileManagerModelTest {
         final IdentityController im = mock(IdentityController.class);
         when(im.getProvidersByType("profile")).thenReturn(identities);
 
-        ProfileManagerModel instance = new ProfileManagerModel(im, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(im, identityFactory);
         instance.load();
 
         assertEquals(Arrays.asList(new Profile[]{new Profile(identityFactory, configProvider), }), instance.getProfiles());
@@ -119,7 +118,7 @@ public class ProfileManagerModelTest {
     public void testGetAndSetProfiles() {
         final List<Profile> newProfiles = Arrays.asList(
                 new Profile[]{createProfile("2"),});
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertEquals(Collections.emptyList(), instance.getProfiles());
         instance.setProfiles(newProfiles);
         assertEquals(newProfiles, instance.getProfiles());
@@ -131,7 +130,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testAddProfiles() {
         final Profile newProfile = createProfile("2");
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertEquals(Arrays.asList(new Profile[]{defaultProfile,}), instance.getProfiles());
         final List<Profile> newProfiles = new ArrayList<>();
         newProfiles.add(defaultProfile);
@@ -146,7 +145,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testDeleteProfileNullProfile() {
         final Profile first = createProfile("1");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.setSelectedProfile(first);
         assertEquals(first, instance.getSelectedProfile());
@@ -161,7 +160,7 @@ public class ProfileManagerModelTest {
     public void testDeleteProfileNotSelected() {
         final Profile first = createProfile("1");
         final Profile second = createProfile("2");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.addProfile(second);
         instance.setSelectedProfile(second);
@@ -177,7 +176,7 @@ public class ProfileManagerModelTest {
     public void testDeleteProfileLastProfile() {
         final Profile first = createProfile("1");
         final Profile second = createProfile("2");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.addProfile(second);
         instance.setSelectedProfile(second);
@@ -193,7 +192,7 @@ public class ProfileManagerModelTest {
     public void testDeleteProfileFirstProfile() {
         final Profile first = createProfile("1");
         final Profile second = createProfile("2");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.addProfile(second);
         instance.setSelectedProfile(first);
@@ -210,7 +209,7 @@ public class ProfileManagerModelTest {
         final Profile first = createProfile("1");
         final Profile second = createProfile("2");
         final Profile third = createProfile("3");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.addProfile(second);
         instance.addProfile(third);
@@ -226,7 +225,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testDeleteProfileOnlyProfile() {
         final Profile first = createProfile("1");
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(first);
         instance.setSelectedProfile(first);
         assertEquals(first, instance.getSelectedProfile());
@@ -239,10 +238,10 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testGetAndSetSelectedProfile() {
-        Profile profile2 = createProfile("2");
-        Profile profile3 = createProfile("3");
-        Profile profile4 = createProfile("4");
-        ProfileManagerModel instance = createModel();
+        final Profile profile2 = createProfile("2");
+        final Profile profile3 = createProfile("3");
+        final Profile profile4 = createProfile("4");
+        final ProfileManagerModel instance = createModel();
         assertEquals(defaultProfile, instance.getSelectedProfile());
         instance.addProfile(profile2);
         assertEquals(profile2, instance.getSelectedProfile());
@@ -258,7 +257,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testGetAndSetNicknames() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final List<String> expResult = defaultProfile.getNicknames();
         List<String> result = instance.getNicknames();
         assertEquals(expResult, result);
@@ -272,8 +271,8 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testAddNickname() {
-        String nickname = "foo";
-        ProfileManagerModel instance = createModel();
+        final String nickname = "foo";
+        final ProfileManagerModel instance = createModel();
         assertEquals(defaultProfile.getNicknames(), instance.getNicknames());
         final List<String> nicknames = new ArrayList<>(defaultProfile.getNicknames());
         instance.addNickname(nickname);
@@ -286,7 +285,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testDeleteNicknameObject() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final List<String> nicknames = new ArrayList<>(instance.getNicknames());
         Object nickname = (Object) "";
         assertEquals(nicknames, instance.getNicknames());
@@ -303,7 +302,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testDeleteNicknameNullSelectedProfile() {
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertNull(instance.getSelectedProfile());
         assertTrue(instance.getNicknames().isEmpty());
         instance.deleteNickname("1nickname");
@@ -316,7 +315,7 @@ public class ProfileManagerModelTest {
     public void testDeleteNicknameNullNickname() {
         final Profile profile = createProfile("1");
         final String first = "1nickname";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.setSelectedNickname(first);
@@ -333,7 +332,7 @@ public class ProfileManagerModelTest {
         final Profile profile = createProfile("1");
         final String first = "1nickname";
         final String second = "1nickname2";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.addNickname(second);
@@ -351,7 +350,7 @@ public class ProfileManagerModelTest {
         final Profile profile = createProfile("1");
         final String first = "1nickname";
         final String second = "1nickname2";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.addNickname(second);
@@ -369,7 +368,7 @@ public class ProfileManagerModelTest {
         final Profile profile = createProfile("1");
         final String first = "1nickname";
         final String second = "1nickname2";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.addNickname(second);
@@ -388,7 +387,7 @@ public class ProfileManagerModelTest {
         final String first = "1nickname";
         final String second = "1nickname2";
         final String third = "1nickname3";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.addNickname(second);
@@ -406,7 +405,7 @@ public class ProfileManagerModelTest {
     public void testDeleteNicknameOnlyNickname() {
         final Profile profile = createProfile("1");
         final String first = "1nickname";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.addProfile(profile);
         instance.setSelectedProfile(profile);
         instance.setSelectedNickname(first);
@@ -421,7 +420,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testGetAndSetSelectedNickname() {
         final String selectedNickname = "1nickname";
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertNull(instance.getSelectedNickname());
         instance.setSelectedNickname(selectedNickname);
         assertEquals(selectedNickname, instance.getSelectedNickname());
@@ -434,7 +433,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testEditNickname() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final List<String> nicknames = new ArrayList<>(instance.getNicknames());
         final String nickname = nicknames.get(0);
         assertEquals(nicknames, instance.getNicknames());
@@ -450,7 +449,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testGetAndSetName() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final String name = defaultProfile.getName();
         final String newName = "foo";
         assertEquals(name, instance.getName());
@@ -463,7 +462,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testGetAndSetRealname() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final String name = "1realname";
         final String newName = "foo";
         assertEquals(name, instance.getRealname());
@@ -476,7 +475,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testGetAndSetIdent() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         final String name = "1ident";
         final String newName = "foo";
         assertEquals(name, instance.getIdent());
@@ -489,7 +488,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsManipulateProfileAllowed() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertTrue(instance.isManipulateProfileAllowed());
         instance.setProfiles(Arrays.asList(new Profile[]{}));
         assertFalse(instance.isManipulateProfileAllowed());
@@ -500,7 +499,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsManipulateNicknameAllowed() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertFalse(instance.isManipulateNicknameAllowed());
         instance.setSelectedNickname("1nickname");
         assertTrue(instance.isManipulateNicknameAllowed());
@@ -512,7 +511,7 @@ public class ProfileManagerModelTest {
         profile.setName("*");
         profile.setRealname("");
         profile.setIdent("*");
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertTrue(instance.isChangeProfileAllowed());
         instance.setProfiles(Arrays.asList(new Profile[]{profile,}));
         assertFalse(instance.isChangeProfileAllowed());
@@ -535,7 +534,7 @@ public class ProfileManagerModelTest {
         profile.setName("*");
         profile.setRealname("");
         profile.setIdent("*");
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         assertTrue(instance.isOKAllowed());
         instance.setProfiles(Arrays.asList(new Profile[]{}));
         assertFalse(instance.isOKAllowed());
@@ -556,7 +555,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsNameInValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setName("\\");
         assertTrue(instance.isNameValid().isFailure());
@@ -567,7 +566,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsNameValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setName("profile");
         assertFalse(instance.isNameValid().isFailure());
@@ -578,7 +577,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsNicknamesInValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setNicknames(Arrays.asList(new String[]{}));
         assertTrue(instance.isNicknamesValid().isFailure());
@@ -589,7 +588,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsNicknamesValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setNicknames(Arrays.asList(new String[]{"nickname"}));
         assertFalse(instance.isNicknamesValid().isFailure());
@@ -600,7 +599,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsRealnameInValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setRealname("");
         assertTrue(instance.isRealnameValid().isFailure());
@@ -611,7 +610,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsRealnameValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setRealname("realname");
         assertFalse(instance.isRealnameValid().isFailure());
@@ -622,7 +621,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsIdentInValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setIdent("*");
         assertTrue(instance.isIdentValid().isFailure());
@@ -633,7 +632,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsIdentValid() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setIdent("ident");
         assertFalse(instance.isIdentValid().isFailure());
@@ -644,7 +643,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testIsIdentValidEmptyString() {
-        ProfileManagerModel instance = createModel();
+        final ProfileManagerModel instance = createModel();
         instance.setProfiles(Arrays.asList(defaultProfile));
         instance.setIdent("");
         assertFalse(instance.isIdentValid().isFailure());
@@ -655,7 +654,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testNullSelectedProfileGetters() {
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue("".equals(instance.getSelectedNickname()));
         assertTrue("".equals(instance.getName()));
         assertTrue("".equals(instance.getRealname()));
@@ -668,7 +667,7 @@ public class ProfileManagerModelTest {
      */
     @Test
     public void testNullSelectedProfileValidators() {
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertFalse(instance.isNameValid().isFailure());
         assertFalse(instance.isNicknamesValid().isFailure());
         assertFalse(instance.isRealnameValid().isFailure());
@@ -681,7 +680,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileSetSelectedNickname() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue("".equals(instance.getSelectedNickname()));
         instance.setSelectedNickname(test);
         assertTrue("".equals(instance.getSelectedNickname()));
@@ -693,7 +692,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileSetName() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue("".equals(instance.getName()));
         instance.setName(test);
         assertTrue("".equals(instance.getName()));
@@ -705,7 +704,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileSetRealname() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue("".equals(instance.getRealname()));
         instance.setRealname(test);
         assertTrue("".equals(instance.getRealname()));
@@ -717,7 +716,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileSetIdent() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue("".equals(instance.getIdent()));
         instance.setIdent(test);
         assertTrue("".equals(instance.getIdent()));
@@ -729,7 +728,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileSetNicknames() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue(instance.getNicknames().isEmpty());
         instance.setNicknames(Arrays.asList(new String[]{test, }));
         assertTrue(instance.getNicknames().isEmpty());
@@ -741,7 +740,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileAddNickname() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue(instance.getNicknames().isEmpty());
         instance.addNickname(test);
         assertTrue(instance.getNicknames().isEmpty());
@@ -753,7 +752,7 @@ public class ProfileManagerModelTest {
     @Test
     public void testNullSelectedProfileDeleteNickname() {
         final String test = "test";
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         assertTrue(instance.getNicknames().isEmpty());
         instance.deleteNickname(test);
         assertTrue(instance.getNicknames().isEmpty());
@@ -770,7 +769,7 @@ public class ProfileManagerModelTest {
         final Profile second = mock(Profile.class);
         when(first.isDeleted()).thenReturn(false);
         when(second.isDeleted()).thenReturn(true);
-        ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
+        final ProfileManagerModel instance = new ProfileManagerModel(manager, identityFactory);
         instance.setProfiles(Arrays.asList(new Profile[]{first, second, }));
         instance.save();
         verify(first).save();

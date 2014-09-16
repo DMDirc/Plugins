@@ -234,7 +234,7 @@ public class ActionConditionDisplayPanel extends JPanel implements
             }
 
             sb.append(condition.getComponent().getName());
-            sb.append(" ");
+            sb.append(' ');
 
             if (condition.getComparison() == null) {
                 sb.append(" ...");
@@ -250,7 +250,7 @@ public class ActionConditionDisplayPanel extends JPanel implements
             }
 
             sb.append(condition.getTarget().replace("<", "&lt;"));
-            sb.append("'");
+            sb.append('\'');
             return sb.toString();
         }
     }

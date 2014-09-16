@@ -68,8 +68,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     private final TextFrame parent;
     /** Colour Manager. */
     private final ColourManager colourManager;
-    /** Config to read from. */
-    private final AggregateConfigProvider config;
     /** Close button. */
     private ImageButton<Object> closeButton;
     /** Next match button. */
@@ -101,7 +99,6 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         listeners = new ListenerList();
 
         this.parent = newParent;
-        this.config = parent.getContainer().getConfigManager();
         this.colourManager = colourManager;
 
         getInputMap(JComponent.WHEN_FOCUSED).
@@ -247,25 +244,23 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         final LinePosition result = up ? searcher.searchUp() : searcher.
                 searchDown();
 
-        if (result == null) {
-            //Do nothing
-        } else if ((textPane.getSelectedRange().getEndLine() != 0 || textPane.
-                getSelectedRange().getEndPos() != 0)
-                && ((up && result.getEndLine() > textPane.getSelectedRange().
-                getEndLine())
-                || (!up && result.getStartLine() < textPane.getSelectedRange().
-                getStartLine()))) {
-            wrapIndicator.setVisible(true);
-            textPane.setScrollBarPosition(result.getEndLine());
-            textPane.setSelectedText(result);
-            validator.setValidates(true);
-            searchBox.checkError();
-        } else {
-            //found, select and return found
-            textPane.setScrollBarPosition(result.getEndLine());
-            textPane.setSelectedText(result);
-            validator.setValidates(true);
-            searchBox.checkError();
+        if (result != null) {
+            if ((textPane.getSelectedRange().getEndLine() != 0 || textPane.
+                    getSelectedRange().getEndPos() != 0)
+                    && (up && result.getEndLine() > textPane.getSelectedRange().getEndLine()
+                    || !up && result.getStartLine() < textPane.getSelectedRange().getStartLine())) {
+                wrapIndicator.setVisible(true);
+                textPane.setScrollBarPosition(result.getEndLine());
+                textPane.setSelectedText(result);
+                validator.setValidates(true);
+                searchBox.checkError();
+            } else {
+                //found, select and return found
+                textPane.setScrollBarPosition(result.getEndLine());
+                textPane.setSelectedText(result);
+                validator.setValidates(true);
+                searchBox.checkError();
+            }
         }
     }
 

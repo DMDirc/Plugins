@@ -42,7 +42,7 @@ public class EditNicknameValidatorTest {
         when(model.getSelectedNickname()).thenReturn(null);
         when(model.getNicknames()).thenReturn(Arrays.asList(
                 new String[]{"nickname1", "nickname2",}));
-        EditNicknameValidator instance = new EditNicknameValidator(model);
+        final EditNicknameValidator instance = new EditNicknameValidator(model);
         assertFalse(instance.validate("nickname").isFailure());
     }
 
@@ -55,7 +55,7 @@ public class EditNicknameValidatorTest {
         when(model.getSelectedNickname()).thenReturn("nickname");
         when(model.getNicknames()).thenReturn(Arrays.asList(
                 new String[]{"nickname1", "nickname2",}));
-        EditNicknameValidator instance = new EditNicknameValidator(model);
+        final EditNicknameValidator instance = new EditNicknameValidator(model);
         assertFalse(instance.validate("nickname").isFailure());
     }
 
@@ -68,7 +68,7 @@ public class EditNicknameValidatorTest {
         when(model.getSelectedNickname()).thenReturn("nickname");
         when(model.getNicknames()).thenReturn(Arrays.asList(
                 new String[]{"nickname1", "nickname2",}));
-        EditNicknameValidator instance = new EditNicknameValidator(model);
+        final EditNicknameValidator instance = new EditNicknameValidator(model);
         assertFalse(instance.validate("nickname3").isFailure());
     }
 }

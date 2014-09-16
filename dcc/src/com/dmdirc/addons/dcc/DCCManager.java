@@ -464,10 +464,10 @@ public class DCCManager {
                     bit = bit.substring(1);
                 }
                 if (bit.endsWith("\"")) {
-                    filenameBits.append(" ").append(bit.substring(0, bit.length() - 1));
+                    filenameBits.append(' ').append(bit.substring(0, bit.length() - 1));
                     break;
                 } else {
-                    filenameBits.append(" ").append(bit);
+                    filenameBits.append(' ').append(bit);
                 }
             }
             tmpFilename = filenameBits.toString().trim();
@@ -514,13 +514,12 @@ public class DCCManager {
             return;
         }
 
-        if (DCCTransfer.findByToken(token) == null && !dontAsk) {
-            if (token.isEmpty() || port.equals("0")) {
-                // Make sure this is not a reverse DCC Send that we no longer care about.
-                eventBus.publish(new DccSendRequestEvent(connection, nickname, filename));
-                new SendRequestDialog(mainWindow, this, token, ipLong, portInt, filename, size,
-                        nickname, connection).display();
-            }
+        if (DCCTransfer.findByToken(token) == null && !dontAsk &&
+                (token.isEmpty() || port.equals("0"))) {
+            // Make sure this is not a reverse DCC Send that we no longer care about.
+            eventBus.publish(new DccSendRequestEvent(connection, nickname, filename));
+            new SendRequestDialog(mainWindow, this, token, ipLong, portInt, filename, size,
+                    nickname, connection).display();
         }
     }
 
@@ -561,11 +560,11 @@ public class DCCManager {
                     bit = bit.substring(1);
                 }
                 if (bit.endsWith("\"")) {
-                    filenameBits.append(" ")
+                    filenameBits.append(' ')
                             .append(bit.substring(0, bit.length() - 1));
                     break;
                 } else {
-                    filenameBits.append(" ").append(bit);
+                    filenameBits.append(' ').append(bit);
                 }
             }
             filename = filenameBits.toString().trim();

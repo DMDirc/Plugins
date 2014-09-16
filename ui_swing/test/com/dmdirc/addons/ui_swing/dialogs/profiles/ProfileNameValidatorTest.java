@@ -63,7 +63,7 @@ public class ProfileNameValidatorTest {
      */
     @Test
     public void testValidateNoDupes() {
-        ProfileRenameValidator instance = new ProfileRenameValidator(model);
+        final ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertFalse(instance.validate("Random").isFailure());
     }
 
@@ -72,7 +72,7 @@ public class ProfileNameValidatorTest {
      */
     @Test
     public void testValidateNonSelectedDupe() {
-        ProfileRenameValidator instance = new ProfileRenameValidator(model);
+        final ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertTrue(instance.validate("other").isFailure());
     }
 
@@ -81,7 +81,7 @@ public class ProfileNameValidatorTest {
      */
     @Test
     public void testValidateSelectedDupe() {
-        ProfileRenameValidator instance = new ProfileRenameValidator(model);
+        final ProfileRenameValidator instance = new ProfileRenameValidator(model);
         assertFalse(instance.validate("selected").isFailure());
     }
 }

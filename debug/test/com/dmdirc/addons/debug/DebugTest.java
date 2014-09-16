@@ -51,7 +51,6 @@ public class DebugTest {
 
     @Mock private CommandArguments arguments;
     @Mock private FrameContainer container;
-    @Mock private DebugPlugin plugin;
     @Mock private CommandController controller;
     @Mock private DebugCommand debugCommand;
     @Mock private CommandContext commandContext;
