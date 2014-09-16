@@ -4,6 +4,7 @@ import org.mdonoughe.JGitDescribeTask
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'findbugs'
     apply plugin: 'pmd'
 
     configurations {
@@ -77,6 +78,19 @@ subprojects {
     pmd {
         ruleSets = []
         ruleSetFiles = files("$rootDir/etc/pmd/full.xml")
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            html.enabled = true
+            xml.enabled = false
+        }
+    }
+
+    findbugs {
+        reportLevel = 'low'
+        effort = 'max'
+        ignoreFailures = true
     }
 
     jar {
