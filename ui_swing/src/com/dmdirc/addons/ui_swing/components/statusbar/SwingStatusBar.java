@@ -29,7 +29,6 @@ import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.StatusMessage;
 
 import com.google.common.base.Preconditions;
-import com.google.common.eventbus.Subscribe;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -40,6 +39,8 @@ import javax.swing.UIManager;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
@@ -91,7 +92,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         add(inviteLabel, componentConstraints);
     }
 
-    @Subscribe
+    @Handler
     public void addComponent(final StatusBarComponentAddedEvent event) {
         Preconditions.checkArgument(event.getComponent() instanceof Component,
                 "Error adding status bar component, " +
@@ -114,7 +115,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         }
     }
 
-    @Subscribe
+    @Handler
     public void removeComponent(final StatusBarComponentRemovedEvent event) {
         Preconditions.checkArgument(event.getComponent() instanceof Component,
                 "Error removing status bar component" +
