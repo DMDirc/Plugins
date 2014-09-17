@@ -57,6 +57,8 @@ public final class ErrorListDialog extends StandardDialog implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
+    /** Row selection change lock. */
+    private static final Object SELECTION_LOCK = new Object();
     /** Table model. */
     private final ErrorTableModel tableModel;
     /** Table scrollpane. */
@@ -204,7 +206,7 @@ public final class ErrorListDialog extends StandardDialog implements
                 deleteButton.setEnabled(false);
                 sendButton.setEnabled(false);
             }
-            synchronized (selectedRow) {
+            synchronized (SELECTION_LOCK) {
                 if (rowBeingDeleted) {
                     table.getSelectionModel().setSelectionInterval(selectedRow.
                             get(), selectedRow.get());
@@ -225,13 +227,13 @@ public final class ErrorListDialog extends StandardDialog implements
         if (e.getSource() == getCancelButton()) {
             setVisible(false);
         } else if (e.getSource() == deleteButton) {
-            synchronized (selectedRow) {
+            synchronized (SELECTION_LOCK) {
                 ErrorManager.getErrorManager().deleteError(tableModel.getError(
                         table.getRowSorter().convertRowIndexToModel(
                                 table.getSelectedRow())));
             }
         } else if (e.getSource() == sendButton) {
-            synchronized (selectedRow) {
+            synchronized (SELECTION_LOCK) {
                 ErrorManager.getErrorManager().sendError(tableModel.getError(
                         table.getRowSorter().convertRowIndexToModel(
                                 table.getSelectedRow())));
@@ -254,7 +256,7 @@ public final class ErrorListDialog extends StandardDialog implements
         }
         switch (e.getType()) {
             case TableModelEvent.DELETE:
-                synchronized (selectedRow) {
+                synchronized (SELECTION_LOCK) {
                     if (selectedRow.get() >= tableModel.getRowCount()) {
                         selectedRow.set(tableModel.getRowCount() - 1);
                     }
@@ -265,7 +267,7 @@ public final class ErrorListDialog extends StandardDialog implements
                 }
                 break;
             case TableModelEvent.INSERT:
-                synchronized (selectedRow) {
+                synchronized (SELECTION_LOCK) {
                     table.getSelectionModel().setSelectionInterval(selectedRow.
                             get(),
                             selectedRow.get());
