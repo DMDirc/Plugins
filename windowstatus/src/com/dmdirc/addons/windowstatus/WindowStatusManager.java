@@ -141,78 +141,92 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         if (current == null) {
             return;
         }
-        final StringBuilder textString = new StringBuilder();
+        final String textString;
 
         if (current instanceof Connection) {
-            textString.append(((Connection) current).getAddress());
+            textString = updateStatusConnection((Connection) current);
         } else if (current instanceof Channel) {
-            final ChannelInfo chan = ((Channel) current).getChannelInfo();
-            final Map<Integer, String> names = new HashMap<>();
-            final Map<Integer, Integer> types = new HashMap<>();
-
-            textString.append(chan.getName());
-            textString.append(" - Nicks: ");
-            textString.append(chan.getChannelClientCount());
-            textString.append(" (");
-
-            for (ChannelClientInfo client : chan.getChannelClients()) {
-                String mode = client.getImportantModePrefix();
-                final Integer im = client.getClient().getParser()
-                        .getChannelUserModes().indexOf(mode);
-
-                if (!names.containsKey(im)) {
-                    if (mode.isEmpty()) {
-                        if (shownone) {
-                            mode = nonePrefix;
-                        } else {
-                            continue;
-                        }
-                    }
-                    names.put(im, mode);
-                }
-
-                Integer count = types.get(im);
-
-                if (count == null) {
-                    count = 1;
-                } else {
-                    count++;
-                }
-                types.put(im, count);
-            }
-
-            boolean isFirst = true;
-
-            for (Map.Entry<Integer, Integer> entry : types.entrySet()) {
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    textString.append(' ');
-                }
-                textString.append(names.get(entry.getKey()));
-                textString.append(entry.getValue());
-            }
-
-            textString.append(')');
+            textString = updateStatusChannel((Channel) current);
         } else if (current instanceof Query) {
-            final Query frame = (Query) current;
-
-            textString.append(frame.getHost());
-            if (showname && frame.getConnection().getParser() != null) {
-                final ClientInfo client = frame.getConnection().getParser()
-                        .getClient(frame.getHost());
-                final String realname = client.getRealname();
-                if (realname != null && !realname.isEmpty()) {
-                    textString.append(" - ");
-                    textString.append(client.getRealname());
-                }
-            }
+            textString = updateStatusQuery((Query) current);
         } else {
-            textString.append("???");
+            textString = "???";
         }
         if (panel != null) {
-            panel.setText(textString.toString());
+            panel.setText(textString);
         }
+    }
+
+    private String updateStatusConnection(final Connection connection) {
+        return connection.getAddress();
+    }
+
+    private String updateStatusChannel(final Channel frame) {
+        final StringBuilder textString = new StringBuilder();
+        final ChannelInfo chan = frame.getChannelInfo();
+        final Map<Integer, String> names = new HashMap<>();
+        final Map<Integer, Integer> types = new HashMap<>();
+
+        textString.append(chan.getName());
+        textString.append(" - Nicks: ");
+        textString.append(chan.getChannelClientCount());
+        textString.append(" (");
+
+        for (ChannelClientInfo client : chan.getChannelClients()) {
+            String mode = client.getImportantModePrefix();
+            final Integer im = client.getClient().getParser()
+                    .getChannelUserModes().indexOf(mode);
+
+            if (!names.containsKey(im)) {
+                if (mode.isEmpty()) {
+                    if (shownone) {
+                        mode = nonePrefix;
+                    } else {
+                        continue;
+                    }
+                }
+                names.put(im, mode);
+            }
+
+            Integer count = types.get(im);
+
+            if (count == null) {
+                count = 1;
+            } else {
+                count++;
+            }
+            types.put(im, count);
+        }
+
+        boolean isFirst = true;
+
+        for (Map.Entry<Integer, Integer> entry : types.entrySet()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                textString.append(' ');
+            }
+            textString.append(names.get(entry.getKey()));
+            textString.append(entry.getValue());
+        }
+
+        textString.append(')');
+        return textString.toString();
+    }
+
+    private String updateStatusQuery(final Query frame) {
+        final StringBuilder textString = new StringBuilder();
+        textString.append(frame.getHost());
+        if (showname && frame.getConnection().getParser() != null) {
+            final ClientInfo client = frame.getConnection().getParser()
+                    .getClient(frame.getHost());
+            final String realname = client.getRealname();
+            if (realname != null && !realname.isEmpty()) {
+                textString.append(" - ");
+                textString.append(client.getRealname());
+            }
+        }
+        return textString.toString();
     }
 
     @Override
