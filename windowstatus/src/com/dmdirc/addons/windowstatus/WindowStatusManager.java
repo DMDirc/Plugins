@@ -40,8 +40,7 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
@@ -164,43 +163,32 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     private String updateStatusChannel(final Channel frame) {
         final StringBuilder textString = new StringBuilder();
         final ChannelInfo chan = frame.getChannelInfo();
-        final Map<Integer, String> names = new HashMap<>();
 
         textString.append(chan.getName());
         textString.append(" - Nicks: ");
         textString.append(chan.getChannelClientCount());
         textString.append(" (");
 
-        final String channelUserModes = chan.getParser().getChannelUserModes();
-        final int[] usersWithMode = new int[channelUserModes.length() + 1];
+        final String channelUserModes = ' ' + chan.getParser().getChannelUserModes();
+        final int[] usersWithMode = new int[channelUserModes.length()];
         for (ChannelClientInfo client : chan.getChannelClients()) {
-            String mode = client.getImportantModePrefix();
+            final String mode = client.getImportantModePrefix();
             final int index = channelUserModes.indexOf(mode);
-
-            if (!names.containsKey(index)) {
-                if (mode.isEmpty()) {
-                    if (shownone) {
-                        mode = nonePrefix;
-                    } else {
-                        continue;
-                    }
-                }
-                names.put(index, mode);
-            }
-
-            usersWithMode[1 + index]++;
+            usersWithMode[index]++;
         }
 
         boolean isFirst = true;
-
-        for (Map.Entry<Integer, String> entry : names.entrySet()) {
-            if (isFirst) {
+        for (int i = channelUserModes.length() - 1; i >= 0; i--) {
+            final int count = usersWithMode[i];
+            if (count > 0) {
+                if (!isFirst) {
+                    textString.append(' ');
+                }
+                final String name = i > 0 ?
+                        Character.toString(channelUserModes.charAt(i)) : nonePrefix;
+                textString.append(count).append(name);
                 isFirst = false;
-            } else {
-                textString.append(' ');
             }
-            textString.append(entry.getValue());
-            textString.append(usersWithMode[1 + entry.getKey()]);
         }
 
         textString.append(')');
