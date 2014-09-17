@@ -32,7 +32,7 @@ import dagger.Provides;
 /**
  * DI module for this plugin.
  */
-@Module(injects = {WindowStatusManager.class}, addsTo = SwingModule.class)
+@Module(injects = WindowStatusManager.class, addsTo = SwingModule.class)
 public class WindowStatusModule {
 
     /** The plugin's plugin info. */
