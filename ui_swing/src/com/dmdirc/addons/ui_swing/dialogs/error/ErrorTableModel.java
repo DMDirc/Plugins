@@ -76,7 +76,9 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
 
     @Override
     public int getRowCount() {
-        return errors.size();
+        synchronized (this.errors) {
+            return errors.size();
+        }
     }
 
     @Override
