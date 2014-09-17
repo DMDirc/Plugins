@@ -24,6 +24,7 @@ package com.dmdirc.addons.mediasource_windows;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.util.DateUtils;
 
 /**
  * Uses WindowsMediaSourcePlugin to retrieve now playing info.
@@ -84,11 +85,11 @@ public class DllSource implements MediaSource {
 
         if (result.getExitCode() == 0) {
             final String output = result.getGoodOutput();
-            if (output.equalsIgnoreCase("stopped")) {
+            if ("stopped".equalsIgnoreCase(output)) {
                 return MediaSourceState.STOPPED;
-            } else if (output.equalsIgnoreCase("playing")) {
+            } else if ("playing".equalsIgnoreCase(output)) {
                 return MediaSourceState.PLAYING;
-            } else if (output.equalsIgnoreCase("paused")) {
+            } else if ("paused".equalsIgnoreCase(output)) {
                 return MediaSourceState.PAUSED;
             } else {
                 return MediaSourceState.NOTKNOWN;
@@ -111,7 +112,7 @@ public class DllSource implements MediaSource {
     public String getTitle() {
         if (useArtistTitle) {
             final String[] bits = getOutput("getArtistTitle").split("\\s-\\s", 2);
-            return (bits.length > 1) ? bits[1] : "";
+            return bits.length > 1 ? bits[1] : "";
         } else {
             return getOutput("getTitle");
         }
@@ -122,32 +123,11 @@ public class DllSource implements MediaSource {
         return getOutput("getAlbum");
     }
 
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = (secondsInput / 3600);
-        final long minutes = (secondsInput / 60 % 60);
-        final long seconds = (secondsInput % 60);
-
-        if (hours > 0) {
-            result.append(hours).append(':');
-        }
-        result.append(String.format("%0,2d:%0,2d", minutes, seconds));
-
-        return result.toString();
-    }
-
     @Override
     public String getLength() {
         try {
             final int seconds = Integer.parseInt(getOutput("getLength"));
-            return duration(seconds);
+            return DateUtils.formatDurationAsTime(seconds);
         } catch (NumberFormatException nfe) {
         }
         return "Unknown";
@@ -157,7 +137,7 @@ public class DllSource implements MediaSource {
     public String getTime() {
         try {
             final int seconds = Integer.parseInt(getOutput("getTime"));
-            return duration(seconds);
+            return DateUtils.formatDurationAsTime(seconds);
         } catch (NumberFormatException nfe) {
         }
         return "Unknown";
