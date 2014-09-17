@@ -165,19 +165,19 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
         final StringBuilder textString = new StringBuilder();
         final ChannelInfo chan = frame.getChannelInfo();
         final Map<Integer, String> names = new HashMap<>();
-        final Map<Integer, Integer> types = new HashMap<>();
 
         textString.append(chan.getName());
         textString.append(" - Nicks: ");
         textString.append(chan.getChannelClientCount());
         textString.append(" (");
 
+        final String channelUserModes = chan.getParser().getChannelUserModes();
+        final int[] usersWithMode = new int[channelUserModes.length() + 1];
         for (ChannelClientInfo client : chan.getChannelClients()) {
             String mode = client.getImportantModePrefix();
-            final Integer im = client.getClient().getParser()
-                    .getChannelUserModes().indexOf(mode);
+            final int index = channelUserModes.indexOf(mode);
 
-            if (!names.containsKey(im)) {
+            if (!names.containsKey(index)) {
                 if (mode.isEmpty()) {
                     if (shownone) {
                         mode = nonePrefix;
@@ -185,29 +185,22 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
                         continue;
                     }
                 }
-                names.put(im, mode);
+                names.put(index, mode);
             }
 
-            Integer count = types.get(im);
-
-            if (count == null) {
-                count = 1;
-            } else {
-                count++;
-            }
-            types.put(im, count);
+            usersWithMode[1 + index]++;
         }
 
         boolean isFirst = true;
 
-        for (Map.Entry<Integer, Integer> entry : types.entrySet()) {
+        for (Map.Entry<Integer, String> entry : names.entrySet()) {
             if (isFirst) {
                 isFirst = false;
             } else {
                 textString.append(' ');
             }
-            textString.append(names.get(entry.getKey()));
             textString.append(entry.getValue());
+            textString.append(usersWithMode[1 + entry.getKey()]);
         }
 
         textString.append(')');
