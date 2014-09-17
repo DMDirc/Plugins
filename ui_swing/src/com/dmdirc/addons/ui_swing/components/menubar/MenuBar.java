@@ -146,10 +146,10 @@ public class MenuBar extends JMenuBar {
             }
             child = null;
         }
-        if (child instanceof JMenuItem) {
-            return Optional.fromNullable((JMenuItem) child);
-        } else {
+        if (child == null) {
             return Optional.absent();
+        } else {
+            return Optional.fromNullable((JMenuItem) child);
         }
     }
 
