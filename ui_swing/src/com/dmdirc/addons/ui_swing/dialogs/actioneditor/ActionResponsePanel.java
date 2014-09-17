@@ -113,13 +113,17 @@ public class ActionResponsePanel extends JPanel {
      */
     public void setResponse(final String... response) {
         final StringBuilder sb = new StringBuilder();
-        for (String responseLine : response) {
-            responseLine = responseLine.replace("\n", "\\n");
-            sb.append(responseLine).append('\n');
+        if (response != null) {
+            for (String responseLine : response) {
+                responseLine = responseLine.replace("\n", "\\n");
+                sb.append(responseLine).append('\n');
+            }
         }
 
         if (sb.length() > 0) {
             this.response.setText(sb.substring(0, sb.length() - 1));
+        } else {
+            this.response.setText("");
         }
 
         UIUtilities.resetScrollPane(scrollPane);
