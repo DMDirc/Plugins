@@ -24,6 +24,7 @@ package com.dmdirc.addons.mediasource_windows;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.util.DateUtils;
 
 /**
  * Uses WindowsMediaSourcePlugin to retrieve now playing info.
@@ -122,32 +123,11 @@ public class DllSource implements MediaSource {
         return getOutput("getAlbum");
     }
 
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = (secondsInput / 3600);
-        final long minutes = (secondsInput / 60 % 60);
-        final long seconds = (secondsInput % 60);
-
-        if (hours > 0) {
-            result.append(hours).append(':');
-        }
-        result.append(String.format("%0,2d:%0,2d", minutes, seconds));
-
-        return result.toString();
-    }
-
     @Override
     public String getLength() {
         try {
             final int seconds = Integer.parseInt(getOutput("getLength"));
-            return duration(seconds);
+            return DateUtils.formatDurationAsTime(seconds);
         } catch (NumberFormatException nfe) {
         }
         return "Unknown";

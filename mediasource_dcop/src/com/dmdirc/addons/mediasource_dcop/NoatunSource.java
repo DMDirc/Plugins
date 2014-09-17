@@ -24,6 +24,7 @@ package com.dmdirc.addons.mediasource_dcop;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.util.DateUtils;
 
 import java.util.List;
 
@@ -104,8 +105,9 @@ public class NoatunSource implements MediaSource {
 
     @Override
     public String getTime() {
-        return duration(Integer.parseInt(myPlugin.getDcopResult(
-                "dcop noatun Noatun position").get(0)) / 1000);
+        return DateUtils.formatDurationAsTime(
+                Integer.parseInt(myPlugin.getDcopResult("dcop noatun Noatun position").get(0)) /
+                        1000);
     }
 
     @Override
@@ -116,29 +118,6 @@ public class NoatunSource implements MediaSource {
     @Override
     public String getBitrate() {
         return null;
-    }
-
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = secondsInput / 3600;
-        final long minutes = secondsInput / 60 % 60;
-        final long seconds = secondsInput % 60;
-
-        if (hours > 0) {
-            result.append(hours).append(':');
-        }
-
-        result.append(minutes).append(':');
-        result.append(seconds).append(':');
-
-        return result.toString();
     }
 
 }

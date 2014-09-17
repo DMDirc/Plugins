@@ -33,6 +33,7 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
+import com.dmdirc.util.DateUtils;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -237,34 +238,12 @@ public class TransferPanel extends JPanel implements ActionListener,
                 }
 
                 remaining.setText(String.format("Time Remaining: %s",
-                        duration((int) transferContainer.getRemainingTime())));
+                        DateUtils.formatDurationAsTime((int) transferContainer.getRemainingTime())));
                 taken.setText(String.format("Time Taken: %s", transferContainer
-                        .getStartTime() == 0 ? "N/A" : duration(
-                                transferContainer.getElapsedTime())));
+                        .getStartTime() == 0 ? "N/A" : DateUtils.formatDurationAsTime(
+                        transferContainer.getElapsedTime())));
             }
         });
-    }
-
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = (secondsInput / 3600);
-        final long minutes = (secondsInput / 60 % 60);
-        final long seconds = (secondsInput % 60);
-
-        if (hours > 0) {
-            result.append(hours);
-            result.append(':');
-        }
-        result.append(String.format("%0,2d:%0,2d", minutes, seconds));
-
-        return result.toString();
     }
 
 }
