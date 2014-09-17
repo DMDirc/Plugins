@@ -24,6 +24,7 @@ package com.dmdirc.addons.mediasource_dbus;
 
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
+import com.dmdirc.util.DateUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class MPRISSource implements MediaSource {
     public String getLength() {
         try {
             final Long len = Long.parseLong(getData("mpris:length"));
-            return duration(len / 1000);
+            return DateUtils.formatDurationAsTime((int) (len / 1000));
         } catch (final NumberFormatException nfe) {
             return "Unknown";
         }
@@ -149,7 +150,7 @@ public class MPRISSource implements MediaSource {
             if (len == 0) {
                 return "Unknown";
             } else {
-                return duration(len / 1000);
+                return DateUtils.formatDurationAsTime((int) (len / 1000));
             }
         } catch (final NumberFormatException nfe) {
             return "Unknown";
@@ -188,42 +189,6 @@ public class MPRISSource implements MediaSource {
         }
 
         return getFirstValue("org.mpris.MediaPlayer2.Player.PlaybackStatus");
-    }
-
-    /**
-     * Get the duration in seconds as a string.
-     *
-     * @param secondsInput Input to get duration for
-     *
-     * @return Duration as a string
-     */
-    private String duration(final long secondsInput) {
-        final StringBuilder result = new StringBuilder();
-        final long hours = secondsInput / 3600;
-        final long minutes = secondsInput / 60 % 60;
-        final long seconds = secondsInput % 60;
-
-        if (hours > 0) {
-            if (hours < 10) {
-                result.append('0');
-            }
-
-            result.append(hours).append(':');
-        }
-
-        if (minutes < 10) {
-            result.append('0');
-        }
-
-        result.append(minutes).append(':');
-
-        if (seconds < 10) {
-            result.append('0');
-        }
-
-        result.append(seconds);
-
-        return result.toString();
     }
 
 }
