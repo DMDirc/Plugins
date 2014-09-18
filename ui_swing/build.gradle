@@ -1,5 +1,5 @@
 dependencies {
-  bundle group: 'com.miglayout', name: 'miglayout-swing', version: '4.+'
-  bundle group: 'org.swinglabs', name: 'jxlayer', version: '3.+'
+  bundle group: 'com.miglayout', name: 'miglayout-swing', version: '4.2'
+  bundle group: 'org.swinglabs', name: 'jxlayer', version: '3.0.4'
   bundle group: 'com.greboid.libraries', name: 'menuscroller', version: 'latest.release'
 }
