@@ -72,7 +72,16 @@ subprojects {
 
         ext.version = jgit.getDescription()
         def targetFile = new File("$buildDir", 'plugin.config')
-        targetFile << "\n\nversion:\n  number=${version}\n"
+        targetFile << "\n\nversion:\n  number=${version}"
+
+        targetFile << "\n\nbuildenv:\n"
+        def compileConfiguration = project.configurations.getByName("compile")
+        def resolvedConfiguration = compileConfiguration.resolvedConfiguration
+        def resolvedArtifacts = resolvedConfiguration.resolvedArtifacts
+        resolvedArtifacts.each { dp ->
+            def version = dp.getModuleVersion().getId()
+            targetFile << "  " + version.group + " " + version.name + " " + version.version + "\n"
+        }
     }
 
     pmd {
