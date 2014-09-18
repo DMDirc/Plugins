@@ -108,7 +108,7 @@ public class SwingModule {
     @Singleton
     @SwingEventBus
     public DMDircMBassador getSwingEventBus() {
-        return new DMDircMBassador(BusConfiguration.Default());
+        return new DMDircMBassador();
     }
 
     @Provides
