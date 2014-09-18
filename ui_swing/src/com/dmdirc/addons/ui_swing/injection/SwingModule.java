@@ -76,7 +76,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import net.engio.mbassy.bus.config.BusConfiguration;
 
 /**
  * Dagger module that provides Swing-specific dependencies.
@@ -108,7 +107,7 @@ public class SwingModule {
     @Singleton
     @SwingEventBus
     public DMDircMBassador getSwingEventBus() {
-        return new DMDircMBassador(BusConfiguration.Default());
+        return new DMDircMBassador();
     }
 
     @Provides
