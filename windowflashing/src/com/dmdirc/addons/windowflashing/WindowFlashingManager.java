@@ -31,6 +31,7 @@ import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
@@ -40,6 +41,7 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
 import net.engio.mbassy.listener.Handler;
 
+@Singleton
 public class WindowFlashingManager {
 
     /** Swing main frame. */
