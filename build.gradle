@@ -81,11 +81,6 @@ subprojects {
         }
     }
 
-    task licenses(type: Copy) {
-        from 'licenses'
-        into "$buildDir/licenses"
-    }
-
     pmd {
         ruleSets = []
         ruleSetFiles = files("$rootDir/etc/pmd/full.xml")
@@ -108,16 +103,12 @@ subprojects {
         from("$buildDir/plugin.config") {
             into 'META-INF'
         }
-        from("$buildDir/licenses") {
-            into 'META-INF/licenses'
-        }
 
         from { configurations.bundle.collect { it.isDirectory() ? it : zipTree(it) } } {
             exclude 'META-INF/**'
         }
     }
 
-    jar.dependsOn licenses
     jar.dependsOn updatePluginConfig
 }
 
