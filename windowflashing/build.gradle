@@ -1,5 +1,5 @@
 dependencies {
-  compile project(':ui_swing')
+  compile plugin('ui_swing')
   bundle group: 'net.java.dev.jna', name: 'jna', version: '4.1.0'
   bundle group: 'net.java.dev.jna', name: 'jna-platform', version: '4.1.0'
 }

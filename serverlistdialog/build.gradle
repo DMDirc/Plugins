@@ -1,4 +1,4 @@
 dependencies {
-  compile project(':ui_swing')
-  compile project(':serverlists')
+  compile plugin('ui_swing')
+  compile plugin('serverlists')
 }
