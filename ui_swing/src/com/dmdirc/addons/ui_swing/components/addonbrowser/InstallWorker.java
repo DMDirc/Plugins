@@ -28,8 +28,10 @@ import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -74,27 +76,30 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     @Override
     protected String doInBackground() {
         try {
-            final File file = new File(tempDirectory, "." + info.getId());
+            final Path file = Paths.get(tempDirectory, "." + info.getId());
             downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
-                    + info.getDownload(), file.getAbsolutePath());
+                    + info.getDownload(), file);
 
             switch (info.getType()) {
                 case TYPE_ACTION_PACK:
-                    ActionManager.installActionPack(file.getAbsolutePath());
+                    ActionManager.installActionPack(file.toAbsolutePath().toString());
                     break;
                 case TYPE_PLUGIN:
-                    final File newFile = new File(pluginDirectory, info.getTitle() + ".jar");
-                    if (file.renameTo(newFile)) {
-                        pluginManager.addPlugin(newFile.getName());
-                    } else {
+                    final Path newFile = Paths.get(pluginDirectory, info.getTitle() + ".jar");
+                    try {
+                        Files.move(file, newFile);
+                        pluginManager.addPlugin(newFile.getFileName().toString());
+                    } catch (IOException ex) {
                         return "Unable to install addon, failed to move file: "
-                                + file.getAbsolutePath();
+                                + file.toAbsolutePath().toString();
                     }
                     break;
                 case TYPE_THEME:
-                    if (!file.renameTo(new File(themeDirectory, info.getTitle() + ".zip"))) {
+                    try {
+                        Files.move(file, Paths.get(themeDirectory, info.getTitle() + ".zip"));
+                    } catch (IOException ex) {
                         return "Unable to install addon, failed to move file: "
-                                + file.getAbsolutePath();
+                                + file.toAbsolutePath().toString();
                     }
                     break;
                 default:
