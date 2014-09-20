@@ -130,3 +130,15 @@ buildscript {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
 }
+
+def plugin(name) {
+    if (allprojects.find { it.name == name }) {
+        project(name)
+    } else if (allprojects.find { it.name == 'plugins:' + name }) {
+        project('plugins:' + name)
+    } else if (allprojects.find { it.name == 'modules:plugins:' + name }) {
+        project('modules:plugins:' + name)
+    } else {
+        println "Couldn't find project $name"
+    }
+}
