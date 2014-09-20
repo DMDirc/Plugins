@@ -37,13 +37,6 @@
             <arg value="--refresh-dependencies"/>
             <arg value="jar"/>
         </exec>
-
-        <mkdir dir="dist"/>
-        <copy todir="dist" flatten="true">
-            <fileset dir=".">
-                <include name="*/build/libs/*.jar"/>
-            </fileset>
-        </copy>
     </target>
 
     <target name="clean">
