@@ -111,6 +111,15 @@ subprojects {
         }
     }
 
+    jar.doLast {
+        copy {
+            from jar.archivePath
+            into "../dist/"
+            rename ".*", "${project.name}.jar"
+        }
+    }
+    jar.outputs.file "../dist/${project.name}.jar"
+
     jar.dependsOn updatePluginConfig
 }
 
