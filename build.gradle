@@ -63,12 +63,14 @@ subprojects {
     }
 
     task updatePluginConfig(dependsOn: copyPluginConfig) << {
+        def gitDir = new File(projectDir.parent, '.git')
+
         def jgit = new org.mdonoughe.JGitDescribeTask()
-        jgit.setDir(new File("$rootDir", '.git'))
-        jgit.setSubDir("$projectDir")
+        jgit.dir = gitDir
+        jgit.subDir = projectDir
 
         ext.version = jgit.getDescription()
-        def targetFile = new File("$buildDir", 'plugin.config')
+        def targetFile = new File(buildDir, 'plugin.config')
         targetFile << "\n\nversion:\n  number=${version}"
 
         targetFile << "\n\nbuildenv:\n"
@@ -76,7 +78,7 @@ subprojects {
         def resolvedConfiguration = compileConfiguration.resolvedConfiguration
         def resolvedArtifacts = resolvedConfiguration.resolvedArtifacts
         resolvedArtifacts.each { dp ->
-            def version = dp.getModuleVersion().getId()
+            def version = dp.moduleVersion.id
             targetFile << "  " + version.group + " " + version.name + " " + version.version + "\n"
         }
     }
