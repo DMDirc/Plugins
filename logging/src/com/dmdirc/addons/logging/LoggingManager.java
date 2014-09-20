@@ -67,6 +67,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -768,9 +771,9 @@ public class LoggingManager implements ConfigChangeListener {
             return false;
         }
 
-        final String log = getLogFile(descriptor);
+        final Path log = Paths.get(getLogFile(descriptor));
 
-        if (!new File(log).exists()) {
+        if (!Files.exists(log)) {
             // File doesn't exist
             return false;
         }
