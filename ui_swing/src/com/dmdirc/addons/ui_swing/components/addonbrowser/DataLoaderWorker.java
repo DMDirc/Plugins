@@ -35,22 +35,21 @@ import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.text.StyleConstants;
-
-import net.miginfocom.swing.MigLayout;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Loads the addon data feed into the addon browser.
@@ -140,7 +139,7 @@ public class DataLoaderWorker
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
                 downloader.downloadPage("http://addons.dmdirc.com/feed",
-                        tempDirectory + "addons.feed", this);
+                        Paths.get(tempDirectory, "addons.feed"), this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
                 loadingPanel.add(new TextLabel("Unable to download feeds: " + ex.getMessage()));
