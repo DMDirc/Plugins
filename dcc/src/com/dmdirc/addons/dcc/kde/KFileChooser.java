@@ -198,14 +198,14 @@ public class KFileChooser extends JFileChooser {
 
         if (kdp.getProcess().exitValue() == 0) {
             if (isMultiSelectionEnabled()) {
-                final List<String> list = kdp.getStdOutStream().getList();
+                final List<String> list = kdp.getStdOut();
                 final File[] fileList = new File[list.size()];
                 for (int i = 0; i < list.size(); ++i) {
                     fileList[i] = new File(list.get(i));
                 }
                 setSelectedFiles(fileList);
             } else {
-                setSelectedFile(new File(kdp.getStdOutStream().getList().get(0)));
+                setSelectedFile(new File(kdp.getStdOut().get(0)));
             }
             return JFileChooser.APPROVE_OPTION;
         } else {
@@ -246,7 +246,7 @@ public class KFileChooser extends JFileChooser {
         }
 
         if (kdp.getProcess().exitValue() == 0) {
-            setSelectedFile(new File(kdp.getStdOutStream().getList().get(0)));
+            setSelectedFile(new File(kdp.getStdOut().get(0)));
             return JFileChooser.APPROVE_OPTION;
         } else {
             return JFileChooser.ERROR_OPTION;

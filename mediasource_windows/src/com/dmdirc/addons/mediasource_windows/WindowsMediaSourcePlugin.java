@@ -27,7 +27,7 @@ import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
-import com.dmdirc.util.io.StreamReader;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,8 +76,8 @@ public class WindowsMediaSourcePlugin extends BasePlugin
                 player,
                 method});
             final StringBuffer data = new StringBuffer();
-            new StreamReader(myProcess.getErrorStream()).start();
-            new StreamReader(myProcess.getInputStream(), data).start();
+            StreamUtils.readStream(myProcess.getErrorStream());
+            StreamUtils.readStreamIntoStringBuffer(myProcess.getInputStream(), data);
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {

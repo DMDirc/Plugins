@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.dcc.kde;
 
-import com.dmdirc.util.io.StreamReader;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hold a Process and stream readers for a KDialog Process.
@@ -37,10 +38,10 @@ public class KDialogProcess {
     private static final boolean IS_BIN = new File("/bin/kdialog").exists();
     /** Does KDialog exist? */
     private static final boolean HAS_KDIALOG = IS_BIN || new File("/usr/bin/kdialog").exists();
-    /** Stream for the stdout stream for this process. */
-    private final StreamReader stdOutputStream;
-    /** Stream for the stderr stream for this process. */
-    private final StreamReader stdErrorStream;
+    /** Output from the output stream. */
+    private final List<String> stdOutput;
+    /** Output from the error stream. */
+    private final List<String> stdError;
     /** The actual process for this process. */
     private final Process process;
 
@@ -56,10 +57,10 @@ public class KDialogProcess {
         System.arraycopy(params, 0, exec, 1, params.length);
         exec[0] = IS_BIN ? "/bin/kdialog" : "/usr/bin/kdialog";
         process = Runtime.getRuntime().exec(exec);
-        stdOutputStream = new StreamReader(process.getInputStream(), new ArrayList<String>());
-        stdErrorStream = new StreamReader(process.getErrorStream(), new ArrayList<String>());
-        stdOutputStream.start();
-        stdErrorStream.start();
+        stdOutput = new ArrayList<>();
+        stdError = new ArrayList<>();
+        StreamUtils.readStreamIntoList(process.getInputStream(), stdOutput);
+        StreamUtils.readStreamIntoList(process.getErrorStream(), stdError);
     }
 
     /**
@@ -85,8 +86,8 @@ public class KDialogProcess {
      *
      * @return The StreamReader for this KDialogProcess's stdout stream
      */
-    public StreamReader getStdOutStream() {
-        return stdOutputStream;
+    public List<String> getStdOut() {
+        return stdOutput;
     }
 
     /**
@@ -94,8 +95,8 @@ public class KDialogProcess {
      *
      * @return The StreamReader for this KDialogProcess's stderr stream
      */
-    public StreamReader getStdErrStream() {
-        return stdErrorStream;
+    public List<String> getStdErr() {
+        return stdError;
     }
 
     /**

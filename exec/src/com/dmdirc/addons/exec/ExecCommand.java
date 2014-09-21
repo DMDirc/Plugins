@@ -33,7 +33,7 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.CommandUtils;
-import com.dmdirc.util.io.StreamReader;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,13 +88,8 @@ public class ExecCommand extends Command {
                         ? null : new LinkedList<String>();
                 final List<String> errorOutput = args.isSilent()
                         ? null : new LinkedList<String>();
-                final StreamReader inputReader = new StreamReader(
-                        p.getInputStream(), execOutput);
-                final StreamReader errorReader = new StreamReader(
-                        p.getErrorStream(), errorOutput);
-
-                inputReader.run();
-                errorReader.run();
+                StreamUtils.readStreamIntoList(p.getInputStream(), execOutput);
+                StreamUtils.readStreamIntoList(p.getErrorStream(), errorOutput);
                 if (!args.isSilent()) {
                     for (String line : execOutput) {
                         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
