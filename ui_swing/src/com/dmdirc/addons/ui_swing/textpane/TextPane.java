@@ -30,6 +30,7 @@ import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.StringUtils;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Adjustable;
@@ -81,7 +82,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /** Clipboard to handle copy and paste cations. */
     private final Clipboard clipboard;
     /** Last seen line. */
-    private int lastSeenLine = 0;
+    private int lastSeenLine;
     /** Show new line notifications. */
     private boolean showNotification;
 
@@ -379,10 +380,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         if (lineNumber == -1) {
             return "";
         }
-        final int[] indexes = canvas.getSurroundingWordIndexes(document
-                .getLine(lineNumber).getText(), index);
-        return document.getLine(lineNumber).getText().substring(indexes[0],
-                indexes[1]);
+        final int[] indexes = StringUtils.indiciesOfWord(
+                document.getLine(lineNumber).getText(), index);
+        return document.getLine(lineNumber).getText().substring(indexes[0], indexes[1]);
     }
 
     /** Adds the selected text to the clipboard. */
