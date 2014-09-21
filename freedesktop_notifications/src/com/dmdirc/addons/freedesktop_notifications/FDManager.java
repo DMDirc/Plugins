@@ -33,7 +33,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.io.StreamReader;
+import com.dmdirc.util.io.StreamUtils;
 
 import com.google.common.base.Strings;
 import com.google.common.html.HtmlEscapers;
@@ -110,8 +110,8 @@ public class FDManager implements ConfigChangeListener {
         try {
             final Process myProcess = Runtime.getRuntime().exec(args);
             final StringBuffer data = new StringBuffer();
-            new StreamReader(myProcess.getErrorStream()).start();
-            new StreamReader(myProcess.getInputStream(), data).start();
+            StreamUtils.readStream(myProcess.getErrorStream());
+            StreamUtils.readStreamIntoStringBuffer(myProcess.getInputStream(), data);
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {
