@@ -28,6 +28,7 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.LinePosition;
+import com.dmdirc.util.StringUtils;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.Cursor;
@@ -399,7 +400,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-
         final LineInfo lineInfo = getClickPosition(getMousePosition(), true);
         fireMouseEvents(getClickType(lineInfo), MouseEventType.CLICK, e);
 
@@ -412,8 +412,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 start = -1;
                 end = -1;
             } else {
-                final int[] extent = getSurroundingWordIndexes(clickedText,
-                        lineInfo.getIndex());
+                final int[] extent = StringUtils.indiciesOfWord(clickedText, lineInfo.getIndex());
                 start = extent[0];
                 end = extent[1];
             }
@@ -475,69 +474,6 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             }
         }
         return new ClickTypeValue(ClickType.NORMAL, "");
-    }
-
-    /**
-     * Returns the indexes for the word surrounding the index in the specified string.
-     *
-     * @param text  Text to get word from
-     * @param index Index to get surrounding word
-     *
-     * @return Indexes of the word surrounding the index (start, end)
-     */
-    protected int[] getSurroundingWordIndexes(final String text,
-            final int index) {
-        final int start = getSurroundingWordStart(text, index);
-        final int end = getSurroundingWordEnd(text, index);
-
-        if (start < 0 || end > text.length() || start > end) {
-            return new int[]{0, 0};
-        }
-
-        return new int[]{start, end};
-
-    }
-
-    /**
-     * Returns the start index for the word surrounding the index in the specified string.
-     *
-     * @param text  Text to get word from
-     * @param index Index to get surrounding word
-     *
-     * @return Start index of the word surrounding the index
-     */
-    private int getSurroundingWordStart(final CharSequence text, final int index) {
-        int start = index;
-
-        // Traverse backwards
-        while (start > 0 && start < text.length()
-                && text.charAt(start) != ' ') {
-            start--;
-        }
-        if (start + 1 < text.length() && text.charAt(start) == ' ') {
-            start++;
-        }
-
-        return start;
-    }
-
-    /**
-     * Returns the end index for the word surrounding the index in the specified string.
-     *
-     * @param text  Text to get word from
-     * @param index Index to get surrounding word
-     *
-     * @return End index of the word surrounding the index
-     */
-    private int getSurroundingWordEnd(final CharSequence text, final int index) {
-        int end = index;
-
-        // And forwards
-        while (end < text.length() && end > 0 && text.charAt(end) != ' ') {
-            end++;
-        }
-
-        return end;
     }
 
     @Override

@@ -81,7 +81,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /** Clipboard to handle copy and paste cations. */
     private final Clipboard clipboard;
     /** Last seen line. */
-    private int lastSeenLine = 0;
+    private int lastSeenLine;
     /** Show new line notifications. */
     private boolean showNotification;
 
