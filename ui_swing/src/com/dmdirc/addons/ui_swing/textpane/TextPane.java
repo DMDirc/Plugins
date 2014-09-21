@@ -48,6 +48,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.swing.BoundedRangeModel;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
@@ -121,7 +122,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         layer.setUI(backgroundPainter);
         add(layer, "dock center");
         add(newLineIndicator, "dock south, center, grow");
-        scrollModel = new TextPaneBoundedRangeModel();
+        scrollModel = new DefaultBoundedRangeModel();
+        scrollModel.setMaximum(0);
         scrollModel.setExtent(0);
         final JScrollBar scrollBar = new JScrollBar(Adjustable.VERTICAL);
         scrollBar.setModel(scrollModel);
@@ -380,8 +382,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         if (lineNumber == -1) {
             return "";
         }
-        final int[] indexes = StringUtils.indiciesOfWord(
-                document.getLine(lineNumber).getText(), index);
+        final int[] indexes = StringUtils.indiciesOfWord(document.getLine(lineNumber).getText(),
+                index);
         return document.getLine(lineNumber).getText().substring(indexes[0], indexes[1]);
     }
 
