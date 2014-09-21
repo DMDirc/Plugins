@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -33,12 +32,14 @@ import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
+import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
@@ -97,7 +98,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             final DMDircMBassador eventBus,
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
-            final TextFrame frame) {
+            final Window frame) {
         this.frame = frame;
         this.configDomain = configDomain;
         this.clipboard = clipboard;
@@ -121,7 +122,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(newLineIndicator, "dock south, center, grow");
         scrollModel = new TextPaneBoundedRangeModel();
         scrollModel.setExtent(0);
-        final JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL);
+        final JScrollBar scrollBar = new JScrollBar(Adjustable.VERTICAL);
         scrollBar.setModel(scrollModel);
         add(scrollBar, "dock east");
         scrollBar.addAdjustmentListener(this);
@@ -139,9 +140,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             @Override
             public void mouseDragged(final MouseEvent e) {
                 if (e.getXOnScreen() > getLocationOnScreen().getX()
-                        && e.getXOnScreen() < (getLocationOnScreen().getX()
-                        + getWidth()) && e.getModifiersEx()
-                        == MouseEvent.BUTTON1_DOWN_MASK) {
+                        && e.getXOnScreen() < getLocationOnScreen().getX() + getWidth()
+                        && e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
                     if (getLocationOnScreen().getY() > e.getYOnScreen()) {
                         scrollModel.setValue(scrollBar.getValue() - 1);
                     } else if (getLocationOnScreen().getY() + getHeight()
