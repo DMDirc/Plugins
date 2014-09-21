@@ -82,7 +82,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
 
             switch (info.getType()) {
                 case TYPE_ACTION_PACK:
-                    ActionManager.installActionPack(file.toAbsolutePath().toString());
+                    ActionManager.installActionPack(file);
                     break;
                 case TYPE_PLUGIN:
                     final Path newFile = Paths.get(pluginDirectory, info.getTitle() + ".jar");
