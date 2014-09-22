@@ -1,0 +1,17 @@
+---
+
+machine:
+  environment:
+    TERM: dumb
+
+checkout:
+  post:
+    - git fetch --depth=1000 --tags
+
+dependencies:
+  override:
+    - ./gradlew --refresh-dependencies assemble
+
+test:
+  override:
+    - ./gradlew --stacktrace test
