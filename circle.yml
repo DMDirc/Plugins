@@ -11,7 +11,7 @@ checkout:
 
 dependencies:
   override:
-    - ./gradlew --refresh-dependencies assemble
+    - ./gradlew assemble
 
 test:
   override:
