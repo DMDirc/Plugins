@@ -24,7 +24,9 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
@@ -32,6 +34,8 @@ import com.dmdirc.util.io.ReverseFileReader;
 
 import com.google.common.base.Optional;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 
 /**
@@ -43,7 +47,7 @@ public class HistoryWindow extends FrameContainer {
      * Creates a new HistoryWindow.
      *
      * @param title      The title of the window
-     * @param reader     The reader to use to get the history
+     * @param logFile    The logfile to read and display
      * @param parent     The window this history window was opened from
      * @param urlBuilder The URL builder to use when finding icons.
      * @param eventBus   The bus to dispatch events on.
@@ -51,7 +55,7 @@ public class HistoryWindow extends FrameContainer {
      */
     public HistoryWindow(
             final String title,
-            final ReverseFileReader reader,
+            final Path logFile,
             final FrameContainer parent,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
@@ -63,7 +67,13 @@ public class HistoryWindow extends FrameContainer {
 
         final int frameBufferSize = parent.getConfigManager().getOptionInt(
                 "ui", "frameBufferSize");
-        addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
+        try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
+            addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
+        } catch (IOException | SecurityException ex) {
+            eventBus.publishAsync(
+                    new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to read log file.", ""));
+        }
+
     }
 
     @Override
