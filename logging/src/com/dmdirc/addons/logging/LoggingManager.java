@@ -778,17 +778,8 @@ public class LoggingManager implements ConfigChangeListener {
             return false;
         }
 
-        final ReverseFileReader reader;
-
-        try {
-            reader = new ReverseFileReader(log);
-        } catch (IOException | SecurityException ex) {
-            return false;
-        }
-
-        final HistoryWindow window = new HistoryWindow("History", reader, target, urlBuilder,
-                eventBus, colourManagerFactory, historyLines);
-        windowManager.addWindow(target, window);
+        windowManager.addWindow(target, new HistoryWindow("History", log, target, urlBuilder,
+                eventBus, colourManagerFactory, historyLines));
 
         return true;
     }
