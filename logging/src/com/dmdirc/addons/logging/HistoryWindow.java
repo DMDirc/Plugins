@@ -24,7 +24,9 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
@@ -68,7 +70,8 @@ public class HistoryWindow extends FrameContainer {
         try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
             addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
         } catch (IOException | SecurityException ex) {
-            addLine("", false);
+            eventBus.publishAsync(
+                    new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to read log file.", ""));
         }
 
     }
