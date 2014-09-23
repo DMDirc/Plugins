@@ -58,6 +58,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /** Canvas object to draw text. */
 class TextPaneCanvas extends JPanel implements MouseInputListener,
         ComponentListener, AdjustmentListener, ConfigChangeListener {
@@ -182,73 +184,80 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
         // Iterate through the lines
         for (int line = startLine; line >= 0; line--) {
-            final AttributedCharacterIterator iterator = document.getStyledLine(line);
-            final int lineHeight = (int) (document.getLineHeight(line) * (LINE_PADDING + 1));
-            final int paragraphStart = iterator.getBeginIndex();
-            final int paragraphEnd = iterator.getEndIndex();
-            final LineBreakMeasurer lineMeasurer =
-                    new LineBreakMeasurer(iterator, g.getFontRenderContext());
-            lineMeasurer.setPosition(paragraphStart);
-
-            final int wrappedLine = getNumWrappedLines(lineMeasurer, paragraphStart,
-                    paragraphEnd, formatWidth);
-
-            if (wrappedLine > 1) {
-                drawPosY -= lineHeight * wrappedLine;
-            }
-
-            if (line == startLine) {
-                drawPosY += DOUBLE_SIDE_PADDING;
-            }
-
-            int numberOfWraps = 0;
-            int chars = 0;
-            // Loop through each wrapped line
-            while (lineMeasurer.getPosition() < paragraphEnd) {
-                final TextLayout layout = lineMeasurer.nextLayout(formatWidth);
-
-                // Calculate the Y offset
-                if (wrappedLine == 1) {
-                    drawPosY -= lineHeight;
-                } else if (numberOfWraps != 0) {
-                    drawPosY += lineHeight;
-                }
-
-                // Calculate the initial X position
-                final float drawPosX;
-                if (layout.isLeftToRight()) {
-                    drawPosX = SINGLE_SIDE_PADDING;
-                } else {
-                    drawPosX = formatWidth - layout.getAdvance();
-                }
-
-                // Check if the target is in range
-                if (drawPosY >= 0 || drawPosY <= formatHeight) {
-                    g.setColor(textPane.getForeground());
-
-                    layout.draw(g, drawPosX, drawPosY + layout.getDescent());
-                    doHighlight(line, chars, layout, g, drawPosY, drawPosX);
-                    firstVisibleLine = line;
-                    textLayouts.put(layout, new LineInfo(line, numberOfWraps));
-                    positions.put(new Rectangle(0,
-                            (int) (drawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
-                            (int) formatWidth + DOUBLE_SIDE_PADDING,
-                            (int) (layout.getAscent() + layout.getDescent())),
-                            layout);
-                }
-
-                numberOfWraps++;
-                chars += layout.getCharacterCount();
-            }
-            if (numberOfWraps > 1) {
-                drawPosY -= lineHeight * (wrappedLine - 1);
-            }
+            drawPosY = paintLineOntoGraphics(g, formatWidth, formatHeight, drawPosY, line);
             if (drawPosY <= 0) {
                 break;
             }
         }
 
         checkForLink();
+    }
+
+    private float paintLineOntoGraphics(final Graphics2D g, final float formatWidth,
+            final float formatHeight, final float drawPosY, final int line) {
+        final AttributedCharacterIterator iterator = document.getStyledLine(line);
+        final int lineHeight = (int) (document.getLineHeight(line) * (LINE_PADDING + 1));
+        final int paragraphStart = iterator.getBeginIndex();
+        final int paragraphEnd = iterator.getEndIndex();
+        final LineBreakMeasurer lineMeasurer =
+                new LineBreakMeasurer(iterator, g.getFontRenderContext());
+        lineMeasurer.setPosition(paragraphStart);
+
+        final int wrappedLine = getNumWrappedLines(lineMeasurer, paragraphStart,
+                paragraphEnd, formatWidth);
+        float newDrawPosY = drawPosY;
+
+        if (wrappedLine > 1) {
+            newDrawPosY -= lineHeight * wrappedLine;
+        }
+
+        if (line == startLine) {
+            newDrawPosY += DOUBLE_SIDE_PADDING;
+        }
+
+        int numberOfWraps = 0;
+        int chars = 0;
+        // Loop through each wrapped line
+        while (lineMeasurer.getPosition() < paragraphEnd) {
+            final TextLayout layout = checkNotNull(lineMeasurer.nextLayout(formatWidth));
+
+            // Calculate the Y offset
+            if (wrappedLine == 1) {
+                newDrawPosY -= lineHeight;
+            } else if (numberOfWraps != 0) {
+                newDrawPosY += lineHeight;
+            }
+
+            // Calculate the initial X position
+            final float drawPosX;
+            if (layout.isLeftToRight()) {
+                drawPosX = SINGLE_SIDE_PADDING;
+            } else {
+                drawPosX = formatWidth - layout.getAdvance();
+            }
+
+            // Check if the target is in range
+            if (newDrawPosY >= 0 || newDrawPosY <= formatHeight) {
+                g.setColor(textPane.getForeground());
+
+                layout.draw(g, drawPosX, newDrawPosY + layout.getDescent());
+                doHighlight(line, chars, layout, g, newDrawPosY, drawPosX);
+                firstVisibleLine = line;
+                textLayouts.put(layout, new LineInfo(line, numberOfWraps));
+                positions.put(new Rectangle(0,
+                        (int) (newDrawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
+                        (int) formatWidth + DOUBLE_SIDE_PADDING,
+                        (int) (layout.getAscent() + layout.getDescent())),
+                        layout);
+            }
+
+            numberOfWraps++;
+            chars += layout.getCharacterCount();
+        }
+        if (numberOfWraps > 1) {
+            newDrawPosY -= lineHeight * (wrappedLine - 1);
+        }
+        return newDrawPosY;
     }
 
     /**
@@ -317,39 +326,44 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
             // If the selection includes the chars we're showing
             if (lastChar > chars && firstChar < chars + layout.getCharacterCount()) {
-                String text = document.getLine(line).getText();
-                if (firstChar >= 0 && text.length() > lastChar) {
-                    text = text.substring(firstChar, lastChar);
-                }
-
-                if (text.isEmpty()) {
-                    return;
-                }
-
-                final AttributedCharacterIterator iterator = document.getStyledLine(line);
-                if (iterator.getEndIndex() == iterator.getBeginIndex()) {
-                    return;
-                }
-                final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
-
-                as.addAttribute(TextAttribute.FOREGROUND, textPane.getBackground());
-                as.addAttribute(TextAttribute.BACKGROUND, textPane.getForeground());
-                final TextLayout newLayout = new TextLayout(as.getIterator(),
-                        g.getFontRenderContext());
-                final Shape shape = layout.getLogicalHighlightShape(firstChar - chars,
-                        lastChar - chars);
-                final int trans = (int) (newLayout.getDescent() + drawPosY);
-
-                if (firstChar != 0) {
-                    g.translate(shape.getBounds().getX(), 0);
-                }
-
-                newLayout.draw(g, drawPosX, trans);
-
-                if (firstChar != 0) {
-                    g.translate(-1 * shape.getBounds().getX(), 0);
-                }
+                doHighlight(line,
+                        layout.getLogicalHighlightShape(firstChar - chars, lastChar - chars), g,
+                        drawPosY, drawPosX, firstChar, lastChar);
             }
+        }
+    }
+
+    private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
+            final float drawPosY, final float drawPosX, final int firstChar, final int lastChar) {
+        String text = document.getLine(line).getText();
+        if (firstChar >= 0 && text.length() > lastChar) {
+            text = text.substring(firstChar, lastChar);
+        }
+
+        if (text.isEmpty()) {
+            return;
+        }
+
+        final AttributedCharacterIterator iterator = document.getStyledLine(line);
+        if (iterator.getEndIndex() == iterator.getBeginIndex()) {
+            return;
+        }
+        final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
+
+        as.addAttribute(TextAttribute.FOREGROUND, textPane.getBackground());
+        as.addAttribute(TextAttribute.BACKGROUND, textPane.getForeground());
+        final TextLayout newLayout = new TextLayout(as.getIterator(),
+                g.getFontRenderContext());
+        final int trans = (int) (newLayout.getDescent() + drawPosY);
+
+        if (firstChar != 0) {
+            g.translate(logicalHighlightShape.getBounds().getX(), 0);
+        }
+
+        newLayout.draw(g, drawPosX, trans);
+
+        if (firstChar != 0) {
+            g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
         }
     }
 
@@ -421,21 +435,20 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             final AttributedCharacterIterator iterator = document.getStyledLine(
                     lineInfo.getLine());
             final int index = lineInfo.getIndex();
-            if (index >= iterator.getBeginIndex() && index <= iterator.
-                    getEndIndex()) {
+            if (index >= iterator.getBeginIndex() && index <= iterator.getEndIndex()) {
                 iterator.setIndex(lineInfo.getIndex());
-                final Object linkAttribute = iterator.getAttributes()
-                        .get(IRCTextAttribute.HYPERLINK);
+                final Object linkAttribute =
+                        iterator.getAttributes().get(IRCTextAttribute.HYPERLINK);
                 if (linkAttribute instanceof String) {
                     return new ClickTypeValue(ClickType.HYPERLINK, (String) linkAttribute);
                 }
-                final Object channelAttribute = iterator.getAttributes()
-                        .get(IRCTextAttribute.CHANNEL);
+                final Object channelAttribute =
+                        iterator.getAttributes().get(IRCTextAttribute.CHANNEL);
                 if (channelAttribute instanceof String) {
                     return new ClickTypeValue(ClickType.CHANNEL, (String) channelAttribute);
                 }
-                final Object nickAttribute = iterator.getAttributes()
-                        .get(IRCTextAttribute.NICKNAME);
+                final Object nickAttribute =
+                        iterator.getAttributes().get(IRCTextAttribute.NICKNAME);
                 if (nickAttribute instanceof String) {
                     return new ClickTypeValue(ClickType.NICKNAME, (String) nickAttribute);
                 }
@@ -547,8 +560,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @param type mouse event type
      * @param e    responsible mouse event
      */
-    protected void highlightEvent(final MouseEventType type,
-            final MouseEvent e) {
+    protected void highlightEvent(final MouseEventType type, final MouseEvent e) {
         if (isVisible()) {
             final Point point = e.getLocationOnScreen();
             SwingUtilities.convertPointFromScreen(point, this);
@@ -681,15 +693,13 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @return line number, line part, position in whole line
      */
-    public LineInfo getClickPosition(final Point point,
-            final boolean selection) {
+    public LineInfo getClickPosition(final Point point, final boolean selection) {
         int lineNumber = -1;
         int linePart = -1;
         int pos = 0;
 
         if (point != null) {
-            for (Map.Entry<Rectangle, TextLayout> entry
-                    : positions.entrySet()) {
+            for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
                 if (entry.getKey().contains(point)) {
                     lineNumber = textLayouts.get(entry.getValue()).getLine();
                     linePart = textLayouts.get(entry.getValue()).getPart();
@@ -741,23 +751,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @return Selected range info
      */
     protected LinePosition getSelectedRange() {
-        if (selection.getStartLine() > selection.getEndLine()) {
-            // Swap both
-            return new LinePosition(selection.getEndLine(),
-                    selection.getEndPos(), selection.getStartLine(),
-                    selection.getStartPos());
-        } else if (selection.getStartLine() == selection.getEndLine()
-                && selection.getStartPos() > selection.getEndPos()) {
-            // Just swap the chars
-            return new LinePosition(selection.getStartLine(), selection.
-                    getEndPos(), selection.getEndLine(),
-                    selection.getStartPos());
-        } else {
-            // Swap nothing
-            return new LinePosition(selection.getStartLine(), selection.
-                    getStartPos(), selection.getEndLine(),
-                    selection.getEndPos());
-        }
+        return selection.getNormalised();
     }
 
     /** Clears the selection. */
@@ -851,8 +845,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     private void fireMouseEvents(final ClickTypeValue clickType,
             final MouseEventType eventType, final MouseEvent event) {
-        for (TextPaneListener listener
-                : listeners.get(TextPaneListener.class)) {
+        for (TextPaneListener listener : listeners.get(TextPaneListener.class)) {
             listener.mouseClicked(clickType, eventType, event);
         }
     }
