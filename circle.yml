@@ -11,8 +11,8 @@ checkout:
 
 dependencies:
   override:
-    - ./gradlew assemble
+    - ./gradlew --parallel assemble
 
 test:
   override:
-    - ./gradlew --stacktrace test
+    - ./gradlew --stacktrace --parallel test
