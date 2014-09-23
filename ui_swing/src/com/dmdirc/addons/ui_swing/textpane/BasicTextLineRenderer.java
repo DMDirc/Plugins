@@ -112,18 +112,8 @@ public class BasicTextLineRenderer implements LineRenderer {
 
             // Check if the target is in range
             if (newDrawPosY >= 0 || newDrawPosY <= canvasHeight) {
-                graphics.setColor(textPane.getForeground());
-
-                layout.draw(graphics, drawPosX, newDrawPosY + layout.getDescent());
-                doHighlight(line, chars, layout, graphics, newDrawPosY, drawPosX);
-                result.firstVisibleLine = line;
-                final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
-                result.textLayouts.put(lineInfo, layout);
-                result.drawnAreas.put(lineInfo,
-                        new Rectangle(0,
-                                (int) (newDrawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
-                                (int) canvasWidth + DOUBLE_SIDE_PADDING,
-                                (int) (layout.getAscent() + layout.getDescent())));
+                renderLine(graphics, (int) canvasWidth, line, drawPosX, newDrawPosY,
+                        numberOfWraps, chars, layout);
             }
 
             numberOfWraps++;
@@ -135,6 +125,22 @@ public class BasicTextLineRenderer implements LineRenderer {
 
         result.totalHeight = drawPosY - newDrawPosY;
         return result;
+    }
+
+    protected void renderLine(final Graphics2D graphics, final int canvasWidth, final int line,
+            final float drawPosX, final float drawPosY, final int numberOfWraps, final int chars,
+            final TextLayout layout) {
+        graphics.setColor(textPane.getForeground());
+        layout.draw(graphics, drawPosX, drawPosY + layout.getDescent());
+        doHighlight(line, chars, layout, graphics, drawPosX, drawPosY);
+        result.firstVisibleLine = line;
+        final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
+        result.textLayouts.put(lineInfo, layout);
+        result.drawnAreas.put(lineInfo,
+                new Rectangle(0,
+                        (int) (drawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
+                        canvasWidth + DOUBLE_SIDE_PADDING,
+                        (int) (layout.getAscent() + layout.getDescent())));
     }
 
     /**
@@ -170,12 +176,12 @@ public class BasicTextLineRenderer implements LineRenderer {
      * @param chars    Number of characters so far in the line
      * @param layout   Current line textlayout
      * @param g        Graphics surface to draw highlight on
-     * @param drawPosY current y location of the line
      * @param drawPosX current x location of the line
+     * @param drawPosY current y location of the line
      */
-    private void doHighlight(final int line, final int chars,
+    protected void doHighlight(final int line, final int chars,
             final TextLayout layout, final Graphics2D g,
-            final float drawPosY, final float drawPosX) {
+            final float drawPosX, final float drawPosY) {
         final LinePosition selectedRange = textPaneCanvas.getSelectedRange();
         final int selectionStartLine = selectedRange.getStartLine();
         final int selectionStartChar = selectedRange.getStartPos();
