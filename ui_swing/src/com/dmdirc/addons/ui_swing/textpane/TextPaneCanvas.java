@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.textpane.LineRenderer.RenderResult;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.IRCDocument;
@@ -36,7 +37,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -44,21 +44,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute;
 import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /** Canvas object to draw text. */
 class TextPaneCanvas extends JPanel implements MouseInputListener,
@@ -72,16 +68,14 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private static final int SINGLE_SIDE_PADDING = 3;
     /** Both Side padding for textpane. */
     private static final int DOUBLE_SIDE_PADDING = SINGLE_SIDE_PADDING * 2;
-    /** Padding to add to line height. */
-    private static final double LINE_PADDING = 0.2;
     /** IRCDocument. */
     private final IRCDocument document;
     /** parent textpane. */
     private final TextPane textPane;
-    /** Position -> TextLayout. */
-    private final Map<Rectangle, TextLayout> positions;
+    /** Position -> LineInfo. */
+    private final Map<LineInfo, Rectangle> lineAreas;
     /** TextLayout -> Line numbers. */
-    private final Map<TextLayout, LineInfo> textLayouts;
+    private final Map<LineInfo, TextLayout> lineLayouts;
     /** Start line. */
     private int startLine;
     /** Selection. */
@@ -96,6 +90,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private boolean quickCopy;
     /** Mouse click listeners. */
     private final ListenerList listeners = new ListenerList();
+    /** Renderer to use for lines. */
+    private final LineRenderer lineRenderer;
 
     /**
      * Creates a new text pane canvas.
@@ -107,11 +103,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         this.document = document;
         textPane = parent;
         this.manager = parent.getWindow().getContainer().getConfigManager();
+        this.lineRenderer = new BasicTextLineRenderer(textPane, this, document);
         startLine = 0;
         setDoubleBuffered(true);
         setOpaque(true);
-        textLayouts = new HashMap<>();
-        positions = new HashMap<>();
+        lineLayouts = new TreeMap<>(new LineInfoComparator());
+        lineAreas = new HashMap<>();
         selection = new LinePosition(-1, -1, -1, -1);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -166,8 +163,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         final float formatHeight = getHeight();
         float drawPosY = formatHeight;
 
-        textLayouts.clear();
-        positions.clear();
+        lineLayouts.clear();
+        lineAreas.clear();
 
         //check theres something to draw and theres some space to draw in
         if (document.getNumLines() == 0 || formatWidth < 1) {
@@ -195,176 +192,12 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
     private float paintLineOntoGraphics(final Graphics2D g, final float formatWidth,
             final float formatHeight, final float drawPosY, final int line) {
-        final AttributedCharacterIterator iterator = document.getStyledLine(line);
-        final int lineHeight = (int) (document.getLineHeight(line) * (LINE_PADDING + 1));
-        final int paragraphStart = iterator.getBeginIndex();
-        final int paragraphEnd = iterator.getEndIndex();
-        final LineBreakMeasurer lineMeasurer =
-                new LineBreakMeasurer(iterator, g.getFontRenderContext());
-        lineMeasurer.setPosition(paragraphStart);
-
-        final int wrappedLine = getNumWrappedLines(lineMeasurer, paragraphStart,
-                paragraphEnd, formatWidth);
-        float newDrawPosY = drawPosY;
-
-        if (wrappedLine > 1) {
-            newDrawPosY -= lineHeight * wrappedLine;
-        }
-
-        if (line == startLine) {
-            newDrawPosY += DOUBLE_SIDE_PADDING;
-        }
-
-        int numberOfWraps = 0;
-        int chars = 0;
-        // Loop through each wrapped line
-        while (lineMeasurer.getPosition() < paragraphEnd) {
-            final TextLayout layout = checkNotNull(lineMeasurer.nextLayout(formatWidth));
-
-            // Calculate the Y offset
-            if (wrappedLine == 1) {
-                newDrawPosY -= lineHeight;
-            } else if (numberOfWraps != 0) {
-                newDrawPosY += lineHeight;
-            }
-
-            // Calculate the initial X position
-            final float drawPosX;
-            if (layout.isLeftToRight()) {
-                drawPosX = SINGLE_SIDE_PADDING;
-            } else {
-                drawPosX = formatWidth - layout.getAdvance();
-            }
-
-            // Check if the target is in range
-            if (newDrawPosY >= 0 || newDrawPosY <= formatHeight) {
-                g.setColor(textPane.getForeground());
-
-                layout.draw(g, drawPosX, newDrawPosY + layout.getDescent());
-                doHighlight(line, chars, layout, g, newDrawPosY, drawPosX);
-                firstVisibleLine = line;
-                textLayouts.put(layout, new LineInfo(line, numberOfWraps));
-                positions.put(new Rectangle(0,
-                        (int) (newDrawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
-                        (int) formatWidth + DOUBLE_SIDE_PADDING,
-                        (int) (layout.getAscent() + layout.getDescent())),
-                        layout);
-            }
-
-            numberOfWraps++;
-            chars += layout.getCharacterCount();
-        }
-        if (numberOfWraps > 1) {
-            newDrawPosY -= lineHeight * (wrappedLine - 1);
-        }
-        return newDrawPosY;
-    }
-
-    /**
-     * Returns the number of times a line will wrap.
-     *
-     * @param lineMeasurer   LineBreakMeasurer to work out wrapping for
-     * @param paragraphStart Start index of the paragraph
-     * @param paragraphEnd   End index of the paragraph
-     * @param formatWidth    Width to wrap at
-     *
-     * @return Number of times the line wraps
-     */
-    private int getNumWrappedLines(final LineBreakMeasurer lineMeasurer,
-            final int paragraphStart,
-            final int paragraphEnd,
-            final float formatWidth) {
-        int wrappedLine = 0;
-
-        while (lineMeasurer.getPosition() < paragraphEnd) {
-            lineMeasurer.nextLayout(formatWidth);
-            wrappedLine++;
-        }
-
-        lineMeasurer.setPosition(paragraphStart);
-
-        return wrappedLine;
-    }
-
-    /**
-     * Redraws the text that has been highlighted.
-     *
-     * @param line     Line number
-     * @param chars    Number of characters so far in the line
-     * @param layout   Current line textlayout
-     * @param g        Graphics surface to draw highlight on
-     * @param drawPosY current y location of the line
-     * @param drawPosX current x location of the line
-     */
-    private void doHighlight(final int line, final int chars,
-            final TextLayout layout, final Graphics2D g,
-            final float drawPosY, final float drawPosX) {
-        final LinePosition selectedRange = getSelectedRange();
-        final int selectionStartLine = selectedRange.getStartLine();
-        final int selectionStartChar = selectedRange.getStartPos();
-        final int selectionEndLine = selectedRange.getEndLine();
-        final int selectionEndChar = selectedRange.getEndPos();
-
-        //Does this line need highlighting?
-        if (selectionStartLine <= line && selectionEndLine >= line) {
-            final int firstChar;
-
-            // Determine the first char we care about
-            if (selectionStartLine < line || selectionStartChar < chars) {
-                firstChar = chars;
-            } else {
-                firstChar = selectionStartChar;
-            }
-
-            // ... And the last
-            final int lastChar;
-            if (selectionEndLine > line || selectionEndChar > chars + layout.getCharacterCount()) {
-                lastChar = chars + layout.getCharacterCount();
-            } else {
-                lastChar = selectionEndChar;
-            }
-
-            // If the selection includes the chars we're showing
-            if (lastChar > chars && firstChar < chars + layout.getCharacterCount()) {
-                doHighlight(line,
-                        layout.getLogicalHighlightShape(firstChar - chars, lastChar - chars), g,
-                        drawPosY, drawPosX, firstChar, lastChar);
-            }
-        }
-    }
-
-    private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
-            final float drawPosY, final float drawPosX, final int firstChar, final int lastChar) {
-        String text = document.getLine(line).getText();
-        if (firstChar >= 0 && text.length() > lastChar) {
-            text = text.substring(firstChar, lastChar);
-        }
-
-        if (text.isEmpty()) {
-            return;
-        }
-
-        final AttributedCharacterIterator iterator = document.getStyledLine(line);
-        if (iterator.getEndIndex() == iterator.getBeginIndex()) {
-            return;
-        }
-        final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
-
-        as.addAttribute(TextAttribute.FOREGROUND, textPane.getBackground());
-        as.addAttribute(TextAttribute.BACKGROUND, textPane.getForeground());
-        final TextLayout newLayout = new TextLayout(as.getIterator(),
-                g.getFontRenderContext());
-        final int trans = (int) (newLayout.getDescent() + drawPosY);
-
-        if (firstChar != 0) {
-            g.translate(logicalHighlightShape.getBounds().getX(), 0);
-        }
-
-        newLayout.draw(g, drawPosX, trans);
-
-        if (firstChar != 0) {
-            g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
-        }
+        final RenderResult result = lineRenderer.render(g, formatWidth, formatHeight, drawPosY,
+                line, line == startLine);
+        lineAreas.putAll(result.drawnAreas);
+        lineLayouts.putAll(result.textLayouts);
+        firstVisibleLine = result.firstVisibleLine;
+        return drawPosY - result.totalHeight;
     }
 
     @Override
@@ -612,18 +445,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @return First line's rectangle
      */
     private Rectangle getFirstLineRectangle() {
-        TextLayout firstLineLayout = null;
-        for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == firstVisibleLine) {
-                firstLineLayout = entry.getKey();
-            }
-        }
-        if (firstLineLayout == null) {
-            return null;
-        }
-        for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
-            if (entry.getValue() == firstLineLayout) {
-                return entry.getKey();
+        for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+            if (entry.getKey().getLine() == firstVisibleLine) {
+                return entry.getValue();
             }
         }
         return null;
@@ -635,18 +459,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @return Last line's rectangle
      */
     private Rectangle getLastLineRectangle() {
-        TextLayout lastLineLayout = null;
-        for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == lastVisibleLine) {
-                lastLineLayout = entry.getKey();
-            }
-        }
-        if (lastLineLayout == null) {
-            return null;
-        }
-        for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
-            if (entry.getValue() == lastLineLayout) {
-                return entry.getKey();
+        for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+            if (entry.getKey().getLine() == lastVisibleLine) {
+                return entry.getValue();
             }
         }
         return null;
@@ -659,10 +474,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     private LineInfo getFirstLineInfo() {
         int firstLineParts = Integer.MAX_VALUE;
-        for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == firstVisibleLine
-                    && entry.getValue().getPart() < firstLineParts) {
-                firstLineParts = entry.getValue().getPart();
+        for (LineInfo info : lineAreas.keySet()) {
+            if (info.getLine() == firstVisibleLine && info.getPart() < firstLineParts) {
+                firstLineParts = info.getPart();
             }
         }
         return new LineInfo(firstVisibleLine, firstLineParts);
@@ -675,10 +489,9 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     private LineInfo getLastLineInfo() {
         int lastLineParts = -1;
-        for (Map.Entry<TextLayout, LineInfo> entry : textLayouts.entrySet()) {
-            if (entry.getValue().getLine() == lastVisibleLine
-                    && entry.getValue().getPart() > lastLineParts) {
-                lastLineParts = entry.getValue().getPart();
+        for (LineInfo info : lineAreas.keySet()) {
+            if (info.getLine() == lastVisibleLine && info.getPart() > lastLineParts) {
+                lastLineParts = info.getPart();
             }
         }
         return new LineInfo(lastVisibleLine + 1, lastLineParts);
@@ -699,10 +512,10 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         int pos = 0;
 
         if (point != null) {
-            for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
-                if (entry.getKey().contains(point)) {
-                    lineNumber = textLayouts.get(entry.getValue()).getLine();
-                    linePart = textLayouts.get(entry.getValue()).getPart();
+            for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+                if (entry.getValue().contains(point)) {
+                    lineNumber = entry.getKey().getLine();
+                    linePart = entry.getKey().getPart();
                 }
             }
 
@@ -727,13 +540,13 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             final int x, final int y, final boolean selection) {
         int pos = 0;
 
-        for (Map.Entry<Rectangle, TextLayout> entry : positions.entrySet()) {
-            if (textLayouts.get(entry.getValue()).getLine() == lineNumber) {
-                if (textLayouts.get(entry.getValue()).getPart() < linePart) {
+        for (Map.Entry<LineInfo, TextLayout> entry : lineLayouts.entrySet()) {
+            if (entry.getKey().getLine() == lineNumber) {
+                if (entry.getKey().getPart() < linePart) {
                     pos += entry.getValue().getCharacterCount();
-                } else if (textLayouts.get(entry.getValue()).getPart() == linePart) {
-                    final TextHitInfo hit =
-                            entry.getValue().hitTestChar(x - DOUBLE_SIDE_PADDING, y);
+                } else if (entry.getKey().getPart() == linePart) {
+                    final TextHitInfo hit = entry.getValue()
+                            .hitTestChar(x - DOUBLE_SIDE_PADDING, y);
                     if (selection || x > entry.getValue().getBounds().getX()) {
                         pos += hit.getInsertionIndex();
                     } else {
