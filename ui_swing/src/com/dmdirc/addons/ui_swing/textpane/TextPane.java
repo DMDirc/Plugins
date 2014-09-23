@@ -263,8 +263,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             return null;
         }
 
-        for (int i = selectedRange.getStartLine(); i
-                <= selectedRange.getEndLine(); i++) {
+        for (int i = selectedRange.getStartLine(); i <= selectedRange.getEndLine(); i++) {
             if (i != selectedRange.getStartLine()) {
                 selectedText.append('\n');
             }
@@ -278,11 +277,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 line = document.getLine(i).getText();
             }
             if (!line.isEmpty()) {
-                if (selectedRange.getEndLine()
-                        == selectedRange.getStartLine()) {
+                if (selectedRange.getEndLine() == selectedRange.getStartLine()) {
                     //loop through range
-                    if (selectedRange.getStartPos() != -1 && selectedRange.
-                            getEndPos() != -1) {
+                    if (selectedRange.getStartPos() != -1 && selectedRange.getEndPos() != -1) {
                         selectedText.append(getText(line,
                                 selectedRange.getStartPos(),
                                 selectedRange.getEndPos(), styled));
@@ -290,20 +287,17 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 } else if (i == selectedRange.getStartLine()) {
                     //loop from start of range to the end
                     if (selectedRange.getStartPos() != -1) {
-                        selectedText.append(getText(line,
-                                selectedRange.getStartPos(),
+                        selectedText.append(getText(line, selectedRange.getStartPos(),
                                 Styliser.stipControlCodes(line).length(), styled));
                     }
                 } else if (i == selectedRange.getEndLine()) {
                     //loop from start to end of range
                     if (selectedRange.getEndPos() != -1) {
-                        selectedText.append(getText(line, 0, selectedRange
-                                .getEndPos(), styled));
+                        selectedText.append(getText(line, 0, selectedRange .getEndPos(), styled));
                     }
                 } else {
                     //loop the whole line
-                    selectedText.append(getText(line, 0, line.length(),
-                            styled));
+                    selectedText.append(getText(line, 0, line.length(), styled));
                 }
             }
         }
@@ -447,10 +441,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
             public void run() {
                 lastSeenLine -= numTrimmed;
                 final LinePosition selectedRange = getSelectedRange();
-                selectedRange.setStartLine(selectedRange.getStartLine()
-                        - numTrimmed);
-                selectedRange.setEndLine(selectedRange.getEndLine()
-                        - numTrimmed);
+                selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
+                selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
                 if (selectedRange.getStartLine() < 0) {
                     selectedRange.setStartLine(0);
                 }
@@ -461,8 +453,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 if (scrollModel.getValue() == scrollModel.getMaximum()) {
                     setRangeProperties(newSize, newSize);
                 } else {
-                    setRangeProperties(newSize, scrollModel.getValue()
-                            - numTrimmed);
+                    setRangeProperties(newSize, scrollModel.getValue() - numTrimmed);
                 }
             }
         });
