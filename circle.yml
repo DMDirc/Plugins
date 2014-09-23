@@ -6,7 +6,8 @@ machine:
 
 checkout:
   post:
-    - git fetch --depth=1000 --tags
+    - "if [ -e .git/shallow ]; then git fetch --unshallow; fi"
+    - git fetch --tags
 
 dependencies:
   override:
