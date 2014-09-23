@@ -125,8 +125,8 @@ subprojects {
 
 allprojects {
     configurations.all {
-        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy.cacheDynamicVersionsFor 2, 'minutes'
+        resolutionStrategy.cacheChangingModulesFor 2, 'minutes'
     }
 }
 
