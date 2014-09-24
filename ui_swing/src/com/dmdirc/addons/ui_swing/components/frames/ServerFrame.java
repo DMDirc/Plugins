@@ -46,6 +46,7 @@ import java.util.Collection;
 import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -142,7 +143,7 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getConnection().getState().equals(ServerState.CONNECTED)) {
+        if (getContainer().getConnection().getState() == ServerState.CONNECTED) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);
@@ -166,11 +167,17 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void certificateProblemResolved(final CertificateManager manager) {
-        if (sslDialog != null) {
-            sslDialog.dispose();
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (sslDialog != null) {
+                    sslDialog.dispose();
+                }
+            }
+        });
     }
 
+    @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
         dialogProvider.dispose(connection);
