@@ -173,8 +173,8 @@ public class BasicTextLineRenderer implements LineRenderer {
      * Redraws the text that has been highlighted.
      *
      * @param line     Line number
-     * @param chars    Number of characters so far in the line
-     * @param layout   Current line textlayout
+     * @param chars    Number of characters already handled in a wrapped line
+     * @param layout   Current wrapped line's textlayout
      * @param g        Graphics surface to draw highlight on
      * @param drawPosX current x location of the line
      * @param drawPosY current y location of the line
@@ -188,49 +188,37 @@ public class BasicTextLineRenderer implements LineRenderer {
         final int selectionEndLine = selectedRange.getEndLine();
         final int selectionEndChar = selectedRange.getEndPos();
 
-        //Does this line need highlighting?
+        // Does this line need highlighting?
         if (selectionStartLine <= line && selectionEndLine >= line) {
             final int firstChar;
 
             // Determine the first char we care about
             if (selectionStartLine < line || selectionStartChar < chars) {
-                firstChar = chars;
+                firstChar = 0;
             } else {
-                firstChar = selectionStartChar;
+                firstChar = selectionStartChar - chars;
             }
 
             // ... And the last
             final int lastChar;
             if (selectionEndLine > line || selectionEndChar > chars + layout.getCharacterCount()) {
-                lastChar = chars + layout.getCharacterCount();
+                lastChar = layout.getCharacterCount();
             } else {
-                lastChar = selectionEndChar;
+                lastChar = selectionEndChar - chars;
             }
 
             // If the selection includes the chars we're showing
-            if (lastChar > chars && firstChar < chars + layout.getCharacterCount()) {
+            if (lastChar > 0 && firstChar < layout.getCharacterCount() && lastChar > firstChar) {
                 doHighlight(line,
-                        layout.getLogicalHighlightShape(firstChar - chars, lastChar - chars), g,
-                        drawPosY, drawPosX, firstChar, lastChar);
+                        layout.getLogicalHighlightShape(firstChar, lastChar), g,
+                        drawPosY, drawPosX, chars + firstChar, chars + lastChar);
             }
         }
     }
 
     private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
             final float drawPosY, final float drawPosX, final int firstChar, final int lastChar) {
-        String text = document.getLine(line).getText();
-        if (firstChar >= 0 && text.length() > lastChar) {
-            text = text.substring(firstChar, lastChar);
-        }
-
-        if (text.isEmpty()) {
-            return;
-        }
-
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
-        if (iterator.getEndIndex() == iterator.getBeginIndex()) {
-            return;
-        }
         final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
 
         as.addAttribute(TextAttribute.FOREGROUND, textPane.getBackground());
@@ -239,15 +227,9 @@ public class BasicTextLineRenderer implements LineRenderer {
                 g.getFontRenderContext());
         final int trans = (int) (newLayout.getDescent() + drawPosY);
 
-        if (firstChar != 0) {
-            g.translate(logicalHighlightShape.getBounds().getX(), 0);
-        }
-
+        g.translate(logicalHighlightShape.getBounds().getX(), 0);
         newLayout.draw(g, drawPosX, trans);
-
-        if (firstChar != 0) {
-            g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
-        }
+        g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
     }
 
 }
