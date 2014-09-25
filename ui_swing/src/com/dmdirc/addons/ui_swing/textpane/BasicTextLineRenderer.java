@@ -67,6 +67,7 @@ public class BasicTextLineRenderer implements LineRenderer {
             final float canvasHeight, final float drawPosY, final int line,
             final boolean bottomLine) {
         result.drawnAreas.clear();
+        result.textLayouts.clear();
         result.totalHeight = 0;
 
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
