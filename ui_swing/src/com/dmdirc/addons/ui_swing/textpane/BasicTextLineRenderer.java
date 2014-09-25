@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.textpane;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.LinePosition;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -33,6 +34,8 @@ import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+
+import javax.swing.UIManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,11 +58,17 @@ public class BasicTextLineRenderer implements LineRenderer {
     private final TextPaneCanvas textPaneCanvas;
     private final IRCDocument document;
 
+    private final Color highlightForeground;
+    private final Color highlightBackground;
+
     public BasicTextLineRenderer(final TextPane textPane, final TextPaneCanvas textPaneCanvas,
             final IRCDocument document) {
         this.textPane = textPane;
         this.textPaneCanvas = textPaneCanvas;
         this.document = document;
+
+        highlightForeground = UIManager.getColor("TextArea.selectionForeground");
+        highlightBackground = UIManager.getColor("TextArea.selectionBackground");
     }
 
     @Override
@@ -222,8 +231,8 @@ public class BasicTextLineRenderer implements LineRenderer {
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
         final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
 
-        as.addAttribute(TextAttribute.FOREGROUND, textPane.getBackground());
-        as.addAttribute(TextAttribute.BACKGROUND, textPane.getForeground());
+        as.addAttribute(TextAttribute.FOREGROUND, highlightForeground);
+        as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
         final TextLayout newLayout = new TextLayout(as.getIterator(),
                 g.getFontRenderContext());
         final int trans = (int) (newLayout.getDescent() + drawPosY);
