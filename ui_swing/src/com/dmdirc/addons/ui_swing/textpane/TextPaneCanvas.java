@@ -49,7 +49,6 @@ import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -107,7 +106,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         startLine = 0;
         setDoubleBuffered(true);
         setOpaque(true);
-        lineLayouts = new TreeMap<>(new LineInfoComparator());
+        lineLayouts = new HashMap<>();
         lineAreas = new HashMap<>();
         selection = new LinePosition(-1, -1, -1, -1);
         addMouseListener(this);
@@ -415,6 +414,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 }
             }
             LineInfo info = getClickPosition(point, true);
+
+            // TODO: These are fairly expensive if the user is moving around a lot; cache them.
             final Rectangle first = getFirstLineRectangle();
             final Rectangle last = getLastLineRectangle();
             if (info.getLine() == -1 && info.getPart() == -1 && contains(point)
