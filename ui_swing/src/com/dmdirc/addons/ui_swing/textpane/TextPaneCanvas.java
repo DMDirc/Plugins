@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +73,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /** parent textpane. */
     private final TextPane textPane;
     /** Position -> LineInfo. */
-    private final Map<LineInfo, Rectangle> lineAreas;
+    private final Map<LineInfo, Rectangle2D.Float> lineAreas;
     /** TextLayout -> Line numbers. */
     private final Map<LineInfo, TextLayout> lineLayouts;
     /** Start line. */
@@ -416,8 +417,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
             LineInfo info = getClickPosition(point, true);
 
             // TODO: These are fairly expensive if the user is moving around a lot; cache them.
-            final Rectangle first = getFirstLineRectangle();
-            final Rectangle last = getLastLineRectangle();
+            final Rectangle2D.Float first = getFirstLineRectangle();
+            final Rectangle2D.Float last = getLastLineRectangle();
             if (info.getLine() == -1 && info.getPart() == -1 && contains(point)
                     && document.getNumLines() != 0 && first != null && last != null) {
                 if (first.getY() >= point.getY()) {
@@ -445,8 +446,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @return First line's rectangle
      */
-    private Rectangle getFirstLineRectangle() {
-        for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+    private Rectangle2D.Float getFirstLineRectangle() {
+        for (Map.Entry<LineInfo, Rectangle2D.Float> entry : lineAreas.entrySet()) {
             if (entry.getKey().getLine() == firstVisibleLine) {
                 return entry.getValue();
             }
@@ -459,8 +460,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      *
      * @return Last line's rectangle
      */
-    private Rectangle getLastLineRectangle() {
-        for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+    private Rectangle2D.Float getLastLineRectangle() {
+        for (Map.Entry<LineInfo, Rectangle2D.Float> entry : lineAreas.entrySet()) {
             if (entry.getKey().getLine() == lastVisibleLine) {
                 return entry.getValue();
             }
@@ -513,15 +514,15 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
         int pos = 0;
 
         if (point != null) {
-            for (Map.Entry<LineInfo, Rectangle> entry : lineAreas.entrySet()) {
+            for (Map.Entry<LineInfo, Rectangle2D.Float> entry : lineAreas.entrySet()) {
                 if (entry.getValue().contains(point)) {
                     lineNumber = entry.getKey().getLine();
                     linePart = entry.getKey().getPart();
                 }
             }
 
-            pos = getHitPosition(lineNumber, linePart, (int) point.getX(),
-                    (int) point.getY(), selection);
+            pos = getHitPosition(lineNumber, linePart, (int) point.getX(), (int) point.getY(),
+                    selection);
         }
 
         return new LineInfo(lineNumber, linePart, pos);
@@ -538,7 +539,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @return Hit position
      */
     private int getHitPosition(final int lineNumber, final int linePart,
-            final int x, final int y, final boolean selection) {
+            final float x, final float y, final boolean selection) {
         int pos = 0;
 
         for (Map.Entry<LineInfo, TextLayout> entry : lineLayouts.entrySet()) {
@@ -546,8 +547,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 if (entry.getKey().getPart() < linePart) {
                     pos += entry.getValue().getCharacterCount();
                 } else if (entry.getKey().getPart() == linePart) {
-                    final TextHitInfo hit = entry.getValue()
-                            .hitTestChar(x - DOUBLE_SIDE_PADDING, y);
+                    final TextHitInfo hit =
+                            entry.getValue().hitTestChar(x - DOUBLE_SIDE_PADDING, y);
                     if (selection || x > entry.getValue().getBounds().getX()) {
                         pos += hit.getInsertionIndex();
                     } else {
