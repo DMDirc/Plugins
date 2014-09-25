@@ -27,11 +27,11 @@ import com.dmdirc.ui.messages.LinePosition;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class BasicTextLineRenderer implements LineRenderer {
 
     /** Padding to add to line height. */
-    private static final double LINE_PADDING = 0.2;
+    private static final float LINE_PADDING = 0.2f;
     /** Single Side padding for textpane. */
     private static final int SINGLE_SIDE_PADDING = 3;
     /** Both Side padding for textpane. */
@@ -84,7 +84,7 @@ public class BasicTextLineRenderer implements LineRenderer {
         result.totalHeight = 0;
 
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
-        final int lineHeight = (int) (document.getLineHeight(line) * (LINE_PADDING + 1));
+        final float lineHeight = document.getLineHeight(line) * (LINE_PADDING + 1);
         final int paragraphStart = iterator.getBeginIndex();
         final int paragraphEnd = iterator.getEndIndex();
         final LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(iterator,
@@ -118,7 +118,7 @@ public class BasicTextLineRenderer implements LineRenderer {
 
             // Check if the target is in range
             if (newDrawPosY >= 0 || newDrawPosY <= canvasHeight) {
-                renderLine(graphics, (int) canvasWidth, line, drawPosX, newDrawPosY, i, chars,
+                renderLine(graphics, canvasWidth, line, drawPosX, newDrawPosY, i, chars,
                         layout);
             }
 
@@ -130,20 +130,20 @@ public class BasicTextLineRenderer implements LineRenderer {
         return result;
     }
 
-    protected void renderLine(final Graphics2D graphics, final int canvasWidth, final int line,
+    protected void renderLine(final Graphics2D graphics, final float canvasWidth, final int line,
             final float drawPosX, final float drawPosY, final int numberOfWraps, final int chars,
             final TextLayout layout) {
         graphics.setColor(textPane.getForeground());
         layout.draw(graphics, drawPosX, drawPosY);
         doHighlight(line, chars, layout, graphics, drawPosX, drawPosY);
-        result.firstVisibleLine = line;
         final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
+        result.firstVisibleLine = line;
         result.textLayouts.put(lineInfo, layout);
         result.drawnAreas.put(lineInfo,
-                new Rectangle(0,
-                        (int) (drawPosY + 1.5 - layout.getAscent() + layout.getDescent()),
+                new Rectangle2D.Float(0,
+                        drawPosY - layout.getAscent() - layout.getLeading(),
                         canvasWidth + DOUBLE_SIDE_PADDING,
-                        (int) (layout.getAscent() + layout.getDescent())));
+                        layout.getAscent() + layout.getDescent() + layout.getLeading()));
     }
 
     /**
@@ -203,7 +203,7 @@ public class BasicTextLineRenderer implements LineRenderer {
         final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
         g.translate(logicalHighlightShape.getBounds().getX(), 0);
-        newLayout.draw(g, drawPosX, (int) drawPosY);
+        newLayout.draw(g, drawPosX, drawPosY);
         g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
     }
 

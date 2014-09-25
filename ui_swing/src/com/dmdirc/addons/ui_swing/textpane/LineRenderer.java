@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public interface LineRenderer {
     class RenderResult {
 
         /** Map of line information to their rendered rectangles. */
-        public final Map<LineInfo, Rectangle> drawnAreas = new HashMap<>();
+        public final Map<LineInfo, Rectangle2D.Float> drawnAreas = new HashMap<>();
 
         /** Map of line information to the layout used to render them. */
         public final Map<LineInfo, TextLayout> textLayouts = new HashMap<>();
