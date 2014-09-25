@@ -152,32 +152,6 @@ public class BasicTextLineRenderer implements LineRenderer {
     }
 
     /**
-     * Returns the number of times a line will wrap.
-     *
-     * @param lineMeasurer   LineBreakMeasurer to work out wrapping for
-     * @param paragraphStart Start index of the paragraph
-     * @param paragraphEnd   End index of the paragraph
-     * @param formatWidth    Width to wrap at
-     *
-     * @return Number of times the line wraps
-     */
-    private int getNumWrappedLines(final LineBreakMeasurer lineMeasurer,
-            final int paragraphStart,
-            final int paragraphEnd,
-            final float formatWidth) {
-        int wrappedLine = 0;
-
-        while (lineMeasurer.getPosition() < paragraphEnd) {
-            lineMeasurer.nextLayout(formatWidth);
-            wrappedLine++;
-        }
-
-        lineMeasurer.setPosition(paragraphStart);
-
-        return wrappedLine;
-    }
-
-    /**
      * Redraws the text that has been highlighted.
      *
      * @param line     Line number
