@@ -34,6 +34,8 @@ import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.UIManager;
 
@@ -61,6 +63,9 @@ public class BasicTextLineRenderer implements LineRenderer {
     private final Color highlightForeground;
     private final Color highlightBackground;
 
+    /** Reused in each render pass to save creating a new list. */
+    private final List<TextLayout> wrappedLines = new ArrayList<>();
+
     public BasicTextLineRenderer(final TextPane textPane, final TextPaneCanvas textPaneCanvas,
             final IRCDocument document) {
         this.textPane = textPane;
@@ -87,30 +92,27 @@ public class BasicTextLineRenderer implements LineRenderer {
                 graphics.getFontRenderContext());
         lineMeasurer.setPosition(paragraphStart);
 
-        final int wrappedLine = getNumWrappedLines(lineMeasurer, paragraphStart,
-                paragraphEnd, canvasWidth);
         float newDrawPosY = drawPosY;
-
-        if (wrappedLine > 1) {
-            newDrawPosY -= lineHeight * wrappedLine;
-        }
 
         if (bottomLine) {
             newDrawPosY += DOUBLE_SIDE_PADDING;
         }
 
-        int numberOfWraps = 0;
+        // Calculate layouts for each wrapped line.
+        wrappedLines.clear();
         int chars = 0;
-        // Loop through each wrapped line
         while (lineMeasurer.getPosition() < paragraphEnd) {
             final TextLayout layout = checkNotNull(lineMeasurer.nextLayout(canvasWidth));
+            chars += layout.getCharacterCount();
+            wrappedLines.add(layout);
+        }
+
+        // Loop through each wrapped line
+        for (int i = wrappedLines.size() - 1; i >= 0; i--) {
+            final TextLayout layout = wrappedLines.get(i);
 
             // Calculate the Y offset
-            if (wrappedLine == 1) {
-                newDrawPosY -= lineHeight;
-            } else if (numberOfWraps != 0) {
-                newDrawPosY += lineHeight;
-            }
+            newDrawPosY -= lineHeight;
 
             // Calculate the initial X position
             final float drawPosX;
@@ -120,17 +122,13 @@ public class BasicTextLineRenderer implements LineRenderer {
                 drawPosX = canvasWidth - layout.getAdvance();
             }
 
+            chars -= layout.getCharacterCount();
+
             // Check if the target is in range
             if (newDrawPosY >= 0 || newDrawPosY <= canvasHeight) {
-                renderLine(graphics, (int) canvasWidth, line, drawPosX, newDrawPosY,
-                        numberOfWraps, chars, layout);
+                renderLine(graphics, (int) canvasWidth, line, drawPosX, newDrawPosY, i, chars,
+                        layout);
             }
-
-            numberOfWraps++;
-            chars += layout.getCharacterCount();
-        }
-        if (numberOfWraps > 1) {
-            newDrawPosY -= lineHeight * (wrappedLine - 1);
         }
 
         result.totalHeight = drawPosY - newDrawPosY;
