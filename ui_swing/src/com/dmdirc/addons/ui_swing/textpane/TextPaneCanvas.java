@@ -160,7 +160,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private void paintOntoGraphics(final Graphics2D g) {
         final float formatWidth = getWidth() - DOUBLE_SIDE_PADDING;
         final float formatHeight = getHeight();
-        float drawPosY = formatHeight;
+        float drawPosY = formatHeight - DOUBLE_SIDE_PADDING;
 
         lineLayouts.clear();
         lineAreas.clear();
@@ -192,7 +192,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     private float paintLineOntoGraphics(final Graphics2D g, final float formatWidth,
             final float formatHeight, final float drawPosY, final int line) {
         final RenderResult result = lineRenderer.render(g, formatWidth, formatHeight, drawPosY,
-                line, line == startLine);
+                line);
         lineAreas.putAll(result.drawnAreas);
         lineLayouts.putAll(result.textLayouts);
         firstVisibleLine = result.firstVisibleLine;

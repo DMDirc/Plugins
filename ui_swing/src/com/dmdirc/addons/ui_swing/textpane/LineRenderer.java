@@ -41,13 +41,11 @@ public interface LineRenderer {
      * @param canvasHeight The height of the canvas available to render on.
      * @param drawPosY The Y position to start rendering at.
      * @param line The number of the line to be rendered.
-     * @param bottomLine True if this line is the bottom-most (newest) line being rendered.
      * @return The result of the render. Callers should not store the result object, as it may
      * be recycled.
      */
     RenderResult render(final Graphics2D graphics, final float canvasWidth,
-            final float canvasHeight, final float drawPosY, final int line,
-            final boolean bottomLine);
+            final float canvasHeight, final float drawPosY, final int line);
 
     /**
      * Describes the results of a rendering attempt.

@@ -78,8 +78,7 @@ public class BasicTextLineRenderer implements LineRenderer {
 
     @Override
     public RenderResult render(final Graphics2D graphics, final float canvasWidth,
-            final float canvasHeight, final float drawPosY, final int line,
-            final boolean bottomLine) {
+            final float canvasHeight, final float drawPosY, final int line) {
         result.drawnAreas.clear();
         result.textLayouts.clear();
         result.totalHeight = 0;
@@ -94,10 +93,6 @@ public class BasicTextLineRenderer implements LineRenderer {
 
         float newDrawPosY = drawPosY;
 
-        if (bottomLine) {
-            newDrawPosY += DOUBLE_SIDE_PADDING;
-        }
-
         // Calculate layouts for each wrapped line.
         wrappedLines.clear();
         int chars = 0;
@@ -110,9 +105,6 @@ public class BasicTextLineRenderer implements LineRenderer {
         // Loop through each wrapped line
         for (int i = wrappedLines.size() - 1; i >= 0; i--) {
             final TextLayout layout = wrappedLines.get(i);
-
-            // Calculate the Y offset
-            newDrawPosY -= lineHeight;
 
             // Calculate the initial X position
             final float drawPosX;
@@ -129,6 +121,9 @@ public class BasicTextLineRenderer implements LineRenderer {
                 renderLine(graphics, (int) canvasWidth, line, drawPosX, newDrawPosY, i, chars,
                         layout);
             }
+
+            // Calculate the Y offset
+            newDrawPosY -= lineHeight;
         }
 
         result.totalHeight = drawPosY - newDrawPosY;
@@ -139,7 +134,7 @@ public class BasicTextLineRenderer implements LineRenderer {
             final float drawPosX, final float drawPosY, final int numberOfWraps, final int chars,
             final TextLayout layout) {
         graphics.setColor(textPane.getForeground());
-        layout.draw(graphics, drawPosX, drawPosY + layout.getDescent());
+        layout.draw(graphics, drawPosX, drawPosY);
         doHighlight(line, chars, layout, graphics, drawPosX, drawPosY);
         result.firstVisibleLine = line;
         final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
@@ -205,12 +200,10 @@ public class BasicTextLineRenderer implements LineRenderer {
 
         as.addAttribute(TextAttribute.FOREGROUND, highlightForeground);
         as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
-        final TextLayout newLayout = new TextLayout(as.getIterator(),
-                g.getFontRenderContext());
-        final int trans = (int) (newLayout.getDescent() + drawPosY);
+        final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
         g.translate(logicalHighlightShape.getBounds().getX(), 0);
-        newLayout.draw(g, drawPosX, trans);
+        newLayout.draw(g, drawPosX, (int) drawPosY);
         g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
     }
 
