@@ -46,8 +46,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class BasicTextLineRenderer implements LineRenderer {
 
-    /** Padding to add to line height. */
-    private static final float LINE_PADDING = 0.2f;
     /** Single Side padding for textpane. */
     private static final int SINGLE_SIDE_PADDING = 3;
     /** Both Side padding for textpane. */
@@ -84,7 +82,6 @@ public class BasicTextLineRenderer implements LineRenderer {
         result.totalHeight = 0;
 
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
-        final float lineHeight = document.getLineHeight(line) * (LINE_PADDING + 1);
         final int paragraphStart = iterator.getBeginIndex();
         final int paragraphEnd = iterator.getEndIndex();
         final LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(iterator,
@@ -123,7 +120,7 @@ public class BasicTextLineRenderer implements LineRenderer {
             }
 
             // Calculate the Y offset
-            newDrawPosY -= lineHeight;
+            newDrawPosY -= layout.getAscent() + layout.getLeading() + layout.getDescent();
         }
 
         result.totalHeight = drawPosY - newDrawPosY;
