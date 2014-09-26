@@ -27,6 +27,7 @@ import com.dmdirc.ui.messages.LinePosition;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -132,7 +133,7 @@ public class BasicTextLineRenderer implements LineRenderer {
             final TextLayout layout) {
         graphics.setColor(textPane.getForeground());
         layout.draw(graphics, drawPosX, drawPosY);
-        doHighlight(line, chars, layout, graphics, drawPosX, drawPosY);
+        doHighlight(line, chars, layout, graphics, (int) canvasWidth + DOUBLE_SIDE_PADDING, drawPosX, drawPosY);
         final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
         result.firstVisibleLine = line;
         result.textLayouts.put(lineInfo, layout);
@@ -154,7 +155,7 @@ public class BasicTextLineRenderer implements LineRenderer {
      * @param drawPosY current y location of the line
      */
     protected void doHighlight(final int line, final int chars,
-            final TextLayout layout, final Graphics2D g,
+            final TextLayout layout, final Graphics2D g, final int canvasWidth,
             final float drawPosX, final float drawPosY) {
         final LinePosition selectedRange = textPaneCanvas.getSelectedRange();
         final int selectionStartLine = selectedRange.getStartLine();
@@ -184,14 +185,16 @@ public class BasicTextLineRenderer implements LineRenderer {
             // If the selection includes the chars we're showing
             if (lastChar > 0 && firstChar < layout.getCharacterCount() && lastChar > firstChar) {
                 doHighlight(line,
-                        layout.getLogicalHighlightShape(firstChar, lastChar), g,
-                        drawPosY, drawPosX, chars + firstChar, chars + lastChar);
+                        layout.getLogicalHighlightShape(firstChar, lastChar), g, canvasWidth,
+                        drawPosY, drawPosX, chars + firstChar, chars + lastChar,
+                        lastChar == layout.getCharacterCount());
             }
         }
     }
 
     private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
-            final float drawPosY, final float drawPosX, final int firstChar, final int lastChar) {
+            final int canvasWidth, final float drawPosY, final float drawPosX,
+            final int firstChar, final int lastChar, final boolean isEndOfLine) {
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
         final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
 
@@ -199,7 +202,18 @@ public class BasicTextLineRenderer implements LineRenderer {
         as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
         final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
-        newLayout.draw(g, (float) (drawPosX + logicalHighlightShape.getBounds().getX()), drawPosY);
+        final Rectangle bounds = logicalHighlightShape.getBounds();
+        g.setColor(highlightBackground);
+
+        if (isEndOfLine) {
+            g.fillRect(bounds.x + bounds.width,
+                    (int) (1 + drawPosY - newLayout.getAscent() - newLayout.getLeading()),
+                    canvasWidth - bounds.x - bounds.width,
+                    (int) (1 + newLayout.getAscent() + newLayout.getLeading()
+                            + newLayout.getDescent()));
+        }
+
+        newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY);
     }
 
 }
