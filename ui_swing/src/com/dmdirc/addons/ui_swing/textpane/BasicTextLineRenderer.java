@@ -199,9 +199,7 @@ public class BasicTextLineRenderer implements LineRenderer {
         as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
         final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
-        g.translate(logicalHighlightShape.getBounds().getX(), 0);
-        newLayout.draw(g, drawPosX, drawPosY);
-        g.translate(-1 * logicalHighlightShape.getBounds().getX(), 0);
+        newLayout.draw(g, (float) (drawPosX + logicalHighlightShape.getBounds().getX()), drawPosY);
     }
 
 }
