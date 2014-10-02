@@ -390,7 +390,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             if (event.getWindow() != null && node != null) {
                 final NodeLabel label = node.getLabel();
                 if (label != null) {
-                    label.notificationCleared(event);
+                    label.notificationCleared();
                     tree.repaint();
                 }
             }

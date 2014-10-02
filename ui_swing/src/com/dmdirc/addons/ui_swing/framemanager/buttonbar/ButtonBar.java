@@ -307,7 +307,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
         final FrameToggleButton button = new FrameToggleButton(
                 source.getContainer().getName(),
                 source.getContainer().getIconManager().getIcon(source.getContainer().getIcon()),
-                (TextFrame) source, source.getContainer());
+                (TextFrame) source);
         button.addActionListener(this);
         button.addMouseListener(this);
         button.setHorizontalAlignment(SwingConstants.LEFT);

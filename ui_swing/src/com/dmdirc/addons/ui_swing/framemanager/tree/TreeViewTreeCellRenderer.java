@@ -110,7 +110,6 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         if (label == null) {
             return new JLabel("Label == null");
         }
-        final boolean bold;
         Color background = tree.getBackground();
         Color foreground = tree.getForeground();
 
@@ -123,6 +122,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
             foreground = colour;
         }
 
+        final boolean bold;
         if (label.isSelected()) {
             bold = activeBold;
             if (!tree.getBackground().equals(activeBackground)) {
