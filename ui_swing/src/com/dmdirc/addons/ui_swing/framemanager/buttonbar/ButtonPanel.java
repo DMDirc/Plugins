@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -33,13 +34,10 @@ import java.awt.event.MouseWheelListener;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-import net.miginfocom.swing.MigLayout;
-
 /**
  * Implements scrollable onto a JPanel so we have more control over scrolling.
  */
-public class ButtonPanel extends JPanel implements Scrollable,
-        MouseWheelListener {
+public class ButtonPanel extends JPanel implements Scrollable, MouseWheelListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -55,7 +53,7 @@ public class ButtonPanel extends JPanel implements Scrollable,
      * @param layout             Layout settings for this ButtonPanel
      * @param buttonBar          the buttonBar that created this Panel
      */
-    public ButtonPanel(final ActiveFrameManager activeFrameManager, final MigLayout layout,
+    public ButtonPanel(final ActiveFrameManager activeFrameManager, final LayoutManager layout,
             final ButtonBar buttonBar) {
         super(layout);
 
@@ -65,7 +63,7 @@ public class ButtonPanel extends JPanel implements Scrollable,
 
     @Override
     public Dimension getPreferredScrollableViewportSize() {
-        return super.getPreferredSize();
+        return getPreferredSize();
     }
 
     @Override
@@ -97,8 +95,7 @@ public class ButtonPanel extends JPanel implements Scrollable,
         int newIndex = 0;
         if (e.getWheelRotation() < 0) {
             //Up
-            newIndex = selectedIndex > 0 ? selectedIndex - 1
-                    : getComponentCount() - 1;
+            newIndex = selectedIndex > 0 ? selectedIndex - 1 : getComponentCount() - 1;
         } else if (e.getWheelRotation() > 0) {
             //Down
             newIndex = (selectedIndex + 1) % getComponentCount();

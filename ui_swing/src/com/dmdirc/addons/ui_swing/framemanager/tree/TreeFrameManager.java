@@ -60,9 +60,11 @@ import javax.inject.Inject;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -167,7 +169,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             public void run() {
                 final JScrollPane scrollPane = new JScrollPane(tree);
                 scrollPane.setAutoscrolls(true);
-                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollPane.setHorizontalScrollBarPolicy(
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
                 parent.setVisible(false);
                 parent.setLayout(new MigLayout("ins 0, fill"));
@@ -212,7 +215,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 if (node.getLevel() == 0) {
                     eventBus.publishAsync(
                             new UserErrorEvent(ErrorLevel.MEDIUM, new IllegalArgumentException(),
-                                    "delServer triggered for root node" + node.toString(), ""));
+                                    "delServer triggered for root node" + node, ""));
                 } else {
                     model.removeNodeFromParent(nodes.get(window.getContainer()));
                 }
@@ -230,7 +233,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * @param parent Parent node
      * @param window Window to add
      */
-    public void addWindow(final TreeViewNode parent, final FrameContainer window) {
+    public void addWindow(final MutableTreeNode parent, final FrameContainer window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             @Override
@@ -345,7 +348,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     @Override
     public void selectionChanged(final TextFrame window) {
         synchronized (nodes) {
-            final Collection<TreeViewNode> collection = new ArrayList<>(nodes.values());
+            final Iterable<TreeViewNode> collection = new ArrayList<>(nodes.values());
             for (TreeViewNode treeNode : collection) {
                 final NodeLabel label = treeNode.getLabel();
                 label.selectionChanged(window);
@@ -390,7 +393,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             if (event.getWindow() != null && node != null) {
                 final NodeLabel label = node.getLabel();
                 if (label != null) {
-                    label.notificationCleared(event);
+                    label.notificationCleared();
                     tree.repaint();
                 }
             }

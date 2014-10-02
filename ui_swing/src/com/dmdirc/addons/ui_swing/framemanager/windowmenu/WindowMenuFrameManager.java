@@ -46,6 +46,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -70,7 +71,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Comparator. */
-    private final FrameContainerComparator comparator = new FrameContainerComparator();
+    private final Comparator<FrameContainer> comparator = new FrameContainerComparator();
     /** Non frame container menu count. */
     private final int itemCount;
     /** Menu items closing the active window. */
@@ -138,7 +139,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
 
         activeFrameManager.addSelectionListener(this);
 
-        new WindowMenuScroller(this, globalConfig, domain, itemCount);
+        WindowMenuScroller.createScroller(this, globalConfig, domain, itemCount);
         checkMenuItems();
     }
 
@@ -388,9 +389,8 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
                 continue;
             }
             final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
-            if (sortBefore(newChild, child)) {
-                return i;
-            } else if (!sortAfter(newChild, child)
+            if (sortBefore(newChild, child)
+                    || !sortAfter(newChild, child)
                     && globalConfig.getOptionBool("treeview", "sortwindows")
                     && newChild.getName().compareToIgnoreCase(child.getName()) < 0) {
                 return i;

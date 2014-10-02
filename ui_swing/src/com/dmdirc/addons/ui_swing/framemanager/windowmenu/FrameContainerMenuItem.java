@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -37,7 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -81,30 +82,18 @@ public class FrameContainerMenuItem extends JMenuItem implements ActionListener,
         addActionListener(this);
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void iconChanged(final FrameIconChangedEvent event) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (frame != null && window != null && frame.equals(window.getContainer())) {
-                    setIcon(window.getIconManager().getIcon(event.getIcon()));
-                }
-            }
-        });
+        if (frame != null && window != null && frame.equals(window.getContainer())) {
+            setIcon(window.getIconManager().getIcon(event.getIcon()));
+        }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void nameChanged(final FrameNameChangedEvent event) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (frame != null && window != null && frame.equals(window.getContainer())) {
-                    setText(Styliser.stipControlCodes(event.getName()));
-                }
-            }
-        });
+        if (frame != null && window != null && frame.equals(window.getContainer())) {
+            setText(Styliser.stipControlCodes(event.getName()));
+        }
     }
 
     @Override
@@ -115,13 +104,13 @@ public class FrameContainerMenuItem extends JMenuItem implements ActionListener,
     @Override
     public void selectionChanged(final TextFrame window) {
         if (frame.equals(window.getContainer())) {
-            setFont(getFont().deriveFont(Font.BOLD));
+            setFont(UIManager.getFont("MenuItem.font").deriveFont(Font.BOLD));
             final Optional<FrameContainer> parentWindow = window.getContainer().getParent();
             if (parentWindow.isPresent()) {
                 manager.parentSelection(parentWindow.get());
             }
         } else {
-            setFont(getFont().deriveFont(Font.PLAIN));
+            setFont(UIManager.getFont("MenuItem.font").deriveFont(Font.PLAIN));
         }
     }
 

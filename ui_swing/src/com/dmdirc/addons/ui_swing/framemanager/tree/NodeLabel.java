@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
-import com.dmdirc.events.NotificationClearedEvent;
 import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -103,27 +102,27 @@ public class NodeLabel extends JPanel implements SelectionListener {
 
     @Override
     public void selectionChanged(final TextFrame window) {
-        selected = equals(window.getContainer());
+        selected = this.window.equals(window.getContainer());
     }
 
     public void notificationSet(final NotificationSetEvent event) {
             notificationColour = UIUtilities.convertColour(event.getColour());
     }
 
-    public void notificationCleared(final NotificationClearedEvent event) {
+    public void notificationCleared() {
             notificationColour = null;
     }
 
     @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
-        if (equals(event.getContainer())) {
+        if (window.equals(event.getContainer())) {
             icon.setIcon(window.getIconManager().getIcon(event.getIcon()));
         }
     }
 
     @Handler
     public void nameChanged(final FrameNameChangedEvent event) {
-        if (equals(event.getContainer())) {
+        if (window.equals(event.getContainer())) {
             text.setText(event.getName());
         }
     }
@@ -165,15 +164,6 @@ public class NodeLabel extends JPanel implements SelectionListener {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (window == null) {
-            return false;
-        }
-
-        return window.equals(obj);
-    }
-
-    @Override
     public int hashCode() {
         if (window == null) {
             return super.hashCode();
@@ -187,11 +177,6 @@ public class NodeLabel extends JPanel implements SelectionListener {
         return UIManager.getFont("TextPane.font");
     }
 
-    /**
-     * Sets the foreground colour for this label.
-     *
-     * @param colour New foreground colour
-     */
     @Override
     public void setForeground(final Color colour) {
         if (text != null) {
@@ -199,11 +184,6 @@ public class NodeLabel extends JPanel implements SelectionListener {
         }
     }
 
-    /**
-     * Sets the background colour for this label.
-     *
-     * @param colour New background colour
-     */
     @Override
     public void setBackground(final Color colour) {
         if (text != null) {
@@ -211,11 +191,6 @@ public class NodeLabel extends JPanel implements SelectionListener {
         }
     }
 
-    /**
-     * Sets the font for this label.
-     *
-     * @param font New font
-     */
     @Override
     public void setFont(final Font font) {
         if (text != null) {
@@ -223,33 +198,11 @@ public class NodeLabel extends JPanel implements SelectionListener {
         }
     }
 
-    /**
-     * Sets the opacity of this label.
-     *
-     * @param opacity Desired opacity
-     */
     @Override
     public void setOpaque(final boolean opacity) {
         if (text != null) {
             text.setOpaque(opacity);
         }
-    }
-
-    /**
-     * Sets the text and style in this label.
-     *
-     * @param styliser   Styliser to use to style text
-     * @param styledText Styled text string to use
-     */
-    public void setStyledText(final Styliser styliser,
-            final String styledText) {
-        if (currentText.equals(styledText)) {
-            return;
-        }
-        text.setText("");
-        currentText = styledText;
-        styliser.addStyledString((StyledDocument) text.getDocument(),
-                new String[]{styledText,});
     }
 
     /**

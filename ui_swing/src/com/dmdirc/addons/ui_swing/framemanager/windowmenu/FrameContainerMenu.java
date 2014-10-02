@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -35,7 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenu;
-import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -76,35 +77,23 @@ public class FrameContainerMenu extends JMenu implements ActionListener, Selecti
         this.frame = frame;
 
         setIcon(frame.getIconManager().getIcon(frame.getIcon()));
-        new WindowMenuScroller(this, globalConfig, domain, 0);
+        WindowMenuScroller.createScroller(this, globalConfig, domain, 0);
 
         addActionListener(this);
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void iconChanged(final FrameIconChangedEvent event) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (frame != null && window != null && frame.equals(window.getContainer())) {
-                    setIcon(window.getIconManager().getIcon(event.getIcon()));
-                }
-            }
-        });
+        if (frame != null && window != null && frame.equals(window.getContainer())) {
+            setIcon(window.getIconManager().getIcon(event.getIcon()));
+        }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void nameChanged(final FrameNameChangedEvent event) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (frame != null && window != null && frame.equals(window.getContainer())) {
-                    setText(event.getName());
-                }
-            }
-        });
+        if (frame != null && window != null && frame.equals(window.getContainer())) {
+            setText(event.getName());
+        }
     }
 
     @Override
@@ -115,9 +104,9 @@ public class FrameContainerMenu extends JMenu implements ActionListener, Selecti
     @Override
     public void selectionChanged(final TextFrame window) {
         if (frame.equals(window.getContainer())) {
-            setFont(getFont().deriveFont(Font.BOLD));
+            setFont(UIManager.getFont("Menu.font").deriveFont(Font.BOLD));
         } else {
-            setFont(getFont().deriveFont(Font.PLAIN));
+            setFont(UIManager.getFont("Menu.font").deriveFont(Font.PLAIN));
         }
     }
 
@@ -125,7 +114,7 @@ public class FrameContainerMenu extends JMenu implements ActionListener, Selecti
      * Informs this menu one of its children is selected.
      */
     protected void childSelected() {
-        setFont(getFont().deriveFont(Font.ITALIC));
+        setFont(UIManager.getFont("Menu.font").deriveFont(Font.ITALIC));
     }
 
     @Override

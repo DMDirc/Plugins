@@ -27,6 +27,8 @@ import com.dmdirc.GlobalWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 /**
  * A simple sorted tree data model based on DefaultTreeModel.
@@ -46,9 +48,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * @param globalConfig The configuration provider to read settings from.
      * @param root         a TreeNode object that is the root of the tree.
      */
-    public TreeViewModel(
-            final AggregateConfigProvider globalConfig,
-            final TreeViewNode root) {
+    public TreeViewModel(final AggregateConfigProvider globalConfig, final TreeNode root) {
         super(root, false);
 
         this.globalConfig = globalConfig;
@@ -61,23 +61,8 @@ public class TreeViewModel extends DefaultTreeModel {
      * @param newChild child to be added.
      * @param parent   parent child is to be added too.
      */
-    public final void insertNodeInto(final TreeViewNode newChild,
-            final TreeViewNode parent) {
-        final int index;
-        index = getIndex(newChild, parent);
-        insertNodeInto(newChild, parent, index);
-    }
-
-    /**
-     * Inserts a new node into the tree and fires the appropriate events.
-     *
-     * @param newChild child to be added.
-     * @param parent   parent child is to be added too.
-     * @param index    Index of item to add
-     */
-    public final void insertNodeInto(final TreeViewNode newChild,
-            final TreeViewNode parent, final int index) {
-        super.insertNodeInto(newChild, parent, index);
+    public final void insertNodeInto(final TreeViewNode newChild, final MutableTreeNode parent) {
+        insertNodeInto(newChild, parent, getIndex(newChild, parent));
     }
 
     /**
@@ -89,7 +74,7 @@ public class TreeViewModel extends DefaultTreeModel {
      *
      * @return index where new node is to be inserted.
      */
-    private int getIndex(final TreeViewNode newChild, final TreeViewNode parent) {
+    private int getIndex(final TreeViewNode newChild, final TreeNode parent) {
         if (newChild.getWindow() instanceof GlobalWindow) {
             return 0;
         }
@@ -101,12 +86,10 @@ public class TreeViewModel extends DefaultTreeModel {
         if (globalConfig.getOptionBool("ui", "sortchildwindows")) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 final TreeViewNode child = (TreeViewNode) parent.getChildAt(i);
-                if (sortBefore(newChild, child)) {
-                    return i;
-                } else if (!sortAfter(newChild, child) && newChild.
-                        getUserObject().
-                        toString().compareToIgnoreCase(child.getUserObject().
-                                toString()) < 0) {
+                if (sortBefore(newChild, child)
+                        || !sortAfter(newChild, child)
+                        && newChild.getUserObject().toString().compareToIgnoreCase(
+                        child.getUserObject().toString()) < 0) {
                     return i;
                 }
             }

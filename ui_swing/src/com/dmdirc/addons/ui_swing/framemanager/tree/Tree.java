@@ -43,6 +43,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -235,7 +237,7 @@ public class Tree extends JTree implements MouseMotionListener,
      *
      * @param e mouse event
      */
-    public void processMouseEvents(final MouseEvent e) {
+    void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null && e.isPopupTrigger()) {
             final TextFrame frame = windowFactory.getSwingWindow(
@@ -293,7 +295,7 @@ public class Tree extends JTree implements MouseMotionListener,
                 }
                 break;
             case "Down":
-                if (index == (node.getSiblingCount() - 1)) {
+                if (index == node.getSiblingCount() - 1) {
                     index = 0;
                 } else {
                     index++;
@@ -306,11 +308,11 @@ public class Tree extends JTree implements MouseMotionListener,
                 windowFactory.getSwingWindow(node.getWindow()).setPopout(false);
                 break;
         }
-        final TreeViewNode parentNode = (TreeViewNode) node.getParent();
+        final MutableTreeNode parentNode = (MutableTreeNode) node.getParent();
         final TreePath nodePath = new TreePath(node.getPath());
         final boolean isExpanded = isExpanded(nodePath);
-        ((TreeViewModel) getModel()).removeNodeFromParent(node);
-        ((TreeViewModel) getModel()).insertNodeInto(node, parentNode, index);
+        ((DefaultTreeModel) getModel()).removeNodeFromParent(node);
+        ((DefaultTreeModel) getModel()).insertNodeInto(node, parentNode, index);
         setExpandedState(nodePath, isExpanded);
     }
 

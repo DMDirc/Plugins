@@ -32,7 +32,7 @@ public class TreeViewNodeMenuItem extends JMenuItem {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Tree view node. */
-    private TreeViewNode treeNode;
+    private final TreeViewNode treeNode;
 
     /**
      * Creates a new treeviewnodemenuitem.
@@ -56,15 +56,6 @@ public class TreeViewNodeMenuItem extends JMenuItem {
      */
     public TreeViewNode getTreeNode() {
         return treeNode;
-    }
-
-    /**
-     * Set the value of treeNode.
-     *
-     * @param treeNode new value of treeNode
-     */
-    public void setTreeNode(final TreeViewNode treeNode) {
-        this.treeNode = treeNode;
     }
 
 }

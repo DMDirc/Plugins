@@ -42,12 +42,14 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -106,17 +108,21 @@ public class CtrlTabWindowManager implements SelectionListener {
 
         activeFrameManager.addSelectionListener(this);
 
-        mainFrame.getRootPane().getActionMap().put("prevFrameAction",
-                new PreviousFrameAction(treeScroller));
-        mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                                KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),
-                        "prevFrameAction");
-        mainFrame.getRootPane().getActionMap().put(
-                "nextFrameAction", new NextFrameAction(treeScroller));
-        mainFrame.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                                KeyEvent.CTRL_DOWN_MASK), "nextFrameAction");
+        if (mainFrame.getRootPane().getActionMap() != null) {
+            mainFrame.getRootPane().getActionMap()
+                    .put("prevFrameAction", new PreviousFrameAction(treeScroller));
+            mainFrame.getRootPane().getActionMap()
+                    .put("nextFrameAction", new NextFrameAction(treeScroller));
+        }
+        final InputMap ancestorFocusedMap = mainFrame.getRootPane().getInputMap(
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        if (ancestorFocusedMap != null) {
+            ancestorFocusedMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+                    InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "prevFrameAction");
+            ancestorFocusedMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+                    InputEvent.CTRL_DOWN_MASK),
+                    "nextFrameAction");
+        }
     }
 
     @Handler
@@ -158,7 +164,7 @@ public class CtrlTabWindowManager implements SelectionListener {
                 if (node.getLevel() == 0) {
                     eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
                             new IllegalArgumentException(),
-                            "delServer triggered for root node" + node.toString(), ""));
+                            "delServer triggered for root node" + node, ""));
                 } else {
                     model.removeNodeFromParent(nodes.get(window));
                 }
@@ -177,7 +183,6 @@ public class CtrlTabWindowManager implements SelectionListener {
         treeScroller.changeFocus(false);
     }
 
-    /* {@inheritDoc} */
     @Override
     public void selectionChanged(final TextFrame window) {
         UIUtilities.invokeLater(new Runnable() {
