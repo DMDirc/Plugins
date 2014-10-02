@@ -139,7 +139,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
 
         activeFrameManager.addSelectionListener(this);
 
-        new WindowMenuScroller(this, globalConfig, domain, itemCount);
+        WindowMenuScroller.createScroller(this, globalConfig, domain, itemCount);
         checkMenuItems();
     }
 

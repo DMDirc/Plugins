@@ -44,6 +44,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -307,11 +308,11 @@ public class Tree extends JTree implements MouseMotionListener,
                 windowFactory.getSwingWindow(node.getWindow()).setPopout(false);
                 break;
         }
-        final TreeViewNode parentNode = (TreeViewNode) node.getParent();
+        final MutableTreeNode parentNode = (MutableTreeNode) node.getParent();
         final TreePath nodePath = new TreePath(node.getPath());
         final boolean isExpanded = isExpanded(nodePath);
         ((DefaultTreeModel) getModel()).removeNodeFromParent(node);
-        ((TreeViewModel) getModel()).insertNodeInto(node, parentNode, index);
+        ((DefaultTreeModel) getModel()).insertNodeInto(node, parentNode, index);
         setExpandedState(nodePath, isExpanded);
     }
 

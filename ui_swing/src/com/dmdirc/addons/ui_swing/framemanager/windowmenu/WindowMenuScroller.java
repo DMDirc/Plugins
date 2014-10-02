@@ -54,23 +54,30 @@ public class WindowMenuScroller implements ConfigChangeListener {
      * @param configDomain Domain to check config settings in
      * @param fixedCount   Number of fixed items in the menu
      */
-    public WindowMenuScroller(final JMenu menu, final AggregateConfigProvider config,
+    private WindowMenuScroller(final JMenu menu, final AggregateConfigProvider config,
             final String configDomain, final int fixedCount) {
         this.menu = menu;
         this.config = config;
         this.configDomain = configDomain;
         this.fixedCount = fixedCount;
+    }
+
+    private void init() {
         this.scroller = new MenuScroller(menu,
-                config.getOptionInt(configDomain,
-                        "windowMenuItems"),
-                config.getOptionInt(configDomain,
-                        "windowMenuScrollInterval"), fixedCount, 0);
+                config.getOptionInt(configDomain,"windowMenuItems"),
+                config.getOptionInt(configDomain, "windowMenuScrollInterval"), fixedCount, 0);
         scroller.setShowSeperators(false);
 
-        config.addChangeListener(configDomain,
-                "windowMenuItems", this);
-        config.addChangeListener(configDomain,
-                "windowMenuScrollInterval", this);
+        config.addChangeListener(configDomain, "windowMenuItems", this);
+        config.addChangeListener(configDomain, "windowMenuScrollInterval", this);
+    }
+
+    /**
+     * Creates a menu scroller and attaches it to the menu.
+     */
+    public static void createScroller(final JMenu menu, final AggregateConfigProvider config,
+            final String configDomain, final int fixedCount) {
+        new WindowMenuScroller(menu, config, configDomain, fixedCount).init();
     }
 
     @Override

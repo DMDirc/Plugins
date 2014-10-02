@@ -398,13 +398,13 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
             @Override
             public void run() {
                 activeWindow = window;
-                FrameToggleButton button = getButton(selected);
-                if (selected != null && button != null) {
-                    button.setSelected(false);
+                final FrameToggleButton selectedButton = getButton(selected);
+                if (selected != null && selectedButton != null) {
+                    selectedButton.setSelected(false);
                 }
 
                 selected = window.getContainer();
-                button = getButton(window.getContainer());
+                final FrameToggleButton button = getButton(window.getContainer());
                 if (button != null) {
                     scrollPane.getViewport().scrollRectToVisible(
                             button.getBounds());
