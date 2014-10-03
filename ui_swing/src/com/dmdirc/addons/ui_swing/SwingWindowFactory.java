@@ -115,6 +115,28 @@ public class SwingWindowFactory implements FrameListener {
         addWindow(null, window, focus);
     }
 
+    @Override
+    public void addWindow(final FrameContainer parent, final FrameContainer window,
+            final boolean focus) {
+        UIUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final TextFrame parentWindow = getSwingWindow(parent);
+                final TextFrame childWindow = doAddWindow(window);
+
+                if (childWindow == null) {
+                    return;
+                }
+                swingEventBus.publish(new SwingWindowAddedEvent(Optional.fromNullable(parentWindow),
+                        childWindow));
+
+                if (focus) {
+                    activeFrameManager.get().setActiveFrame(childWindow);
+                }
+            }
+        });
+    }
+
     /**
      * Creates a new window for the specified container.
      *
@@ -137,43 +159,9 @@ public class SwingWindowFactory implements FrameListener {
         return frame;
     }
 
-    /**
-     * Retrieves a single Swing UI created window belonging to the specified container. Returns null
-     * if the container is null or no such window exists.
-     *
-     * @param window The container whose windows should be searched
-     *
-     * @return A relevant window or null
-     */
-    public TextFrame getSwingWindow(@Nullable final FrameContainer window) {
-        return windows.get(window);
-    }
-
     @Override
     public void delWindow(final FrameContainer window) {
         delWindow(null, window);
-    }
-
-    @Override
-    public void addWindow(final FrameContainer parent, final FrameContainer window,
-            final boolean focus) {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final TextFrame parentWindow = getSwingWindow(parent);
-                final TextFrame childWindow = doAddWindow(window);
-
-                if (childWindow == null) {
-                    return;
-                }
-                swingEventBus.publish(new SwingWindowAddedEvent(
-                        Optional.fromNullable(parentWindow), childWindow));
-
-                if (focus) {
-                    activeFrameManager.get().setActiveFrame(childWindow);
-                }
-            }
-        });
     }
 
     @Override
@@ -184,12 +172,24 @@ public class SwingWindowFactory implements FrameListener {
             public void run() {
                 final TextFrame parentWindow = getSwingWindow(parent);
                 final TextFrame childWindow = getSwingWindow(window);
-                swingEventBus.publish(new SwingWindowDeletedEvent(
-                        Optional.fromNullable(parentWindow), childWindow));
-
+                swingEventBus.publish(
+                        new SwingWindowDeletedEvent(Optional.fromNullable(parentWindow),
+                                childWindow));
                 windows.remove(window);
             }
         });
+    }
+
+    /**
+     * Retrieves a single Swing UI created window belonging to the specified container. Returns null
+     * if the container is null or no such window exists.
+     *
+     * @param window The container whose windows should be searched
+     *
+     * @return A relevant window or null
+     */
+    public TextFrame getSwingWindow(@Nullable final FrameContainer window) {
+        return windows.get(window);
     }
 
     /** Disposes of this window factory, removing all listeners. */
