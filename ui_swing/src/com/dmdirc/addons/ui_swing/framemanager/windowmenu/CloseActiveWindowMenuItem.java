@@ -78,7 +78,7 @@ public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListen
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowAdded(final SwingWindowAddedEvent event) {
-        setEnabled(!windowManager.getTopLevelWindows().isEmpty());
+        setEnabled(true);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
