@@ -36,13 +36,10 @@ import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.ui.IconManager;
 
 import com.google.common.base.Optional;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +53,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
@@ -66,7 +62,7 @@ import net.engio.mbassy.listener.Handler;
  * Manages the window menu window list.
  */
 @Singleton
-public class WindowMenuFrameManager extends JMenu implements ActionListener, SelectionListener {
+public class WindowMenuFrameManager extends JMenu implements SelectionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -74,8 +70,6 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     private final Comparator<FrameContainer> comparator = new FrameContainerComparator();
     /** Non frame container menu count. */
     private final int itemCount;
-    /** Menu items closing the active window. */
-    private final JMenuItem closeMenuItem;
     /** Separator. */
     private final JSeparator separator;
     /** Enabled menu items? */
@@ -94,7 +88,6 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     /**
      * Creates a new instance of WindowMenuFrameManager.
      *
-     * @param iconManager        Icon manager to use for window icons.
      * @param globalConfig       Config to read settings from.
      * @param domain             Domain to read settings from.
      * @param activeFrameManager The active window manager.
@@ -103,12 +96,12 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
      */
     @Inject
     public WindowMenuFrameManager(
-            @GlobalConfig final IconManager iconManager,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
             @SwingEventBus final DMDircMBassador swingEventBus,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final CloseActiveWindowMenuItem closeMenuItem) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
@@ -125,11 +118,7 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
         setText("Window");
         setMnemonic('w');
 
-        closeMenuItem = new JMenuItem(iconManager.getIcon("close"));
-        closeMenuItem.setMnemonic('c');
-        closeMenuItem.setText("Close");
-        closeMenuItem.setActionCommand("Close");
-        closeMenuItem.addActionListener(this);
+        closeMenuItem.init();
         add(closeMenuItem);
 
         separator = new JPopupMenu.Separator();
@@ -149,7 +138,6 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
     private void checkMenuItems() {
         enabledMenuItems.set(getMenuComponentCount() > itemCount);
         separator.setVisible(enabledMenuItems.get());
-        closeMenuItem.setEnabled(enabledMenuItems.get());
     }
 
     @Handler
@@ -314,13 +302,6 @@ public class WindowMenuFrameManager extends JMenu implements ActionListener, Sel
         parentMenu.add(item, getIndex(item.getFrame(), parentMenu));
         menus.remove(menu.getFrame());
         items.put(item.getFrame(), item);
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (enabledMenuItems.get() && "Close".equals(e.getActionCommand())) {
-            activeFrameManager.getActiveFrame().getContainer().close();
-        }
     }
 
     @Override
