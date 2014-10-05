@@ -154,16 +154,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     }
 
     /**
-     * Returns the exported button manager provider.
-     *
-     * @return A button manager provider.
-     */
-    @Exported
-    public FrameManagerProvider getButtonManager() {
-        return swingManager.getButtonProvider();
-    }
-
-    /**
      * Retrieves the main frame to use.
      *
      * @return The main frame to use.

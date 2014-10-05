@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
-import com.dmdirc.addons.ui_swing.framemanager.buttonbar.ButtonBarProvider;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -78,8 +77,6 @@ public class SwingManager {
     private final DMDircMBassador swingEventBus;
     /** The provider to use to create tree-based frame managers. */
     private final TreeFrameManagerProvider treeProvider;
-    /** The provider to use to create button-based frame managers. */
-    private final ButtonBarProvider buttonProvider;
     /** The provider to use to create new main frames. */
     private final Provider<MainFrame> mainFrameProvider;
     /** Swing window manager. */
@@ -107,7 +104,6 @@ public class SwingManager {
      * @param eventBus                The bus to listen on for events.
      * @param swingEventBus           The swing event bus to listen on for swing events.
      * @param treeProvider            Provider to use for tree-based frame managers.
-     * @param buttonProvider          Provider to use for button-based frame managers.
      * @param swingWindowManager      Swing window manager
      * @param errorListDialogProvider Error list dialog provider
      * @param uiInitialiser           Initialiser to set system/swing settings.
@@ -127,7 +123,6 @@ public class SwingManager {
             final DMDircMBassador eventBus,
             @SwingEventBus final DMDircMBassador swingEventBus,
             final TreeFrameManagerProvider treeProvider,
-            final ButtonBarProvider buttonProvider,
             final Provider<SwingWindowManager> swingWindowManager,
             final DialogProvider<ErrorListDialog> errorListDialogProvider,
             final SwingUIInitialiser uiInitialiser) {
@@ -144,7 +139,6 @@ public class SwingManager {
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
         this.treeProvider = treeProvider;
-        this.buttonProvider = buttonProvider;
         this.swingWindowManager = swingWindowManager;
         this.errorListDialogProvider = errorListDialogProvider;
         this.uiInitialiser = uiInitialiser;
@@ -217,10 +211,6 @@ public class SwingManager {
 
     public TreeFrameManagerProvider getTreeProvider() {
         return treeProvider;
-    }
-
-    public ButtonBarProvider getButtonProvider() {
-        return buttonProvider;
     }
 
     @Handler
