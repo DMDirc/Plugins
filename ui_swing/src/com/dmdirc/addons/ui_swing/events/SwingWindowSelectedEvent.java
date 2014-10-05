@@ -20,23 +20,24 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.interfaces.ui.Window;
 
-import java.util.EventListener;
+import com.google.common.base.Optional;
 
 /**
- * Defines the methods that should be implemented by classes which wish to receive information about
- * Swing frame selection changes.
+ * Fired when the window selection changes.
  */
-public interface SelectionListener extends EventListener {
+public class SwingWindowSelectedEvent extends SwingEvent {
 
-    /**
-     * Called when a new window is selected.
-     *
-     * @param window The window that's now selected
-     */
-    void selectionChanged(final TextFrame window);
+    private final Optional<Window> selectedWindow;
 
+    public SwingWindowSelectedEvent(final Optional<Window> selectedWindow) {
+        this.selectedWindow = selectedWindow;
+    }
+
+    public Optional<Window> getWindow() {
+        return selectedWindow;
+    }
 }

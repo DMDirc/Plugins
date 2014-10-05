@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.GlobalWindow;
+import com.dmdirc.addons.ui_swing.WindowComparator;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import javax.swing.tree.DefaultTreeModel;
@@ -37,8 +37,8 @@ public class TreeViewModel extends DefaultTreeModel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Frame container comparator. */
-    private final FrameContainerComparator comparator;
+    /** Window comparator. */
+    private final WindowComparator comparator;
     /** Configuration provider to read settings from. */
     private final AggregateConfigProvider globalConfig;
 
@@ -52,7 +52,7 @@ public class TreeViewModel extends DefaultTreeModel {
         super(root, false);
 
         this.globalConfig = globalConfig;
-        comparator = new FrameContainerComparator();
+        comparator = new WindowComparator();
     }
 
     /**

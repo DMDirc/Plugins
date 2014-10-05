@@ -140,7 +140,8 @@ public class SwingModule {
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
             final Provider<FrameManager> frameManagerProvider,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
 
             @Override
@@ -152,7 +153,8 @@ public class SwingModule {
                         quitWorker,
                         new IconManager(globalConfig, urlBuilder),
                         frameManagerProvider,
-                        eventBus);
+                        eventBus,
+                        swingEventBus);
             }
         });
     }

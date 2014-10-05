@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ui.Window;
 
@@ -34,17 +36,20 @@ import javax.swing.JComponent;
 public class WindowSelectionFontChangerFactory {
 
     private final ActiveFrameManager activeFrameManager;
+    private final DMDircMBassador swingEventBus;
 
     @Inject
-    public WindowSelectionFontChangerFactory(final ActiveFrameManager activeFrameManager) {
+    public WindowSelectionFontChangerFactory(final ActiveFrameManager activeFrameManager,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.activeFrameManager = activeFrameManager;
+        this.swingEventBus = swingEventBus;
     }
 
     public WindowSelectionFontChanger getWindowSelectionFontChanger(final JComponent component,
             final Window window) {
         final WindowSelectionFontChanger windowSelectionFontChanger
                 = new WindowSelectionFontChanger(component, window);
-        windowSelectionFontChanger.init(activeFrameManager);
+        windowSelectionFontChanger.init(activeFrameManager, swingEventBus);
         return windowSelectionFontChanger;
     }
 }

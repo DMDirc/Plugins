@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -52,8 +52,7 @@ import net.engio.mbassy.listener.Handler;
  * Provides an MDI style bar for closing frames.
  */
 @Singleton
-public class MDIBar extends JPanel implements SelectionListener, ActionListener,
-        ConfigChangeListener {
+public class MDIBar extends JPanel implements ActionListener, ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = -8028057596226636245L;
@@ -99,7 +98,6 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
 
         eventBus.subscribe(this);
 
-        activeFrameManager.addSelectionListener(this);
         closeButton.addActionListener(this);
         config.addChangeListener(configDomain, "mdiBarVisibility", this);
 
@@ -150,8 +148,8 @@ public class MDIBar extends JPanel implements SelectionListener, ActionListener,
         check();
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
         check();
     }
 

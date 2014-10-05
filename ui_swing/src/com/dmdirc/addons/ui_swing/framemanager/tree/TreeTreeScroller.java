@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import javax.swing.tree.TreePath;
@@ -37,24 +37,19 @@ public class TreeTreeScroller extends TreeScroller {
 
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
-    /** Factory to use to retrieve swing windows. */
-    private final SwingWindowFactory windowFactory;
 
     /**
      * Creates a new Tree scroller for the tree view.
      *
      * @param activeFrameManager The active window manager
-     * @param windowFactory      Factory to use to retrieve swing windows.
      * @param tree               Tree view tree
      */
     public TreeTreeScroller(
             final ActiveFrameManager activeFrameManager,
-            final SwingWindowFactory windowFactory,
             final Tree tree) {
         super(tree);
 
         this.activeFrameManager = activeFrameManager;
-        this.windowFactory = windowFactory;
     }
 
     @Override
@@ -63,8 +58,8 @@ public class TreeTreeScroller extends TreeScroller {
         checkNotNull(path.getLastPathComponent());
         checkNotNull(((TreeViewNode) path.getLastPathComponent()).getWindow());
         super.setPath(path);
-        activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
-                ((TreeViewNode) path.getLastPathComponent()).getWindow()));
+        activeFrameManager.setActiveFrame((TextFrame)
+                ((TreeViewNode) path.getLastPathComponent()).getWindow());
     }
 
 }

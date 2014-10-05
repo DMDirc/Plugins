@@ -22,27 +22,25 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.interfaces.ui.Window;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * An interface for objects interested in Swing UI window events.
+ * Compares {@link Window}s by name.
  */
-public interface SwingWindowListener {
+public class WindowComparator implements Comparator<Window>, Serializable {
 
-    /**
-     * Called when a new window is added.
-     *
-     * @param parent The parent of the added window (may be null)
-     * @param window The window that was added
-     */
-    void windowAdded(final TextFrame parent, final TextFrame window);
+    private final FrameContainerComparator comparator;
 
-    /**
-     * Called when a new window was deleted.
-     *
-     * @param parent The parent of the added window (may be null)
-     * @param window The window that was deleted
-     */
-    void windowDeleted(final TextFrame parent, final TextFrame window);
+    public WindowComparator() {
+        comparator = new FrameContainerComparator();
+    }
 
+    @Override
+    public int compare(final Window item1, final Window item2) {
+        return comparator.compare(item1.getContainer(), item2.getContainer());
+    }
 }

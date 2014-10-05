@@ -26,9 +26,11 @@ import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
@@ -44,10 +46,13 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
+
 /**
  * Displays information related to the current window in the status bar.
  */
-public class WindowStatusManager implements ConfigChangeListener, SelectionListener {
+public class WindowStatusManager implements ConfigChangeListener {
 
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
@@ -57,6 +62,8 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     private final String domain;
     /** The event bus to post events to. */
     private final DMDircMBassador eventBus;
+    /** The swing event bus to register for events on. */
+    private final DMDircMBassador swingEventBus;
     /** The panel we use in the status bar. */
     private WindowStatusPanel panel;
     /** Should we show the real name in queries? */
@@ -70,11 +77,13 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
     public WindowStatusManager(final ActiveFrameManager activeFrameManager,
             final IdentityController identityController,
             @PluginDomain(WindowStatusPlugin.class) final String domain,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
         this.identityController = identityController;
         this.eventBus = eventBus;
+        this.swingEventBus = swingEventBus;
     }
 
     /**
@@ -89,7 +98,7 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
             }
         });
         eventBus.publishAsync(new StatusBarComponentAddedEvent(panel));
-        activeFrameManager.addSelectionListener(this);
+        swingEventBus.subscribe(this);
         identityController.getGlobalConfiguration().addChangeListener(domain, this);
         updateCache();
     }
@@ -98,15 +107,15 @@ public class WindowStatusManager implements ConfigChangeListener, SelectionListe
      * Unloads the plugin.
      */
     public void onUnload() {
-        activeFrameManager.removeSelectionListener(this);
+        swingEventBus.unsubscribe(this);
         eventBus.publishAsync(new StatusBarComponentRemovedEvent(panel));
         panel = null;
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        if (window != null) {
-            updateStatus(window.getContainer());
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        if (event.getWindow().isPresent()) {
+            updateStatus(event.getWindow().get().getContainer());
         }
     }
 

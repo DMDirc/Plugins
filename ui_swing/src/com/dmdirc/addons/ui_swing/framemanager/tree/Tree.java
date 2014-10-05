@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
+import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -184,9 +184,8 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
-                        ((TreeViewNode) new TreePath(node.getPath()).getLastPathComponent())
-                        .getWindow()));
+                activeFrameManager.setActiveFrame((TextFrame) ((TreeViewNode)
+                        new TreePath(node.getPath()).getLastPathComponent()).getWindow());
             }
         }
         manager.checkRollover(e);
@@ -209,8 +208,8 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
-                        ((TreeViewNode) selectedPath.getLastPathComponent()).getWindow()));
+                activeFrameManager.setActiveFrame((TextFrame) ((TreeViewNode)
+                        selectedPath.getLastPathComponent()).getWindow());
             }
         }
         processMouseEvents(e);
@@ -240,8 +239,8 @@ public class Tree extends JTree implements MouseMotionListener,
     void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null && e.isPopupTrigger()) {
-            final TextFrame frame = windowFactory.getSwingWindow(
-                    ((TreeViewNode) localPath.getLastPathComponent()).getWindow());
+            final TextFrame frame = (TextFrame) ((TreeViewNode) localPath.getLastPathComponent())
+                    .getWindow();
 
             if (frame == null) {
                 return;
@@ -275,8 +274,7 @@ public class Tree extends JTree implements MouseMotionListener,
 
             popupMenu.add(moveUp);
             popupMenu.add(moveDown);
-            popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
-                    getContainer())));
+            popupMenu.add(new JMenuItem(new CloseWindowAction(frame)));
             popupMenu.show(this, e.getX(), e.getY());
         }
     }
@@ -302,10 +300,10 @@ public class Tree extends JTree implements MouseMotionListener,
                 }
                 break;
             case "popout":
-                windowFactory.getSwingWindow(node.getWindow()).setPopout(true);
+                ((TextFrame) node.getWindow()).setPopout(true);
                 break;
             case "popin":
-                windowFactory.getSwingWindow(node.getWindow()).setPopout(false);
+                ((TextFrame) node.getWindow()).setPopout(false);
                 break;
         }
         final MutableTreeNode parentNode = (MutableTreeNode) node.getParent();

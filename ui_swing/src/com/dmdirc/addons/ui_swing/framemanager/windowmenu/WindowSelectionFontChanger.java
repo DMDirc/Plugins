@@ -22,20 +22,29 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ui.Window;
+
+import com.google.common.base.Optional;
 
 import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
+import net.engio.mbassy.listener.Listener;
+import net.engio.mbassy.listener.References;
+
 /**
  * Changes the font for a JComponent on a selection change.
  */
-public class WindowSelectionFontChanger implements SelectionListener {
+@Listener(references = References.Strong)
+public class WindowSelectionFontChanger {
 
     private final JComponent component;
     private final Window window;
@@ -45,15 +54,17 @@ public class WindowSelectionFontChanger implements SelectionListener {
         this.window = window;
     }
 
-    public void init(final ActiveFrameManager activeFrameMaanger) {
-        activeFrameMaanger.addSelectionListener(this);
-        selectionChanged(activeFrameMaanger.getActiveFrame());
+    public void init(final ActiveFrameManager activeFrameMaanger,
+            final DMDircMBassador eventBus) {
+        eventBus.subscribe(this);
+        selectionChanged(new SwingWindowSelectedEvent(
+                Optional.fromNullable((Window) activeFrameMaanger.getActiveFrame())));
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
         // TODO: Check children and set italic
-        if (this.window.equals(window)) {
+        if (event.getWindow().isPresent() && window.equals(event.getWindow().get())) {
             component.setFont(UIManager.getFont("MenuItem.font").deriveFont(Font.BOLD));
         } else {
             component.setFont(UIManager.getFont("MenuItem.font").deriveFont(Font.PLAIN));

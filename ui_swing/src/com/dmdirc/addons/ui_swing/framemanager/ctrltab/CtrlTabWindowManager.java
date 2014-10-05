@@ -24,9 +24,8 @@ package com.dmdirc.addons.ui_swing.framemanager.ctrltab;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SelectionListener;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
@@ -34,8 +33,10 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -58,12 +59,13 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 /**
  * A Window manager to handle ctrl[+shift]+tab switching between windows.
  */
 @Singleton
-public class CtrlTabWindowManager implements SelectionListener {
+public class CtrlTabWindowManager {
 
     /** Node storage, used for adding and deleting nodes correctly. */
     private final Map<Window, TreeViewNode> nodes;
@@ -76,22 +78,13 @@ public class CtrlTabWindowManager implements SelectionListener {
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
 
-    /**
-     * Creates a new ctrl tab window manager.
-     *
-     * @param globalConfig       The configuration to read settings from.
-     * @param windowFactory      The window factory to use to create and listen for windows.
-     * @param mainFrame          The main frame that owns this window manager
-     * @param activeFrameManager Active frame manager.
-     * @param eventBus           The eventBus to post errors to
-     */
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final SwingWindowFactory windowFactory,
             final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
@@ -101,12 +94,12 @@ public class CtrlTabWindowManager implements SelectionListener {
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
-                        ((TreeViewNode) path.getLastPathComponent()).getWindow()));
+                activeFrameManager.setActiveFrame((TextFrame)
+                        ((TreeViewNode) path.getLastPathComponent()).getWindow());
             }
         };
 
-        activeFrameManager.addSelectionListener(this);
+        swingEventBus.subscribe(this);
 
         if (mainFrame.getRootPane().getActionMap() != null) {
             mainFrame.getRootPane().getActionMap()
@@ -140,7 +133,7 @@ public class CtrlTabWindowManager implements SelectionListener {
 
             @Override
             public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window.getContainer());
+                final TreeViewNode node = new TreeViewNode(null, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
@@ -183,19 +176,16 @@ public class CtrlTabWindowManager implements SelectionListener {
         treeScroller.changeFocus(false);
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final TreeNode[] path = model.getPathToRoot(nodes.get(
-                        window));
-                if (path != null && path.length > 0) {
-                    selectionModel.setSelectionPath(new TreePath(path));
-                }
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        if (event.getWindow().isPresent()) {
+            final TreeNode[] path = model.getPathToRoot(nodes.get(event.getWindow().get()));
+            if (path != null && path.length > 0) {
+                selectionModel.setSelectionPath(new TreePath(path));
             }
-        });
+        } else {
+            selectionModel.setSelectionPath(null);
+        }
     }
 
 }

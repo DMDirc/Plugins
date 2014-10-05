@@ -22,28 +22,28 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 /**
- * Close a frame container action.
+ * Close a window action.
  */
-public final class CloseFrameContainerAction extends AbstractAction {
+public final class CloseWindowAction extends AbstractAction {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Frame container to be closed. */
-    private final FrameContainer frame;
+    /** Window to be closed. */
+    private final Window frame;
 
     /**
-     * Instantiates a new close a frame container action.
+     * Instantiates a new close a window action.
      *
-     * @param frame frame container to be closed
+     * @param frame window to be closed
      */
-    public CloseFrameContainerAction(final FrameContainer frame) {
+    public CloseWindowAction(final Window frame) {
         super("Close");
 
         this.frame = frame;
@@ -52,7 +52,7 @@ public final class CloseFrameContainerAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (frame != null) {
-            frame.close();
+            frame.getContainer().close();
         }
     }
 
