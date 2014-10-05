@@ -238,7 +238,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 final NodeLabel label = new NodeLabel(window, iconManager);
                 eventBus.subscribe(label);
                 swingEventBus.subscribe(label);
-                final TreeViewNode node = new TreeViewNode(label, window.getContainer());
+                final TreeViewNode node = new TreeViewNode(label, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }
