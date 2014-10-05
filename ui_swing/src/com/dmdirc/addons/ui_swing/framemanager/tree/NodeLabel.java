@@ -23,10 +23,9 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.events.NotificationSetEvent;
@@ -48,7 +47,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * Node label.
  */
-public class NodeLabel extends JPanel implements SelectionListener {
+public class NodeLabel extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -100,9 +99,10 @@ public class NodeLabel extends JPanel implements SelectionListener {
         selected = false;
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        selected = this.window.equals(window.getContainer());
+    @Handler
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        selected = event.getWindow().isPresent()
+                && window.equals(event.getWindow().get().getContainer());
     }
 
     public void notificationSet(final NotificationSetEvent event) {

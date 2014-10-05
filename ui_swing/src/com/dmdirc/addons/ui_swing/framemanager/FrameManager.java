@@ -22,15 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.framemanager;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
-
 import javax.swing.JComponent;
 
 /**
  * A frame manager is a widget that allows the user to navigate between the various frames that will
  * be open at any one time.
  */
-public interface FrameManager extends SelectionListener {
+public interface FrameManager {
 
     /**
      * Sets the parent component of this frame manager. The frame manager should render itself

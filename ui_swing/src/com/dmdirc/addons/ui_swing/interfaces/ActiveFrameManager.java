@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.interfaces;
 
-import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
 /**
@@ -43,25 +42,5 @@ public interface ActiveFrameManager {
      * @param activeFrame The frame to be activated, or null to show none
      */
     void setActiveFrame(TextFrame activeFrame);
-
-    /**
-     * Registers a new selection listener with this frame. The listener will be notified whenever
-     * the currently selected frame is changed.
-     *
-     * @param listener The listener to be added
-     *
-     * @see #setActiveFrame(com.dmdirc.addons.ui_swing.components.frames.TextFrame)
-     * @see #getActiveFrame()
-     */
-    void addSelectionListener(SelectionListener listener);
-
-    /**
-     * Removes a previously registered selection listener.
-     *
-     * @param listener The listener to be removed
-     *
-     * @see #addSelectionListener(com.dmdirc.addons.ui_swing.SelectionListener)
-     */
-    void removeSelectionListener(SelectionListener listener);
 
 }

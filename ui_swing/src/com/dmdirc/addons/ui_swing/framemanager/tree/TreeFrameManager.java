@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -42,16 +43,18 @@ import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.colours.Colour;
+
+import com.google.common.base.Optional;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -240,6 +243,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             public void run() {
                 final NodeLabel label = new NodeLabel(window);
                 eventBus.subscribe(label);
+                swingEventBus.subscribe(label);
                 final TreeViewNode node = new TreeViewNode(label, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
@@ -339,29 +343,22 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 }
 
                 if (activeFrameManager.getActiveFrame() != null) {
-                    selectionChanged(activeFrameManager.getActiveFrame());
+                    selectionChanged(new SwingWindowSelectedEvent(Optional.fromNullable((Window)
+                            activeFrameManager.getActiveFrame())));
                 }
             }
         });
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        synchronized (nodes) {
-            final Iterable<TreeViewNode> collection = new ArrayList<>(nodes.values());
-            for (TreeViewNode treeNode : collection) {
-                final NodeLabel label = treeNode.getLabel();
-                label.selectionChanged(window);
-            }
-        }
-
-        if (window != null) {
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        if (event.getWindow().isPresent()) {
             UIUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
                     final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel())
-                            .getPathToRoot(nodes.get(window.getContainer()));
+                            .getPathToRoot(nodes.get(event.getWindow().get().getContainer()));
                     if (treePath != null && treePath.length > 0) {
                         final TreePath path = new TreePath(treePath);
                         tree.setTreePath(path);

@@ -33,8 +33,10 @@ import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
@@ -134,13 +136,15 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
             final ActiveFrameManager activeFrameManager,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         this.windowFactory = windowFactory;
         this.globalConfig = globalConfig;
         this.windowManager = windowManager;
         this.activeFrameManager = activeFrameManager;
 
         eventBus.subscribe(this);
+        swingEventBus.subscribe(this);
 
         scrollPane = new JScrollPane();
         scrollPane.setBorder(null);
@@ -209,7 +213,8 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
 
                 final TextFrame activeFrame = activeFrameManager.getActiveFrame();
                 if (activeFrame != null) {
-                    selectionChanged(activeFrame);
+                    selectionChanged(new SwingWindowSelectedEvent(
+                            Optional.fromNullable((Window) activeFrame)));
                 }
                 parent.setVisible(true);
             }
@@ -391,27 +396,20 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
                 event.getWindow().getNotification().or(Colour.BLACK)));
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        UIUtilities.invokeLater(new Runnable() {
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        activeWindow = event.getWindow().orNull();
+        final FrameToggleButton selectedButton = getButton(selected);
+        if (selected != null && selectedButton != null) {
+            selectedButton.setSelected(false);
+        }
 
-            @Override
-            public void run() {
-                activeWindow = window;
-                final FrameToggleButton selectedButton = getButton(selected);
-                if (selected != null && selectedButton != null) {
-                    selectedButton.setSelected(false);
-                }
-
-                selected = window.getContainer();
-                final FrameToggleButton button = getButton(window.getContainer());
-                if (button != null) {
-                    scrollPane.getViewport().scrollRectToVisible(
-                            button.getBounds());
-                    button.setSelected(true);
-                }
-            }
-        });
+        selected = activeWindow == null ? null : activeWindow.getContainer();
+        final FrameToggleButton button = getButton(event.getWindow().get().getContainer());
+        if (button != null) {
+            scrollPane.getViewport().scrollRectToVisible(button.getBounds());
+            button.setSelected(true);
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

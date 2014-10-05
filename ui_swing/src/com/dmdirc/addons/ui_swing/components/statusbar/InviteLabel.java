@@ -25,10 +25,11 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SelectionListener;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
+import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
@@ -51,11 +52,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 /**
  * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
-public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteListener, ActionListener, SelectionListener {
+public class InviteLabel extends StatusbarPopupPanel<JLabel>
+        implements InviteListener, ActionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -70,20 +73,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
     /** Active connection. */
     private Connection activeConnection;
 
-    /**
-     * Instantiates a new invite label.
-     *
-     * @param eventBus      The event bus to subscribe to events on
-     * @param iconManager   The manager to retrieve the invite icon from.
-     * @param connectionManager The manager to use to iterate servers.
-     * @param mainFrame     Main frame
-     */
     @Inject
     public InviteLabel(
             final DMDircMBassador eventBus,
             @GlobalConfig final IconManager iconManager,
             final ConnectionManager connectionManager,
-            final MainFrame mainFrame) {
+            final MainFrame mainFrame,
+            @SwingEventBus final DMDircMBassador swingEventBus) {
         super(new JLabel());
 
         this.parentWindow = mainFrame;
@@ -103,7 +99,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
             connection.addInviteListener(this);
         }
 
-        mainFrame.addSelectionListener(this);
+        swingEventBus.subscribe(this);
         eventBus.subscribe(this);
 
         update();
@@ -179,7 +175,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        super.mouseClicked(e);
+        mouseClicked(e);
         popuplateMenu();
         if (menu.getComponentCount() > 0) {
             menu.show(this, e.getX(), e.getY());
@@ -198,9 +194,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
         }
     }
 
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        activeConnection = window == null ? null : window.getContainer().getConnection();
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    public void selectionChanged(final SwingWindowSelectedEvent event) {
+        if (event.getWindow().isPresent()) {
+            activeConnection = event.getWindow().get().getContainer().getConnection();
+        } else {
+            activeConnection = null;
+        }
         update();
     }
 

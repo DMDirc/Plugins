@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
+import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
@@ -44,10 +45,13 @@ import com.dmdirc.events.NotificationSetEvent;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
+
+import com.google.common.base.Optional;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -98,6 +102,8 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
     private final DMDircMBassador eventBus;
+    /** Swing event bus to post events to. */
+    private final DMDircMBassador swingEventBus;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -133,6 +139,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * @param iconManager          The icon manager to use to get icons.
      * @param frameManagerProvider Provider to use to retrieve frame managers.
      * @param eventBus             The event bus to post events to.
+     * @param swingEventBus        The event bus to post swing events to.
      */
     public MainFrame(
             final Apple apple,
@@ -141,7 +148,8 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
             final Provider<FrameManager> frameManagerProvider,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final DMDircMBassador swingEventBus) {
         checkOnEDT();
         this.apple = apple;
         this.lifecycleController = lifecycleController;
@@ -150,6 +158,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         this.iconManager = iconManager;
         this.frameManagerProvider = frameManagerProvider;
         this.eventBus = eventBus;
+        this.swingEventBus = swingEventBus;
         version = globalConfig.getOption("version", "version");
         focusOrder = new QueuedLinkedHashSet<>();
     }
@@ -299,11 +308,11 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             public void run() {
                 frameManagerPanel.removeAll();
                 if (mainFrameManager != null) {
-                    removeSelectionListener(mainFrameManager);
+                    swingEventBus.unsubscribe(mainFrameManager);
                 }
                 mainFrameManager = frameManagerProvider.get();
                 mainFrameManager.setParent(frameManagerPanel);
-                addSelectionListener(mainFrameManager);
+                swingEventBus.subscribe(mainFrameManager);
             }
         });
     }
@@ -561,22 +570,10 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
                     activeFrame.activateFrame();
                 }
 
-                for (final SelectionListener listener : listeners.get(
-                        SelectionListener.class)) {
-                    listener.selectionChanged(activeFrame);
-                }
+                swingEventBus.publish(
+                        new SwingWindowSelectedEvent(Optional.fromNullable((Window) activeFrame)));
             }
         });
-    }
-
-    @Override
-    public void addSelectionListener(final SelectionListener listener) {
-        listeners.add(SelectionListener.class, listener);
-    }
-
-    @Override
-    public void removeSelectionListener(final SelectionListener listener) {
-        listeners.remove(SelectionListener.class, listener);
     }
 
     @Handler
