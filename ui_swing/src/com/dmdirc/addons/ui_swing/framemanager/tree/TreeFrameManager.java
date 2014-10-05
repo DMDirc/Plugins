@@ -118,7 +118,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @PluginDomain(SwingController.class) final String domain,
             final DMDircMBassador eventBus,
             @SwingEventBus final DMDircMBassador swingEventBus,
-            final IconManager iconManager) {
+            @GlobalConfig final IconManager iconManager) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.nodes = new HashMap<>();
