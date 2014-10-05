@@ -86,6 +86,7 @@ public class MenuBar extends JMenuBar {
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
         menuItemCount = getComponentCount() - tempCount;
+        windowMenu.init();
 
         getActionMap().setParent(null);
         getActionMap().clear();

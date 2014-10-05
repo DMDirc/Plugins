@@ -22,18 +22,35 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.ui.IconManager;
+
+import javax.inject.Inject;
 
 /**
- * Interface to define a menu or menu item that holds a framecontainer.
+ * Factory to create {@link WindowAction}s.
  */
-public interface FrameContainerMenuInterface {
+public class WindowActionFactory {
 
-    /**
-     * Returns the wrapped frame container.
-     *
-     * @return Wrapped frame container
-     */
-    FrameContainer getFrame();
+    private final DMDircMBassador eventBus;
+    private final ActiveFrameManager activeFrameManager;
+    private final IconManager iconManager;
 
+    @Inject
+    public WindowActionFactory(final DMDircMBassador eventBus,
+            final ActiveFrameManager activeFrameManager,
+            @GlobalConfig final IconManager iconManager) {
+        this.eventBus = eventBus;
+        this.activeFrameManager = activeFrameManager;
+        this.iconManager = iconManager;
+    }
+
+    public WindowAction getWindowAction(final TextFrame window) {
+        final WindowAction windowAction = new WindowAction(activeFrameManager, iconManager, window);
+        windowAction.init(eventBus);
+        return windowAction;
+    }
 }

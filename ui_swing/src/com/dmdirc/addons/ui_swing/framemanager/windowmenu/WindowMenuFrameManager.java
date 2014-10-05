@@ -24,38 +24,26 @@ package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
-import com.dmdirc.FrameContainerComparator;
-import com.dmdirc.addons.ui_swing.SelectionListener;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 
-import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
+import javax.swing.JMenuItem;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -63,346 +51,117 @@ import net.engio.mbassy.listener.Handler;
  * Manages the window menu window list.
  */
 @Singleton
-public class WindowMenuFrameManager extends JMenu implements SelectionListener {
+public class WindowMenuFrameManager extends JMenu {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** Comparator. */
-    private final Comparator<FrameContainer> comparator = new FrameContainerComparator();
-    /** Non frame container menu count. */
-    private final int itemCount;
-    /** Separator. */
-    private final JSeparator separator;
-    /** Enabled menu items? */
-    private final AtomicBoolean enabledMenuItems = new AtomicBoolean(false);
-    /** Window to menu map. */
-    private final Map<FrameContainer, FrameContainerMenu> menus;
-    private final Map<FrameContainer, FrameContainerMenuItem> items;
-    private final Map<FrameContainer, FrameContainerMenuItem> menuItems;
-    /** Active frame manager. */
-    private final ActiveFrameManager activeFrameManager;
+    /** Window action factory. */
+    private final WindowActionFactory windowActionFactory;
+    /** Window selection font changer. */
+    private final WindowSelectionFontChangerFactory windowSelectionFontChanger;
+    /** Window to item mapping. */
+    private final Map<Window, AbstractButton> menuItems;
+    /** Swing event bus. */
+    private final DMDircMBassador swingEventBus;
+    /** Close menu item. */
+    private final CloseActiveWindowMenuItem closeMenuItem;
+    /** Global config. */
     private final AggregateConfigProvider globalConfig;
+    /** Plugin domain. */
     private final String domain;
-    /** The client event bus to subscribe to events on. */
-    private final DMDircMBassador eventBus;
+    /** Menu separator. */
+    private final WindowMenuSeparator separator;
 
-    /**
-     * Creates a new instance of WindowMenuFrameManager.
-     *
-     * @param globalConfig       Config to read settings from.
-     * @param domain             Domain to read settings from.
-     * @param activeFrameManager The active window manager.
-     * @param swingEventBus      The swing event bus.
-     * @param eventBus           The client event bus.
-     */
     @Inject
     public WindowMenuFrameManager(@GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
-            final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final DMDircMBassador swingEventBus, final DMDircMBassador eventBus,
-            final CloseActiveWindowMenuItem closeMenuItem) {
+            @SwingEventBus final DMDircMBassador swingEventBus,
+            final CloseActiveWindowMenuItem closeMenuItem,
+            final WindowActionFactory windowActionFactory,
+            final WindowSelectionFontChangerFactory windowSelectionFontChanger,
+            final WindowMenuSeparator separator) {
+        this.windowActionFactory = windowActionFactory;
+        this.windowSelectionFontChanger = windowSelectionFontChanger;
+        this.swingEventBus = swingEventBus;
+        this.closeMenuItem = closeMenuItem;
         this.globalConfig = globalConfig;
+        this.separator = separator;
         this.domain = domain;
-        this.activeFrameManager = activeFrameManager;
-        this.eventBus = eventBus;
-        swingEventBus.subscribe(this);
+        menuItems = Maps.newHashMap();
+    }
 
-        menus = Collections.synchronizedMap(new HashMap<FrameContainer, FrameContainerMenu>());
-        items = Collections.synchronizedMap(new HashMap<FrameContainer, FrameContainerMenuItem>());
-        menuItems =
-                Collections.synchronizedMap(new HashMap<FrameContainer, FrameContainerMenuItem>());
+    /**
+     * Initialises the frame managers and adds appropriate listeners.
+     */
+    public void init() {
+        swingEventBus.subscribe(this);
 
         setText("Window");
         setMnemonic('w');
 
         closeMenuItem.init();
         add(closeMenuItem);
-
-        separator = new JPopupMenu.Separator();
+        separator.init();
         add(separator);
 
-        itemCount = getMenuComponentCount();
-
-        activeFrameManager.addSelectionListener(this);
-
-        WindowMenuScroller.createScroller(this, globalConfig, domain, itemCount);
-        checkMenuItems();
+        WindowMenuScroller.createScroller(this, globalConfig, domain, getMenuComponentCount());
     }
 
-    /**
-     * Checks the number of components in the menu and enables menus items appropriately.
-     */
-    private void checkMenuItems() {
-        enabledMenuItems.set(getMenuComponentCount() > itemCount);
-        separator.setVisible(enabledMenuItems.get());
-    }
-
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void windowAdded(final SwingWindowAddedEvent event) {
         if (event.getParentWindow().isPresent()) {
             addChildWindow(event.getParentWindow().get(), event.getChildWindow());
         } else {
             addTopLevelWindow(event.getChildWindow());
         }
-        checkMenuItems();
     }
 
-    private void addChildWindow(final Window parent, final TextFrame child) {
-        final FrameContainerMenuItem item = getMenuItem(child);
-        eventBus.subscribe(item);
-        final JMenu parentMenu;
-        if (menus.containsKey(parent.getContainer())) {
-            parentMenu = menus.get(parent.getContainer());
-        } else {
-            final FrameContainerMenu replacement = getMenu(child);
-            replaceItemWithMenu(getParentMenu(parent.getContainer()),
-                    items.get(parent.getContainer()), replacement);
-            parentMenu = replacement;
-        }
-        items.put(child.getContainer(), item);
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                parentMenu.add(item, getIndex(child.getContainer(), parentMenu));
-            }
-        });
-    }
-
-    private void addTopLevelWindow(final TextFrame window) {
-        final FrameContainerMenuItem item = getMenuItem(window);
-        eventBus.subscribe(item);
-        items.put(window.getContainer(), item);
-        final int index = getIndex(window.getContainer(), this);
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                add(item, index);
-            }
-        });
-    }
-
-    private FrameContainerMenu getMenu(final TextFrame window) {
-        return UIUtilities.invokeAndWait(new Callable<FrameContainerMenu>() {
-
-            @Override
-            public FrameContainerMenu call() {
-                return new FrameContainerMenu(activeFrameManager, globalConfig, domain, window,
-                        window.getContainer());
-            }
-        });
-    }
-
-    private FrameContainerMenuItem getMenuItem(final TextFrame window) {
-        return UIUtilities.invokeAndWait(new Callable<FrameContainerMenuItem>() {
-
-            @Override
-            public FrameContainerMenuItem call() {
-                return new FrameContainerMenuItem(activeFrameManager, window.getContainer(), window,
-                        WindowMenuFrameManager.this);
-            }
-        });
-    }
-
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         if (event.getParentWindow().isPresent()) {
             deleteChildWindow(event.getParentWindow().get(), event.getChildWindow());
         } else {
             deleteTopLevelWindow(event.getChildWindow());
         }
-        checkMenuItems();
+    }
+
+    private JMenu getMenu(final TextFrame window) {
+        final Action action = windowActionFactory.getWindowAction(window);
+        final JMenu menu = new JMenu(action);
+        windowSelectionFontChanger.getWindowSelectionFontChanger(menu, window);
+        return menu;
+    }
+
+    private JMenuItem getMenuItem(final TextFrame window) {
+        final Action action = windowActionFactory.getWindowAction(window);
+        final JMenuItem menu = new JMenuItem(action);
+        windowSelectionFontChanger.getWindowSelectionFontChanger(menu, window);
+        return menu;
+    }
+
+    private void addChildWindow(final TextFrame parent, final TextFrame child) {
+        if (!(menuItems.get(parent) instanceof JMenu)) {
+            remove(menuItems.get(parent));
+            final AbstractButton item = getMenu(parent);
+            menuItems.put(parent, item);
+            add(item);
+        }
+        final AbstractButton item = getMenuItem(child);
+        menuItems.put(child, item);
+        menuItems.get(parent).add(item);
+    }
+
+    private void addTopLevelWindow(final TextFrame window) {
+        final AbstractButton item = getMenuItem(window);
+        menuItems.put(window, item);
+        add(item);
     }
 
     private void deleteTopLevelWindow(final Window window) {
-        final AbstractButton item;
-        if (items.containsKey(window.getContainer())) {
-            item = items.get(window.getContainer());
-            eventBus.unsubscribe(item);
-            items.remove(window.getContainer());
-        } else if (menus.containsKey(window.getContainer())) {
-            item = menus.get(window.getContainer());
-            eventBus.unsubscribe(item);
-            menus.remove(window.getContainer());
-        } else {
-            return;
-        }
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                remove(item);
-            }
-        });
+        remove(menuItems.get(window));
     }
 
-    private void deleteChildWindow(final TextFrame parent, final Window child) {
-        if (items.containsKey(child.getContainer())) {
-            final JMenu menu = getParentMenu(child.getContainer());
-            final FrameContainerMenuItem item = items.get(child.
-                    getContainer());
-            items.remove(child.getContainer());
-            UIUtilities.invokeAndWait(new Runnable() {
-
-                @Override
-                public void run() {
-                    menu.remove(item);
-                    if (menu.getMenuComponentCount() == 1) {
-                        replaceMenuWithItem(getParentMenu(parent.
-                                        getContainer()), menus.get(parent.getContainer()),
-                                new FrameContainerMenuItem(activeFrameManager,
-                                        parent.getContainer(), parent,
-                                        WindowMenuFrameManager.this));
-                    }
-                }
-            });
-        } else if (menus.containsKey(child.getContainer())) {
-            menus.get(parent.getContainer()).remove(menus.get(child.
-                    getContainer()));
-            menus.remove(child.getContainer());
-        }
+    private void deleteChildWindow(final Window parent, final Window child) {
+        menuItems.get(parent).remove(menuItems.get(child));
     }
-
-    private JMenu getParentMenu(final FrameContainer window) {
-        final Optional<FrameContainer> parent = window.getParent();
-
-        return parent.isPresent() ? menus.get(parent.get()) : this;
-    }
-
-    private void replaceItemWithMenu(final JMenu parentMenu, final FrameContainerMenuItem item,
-            final FrameContainerMenu menu) {
-        UIUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                parentMenu.remove(item);
-                parentMenu.add(menu, getIndex(menu.getFrame(), parentMenu));
-                menu.add(item, getIndex(item.getFrame(), menu));
-            }
-        });
-        eventBus.subscribe(menu);
-        items.remove(item.getFrame());
-        eventBus.unsubscribe(item);
-        menus.put(menu.getFrame(), menu);
-        menuItems.put(item.getFrame(), item);
-    }
-
-    private void replaceMenuWithItem(final JMenu parentMenu, final FrameContainerMenu menu,
-            final FrameContainerMenuItem item) {
-        eventBus.subscribe(item);
-        parentMenu.remove(menu);
-        eventBus.unsubscribe(menu);
-        parentMenu.add(item, getIndex(item.getFrame(), parentMenu));
-        menus.remove(menu.getFrame());
-        items.put(item.getFrame(), item);
-    }
-
-    @Override
-    public void selectionChanged(final TextFrame window) {
-        final Collection<SelectionListener> values = new ArrayList<>();
-        synchronized (menus) {
-            synchronized (items) {
-                synchronized (menuItems) {
-                    values.addAll(menus.values());
-                    values.addAll(items.values());
-                    values.addAll(menuItems.values());
-                }
-            }
-        }
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (SelectionListener menuItem : values) {
-                    menuItem.selectionChanged(window);
-                }
-            }
-        });
-    }
-
-    /**
-     * Tells a parent its child is selected.
-     *
-     * @param window parent to inform
-     */
-    protected void parentSelection(final FrameContainer window) {
-        final FrameContainerMenu menuItem = menus.get(window);
-        if (menuItem != null) {
-            menuItem.childSelected();
-        }
-    }
-
-    /**
-     * Compares the new child with the existing children or parent to decide where it needs to be
-     * inserted.
-     *
-     * @param newChild new node to be inserted.
-     * @param menu     Menu for the node to be inserted in
-     *
-     * @return index where new node is to be inserted.
-     */
-    private int getIndex(final FrameContainer newChild, final JMenu menu) {
-        final int count = menu == this ? itemCount : 0;
-        final int menuItemCount = UIUtilities.invokeAndWait(new Callable<Integer>() {
-
-            @Override
-            public Integer call() {
-                return menu.getMenuComponentCount();
-            }
-        });
-        for (int i = count; i < menuItemCount; i++) {
-            final int index = i;
-            final Component component = UIUtilities.invokeAndWait(new Callable<Component>() {
-                @Override
-                public Component call() {
-                    return menu.getMenuComponent(index);
-                }
-            });
-            if (!(component instanceof FrameContainerMenuInterface)) {
-                continue;
-            }
-            final FrameContainer child = ((FrameContainerMenuInterface) component).getFrame();
-            if (sortBefore(newChild, child) || !sortAfter(newChild, child) &&
-                    globalConfig.getOptionBool("treeview", "sortwindows") &&
-                    newChild.getName().compareToIgnoreCase(child.getName()) < 0) {
-                return i;
-            }
-        }
-
-        return UIUtilities.invokeAndWait(new Callable<Integer>() {
-
-            @Override
-            public Integer call() {
-                return menu.getMenuComponentCount();
-            }
-        });
-    }
-
-    /**
-     * Compares the types of the specified nodes' objects to see if the new node should be sorted
-     * before the other.
-     *
-     * @param newChild The new child to be tested
-     * @param child    The existing child that it's being tested against
-     *
-     * @return True iff newChild should be sorted before child
-     */
-    private boolean sortBefore(final FrameContainer newChild, final FrameContainer child) {
-
-        return comparator.compare(newChild, child) <= -1;
-    }
-
-    /**
-     * Compares the types of the specified nodes' objects to see if the new node should be sorted
-     * after the other.
-     *
-     * @param newChild The new child to be tested
-     * @param child    The existing child that it's being tested against
-     *
-     * @return True iff newChild should be sorted before child
-     */
-    private boolean sortAfter(final FrameContainer newChild, final FrameContainer child) {
-
-        return comparator.compare(newChild, child) >= 1;
-    }
-
 }

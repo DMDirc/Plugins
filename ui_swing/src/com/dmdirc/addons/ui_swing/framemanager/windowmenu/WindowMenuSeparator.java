@@ -22,53 +22,44 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
-import com.dmdirc.ClientModule;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
-import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Invoke;
 
 /**
- * A Menu item that closes the active window when triggered.
+ * Separator that only appears when there are top level windows.
  */
-public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListener {
+public class WindowMenuSeparator extends JPopupMenu.Separator implements ActionListener {
 
     private final ActiveFrameManager activeFrameManager;
     private final DMDircMBassador eventBus;
     private final WindowManager windowManager;
 
     @Inject
-    public CloseActiveWindowMenuItem(final ActiveFrameManager activeFrameManager,
-            @ClientModule.GlobalConfig final IconManager iconManager,
+    public WindowMenuSeparator(final ActiveFrameManager activeFrameManager,
             @SwingEventBus final DMDircMBassador eventBus,
             final WindowManager windowManager) {
-        super(iconManager.getIcon("close"));
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.windowManager = windowManager;
-        setMnemonic('c');
-        setText("Close");
-        setActionCommand("Close");
     }
-
     /**
      * Initialises the menu item adding listeners as required.
      */
     public void init() {
-        addActionListener(this);
         eventBus.subscribe(this);
     }
 
@@ -79,11 +70,11 @@ public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListen
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowAdded(final SwingWindowAddedEvent event) {
-        setEnabled(true);
+        setVisible(true);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
-        setEnabled(!windowManager.getRootWindows().isEmpty());
+        setVisible(!windowManager.getRootWindows().isEmpty());
     }
 }
