@@ -127,8 +127,8 @@ public class SwingWindowFactory implements FrameListener {
                 if (childWindow == null) {
                     return;
                 }
-                swingEventBus.publish(new SwingWindowAddedEvent(Optional.fromNullable(parentWindow),
-                        childWindow));
+                swingEventBus.publish(new SwingWindowAddedEvent(
+                        Optional.fromNullable(parentWindow), childWindow));
 
                 if (focus) {
                     activeFrameManager.get().setActiveFrame(childWindow);
@@ -165,17 +165,15 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     @Override
-    public void delWindow(final FrameContainer parent,
-            final FrameContainer window) {
+    public void delWindow(final FrameContainer parent, final FrameContainer window) {
+        final TextFrame parentWindow = getSwingWindow(parent);
+        final TextFrame childWindow = getSwingWindow(window);
+        windows.remove(window);
         UIUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final TextFrame parentWindow = getSwingWindow(parent);
-                final TextFrame childWindow = getSwingWindow(window);
-                swingEventBus.publish(
-                        new SwingWindowDeletedEvent(Optional.fromNullable(parentWindow),
-                                childWindow));
-                windows.remove(window);
+                swingEventBus.publish(new SwingWindowDeletedEvent(
+                        Optional.fromNullable(parentWindow), childWindow));
             }
         });
     }
