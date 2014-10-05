@@ -29,7 +29,7 @@ import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
+import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
@@ -105,7 +105,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
     /** The parent for the manager. */
     private JComponent parent;
     /** The currently selected frame. */
-    private transient FrameContainer selected;
+    private transient Window selected;
     /** Selected window. */
     private Window activeWindow;
     /** Sort root windows prefs setting. */
@@ -247,13 +247,12 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
     /**
      * Retreives the button object associated with {@link FrameContainer}.
      *
-     * @param frame FrameContainer to find associated button for
+     * @param window FrameContainer to find associated button for
      *
      * @return {@link FrameToggleButton} object asociated with this FrameContainer. Returns null if
      *         none exist
      */
-    public FrameToggleButton getButton(final FrameContainer frame) {
-        final Window window = windowFactory.getSwingWindow(frame);
+    public FrameToggleButton getButton(final Window window) {
         if (buttons.containsKey(window)) {
             return buttons.get(window);
         }
@@ -272,7 +271,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
      */
     private void displayButtons(final Iterable<FrameContainer> windowCollection) {
         for (FrameContainer window : windowCollection) {
-            final FrameToggleButton button = getButton(window);
+            final FrameToggleButton button = getButton(windowFactory.getSwingWindow(window));
             if (button != null) {
                 button.setPreferredSize(new Dimension(buttonWidth, BUTTON_HEIGHT));
                 buttonPanel.add(button);
@@ -383,7 +382,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void notificationSet(final NotificationSetEvent event) {
-        final FrameToggleButton button = getButton(event.getWindow());
+        final FrameToggleButton button = getButton(windowFactory.getSwingWindow(event.getWindow()));
         if (button != null) {
             button.setForeground(UIUtilities.convertColour(event.getColour()));
         }
@@ -404,8 +403,8 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
             selectedButton.setSelected(false);
         }
 
-        selected = activeWindow == null ? null : activeWindow.getContainer();
-        final FrameToggleButton button = getButton(event.getWindow().get().getContainer());
+        selected = activeWindow == null ? null : activeWindow;
+        final FrameToggleButton button = getButton(event.getWindow().get());
         if (button != null) {
             scrollPane.getViewport().scrollRectToVisible(button.getBounds());
             button.setSelected(true);
@@ -414,7 +413,8 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void iconChanged(final FrameIconChangedEvent event) {
-        final FrameToggleButton button = getButton(event.getContainer());
+        final FrameToggleButton button = getButton(windowFactory.getSwingWindow(event
+                .getContainer()));
         if (button != null) {
             button.setIcon(event.getContainer().getIconManager().getIcon(event.getIcon()));
         }
@@ -422,7 +422,8 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void nameChanged(final FrameNameChangedEvent event) {
-        final FrameToggleButton button = getButton(event.getContainer());
+        final FrameToggleButton button = getButton(
+                windowFactory.getSwingWindow(event.getContainer()));
         if (button != null) {
             button.setText(event.getName());
         }
@@ -444,8 +445,7 @@ public final class ButtonBar implements FrameManager, ActionListener, ComponentL
             final JPopupMenu popupMenu = frame.getPopupMenu(null,
                     new Object[][]{new Object[]{""}});
             frame.addCustomPopupItems(popupMenu);
-            popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
-                    getContainer())));
+            popupMenu.add(new JMenuItem(new CloseWindowAction(frame)));
             popupMenu.show(button, e.getX(), e.getY());
         }
     }

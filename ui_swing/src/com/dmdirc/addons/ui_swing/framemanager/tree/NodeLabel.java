@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.events.NotificationSetEvent;
+import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -52,7 +53,7 @@ public class NodeLabel extends JPanel {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The window this node represents in the tree. */
-    private final FrameContainer window;
+    private final Window window;
     /** Colour used to show if the mouse is over this node. */
     private boolean rollover;
     /** Colour used to show if this node has an active notification. */
@@ -63,6 +64,8 @@ public class NodeLabel extends JPanel {
     private final ImageButton<?> icon = new ImageButton<>("", null);
     /** Text label. */
     private final JTextPane text = new JTextPane(new DefaultStyledDocument());
+    /** Icon manager. */
+    private final IconManager iconManager;
     /** Current styled text. */
     private String currentText = "";
 
@@ -71,8 +74,9 @@ public class NodeLabel extends JPanel {
      *
      * @param window Window for this node
      */
-    public NodeLabel(final FrameContainer window) {
+    public NodeLabel(final Window window, final IconManager iconManager) {
         this.window = window;
+        this.iconManager = iconManager;
 
         init();
     }
@@ -85,8 +89,8 @@ public class NodeLabel extends JPanel {
             return;
         }
 
-        icon.setIcon(window.getIconManager().getIcon(window.getIcon()));
-        text.setText(window.getName());
+        icon.setIcon(iconManager.getIcon(window.getContainer().getIcon()));
+        text.setText(window.getContainer().getName());
         text.setBorder(null);
 
         setLayout(new MigLayout("ins 0"));
@@ -116,7 +120,7 @@ public class NodeLabel extends JPanel {
     @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
         if (window.equals(event.getContainer())) {
-            icon.setIcon(window.getIconManager().getIcon(event.getIcon()));
+            icon.setIcon(iconManager.getIcon(event.getIcon()));
         }
     }
 
@@ -212,13 +216,13 @@ public class NodeLabel extends JPanel {
      * @param newText  Style to set
      */
     public void setTextStyle(final Styliser styliser, final String newText) {
-        if (currentText.equals(newText + window.getName())) {
+        if (currentText.equals(newText + window.getContainer().getName())) {
             return;
         }
         text.setText("");
-        currentText = newText + window.getName();
+        currentText = newText + window.getContainer().getName();
         styliser.addStyledString((StyledDocument) text.getDocument(),
-                new String[]{newText, window.getName(),});
+                new String[]{newText, window.getContainer().getName(),});
     }
 
 }

@@ -20,52 +20,27 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager.tree;
+package com.dmdirc.addons.ui_swing;
 
+import com.dmdirc.FrameContainerComparator;
 import com.dmdirc.interfaces.ui.Window;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * Tree node representing a NodeLabel and a FrameContainer.
+ * Compares {@link Window}s by name.
  */
-public class TreeViewNode extends DefaultMutableTreeNode {
+public class WindowComparator implements Comparator<Window>, Serializable {
 
-    /** A version number for this class. */
-    private static final long serialVersionUID = 5;
-    /** Node's label. */
-    private final NodeLabel label;
-    /** Node's frame container. */
-    private final Window window;
+    private final FrameContainerComparator comparator;
 
-    /**
-     * Instantiates a new tree view node.
-     *
-     * @param label  Node label
-     * @param window Node window
-     */
-    public TreeViewNode(final NodeLabel label, final Window window) {
-
-        this.label = label;
-        this.window = window;
+    public WindowComparator() {
+        comparator = new FrameContainerComparator();
     }
 
-    /**
-     * Returns the label for this tree node.
-     *
-     * @return Node label
-     */
-    public NodeLabel getLabel() {
-        return label;
+    @Override
+    public int compare(final Window item1, final Window item2) {
+        return comparator.compare(item1.getContainer(), item2.getContainer());
     }
-
-    /**
-     * Returns the Window for this node.
-     *
-     * @return Node window
-     */
-    public Window getWindow() {
-        return window;
-    }
-
 }

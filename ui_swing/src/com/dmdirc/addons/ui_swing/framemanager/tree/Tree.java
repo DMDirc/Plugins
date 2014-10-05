@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.actions.CloseFrameContainerAction;
+import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -275,8 +275,7 @@ public class Tree extends JTree implements MouseMotionListener,
 
             popupMenu.add(moveUp);
             popupMenu.add(moveDown);
-            popupMenu.add(new JMenuItem(new CloseFrameContainerAction(frame.
-                    getContainer())));
+            popupMenu.add(new JMenuItem(new CloseWindowAction(frame)));
             popupMenu.show(this, e.getX(), e.getY());
         }
     }
