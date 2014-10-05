@@ -77,14 +77,12 @@ public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListen
         activeFrameManager.getActiveFrame().getContainer().close();
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, priority = Integer.MIN_VALUE,
-            delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowAdded(final SwingWindowAddedEvent event) {
         setEnabled(true);
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, priority = Integer.MIN_VALUE,
-            delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         setEnabled(!windowManager.getRootWindows().isEmpty());
     }

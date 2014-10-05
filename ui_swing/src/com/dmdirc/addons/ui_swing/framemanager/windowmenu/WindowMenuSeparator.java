@@ -68,14 +68,12 @@ public class WindowMenuSeparator extends JPopupMenu.Separator implements ActionL
         activeFrameManager.getActiveFrame().getContainer().close();
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, priority = Integer.MIN_VALUE,
-            delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowAdded(final SwingWindowAddedEvent event) {
         setVisible(true);
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, priority = Integer.MIN_VALUE,
-            delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         setVisible(!windowManager.getRootWindows().isEmpty());
     }
