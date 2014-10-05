@@ -77,7 +77,6 @@ public class WindowMenuSeparator extends JPopupMenu.Separator implements ActionL
     @Handler(invocation = EdtHandlerInvocation.class, priority = Integer.MIN_VALUE,
             delivery = Invoke.Asynchronously)
     public void windowDeleted(final SwingWindowDeletedEvent event) {
-        System.out.println("Deleted: " + windowManager.getRootWindows());
         setVisible(!windowManager.getRootWindows().isEmpty());
     }
 }
