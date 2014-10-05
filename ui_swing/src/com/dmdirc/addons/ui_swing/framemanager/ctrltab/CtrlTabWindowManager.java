@@ -26,7 +26,6 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
@@ -82,7 +81,6 @@ public class CtrlTabWindowManager {
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final SwingWindowFactory windowFactory,
             final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
             final DMDircMBassador eventBus,
@@ -96,8 +94,8 @@ public class CtrlTabWindowManager {
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                activeFrameManager.setActiveFrame(windowFactory.getSwingWindow(
-                        ((TreeViewNode) path.getLastPathComponent()).getWindow()));
+                activeFrameManager.setActiveFrame((TextFrame)
+                        ((TreeViewNode) path.getLastPathComponent()).getWindow());
             }
         };
 
@@ -135,7 +133,7 @@ public class CtrlTabWindowManager {
 
             @Override
             public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window.getContainer());
+                final TreeViewNode node = new TreeViewNode(null, window);
                 synchronized (nodes) {
                     nodes.put(window, node);
                 }

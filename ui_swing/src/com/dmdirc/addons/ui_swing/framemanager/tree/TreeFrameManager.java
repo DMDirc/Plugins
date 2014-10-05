@@ -327,7 +327,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(activeFrameManager, windowFactory, tree);
+                scroller = new TreeTreeScroller(activeFrameManager, tree);
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, windowFactory.getSwingWindow(window));
