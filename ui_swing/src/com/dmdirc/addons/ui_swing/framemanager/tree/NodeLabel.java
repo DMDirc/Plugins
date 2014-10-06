@@ -106,7 +106,7 @@ public class NodeLabel extends JPanel {
     @Handler
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         selected = event.getWindow().isPresent()
-                && window.equals(event.getWindow().get().getContainer());
+                && window.equals(event.getWindow().get());
     }
 
     public void notificationSet(final NotificationSetEvent event) {
@@ -119,14 +119,14 @@ public class NodeLabel extends JPanel {
 
     @Handler
     public void iconChanged(final FrameIconChangedEvent event) {
-        if (window.equals(event.getContainer())) {
+        if (window.getContainer().equals(event.getContainer())) {
             icon.setIcon(iconManager.getIcon(event.getIcon()));
         }
     }
 
     @Handler
     public void nameChanged(final FrameNameChangedEvent event) {
-        if (window.equals(event.getContainer())) {
+        if (window.getContainer().equals(event.getContainer())) {
             text.setText(event.getName());
         }
     }
