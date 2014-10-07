@@ -202,19 +202,21 @@ public class BasicTextLineRenderer implements LineRenderer {
         as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
         final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
-        final Rectangle2D bounds = logicalHighlightShape.getBounds2D();
+        final Rectangle2D bounds = logicalHighlightShape.getBounds();
 
         g.setColor(highlightBackground);
+        g.translate(drawPosX + bounds.getX(), drawPosY);
 
         if (isEndOfLine) {
             g.fill(new Rectangle2D.Double(
-                    bounds.getX() + bounds.getWidth(),
-                    drawPosY + bounds.getY(),
+                    bounds.getWidth(),
+                    bounds.getY(),
                     canvasWidth - bounds.getX() - bounds.getWidth(),
                     bounds.getHeight()));
         }
 
-        newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY);
+        newLayout.draw(g, 0, 0);
+        g.translate(-drawPosX - bounds.getX(), -drawPosY);
     }
 
 }
