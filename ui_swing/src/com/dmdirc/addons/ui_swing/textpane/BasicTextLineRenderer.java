@@ -133,7 +133,8 @@ public class BasicTextLineRenderer implements LineRenderer {
             final TextLayout layout) {
         graphics.setColor(textPane.getForeground());
         layout.draw(graphics, drawPosX, drawPosY);
-        doHighlight(line, chars, layout, graphics, (int) canvasWidth + DOUBLE_SIDE_PADDING, drawPosX, drawPosY);
+        doHighlight(line, chars, layout, graphics, canvasWidth + DOUBLE_SIDE_PADDING,
+                drawPosX, drawPosY);
         final LineInfo lineInfo = new LineInfo(line, numberOfWraps);
         result.firstVisibleLine = line;
         result.textLayouts.put(lineInfo, layout);
@@ -155,7 +156,7 @@ public class BasicTextLineRenderer implements LineRenderer {
      * @param drawPosY current y location of the line
      */
     protected void doHighlight(final int line, final int chars,
-            final TextLayout layout, final Graphics2D g, final int canvasWidth,
+            final TextLayout layout, final Graphics2D g, final float canvasWidth,
             final float drawPosX, final float drawPosY) {
         final LinePosition selectedRange = textPaneCanvas.getSelectedRange();
         final int selectionStartLine = selectedRange.getStartLine();
@@ -193,7 +194,7 @@ public class BasicTextLineRenderer implements LineRenderer {
     }
 
     private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
-            final int canvasWidth, final float drawPosY, final float drawPosX,
+            final float canvasWidth, final float drawPosY, final float drawPosX,
             final int firstChar, final int lastChar, final boolean isEndOfLine) {
         final AttributedCharacterIterator iterator = document.getStyledLine(line);
         final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
@@ -206,11 +207,11 @@ public class BasicTextLineRenderer implements LineRenderer {
         g.setColor(highlightBackground);
 
         if (isEndOfLine) {
-            g.fillRect(bounds.x + bounds.width,
-                    (int) (1 + drawPosY - newLayout.getAscent() - newLayout.getLeading()),
+            g.fill(new Rectangle2D.Float(
+                    bounds.x + bounds.width,
+                    1 + drawPosY - newLayout.getAscent() - newLayout.getLeading(),
                     canvasWidth - bounds.x - bounds.width,
-                    (int) (1 + newLayout.getAscent() + newLayout.getLeading()
-                            + newLayout.getDescent()));
+                    1 + newLayout.getAscent() + newLayout.getLeading() + newLayout.getDescent()));
         }
 
         newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY);
