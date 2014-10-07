@@ -207,7 +207,7 @@ public class BasicTextLineRenderer implements LineRenderer {
 
         if (isEndOfLine) {
             g.fillRect(bounds.x + bounds.width,
-                    (int) (1 + drawPosY - newLayout.getAscent() - newLayout.getLeading()),
+                    (int) (drawPosY - newLayout.getAscent() - newLayout.getLeading()),
                     canvasWidth - bounds.x - bounds.width,
                     (int) (1 + newLayout.getAscent() + newLayout.getLeading()
                             + newLayout.getDescent()));
