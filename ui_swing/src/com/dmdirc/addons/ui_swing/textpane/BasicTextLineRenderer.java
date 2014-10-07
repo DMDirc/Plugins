@@ -27,7 +27,6 @@ import com.dmdirc.ui.messages.LinePosition;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -203,15 +202,16 @@ public class BasicTextLineRenderer implements LineRenderer {
         as.addAttribute(TextAttribute.BACKGROUND, highlightBackground);
         final TextLayout newLayout = new TextLayout(as.getIterator(), g.getFontRenderContext());
 
-        final Rectangle bounds = logicalHighlightShape.getBounds();
+        final Rectangle2D bounds = logicalHighlightShape.getBounds2D();
+
         g.setColor(highlightBackground);
 
         if (isEndOfLine) {
-            g.fill(new Rectangle2D.Float(
-                    bounds.x + bounds.width,
-                    1 + drawPosY - newLayout.getAscent() - newLayout.getLeading(),
-                    canvasWidth - bounds.x - bounds.width,
-                    1 + newLayout.getAscent() + newLayout.getLeading() + newLayout.getDescent()));
+            g.fill(new Rectangle2D.Double(
+                    bounds.getX() + bounds.getWidth(),
+                    drawPosY + bounds.getY(),
+                    canvasWidth - bounds.getX() - bounds.getWidth(),
+                    bounds.getHeight()));
         }
 
         newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY);
