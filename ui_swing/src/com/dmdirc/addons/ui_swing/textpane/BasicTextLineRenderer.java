@@ -213,7 +213,7 @@ public class BasicTextLineRenderer implements LineRenderer {
                             + newLayout.getDescent()));
         }
 
-        newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY);
+        newLayout.draw(g, (float) (drawPosX + bounds.getX()), drawPosY +1);
     }
 
 }
