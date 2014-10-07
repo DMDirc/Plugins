@@ -194,7 +194,7 @@ public class WindowStatusManager implements ConfigChangeListener {
                 }
                 final String name = i > 0 ?
                         Character.toString(channelUserModes.charAt(i)) : nonePrefix;
-                textString.append(count).append(name);
+                textString.append(name).append(count);
                 isFirst = false;
             }
         }
