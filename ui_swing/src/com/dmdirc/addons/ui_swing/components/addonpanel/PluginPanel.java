@@ -124,6 +124,7 @@ public class PluginPanel extends AddonPanel {
                                         new AddonToggle(
                                                 updateManager,
                                                 userConfig,
+                                                pluginManager,
                                                 plugin),
                                         iconManager),});
                 }
