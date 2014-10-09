@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.UpdateComponent;
@@ -49,6 +50,8 @@ public final class AddonToggle {
     private final ListenerList listeners = new ListenerList();
     /** Identity to change update settings in. */
     private final ConfigProvider identity;
+    /** The manager to update when toggling a plugin. */
+    private final PluginManager pluginManager;
     /** The manager to update when toggling a theme. */
     private final ThemeManager themeManager;
 
@@ -62,11 +65,13 @@ public final class AddonToggle {
     public AddonToggle(
             final CachingUpdateManager updateManager,
             final ConfigProvider identity,
+            final PluginManager pluginManager,
             final PluginInfo pi) {
         this.identity = identity;
+        this.pluginManager = pluginManager;
         this.pi = pi;
-        this.theme = null;
         this.themeManager = null;
+        this.theme = null;
         state = pi.isLoaded();
 
         checkUpdateState(updateManager);
@@ -86,9 +91,10 @@ public final class AddonToggle {
             final ThemeManager themeManager,
             final Theme theme) {
         this.identity = identity;
+        this.pluginManager = null;
         this.pi = null;
-        this.theme = theme;
         this.themeManager = themeManager;
+        this.theme = theme;
         state = theme.isEnabled();
 
         checkUpdateState(updateManager);
@@ -182,7 +188,7 @@ public final class AddonToggle {
                     } else {
                         pi.unloadPlugin();
                     }
-                    pi.getMetaData().getManager().updateAutoLoad(pi);
+                    pluginManager.updateAutoLoad(pi);
                     if (getID() != -1) {
                         if (getUpdateState()) {
                             identity.unsetOption("updater", "enable-addon-"
