@@ -188,7 +188,8 @@ public class SwingModule {
         final SwingStatusBar sb = UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
             @Override
             public SwingStatusBar call() {
-                return new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel);
+                return new SwingStatusBar(eventBus, inviteLabel, updaterLabel, errorLabel,
+                        messageLabel);
             }
         });
         eventBus.subscribe(messageLabel);
