@@ -22,8 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
+import com.dmdirc.events.StatusBarMessageClearEvent;
+import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.ui.StatusBar;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.StatusMessage;
@@ -49,6 +52,8 @@ public class SwingStatusBar extends JPanel implements StatusBar {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
+    /** Event bus to post events to. */
+    private final DMDircMBassador eventBus;
     /** Mig layout component restraints. */
     private final String componentConstraints;
     /** error panel. */
@@ -61,12 +66,14 @@ public class SwingStatusBar extends JPanel implements StatusBar {
     /**
      * Creates a new instance of SwingStatusBar.
      *
+     * @param eventBus     The event bus to post events to (should be removed soon)
      * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
      * @param errorLabel   The error label to add to the status bar.
      * @param messageLabel The message label to add to the status bar.
      */
     public SwingStatusBar(
+            final DMDircMBassador eventBus,
             final InviteLabel inviteLabel,
             final UpdaterLabel updaterLabel,
             final ErrorPanel errorLabel,
@@ -79,6 +86,7 @@ public class SwingStatusBar extends JPanel implements StatusBar {
         componentConstraints = "sgy components, hmax " + height + ", hmin " + height
                 + ", wmin 20, shrink 0";
 
+        this.eventBus = eventBus;
         this.errorLabel = errorLabel;
         this.updaterLabel = updaterLabel;
         this.inviteLabel = inviteLabel;
@@ -132,21 +140,21 @@ public class SwingStatusBar extends JPanel implements StatusBar {
 
     @Override
     public void setMessage(final StatusMessage message) {
-        //Do nothing
+        eventBus.publish(new StatusBarMessageEvent(message));
     }
 
     @Override
     public void clearMessage() {
-        //Do nothing
+        eventBus.publish(new StatusBarMessageClearEvent());
     }
 
     @Override
     public void addComponent(final StatusBarComponent component) {
-        //Do nothing
+        eventBus.publish(new StatusBarComponentAddedEvent(component));
     }
 
     @Override
     public void removeComponent(final StatusBarComponent component) {
-        //Do nothing
+        eventBus.publish(new StatusBarComponentRemovedEvent(component));
     }
 }
