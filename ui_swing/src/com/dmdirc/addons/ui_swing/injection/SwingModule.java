@@ -204,7 +204,7 @@ public class SwingModule {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ConnectionManager connectionManager,
             final StatusBarManager statusBarManager) {
-        return new URLHandler(eventBus, globalConfig, connectionManager, statusBarManager);
+        return new URLHandler(eventBus, globalConfig, connectionManager);
     }
 
     @Provides
