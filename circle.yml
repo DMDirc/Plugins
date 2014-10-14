@@ -37,4 +37,4 @@ test:
 
 general:
   artifacts:
-    - ../meta/plugins/build/libs/
+    - ../meta/plugins/dist/
