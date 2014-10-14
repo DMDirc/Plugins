@@ -25,11 +25,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
-import com.dmdirc.events.StatusBarMessageClearEvent;
-import com.dmdirc.events.StatusBarMessageEvent;
-import com.dmdirc.interfaces.ui.StatusBar;
-import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.StatusMessage;
 
 import com.google.common.base.Preconditions;
 
@@ -48,7 +43,7 @@ import net.engio.mbassy.listener.Handler;
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /** Status bar, shows message and info on the GUI. */
-public class SwingStatusBar extends JPanel implements StatusBar {
+public class SwingStatusBar extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -136,25 +131,5 @@ public class SwingStatusBar extends JPanel implements StatusBar {
                 validate();
             }
         });
-    }
-
-    @Override
-    public void setMessage(final StatusMessage message) {
-        eventBus.publish(new StatusBarMessageEvent(message));
-    }
-
-    @Override
-    public void clearMessage() {
-        eventBus.publish(new StatusBarMessageClearEvent());
-    }
-
-    @Override
-    public void addComponent(final StatusBarComponent component) {
-        eventBus.publish(new StatusBarComponentAddedEvent(component));
-    }
-
-    @Override
-    public void removeComponent(final StatusBarComponent component) {
-        eventBus.publish(new StatusBarComponentRemovedEvent(component));
     }
 }
