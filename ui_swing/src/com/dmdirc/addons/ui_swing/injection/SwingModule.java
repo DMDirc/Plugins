@@ -62,7 +62,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.ServiceLocator;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.components.StatusBarManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
 
@@ -202,8 +201,7 @@ public class SwingModule {
     public URLHandler getURLHandler(
             final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final ConnectionManager connectionManager,
-            final StatusBarManager statusBarManager) {
+            final ConnectionManager connectionManager) {
         return new URLHandler(eventBus, globalConfig, connectionManager);
     }
 
