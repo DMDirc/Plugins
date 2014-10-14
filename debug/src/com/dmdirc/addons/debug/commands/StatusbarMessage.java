@@ -23,14 +23,15 @@
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.StatusMessage;
-import com.dmdirc.ui.core.components.StatusBarManager;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,8 +41,8 @@ import javax.inject.Provider;
  */
 public class StatusbarMessage extends DebugCommand {
 
-    /** The status bar manager to show messages in. */
-    private final StatusBarManager statusBarManager;
+    /** The event bus to post messages on. */
+    private final DMDircMBassador eventBus;
     /** The global configuration. */
     private final AggregateConfigProvider globalConfig;
 
@@ -49,17 +50,17 @@ public class StatusbarMessage extends DebugCommand {
      * Creates a new instance of the command.
      *
      * @param commandProvider  The provider to use to access the main debug command.
-     * @param statusBarManager The status bar manager to show messages in.
+     * @param eventBus         The event bus to post messages on.
      * @param globalConfig     The global configuration to use.
      */
     @Inject
     public StatusbarMessage(
             final Provider<Debug> commandProvider,
-            final StatusBarManager statusBarManager,
+            final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
         super(commandProvider);
 
-        this.statusBarManager = statusBarManager;
+        this.eventBus = eventBus;
         this.globalConfig = globalConfig;
     }
 
@@ -76,8 +77,8 @@ public class StatusbarMessage extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        statusBarManager.setMessage(new StatusMessage(null,
-                "Test: " + args.getArgumentsAsString(), null, 5, globalConfig));
+        eventBus.publishAsync(new StatusBarMessageEvent(new StatusMessage(null,
+                "Test: " + args.getArgumentsAsString(), null, 5, globalConfig)));
     }
 
 }
