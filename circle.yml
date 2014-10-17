@@ -14,7 +14,7 @@ checkout:
         pwd:
           ../meta/plugins
     - >
-      cd ../meta/plugins
+      cd ../meta/plugins;
       if [ -n "$CIRCLE_PR_NUMBER" ]; then
           git fetch origin pull/$CIRCLE_PR_NUMBER/head:circleci;
       else
