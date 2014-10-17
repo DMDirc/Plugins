@@ -149,6 +149,11 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
 }
 
+subprojects.each { evaluationDependsOn it.path }
+task jar(dependsOn: subprojects*.jar)
+task test(dependsOn: subprojects*.test)
+tasks.dependencies.dependsOn subprojects*.tasks.dependencies
+
 def plugin(name) {
     if (allprojects.find { it.name == name }) {
         project(name)
