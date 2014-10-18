@@ -120,7 +120,7 @@ public class CtrlTabWindowManager {
 
     @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
-        final TextFrame parent = event.getParentWindow().orNull();
+        final TextFrame parent = event.getParentWindow().orElse(null);
         final TextFrame window = event.getChildWindow();
         final TreeViewNode parentNode;
         if (parent == null) {
