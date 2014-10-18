@@ -25,10 +25,9 @@ package com.dmdirc.addons.ui_swing.dialogs.feedback;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.ui.core.feedback.FeedbackDialogModelAdapter;
 
-import com.google.common.base.Optional;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -54,7 +53,7 @@ public class FeedbackModelLinker {
         nameField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setName(Optional.fromNullable(nameField.getText()));
+                model.setName(Optional.ofNullable(nameField.getText()));
             }
 
             @Override
@@ -76,8 +75,8 @@ public class FeedbackModelLinker {
 
             @Override
             public void nameChanged(final Optional<String> name) {
-                if (!name.equals(Optional.fromNullable(nameField.getText()))) {
-                    nameField.setText(name.orNull());
+                if (!name.equals(Optional.ofNullable(nameField.getText()))) {
+                    nameField.setText(name.orElse(null));
                 }
             }
         });
@@ -88,7 +87,7 @@ public class FeedbackModelLinker {
         emailField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setEmail(Optional.fromNullable(emailField.getText()));
+                model.setEmail(Optional.ofNullable(emailField.getText()));
             }
 
             @Override
@@ -110,8 +109,8 @@ public class FeedbackModelLinker {
 
             @Override
             public void emailChanged(final Optional<String> email) {
-                if (!email.equals(Optional.fromNullable(emailField.getText()))) {
-                    emailField.setText(email.orNull());
+                if (!email.equals(Optional.ofNullable(emailField.getText()))) {
+                    emailField.setText(email.orElse(null));
                 }
             }
         });
@@ -122,7 +121,7 @@ public class FeedbackModelLinker {
         feedbackField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setFeedback(Optional.fromNullable(feedbackField.getText()));
+                model.setFeedback(Optional.ofNullable(feedbackField.getText()));
             }
 
             @Override
@@ -144,8 +143,8 @@ public class FeedbackModelLinker {
 
             @Override
             public void feedbackChanged(final Optional<String> feedback) {
-                if (!feedback.equals(Optional.fromNullable(feedbackField.getText()))) {
-                    feedbackField.setText(feedback.orNull());
+                if (!feedback.equals(Optional.ofNullable(feedbackField.getText()))) {
+                    feedbackField.setText(feedback.orElse(null));
                 }
             }
         });

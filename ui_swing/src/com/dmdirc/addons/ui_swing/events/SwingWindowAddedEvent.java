@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.events;
 
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Event triggered when a swing window is added.

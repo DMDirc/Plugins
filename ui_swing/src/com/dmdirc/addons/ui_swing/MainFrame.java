@@ -51,12 +51,11 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
-import com.google.common.base.Optional;
-
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.util.Optional;
 
 import javax.inject.Provider;
 import javax.swing.ImageIcon;
@@ -571,7 +570,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
                 }
 
                 swingEventBus.publish(
-                        new SwingWindowSelectedEvent(Optional.fromNullable((Window) activeFrame)));
+                        new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
             }
         });
     }

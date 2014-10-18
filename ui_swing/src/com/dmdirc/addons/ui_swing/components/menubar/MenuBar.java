@@ -25,11 +25,10 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 import com.dmdirc.addons.ui_swing.components.MDIBar;
 import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
-import com.google.common.base.Optional;
-
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -107,7 +106,7 @@ public class MenuBar extends JMenuBar {
     public void addMenuItem(final String parentMenu, final JMenuItem menuItem) {
         Optional<JMenu> menu = getParentMenuItem(parentMenu);
         if (!menu.isPresent()) {
-            menu = Optional.fromNullable(new JMenu(parentMenu));
+            menu = Optional.ofNullable(new JMenu(parentMenu));
             add(menu.get());
         }
         menu.get().add(menuItem, 0);
@@ -132,7 +131,7 @@ public class MenuBar extends JMenuBar {
             }
             menu = null;
         }
-        return Optional.fromNullable(menu);
+        return Optional.ofNullable(menu);
     }
 
     private Optional<JMenuItem> getChildItem(final JMenu menu, final String name) {
@@ -148,9 +147,9 @@ public class MenuBar extends JMenuBar {
             child = null;
         }
         if (child == null) {
-            return Optional.absent();
+            return Optional.empty();
         } else {
-            return Optional.fromNullable((JMenuItem) child);
+            return Optional.ofNullable((JMenuItem) child);
         }
     }
 

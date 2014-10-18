@@ -26,8 +26,7 @@ import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.DisplayPropertyMap;
 import com.dmdirc.events.DisplayableEvent;
 
-import com.google.common.base.Optional;
-
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
