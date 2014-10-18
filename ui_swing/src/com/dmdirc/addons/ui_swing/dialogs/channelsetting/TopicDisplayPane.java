@@ -37,12 +37,11 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
-import com.google.common.base.Optional;
-
 import java.awt.Color;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;

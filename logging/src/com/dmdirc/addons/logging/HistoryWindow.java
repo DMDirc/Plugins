@@ -32,11 +32,10 @@ import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
-import com.google.common.base.Optional;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Displays an extended history of a window.

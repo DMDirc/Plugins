@@ -32,14 +32,13 @@ import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.aliases.AliasDialogModelAdapter;
 
-import com.google.common.base.Optional;
-
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -88,12 +87,12 @@ public class AliasManagerLinker {
                 }
                 final int index = commandList.getSelectedIndex();
                 if (index == -1 || commandModel.getSize() == 0) {
-                    model.setSelectedAlias(Optional.<Alias>absent());
+                    model.setSelectedAlias(Optional.<Alias>empty());
                 } else if (index >= commandModel.getSize()) {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.
+                    model.setSelectedAlias(Optional.ofNullable(commandModel.
                             getElementAt(index - 1)));
                 } else {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.getElementAt(index)));
+                    model.setSelectedAlias(Optional.ofNullable(commandModel.getElementAt(index)));
                 }
             }
         });
@@ -123,12 +122,12 @@ public class AliasManagerLinker {
                 final int index = commandModel.indexOf(alias);
                 commandModel.remove(alias);
                 if (index >= commandModel.getSize()) {
-                    model.setSelectedAlias(Optional.fromNullable(
+                    model.setSelectedAlias(Optional.ofNullable(
                             commandModel.getElementAt(commandModel.getSize() - 1)));
                 } else if (index == -1 && !commandModel.isEmpty()) {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.get(0)));
+                    model.setSelectedAlias(Optional.ofNullable(commandModel.get(0)));
                 } else {
-                    model.setSelectedAlias(Optional.fromNullable(commandModel.get(index)));
+                    model.setSelectedAlias(Optional.ofNullable(commandModel.get(index)));
                 }
             }
 

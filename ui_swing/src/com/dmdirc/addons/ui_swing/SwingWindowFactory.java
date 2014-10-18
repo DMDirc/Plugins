@@ -37,11 +37,10 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 
-import com.google.common.base.Optional;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -128,7 +127,7 @@ public class SwingWindowFactory implements FrameListener {
                     return;
                 }
                 swingEventBus.publish(new SwingWindowAddedEvent(
-                        Optional.fromNullable(parentWindow), childWindow));
+                        Optional.ofNullable(parentWindow), childWindow));
 
                 if (focus) {
                     activeFrameManager.get().setActiveFrame(childWindow);
@@ -173,7 +172,7 @@ public class SwingWindowFactory implements FrameListener {
             @Override
             public void run() {
                 swingEventBus.publish(new SwingWindowDeletedEvent(
-                        Optional.fromNullable(parentWindow), childWindow));
+                        Optional.ofNullable(parentWindow), childWindow));
             }
         });
     }

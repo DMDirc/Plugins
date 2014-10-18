@@ -30,8 +30,6 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.core.newserver.NewServerDialogModelAdapter;
 
-import com.google.common.base.Optional;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -39,6 +37,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -64,7 +63,7 @@ public class NewServerLinker {
         hostnameField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setHostname(Optional.fromNullable(hostnameField.getText()));
+                model.setHostname(Optional.ofNullable(hostnameField.getText()));
             }
 
             @Override
@@ -88,7 +87,7 @@ public class NewServerLinker {
             public void serverDetailsChanged(final Optional<String> hostname,
                     final Optional<Integer> port, final Optional<String> password,
                     final boolean ssl, final boolean saveAsDefault) {
-                if (!hostname.equals(Optional.fromNullable(hostnameField.getText()))) {
+                if (!hostname.equals(Optional.ofNullable(hostnameField.getText()))) {
                     hostnameField.setText(hostname.isPresent() ? hostname.get() : "");
                 }
             }
@@ -101,7 +100,7 @@ public class NewServerLinker {
 
             private void update() {
                 try {
-                    model.setPort(Optional.fromNullable(Integer.valueOf(portField.getText())));
+                    model.setPort(Optional.ofNullable(Integer.valueOf(portField.getText())));
                 } catch (NumberFormatException ex) {
                     //Do nothing, it'll have to be corrected and its handled by the validator.
                 }
@@ -130,7 +129,7 @@ public class NewServerLinker {
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
-                model.setPassword(Optional.fromNullable(passwordField.getText()));
+                model.setPassword(Optional.ofNullable(passwordField.getText()));
             }
 
             @Override
@@ -173,7 +172,7 @@ public class NewServerLinker {
             @Override
             public void itemStateChanged(final ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    model.setSelectedProfile(Optional.fromNullable((ConfigProvider) e.getItem()));
+                    model.setSelectedProfile(Optional.ofNullable((ConfigProvider) e.getItem()));
                 }
             }
         });

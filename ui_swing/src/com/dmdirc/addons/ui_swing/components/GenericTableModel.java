@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -227,9 +227,9 @@ public class GenericTableModel<T> extends AbstractTableModel {
      */
     private Optional<Method> getGetter(final String name) {
         try {
-            return Optional.fromNullable(clazz.getMethod(name));
+            return Optional.ofNullable(clazz.getMethod(name));
         } catch (NoSuchMethodException ex) {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

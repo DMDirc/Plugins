@@ -28,9 +28,8 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ui.Window;
 
-import com.google.common.base.Optional;
-
 import java.awt.Font;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
@@ -58,7 +57,7 @@ public class WindowSelectionFontChanger {
             final DMDircMBassador eventBus) {
         eventBus.subscribe(this);
         selectionChanged(new SwingWindowSelectedEvent(
-                Optional.fromNullable((Window) activeFrameMaanger.getActiveFrame())));
+                Optional.ofNullable((Window) activeFrameMaanger.getActiveFrame())));
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

@@ -29,7 +29,7 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.util.colours.Colour;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

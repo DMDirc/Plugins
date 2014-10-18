@@ -31,11 +31,10 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
-import com.google.common.base.Optional;
-
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 import javax.swing.JPanel;
 
@@ -129,7 +128,7 @@ public class TopicPane extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e != null && e.getSource() == topicHistoryPane) {
-            topicDisplayPane.setTopic(Optional.of(topicHistoryPane.getSelectedTopic()));
+            topicDisplayPane.setTopic(Optional.ofNullable(topicHistoryPane.getSelectedTopic()));
         }
     }
 

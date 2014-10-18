@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.events;
 
 import com.dmdirc.interfaces.ui.Window;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Fired when the window selection changes.

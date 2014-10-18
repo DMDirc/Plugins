@@ -51,14 +51,13 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
-import com.google.common.base.Optional;
-
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.swing.JComponent;
@@ -186,7 +185,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     @Handler
     public void doAddWindow(final SwingWindowAddedEvent event) {
-        final TextFrame parent = event.getParentWindow().orNull();
+        final TextFrame parent = event.getParentWindow().orElse(null);
         final TextFrame window = event.getChildWindow();
         if (nodes.containsKey(window)) {
             return;
@@ -256,7 +255,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
                 // TODO: Should this colour be configurable?
                 node.getLabel().notificationSet(new NotificationSetEvent(window.getContainer(),
-                        window.getContainer().getNotification().or(Colour.BLACK)));
+                        window.getContainer().getNotification().orElse(Colour.BLACK)));
                 node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
                         window.getContainer().getIcon()));
             }
@@ -339,8 +338,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 }
 
                 if (activeFrameManager.getActiveFrame() != null) {
-                    selectionChanged(new SwingWindowSelectedEvent(Optional.fromNullable((Window)
-                            activeFrameManager.getActiveFrame())));
+                    selectionChanged(new SwingWindowSelectedEvent(
+                            Optional.ofNullable((Window) activeFrameManager.getActiveFrame())));
                 }
             }
         });
