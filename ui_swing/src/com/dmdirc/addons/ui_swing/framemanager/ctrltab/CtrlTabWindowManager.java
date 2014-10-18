@@ -47,6 +47,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -120,49 +121,41 @@ public class CtrlTabWindowManager {
 
     @Handler
     public void windowAdded(final SwingWindowAddedEvent event) {
-        final TextFrame parent = event.getParentWindow().orElse(null);
+        final Optional<TextFrame> parent = event.getParentWindow();
         final TextFrame window = event.getChildWindow();
         final TreeViewNode parentNode;
-        if (parent == null) {
-            parentNode = model.getRootNode();
+        if (parent.isPresent()) {
+            parentNode = nodes.get(parent.get());
         } else {
-            parentNode = nodes.get(parent);
+            parentNode = model.getRootNode();
         }
 
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                final TreeViewNode node = new TreeViewNode(null, window);
-                synchronized (nodes) {
-                    nodes.put(window, node);
-                }
-                node.setUserObject(window);
-                model.insertNodeInto(node, parentNode);
+        UIUtilities.invokeAndWait(() -> {
+            final TreeViewNode node = new TreeViewNode(null, window);
+            synchronized (nodes) {
+                nodes.put(window, node);
             }
+            node.setUserObject(window);
+            model.insertNodeInto(node, parentNode);
         });
     }
 
     @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                if (nodes.get(window) == null) {
-                    return;
-                }
-                final TreeViewNode node = nodes.get(window);
-                if (node.getLevel() == 0) {
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
-                            new IllegalArgumentException(),
-                            "delServer triggered for root node" + node, ""));
-                } else {
-                    model.removeNodeFromParent(nodes.get(window));
-                }
-                nodes.remove(window);
+        UIUtilities.invokeAndWait(() -> {
+            if (nodes.get(window) == null) {
+                return;
             }
+            final TreeViewNode node = nodes.get(window);
+            if (node.getLevel() == 0) {
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
+                        new IllegalArgumentException(),
+                        "delServer triggered for root node" + node, ""));
+            } else {
+                model.removeNodeFromParent(nodes.get(window));
+            }
+            nodes.remove(window);
         });
     }
 
