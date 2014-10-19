@@ -20,13 +20,26 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.injection;
+package com.dmdirc.addons.ui_swing.events;
 
-import javax.inject.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.bus.config.BusConfiguration;
+import net.engio.mbassy.bus.config.Feature;
 
 /**
- * Qualifier for the Swing plugin's event bus.
+ * Event bus for the Swing UI, only allows {@link SwingEvent}s.
  */
-@Qualifier
-public @interface SwingEventBus {
+@Singleton
+public class SwingEventBus extends MBassador<SwingEvent> {
+
+    @Inject
+    public SwingEventBus() {
+        super(new BusConfiguration()
+                .addFeature(Feature.SyncPubSub.Default())
+                .addFeature(Feature.AsynchronousHandlerInvocation.Default())
+                .addFeature(Feature.AsynchronousMessageDispatch.Default()));
+    }
 }

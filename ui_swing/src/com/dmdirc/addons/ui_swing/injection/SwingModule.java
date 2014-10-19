@@ -48,6 +48,7 @@ import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.UpdaterLabel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.URLConfigPanel;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.UpdateConfigPanel;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
@@ -102,13 +103,6 @@ public class SwingModule {
     }
 
     @Provides
-    @Singleton
-    @SwingEventBus
-    public DMDircMBassador getSwingEventBus() {
-        return new DMDircMBassador();
-    }
-
-    @Provides
     @PluginDomain(SwingController.class)
     public String getSettingsDomain() {
         return domain;
@@ -139,7 +133,7 @@ public class SwingModule {
             final URLBuilder urlBuilder,
             final Provider<FrameManager> frameManagerProvider,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
 
             @Override

@@ -31,12 +31,12 @@ import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -85,7 +85,7 @@ public class CtrlTabWindowManager {
             final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));

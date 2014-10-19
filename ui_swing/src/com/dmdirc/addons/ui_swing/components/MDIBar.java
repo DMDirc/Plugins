@@ -23,13 +23,12 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -84,7 +83,7 @@ public class MDIBar extends JPanel implements ActionListener, ConfigChangeListen
             @GlobalConfig final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final DMDircMBassador eventBus) {
+            final SwingEventBus eventBus) {
         this.activeFrameManager = activeFrameManager;
         config = globalConfig;
         configDomain = domain;

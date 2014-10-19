@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
@@ -99,7 +100,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** The bus to despatch events on. */
     private final DMDircMBassador eventBus;
     /** Swing event bus to post events to. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** The main application icon. */
     private ImageIcon imageIcon;
     /** The frame manager that's being used. */
@@ -145,7 +146,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             final IconManager iconManager,
             final Provider<FrameManager> frameManagerProvider,
             final DMDircMBassador eventBus,
-            final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         checkOnEDT();
         this.apple = apple;
         this.lifecycleController = lifecycleController;

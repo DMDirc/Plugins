@@ -31,11 +31,11 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.NotificationClearedEvent;
@@ -98,7 +98,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
     /** Swing event bus. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** Icon manager. */
     private final IconManager iconManager;
     /** display tree. */
@@ -116,7 +116,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus,
+            final SwingEventBus swingEventBus,
             @GlobalConfig final IconManager iconManager) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;

@@ -28,10 +28,10 @@ import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.events.FeedbackNagEvent;
@@ -74,7 +74,7 @@ public class SwingManager {
     /** Bus to listen on for events. */
     private final DMDircMBassador eventBus;
     /** The event bus for this plugin. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** The provider to use to create tree-based frame managers. */
     private final TreeFrameManagerProvider treeProvider;
     /** The provider to use to create new main frames. */
@@ -121,7 +121,7 @@ public class SwingManager {
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus,
+            final SwingEventBus swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
             final DialogProvider<ErrorListDialog> errorListDialogProvider,

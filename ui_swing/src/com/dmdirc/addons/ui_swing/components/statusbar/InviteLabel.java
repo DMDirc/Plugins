@@ -28,8 +28,8 @@ import com.dmdirc.Invite;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
@@ -79,7 +79,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
             @GlobalConfig final IconManager iconManager,
             final ConnectionManager connectionManager,
             final MainFrame mainFrame,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         super(new JLabel());
 
         this.parentWindow = mainFrame;
