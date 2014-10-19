@@ -24,6 +24,7 @@ package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ConnectionManager;
 
 import javax.inject.Inject;
@@ -39,18 +40,20 @@ public class ServerInfoDialogFactory {
     private final LagDisplayManager manager;
     private final MainFrame mainFrame;
     private final ConnectionManager connectionManager;
+    private final ActiveFrameManager activeFrameManager;
 
     @Inject
     public ServerInfoDialogFactory(final LagDisplayManager manager, final MainFrame mainFrame,
-            final ConnectionManager connectionManager) {
+            final ActiveFrameManager activeFrameManager, final ConnectionManager connectionManager) {
         this.manager = manager;
         this.mainFrame = mainFrame;
         this.connectionManager = connectionManager;
+        this.activeFrameManager = activeFrameManager;
     }
 
     public ServerInfoDialog getServerInfoDialog(
             final StatusbarPanel<JLabel> parent) {
-        return new ServerInfoDialog(manager, parent, mainFrame, connectionManager);
+        return new ServerInfoDialog(manager, parent, mainFrame, activeFrameManager, connectionManager);
     }
 
 }
