@@ -490,7 +490,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         return activeFrame;
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
         UIUtilities.invokeLater(() -> {
             focusOrder.offerAndMove(activeFrame);
