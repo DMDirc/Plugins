@@ -26,6 +26,7 @@ import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
 import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPopupWindow;
+import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 
@@ -45,10 +46,10 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
     private static final long serialVersionUID = 3;
     /** The lag display manager. */
     protected final LagDisplayManager manager;
-    /** Swing main frame. */
-    private final MainFrame mainFrame;
     /** Server manager to retrieve servers from. */
     private final ConnectionManager connectionManager;
+    /** The active window manager. */
+    private final ActiveFrameManager activeFrameManager;
 
     /**
      * Creates a new ServerInfoDialog.
@@ -62,12 +63,13 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
             final LagDisplayManager manager,
             final StatusbarPanel<JLabel> parent,
             final MainFrame mainFrame,
+            final ActiveFrameManager activeFrameManager,
             final ConnectionManager connectionManager) {
         super(parent, mainFrame);
 
         this.manager = manager;
-        this.mainFrame = mainFrame;
         this.connectionManager = connectionManager;
+        this.activeFrameManager = activeFrameManager;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ServerInfoDialog extends StatusbarPopupWindow {
             panel.add(new JLabel("No open servers."));
         } else {
             if (manager.shouldShowGraph()) {
-                panel.add(new PingHistoryPanel(manager, mainFrame), "span, grow, wrap");
+                panel.add(new PingHistoryPanel(manager, activeFrameManager), "span, grow, wrap");
                 panel.add(new JSeparator(), "span, grow, wrap");
             }
 

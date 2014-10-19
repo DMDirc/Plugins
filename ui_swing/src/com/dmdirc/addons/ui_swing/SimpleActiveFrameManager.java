@@ -20,40 +20,38 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.lagdisplay;
+package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.components.statusbar.StatusbarPanel;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.ui.Window;
+
+import java.util.Optional;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.swing.JLabel;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
- * Factory for {@link ServerInfoDialog}s.
+ * Simple active frame manager used only to keep track of the active frame.
  */
-@Singleton
-public class ServerInfoDialogFactory {
+public class SimpleActiveFrameManager implements ActiveFrameManager {
 
-    private final LagDisplayManager manager;
-    private final MainFrame mainFrame;
-    private final ConnectionManager connectionManager;
-    private final ActiveFrameManager activeFrameManager;
+    private Optional<Window> window;
 
     @Inject
-    public ServerInfoDialogFactory(final LagDisplayManager manager, final MainFrame mainFrame,
-            final ActiveFrameManager activeFrameManager, final ConnectionManager connectionManager) {
-        this.manager = manager;
-        this.mainFrame = mainFrame;
-        this.connectionManager = connectionManager;
-        this.activeFrameManager = activeFrameManager;
+    public SimpleActiveFrameManager() {
+        window = Optional.empty();
     }
 
-    public ServerInfoDialog getServerInfoDialog(
-            final StatusbarPanel<JLabel> parent) {
-        return new ServerInfoDialog(manager, parent, mainFrame, activeFrameManager, connectionManager);
+    @Handler
+    public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
+        this.window = event.getWindow();
     }
 
+    @Override
+    public TextFrame getActiveFrame() {
+        return (TextFrame) window.orElse(null);
+    }
 }

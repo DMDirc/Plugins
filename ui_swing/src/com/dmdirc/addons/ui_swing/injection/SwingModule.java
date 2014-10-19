@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.NoopClipboard;
 import com.dmdirc.addons.ui_swing.QuitWorker;
+import com.dmdirc.addons.ui_swing.SimpleActiveFrameManager;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingManager;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -160,8 +161,10 @@ public class SwingModule {
 
     @Provides
     @Singleton
-    public ActiveFrameManager getActiveFrameManager(final MainFrame mainFrame) {
-        return mainFrame;
+    public ActiveFrameManager getActiveFrameManager(final SimpleActiveFrameManager frameManager,
+            final SwingEventBus eventBus) {
+        eventBus.subscribe(frameManager);
+        return frameManager;
     }
 
     @Provides
