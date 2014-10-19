@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.ui.Window;
@@ -54,7 +54,7 @@ public class WindowSelectionFontChanger {
     }
 
     public void init(final ActiveFrameManager activeFrameMaanger,
-            final DMDircMBassador eventBus) {
+            final SwingEventBus eventBus) {
         eventBus.subscribe(this);
         selectionChanged(new SwingWindowSelectedEvent(
                 Optional.ofNullable((Window) activeFrameMaanger.getActiveFrame())));

@@ -23,11 +23,10 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
@@ -47,13 +46,13 @@ import net.engio.mbassy.listener.Invoke;
 public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListener {
 
     private final ActiveFrameManager activeFrameManager;
-    private final DMDircMBassador eventBus;
+    private final SwingEventBus eventBus;
     private final WindowManager windowManager;
 
     @Inject
     public CloseActiveWindowMenuItem(final ActiveFrameManager activeFrameManager,
             @ClientModule.GlobalConfig final IconManager iconManager,
-            @SwingEventBus final DMDircMBassador eventBus,
+            final SwingEventBus eventBus,
             final WindowManager windowManager) {
         super(iconManager.getIcon("close"));
         this.activeFrameManager = activeFrameManager;

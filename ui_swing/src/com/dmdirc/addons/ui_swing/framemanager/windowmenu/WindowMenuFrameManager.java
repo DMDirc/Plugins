@@ -23,13 +23,12 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
@@ -62,7 +61,7 @@ public class WindowMenuFrameManager extends JMenu {
     /** Window to item mapping. */
     private final Map<Window, AbstractButton> menuItems;
     /** Swing event bus. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** Close menu item. */
     private final CloseActiveWindowMenuItem closeMenuItem;
     /** Global config. */
@@ -75,7 +74,7 @@ public class WindowMenuFrameManager extends JMenu {
     @Inject
     public WindowMenuFrameManager(@GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
-            @SwingEventBus final DMDircMBassador swingEventBus,
+            final SwingEventBus swingEventBus,
             final CloseActiveWindowMenuItem closeMenuItem,
             final WindowActionFactory windowActionFactory,
             final WindowSelectionFontChangerFactory windowSelectionFontChanger,

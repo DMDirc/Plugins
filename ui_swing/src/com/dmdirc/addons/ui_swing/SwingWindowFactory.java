@@ -29,9 +29,9 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
@@ -65,7 +65,7 @@ public class SwingWindowFactory implements FrameListener {
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
     /** The swing event bus. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
 
     /**
      * Creates a new window factory for the specified controller.
@@ -86,7 +86,7 @@ public class SwingWindowFactory implements FrameListener {
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;

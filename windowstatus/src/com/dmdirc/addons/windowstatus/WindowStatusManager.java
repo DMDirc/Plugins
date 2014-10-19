@@ -29,8 +29,8 @@ import com.dmdirc.Query;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
@@ -63,7 +63,7 @@ public class WindowStatusManager implements ConfigChangeListener {
     /** The event bus to post events to. */
     private final DMDircMBassador eventBus;
     /** The swing event bus to register for events on. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** The panel we use in the status bar. */
     private WindowStatusPanel panel;
     /** Should we show the real name in queries? */
@@ -78,7 +78,7 @@ public class WindowStatusManager implements ConfigChangeListener {
             final IdentityController identityController,
             @PluginDomain(WindowStatusPlugin.class) final String domain,
             final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus) {
+            final SwingEventBus swingEventBus) {
         this.domain = domain;
         this.activeFrameManager = activeFrameManager;
         this.identityController = identityController;

@@ -22,11 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.ui.WindowManager;
 
@@ -45,12 +44,12 @@ import net.engio.mbassy.listener.Invoke;
 public class WindowMenuSeparator extends JPopupMenu.Separator implements ActionListener {
 
     private final ActiveFrameManager activeFrameManager;
-    private final DMDircMBassador eventBus;
+    private final SwingEventBus eventBus;
     private final WindowManager windowManager;
 
     @Inject
     public WindowMenuSeparator(final ActiveFrameManager activeFrameManager,
-            @SwingEventBus final DMDircMBassador eventBus,
+            final SwingEventBus eventBus,
             final WindowManager windowManager) {
         this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;

@@ -28,8 +28,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
-import com.dmdirc.addons.ui_swing.injection.SwingEventBus;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.events.ServerGotpingEvent;
@@ -65,7 +65,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     /** Event bus to receive events on. */
     private final DMDircMBassador eventBus;
     /** Swing event bus to receive events from. */
-    private final DMDircMBassador swingEventBus;
+    private final SwingEventBus swingEventBus;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     private final Provider<LagDisplayPanel> panelProvider;
@@ -88,7 +88,7 @@ public class LagDisplayManager implements ConfigChangeListener {
 
     @Inject
     public LagDisplayManager(final DMDircMBassador eventBus,
-            @SwingEventBus final DMDircMBassador swingEventBus,
+            final SwingEventBus swingEventBus,
             final ActiveFrameManager activeFrameManager,
             final Provider<LagDisplayPanel> panelProvider,
             @PluginDomain(LagDisplayPlugin.class) final String domain,
