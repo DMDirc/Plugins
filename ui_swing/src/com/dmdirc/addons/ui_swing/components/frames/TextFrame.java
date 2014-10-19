@@ -187,8 +187,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             eventBus.unsubscribe(popoutFrame);
             popoutFrame = null;
             // TODO: This is a horrible hack really.
-            swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional
-                    .ofNullable(this)));
+            swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.of(this)));
         }
     }
 
