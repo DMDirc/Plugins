@@ -35,12 +35,4 @@ public interface ActiveFrameManager {
      * @return The active window
      */
     TextFrame getActiveFrame();
-
-    /**
-     * Changes the visible frame.
-     *
-     * @param activeFrame The frame to be activated, or null to show none
-     */
-    void setActiveFrame(TextFrame activeFrame);
-
 }

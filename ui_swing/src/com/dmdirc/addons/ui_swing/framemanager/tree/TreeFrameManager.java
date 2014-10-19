@@ -132,7 +132,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, activeFrameManager, globalConfig,
+                tree = new Tree(TreeFrameManager.this, model, swingEventBus, globalConfig,
                         windowFactory, domain);
                 tree.setCellRenderer(
                         new TreeViewTreeCellRenderer(config, colourManager, TreeFrameManager.this));
@@ -326,7 +326,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 if (scroller != null) {
                     scroller.unregister();
                 }
-                scroller = new TreeTreeScroller(activeFrameManager, tree);
+                scroller = new TreeTreeScroller(swingEventBus, tree);
 
                 for (FrameContainer window : windowManager.getRootWindows()) {
                     addWindow(null, windowFactory.getSwingWindow(window));

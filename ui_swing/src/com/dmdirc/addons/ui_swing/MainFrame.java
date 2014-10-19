@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
@@ -163,6 +164,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     @Override
     public void setVisible(final boolean visible) {
         if (!initDone) {
+            swingEventBus.subscribe(this);
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
             setIconImage(imageIcon.getImage());
 
@@ -488,41 +490,38 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         return activeFrame;
     }
 
-    @Override
-    public void setActiveFrame(final TextFrame activeFrame) {
-        UIUtilities.invokeLater(() -> {
-            focusOrder.offerAndMove(activeFrame);
-            framePanel.setVisible(false);
-            framePanel.removeAll();
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
+        focusOrder.offerAndMove(activeFrame);
+        framePanel.setVisible(false);
+        framePanel.removeAll();
 
-            this.activeFrame = activeFrame;
+        activeFrame = (TextFrame) event.getWindow().get();
 
-            if (activeFrame == null) {
-                framePanel.add(new JPanel(), "grow");
-                setTitle(null);
-            } else {
-                framePanel.add(activeFrame.getDisplayFrame(), "grow");
-                setTitle(activeFrame.getContainer().getTitle());
-            }
+        if (activeFrame == null) {
+            framePanel.add(new JPanel(), "grow");
+            setTitle(null);
+        } else {
+            framePanel.add(activeFrame.getDisplayFrame(), "grow");
+            setTitle(activeFrame.getContainer().getTitle());
+        }
 
-            framePanel.setVisible(true);
+        framePanel.setVisible(true);
 
-            if (activeFrame != null) {
-                activeFrame.requestFocus();
-                activeFrame.requestFocusInWindow();
-                activeFrame.activateFrame();
-            }
+        if (activeFrame != null) {
+            activeFrame.requestFocus();
+            activeFrame.requestFocusInWindow();
+            activeFrame.activateFrame();
+        }
 
-            swingEventBus.publish(
-                    new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
-        });
+        swingEventBus.publish(new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
     }
 
     @Handler
     public void doWindowAdded(final SwingWindowAddedEvent event) {
-        final TextFrame window = event.getChildWindow();
         if (activeFrame == null) {
-            setActiveFrame(window);
+            setActiveFrame(new SwingActiveWindowChangeRequestEvent(
+                    Optional.of(event.getChildWindow())));
         }
     }
 
@@ -541,7 +540,8 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             if (focusOrder.peek() == null) {
                 SwingUtilities.invokeLater(frameManager::scrollUp);
             } else {
-                setActiveFrame(focusOrder.peek());
+                setActiveFrame(new SwingActiveWindowChangeRequestEvent(
+                        Optional.of(focusOrder.peek())));
             }
         }
     }

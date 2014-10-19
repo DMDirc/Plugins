@@ -26,7 +26,8 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
@@ -36,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -61,8 +63,8 @@ public class Tree extends JTree implements MouseMotionListener,
     private static final long serialVersionUID = 1;
     /** Tree frame manager. */
     private final TreeFrameManager manager;
-    /** Active frame manager. */
-    private final ActiveFrameManager activeFrameManager;
+    /** The swing event bus to post events to. */
+    private final SwingEventBus eventBus;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Drag selection enabled? */
@@ -79,7 +81,7 @@ public class Tree extends JTree implements MouseMotionListener,
      *
      * @param manager           Frame manager
      * @param model             tree model.
-     * @param activeFrameManager The active window manager
+     * @param eventBus          The swing event bus to post events to.
      * @param globalConfig      The config to read settings from.
      * @param domain            The domain to read settings from.
      * @param windowFactory     The factory to use to get swing windows.
@@ -87,7 +89,7 @@ public class Tree extends JTree implements MouseMotionListener,
     public Tree(
             final TreeFrameManager manager,
             final TreeModel model,
-            final ActiveFrameManager activeFrameManager,
+            final SwingEventBus eventBus,
             final AggregateConfigProvider globalConfig,
             final SwingWindowFactory windowFactory,
             final String domain) {
@@ -96,7 +98,7 @@ public class Tree extends JTree implements MouseMotionListener,
         this.manager = manager;
         this.config = globalConfig;
         this.windowFactory = windowFactory;
-        this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
 
         putClientProperty("JTree.lineStyle", "Angled");
         getInputMap().setParent(null);
@@ -184,8 +186,9 @@ public class Tree extends JTree implements MouseMotionListener,
         if (dragSelect && dragButton) {
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
-                activeFrameManager.setActiveFrame((TextFrame) ((TreeViewNode)
-                        new TreePath(node.getPath()).getLastPathComponent()).getWindow());
+                eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
+                        Optional.ofNullable(((TreeViewNode) new TreePath(node.getPath())
+                                .getLastPathComponent()).getWindow())));
             }
         }
         manager.checkRollover(e);
@@ -208,8 +211,9 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreePath selectedPath = getPathForLocation(e.getX(),
                     e.getY());
             if (selectedPath != null) {
-                activeFrameManager.setActiveFrame((TextFrame) ((TreeViewNode)
-                        selectedPath.getLastPathComponent()).getWindow());
+                eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
+                        Optional.ofNullable(((TreeViewNode) selectedPath.getLastPathComponent())
+                                .getWindow())));
             }
         }
         processMouseEvents(e);

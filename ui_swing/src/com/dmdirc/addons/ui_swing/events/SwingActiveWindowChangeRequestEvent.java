@@ -20,37 +20,24 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
+package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.events.SwingEventBus;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.interfaces.ui.Window;
 
-import javax.inject.Inject;
+import java.util.Optional;
 
 /**
- * Factory to create {@link WindowAction}s.
+ * Fired to indicate a window change is desired.
  */
-public class WindowActionFactory {
+public class SwingActiveWindowChangeRequestEvent extends SwingEvent {
 
-    private final DMDircMBassador eventBus;
-    private final SwingEventBus swingEventBus;
-    private final IconManager iconManager;
+    private final Optional<Window> window;
 
-    @Inject
-    public WindowActionFactory(final DMDircMBassador eventBus,
-            final SwingEventBus swingEventBus,
-            @GlobalConfig final IconManager iconManager) {
-        this.eventBus = eventBus;
-        this.swingEventBus = swingEventBus;
-        this.iconManager = iconManager;
+    public SwingActiveWindowChangeRequestEvent(final Optional<Window> window) {
+        this.window = window;
     }
 
-    public WindowAction getWindowAction(final TextFrame window) {
-        final WindowAction windowAction = new WindowAction(swingEventBus, iconManager, window);
-        windowAction.init(eventBus);
-        return windowAction;
+    public Optional<Window> getWindow() {
+        return window;
     }
 }

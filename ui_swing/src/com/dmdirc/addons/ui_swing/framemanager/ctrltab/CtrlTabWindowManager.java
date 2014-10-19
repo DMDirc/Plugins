@@ -31,13 +31,13 @@ import com.dmdirc.addons.ui_swing.actions.NextFrameAction;
 import com.dmdirc.addons.ui_swing.actions.PreviousFrameAction;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
@@ -82,7 +82,6 @@ public class CtrlTabWindowManager {
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final ActiveFrameManager activeFrameManager,
             final MainFrame mainFrame,
             final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus) {
@@ -95,8 +94,8 @@ public class CtrlTabWindowManager {
             @Override
             protected void setPath(final TreePath path) {
                 super.setPath(path);
-                activeFrameManager.setActiveFrame((TextFrame)
-                        ((TreeViewNode) path.getLastPathComponent()).getWindow());
+                swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional
+                        .ofNullable(((TreeViewNode) path.getLastPathComponent()).getWindow())));
             }
         };
 

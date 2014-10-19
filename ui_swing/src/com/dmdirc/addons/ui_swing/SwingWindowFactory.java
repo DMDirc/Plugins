@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ServerFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
@@ -130,7 +131,8 @@ public class SwingWindowFactory implements FrameListener {
                         Optional.ofNullable(parentWindow), childWindow));
 
                 if (focus) {
-                    activeFrameManager.get().setActiveFrame(childWindow);
+                    swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
+                                    Optional.ofNullable(childWindow)));
                 }
             }
         });
