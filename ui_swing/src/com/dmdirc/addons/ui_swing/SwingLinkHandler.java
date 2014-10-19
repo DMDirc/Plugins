@@ -23,13 +23,16 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
+
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,16 +46,16 @@ import net.engio.mbassy.listener.Handler;
 public class SwingLinkHandler {
 
     private final URLHandler urlHandler;
-    private final ActiveFrameManager activeFrameManager;
+    private final SwingEventBus eventBus;
     private final SwingWindowFactory windowFactory;
 
     @Inject
     public SwingLinkHandler(
-            final ActiveFrameManager activeFrameManager,
+            final SwingEventBus eventBus,
             final URLHandler urlHandler,
             final SwingWindowFactory windowFactory) {
         this.urlHandler = urlHandler;
-        this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
         this.windowFactory = windowFactory;
     }
 
@@ -75,8 +78,9 @@ public class SwingLinkHandler {
         final FrameContainer container = event.getWindow().getContainer();
         final Connection connection = container.getConnection();
         if (connection != null) {
-            activeFrameManager.setActiveFrame(
-                    windowFactory.getSwingWindow(connection.getQuery(event.getTarget())));
+            eventBus.publishAsync(
+                    new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
+                            windowFactory.getSwingWindow(connection.getQuery(event.getTarget())))));
         }
     }
 

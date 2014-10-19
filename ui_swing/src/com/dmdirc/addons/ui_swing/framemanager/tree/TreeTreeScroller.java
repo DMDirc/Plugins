@@ -23,8 +23,10 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
+
+import java.util.Optional;
 
 import javax.swing.tree.TreePath;
 
@@ -35,21 +37,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TreeTreeScroller extends TreeScroller {
 
-    /** Active frame manager. */
-    private final ActiveFrameManager activeFrameManager;
+    /** The swing event bus to post events to. */
+    private final SwingEventBus eventBus;
 
     /**
      * Creates a new Tree scroller for the tree view.
      *
-     * @param activeFrameManager The active window manager
-     * @param tree               Tree view tree
+     * @param eventBus The swing event bus to post events to.
+     * @param tree     Tree view tree
      */
-    public TreeTreeScroller(
-            final ActiveFrameManager activeFrameManager,
-            final Tree tree) {
+    public TreeTreeScroller(final SwingEventBus eventBus,final Tree tree) {
         super(tree);
-
-        this.activeFrameManager = activeFrameManager;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -58,8 +57,8 @@ public class TreeTreeScroller extends TreeScroller {
         checkNotNull(path.getLastPathComponent());
         checkNotNull(((TreeViewNode) path.getLastPathComponent()).getWindow());
         super.setPath(path);
-        activeFrameManager.setActiveFrame((TextFrame)
-                ((TreeViewNode) path.getLastPathComponent()).getWindow());
+        eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
+                Optional.ofNullable(((TreeViewNode) path.getLastPathComponent()).getWindow())));
     }
 
 }

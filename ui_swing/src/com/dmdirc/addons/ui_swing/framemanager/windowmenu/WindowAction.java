@@ -25,13 +25,15 @@ package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -43,13 +45,13 @@ import net.engio.mbassy.listener.Handler;
  */
 public class WindowAction extends AbstractAction {
 
-    private final ActiveFrameManager activeFrameMaanger;
+    private final SwingEventBus eventBus;
     private final IconManager iconManager;
     private final TextFrame window;
 
-    public WindowAction(final ActiveFrameManager activeFrameMaanger, final IconManager iconManager,
+    public WindowAction(final SwingEventBus eventBus, final IconManager iconManager,
             final TextFrame window) {
-        this.activeFrameMaanger = activeFrameMaanger;
+        this.eventBus = eventBus;
         this.iconManager = iconManager;
         this.window = window;
     }
@@ -76,6 +78,6 @@ public class WindowAction extends AbstractAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        activeFrameMaanger.setActiveFrame(window);
+        eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(window)));
     }
 }
