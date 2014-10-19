@@ -37,7 +37,6 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
@@ -75,8 +74,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 /**
  * The main application frame.
  */
-public class MainFrame extends JFrame implements WindowListener, ConfigChangeListener,
-        ActiveFrameManager {
+public class MainFrame extends JFrame implements WindowListener, ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
@@ -483,11 +481,6 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
             UIUtilities.invokeLater(() -> setIconImage(imageIcon.getImage()));
         }
-    }
-
-    @Override
-    public TextFrame getActiveFrame() {
-        return activeFrame;
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
