@@ -32,6 +32,8 @@ import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
+import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
@@ -69,6 +71,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -103,8 +106,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     private SwingSearchBar searchBar;
     /** Command parser for popup commands. */
     private final CommandParser commandParser;
-    /** Manager used to activate/deactivate windows. */
-    private final ActiveFrameManager activeFrameManager;
+    /** Swing event bus to post events to. */
+    private final SwingEventBus swingEventBus;
     /** Manager to use for building popups. */
     private final PopupManager popupManager;
     /** Bus to despatch events on. */
@@ -131,7 +134,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             final FrameContainer owner,
             final CommandParser commandParser,
             final TextFrameDependencies deps) {
-        this.activeFrameManager = deps.activeFrameManager;
+        this.swingEventBus = deps.swingEventBus;
         this.popupManager = deps.popupManager;
         this.frameParent = owner;
         this.iconManager = deps.iconManager;
@@ -183,6 +186,9 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             popoutFrame.dispose();
             eventBus.unsubscribe(popoutFrame);
             popoutFrame = null;
+            // TODO: This is a horrible hack really.
+            swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional
+                    .ofNullable(this)));
         }
     }
 
@@ -561,6 +567,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         final Clipboard clipboard;
         final CommandController commandController;
         final ColourManagerFactory colourManagerFactory;
+        final SwingEventBus swingEventBus;
 
         @Inject
         public TextFrameDependencies(
@@ -576,7 +583,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
                 final ActiveFrameManager activeFrameManager,
                 final Clipboard clipboard,
                 final CommandController commandController,
-                final ColourManagerFactory colourManagerFactory) {
+                final ColourManagerFactory colourManagerFactory,
+                final SwingEventBus swingEventBus) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainWindow = mainWindow;
@@ -590,6 +598,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             this.clipboard = clipboard;
             this.commandController = commandController;
             this.colourManagerFactory = colourManagerFactory;
+            this.swingEventBus = swingEventBus;
         }
 
     }
