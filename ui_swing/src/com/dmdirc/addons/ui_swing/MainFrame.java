@@ -48,7 +48,6 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.collections.ListenerList;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
 import java.awt.Dimension;
@@ -95,8 +94,6 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     private final String version;
     /** Frame manager used for ctrl tab frame switching. */
     private CtrlTabWindowManager frameManager;
-    /** The listeners registered with this class. */
-    private final ListenerList listeners = new ListenerList();
     /** Provider of frame managers. */
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
@@ -118,7 +115,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** Show version? */
     private boolean showVersion;
     /** Exit code. */
-    private int exitCode = 0;
+    private int exitCode;
     /** Status bar. */
     private SwingStatusBar statusBar;
     /** Main split pane. */
@@ -197,10 +194,6 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         super.setVisible(visible);
     }
 
-    public SwingStatusBar getStatusBar() {
-        return statusBar;
-    }
-
     /**
      * Returns the size of the frame manager.
      *
@@ -221,15 +214,11 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void setTitle(final String title) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (title == null || activeFrame == null) {
-                    MainFrame.super.setTitle(getTitlePrefix());
-                } else {
-                    MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
-                }
+        UIUtilities.invokeLater(() -> {
+            if (title == null || activeFrame == null) {
+                MainFrame.super.setTitle(getTitlePrefix());
+            } else {
+                MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
             }
         });
     }
@@ -240,7 +229,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * @return This frame's title prefix
      */
     private String getTitlePrefix() {
-        return "DMDirc" + (showVersion ? " " + version : "");
+        return "DMDirc" + (showVersion ? ' ' + version : "");
     }
 
     @Override
@@ -255,13 +244,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                lifecycleController.quit(exitCode);
-            }
-        }, "Quit thread").start();
+        new Thread(() -> lifecycleController.quit(exitCode), "Quit thread").start();
     }
 
     @Override
@@ -269,31 +252,16 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         eventBus.publishAsync(new ClientMinimisedEvent());
     }
 
-    /**
-     * {@inheritDoc}.
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowDeiconified(final WindowEvent windowEvent) {
         eventBus.publishAsync(new ClientUnminimisedEvent());
     }
 
-    /**
-     * {@inheritDoc}.
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowActivated(final WindowEvent windowEvent) {
         //ignore
     }
 
-    /**
-     * {@inheritDoc}.
-     *
-     * @param windowEvent Window event
-     */
     @Override
     public void windowDeactivated(final WindowEvent windowEvent) {
         //ignore
@@ -301,18 +269,14 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     /** Initialiases the frame managers. */
     private void initFrameManagers() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                frameManagerPanel.removeAll();
-                if (mainFrameManager != null) {
-                    swingEventBus.unsubscribe(mainFrameManager);
-                }
-                mainFrameManager = frameManagerProvider.get();
-                mainFrameManager.setParent(frameManagerPanel);
-                swingEventBus.subscribe(mainFrameManager);
+        UIUtilities.invokeAndWait(() -> {
+            frameManagerPanel.removeAll();
+            if (mainFrameManager != null) {
+                swingEventBus.unsubscribe(mainFrameManager);
             }
+            mainFrameManager = frameManagerProvider.get();
+            mainFrameManager.setParent(frameManagerPanel);
+            swingEventBus.subscribe(mainFrameManager);
         });
     }
 
@@ -320,26 +284,22 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * Initialises the components for this frame.
      */
     public void initComponents() {
-        UIUtilities.invokeAndWait(new Runnable() {
+        UIUtilities.invokeAndWait(() -> {
+            frameManagerPanel = new JPanel();
+            activeFrame = null;
+            framePanel = new JPanel(new MigLayout("fill, ins 0"));
+            initFrameManagers();
+            mainSplitPane = initSplitPane();
 
-            @Override
-            public void run() {
-                frameManagerPanel = new JPanel();
-                activeFrame = null;
-                framePanel = new JPanel(new MigLayout("fill, ins 0"));
-                initFrameManagers();
-                mainSplitPane = initSplitPane();
+            setPreferredSize(new Dimension(800, 600));
 
-                setPreferredSize(new Dimension(800, 600));
+            getContentPane().setLayout(new MigLayout(
+                    "fill, ins rel, wrap 1, hidemode 2"));
+            layoutComponents();
 
-                getContentPane().setLayout(new MigLayout(
-                        "fill, ins rel, wrap 1, hidemode 2"));
-                layoutComponents();
+            setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-                setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-                pack();
-            }
+            pack();
         });
     }
 
@@ -352,13 +312,9 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * @param menuBar The menu bar to use.
      */
     public void setMenuBar(final MenuBar menuBar) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                apple.setMenuBar(menuBar);
-                setJMenuBar(menuBar);
-            }
+        UIUtilities.invokeAndWait(() -> {
+            apple.setMenuBar(menuBar);
+            setJMenuBar(menuBar);
         });
     }
 
@@ -507,17 +463,13 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             switch (key) {
                 case "framemanager":
                 case "framemanagerPosition":
-                    UIUtilities.invokeAndWait(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            setVisible(false);
-                            getContentPane().remove(mainSplitPane);
-                            initFrameManagers();
-                            getContentPane().removeAll();
-                            layoutComponents();
-                            setVisible(true);
-                        }
+                    UIUtilities.invokeAndWait(() -> {
+                        setVisible(false);
+                        getContentPane().remove(mainSplitPane);
+                        initFrameManagers();
+                        getContentPane().removeAll();
+                        layoutComponents();
+                        setVisible(true);
                     });
                     break;
                 default:
@@ -526,13 +478,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             }
         } else {
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    setIconImage(imageIcon.getImage());
-                }
-            });
+            UIUtilities.invokeLater(() -> setIconImage(imageIcon.getImage()));
         }
     }
 
@@ -543,35 +489,31 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void setActiveFrame(final TextFrame activeFrame) {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeLater(() -> {
+            focusOrder.offerAndMove(activeFrame);
+            framePanel.setVisible(false);
+            framePanel.removeAll();
 
-            @Override
-            public void run() {
-                focusOrder.offerAndMove(activeFrame);
-                framePanel.setVisible(false);
-                framePanel.removeAll();
+            this.activeFrame = activeFrame;
 
-                MainFrame.this.activeFrame = activeFrame;
-
-                if (activeFrame == null) {
-                    framePanel.add(new JPanel(), "grow");
-                    setTitle(null);
-                } else {
-                    framePanel.add(activeFrame.getDisplayFrame(), "grow");
-                    setTitle(activeFrame.getContainer().getTitle());
-                }
-
-                framePanel.setVisible(true);
-
-                if (activeFrame != null) {
-                    activeFrame.requestFocus();
-                    activeFrame.requestFocusInWindow();
-                    activeFrame.activateFrame();
-                }
-
-                swingEventBus.publish(
-                        new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
+            if (activeFrame == null) {
+                framePanel.add(new JPanel(), "grow");
+                setTitle(null);
+            } else {
+                framePanel.add(activeFrame.getDisplayFrame(), "grow");
+                setTitle(activeFrame.getContainer().getTitle());
             }
+
+            framePanel.setVisible(true);
+
+            if (activeFrame != null) {
+                activeFrame.requestFocus();
+                activeFrame.requestFocusInWindow();
+                activeFrame.activateFrame();
+            }
+
+            swingEventBus.publish(
+                    new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
         });
     }
 
@@ -596,13 +538,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             framePanel.removeAll();
             framePanel.setVisible(true);
             if (focusOrder.peek() == null) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        frameManager.scrollUp();
-                    }
-                });
+                SwingUtilities.invokeLater(frameManager::scrollUp);
             } else {
                 setActiveFrame(focusOrder.peek());
             }
