@@ -492,32 +492,29 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
-        UIUtilities.invokeLater(() -> {
-            focusOrder.offerAndMove(activeFrame);
-            framePanel.setVisible(false);
-            framePanel.removeAll();
+        focusOrder.offerAndMove(activeFrame);
+        framePanel.setVisible(false);
+        framePanel.removeAll();
 
-            activeFrame = (TextFrame) event.getWindow().get();
+        activeFrame = (TextFrame) event.getWindow().get();
 
-            if (activeFrame == null) {
-                framePanel.add(new JPanel(), "grow");
-                setTitle(null);
-            } else {
-                framePanel.add(activeFrame.getDisplayFrame(), "grow");
-                setTitle(activeFrame.getContainer().getTitle());
-            }
+        if (activeFrame == null) {
+            framePanel.add(new JPanel(), "grow");
+            setTitle(null);
+        } else {
+            framePanel.add(activeFrame.getDisplayFrame(), "grow");
+            setTitle(activeFrame.getContainer().getTitle());
+        }
 
-            framePanel.setVisible(true);
+        framePanel.setVisible(true);
 
-            if (activeFrame != null) {
-                activeFrame.requestFocus();
-                activeFrame.requestFocusInWindow();
-                activeFrame.activateFrame();
-            }
+        if (activeFrame != null) {
+            activeFrame.requestFocus();
+            activeFrame.requestFocusInWindow();
+            activeFrame.activateFrame();
+        }
 
-            swingEventBus.publish(
-                    new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
-        });
+        swingEventBus.publish(new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
     }
 
     @Handler
