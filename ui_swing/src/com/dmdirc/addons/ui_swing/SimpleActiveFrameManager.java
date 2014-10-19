@@ -45,7 +45,7 @@ public class SimpleActiveFrameManager implements ActiveFrameManager {
         window = Optional.empty();
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class)
+    @Handler
     public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
         this.window = event.getWindow();
     }
