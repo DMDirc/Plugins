@@ -28,6 +28,8 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
+import com.google.common.util.concurrent.Runnables;
+
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -82,7 +84,7 @@ public class StandardInputDialog extends StandardDialog {
             final String title, final String message,
             final Consumer<String> save) {
         this(owner, modal, iconManager, title, message,
-                (s) -> { save.accept(s); return true; }, () -> {});
+                s -> { save.accept(s); return true; }, Runnables.doNothing());
     }
 
     /**
@@ -98,7 +100,7 @@ public class StandardInputDialog extends StandardDialog {
             final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message,
             final Function<String, Boolean> save) {
-        this(owner, modal, iconManager, title, message, save, () -> {});
+        this(owner, modal, iconManager, title, message, save, Runnables.doNothing());
     }
 
     /**
@@ -135,7 +137,7 @@ public class StandardInputDialog extends StandardDialog {
             final Validator<String> validator,
             final Consumer<String> save) {
         this(owner, modal, iconManager, title, message, validator,
-                (String s) -> { save.accept(s); return true; }, () -> {});
+                (String s) -> { save.accept(s); return true; }, Runnables.doNothing());
     }
 
     /**
@@ -153,7 +155,7 @@ public class StandardInputDialog extends StandardDialog {
             final String title, final String message,
             final Validator<String> validator,
             final Function<String, Boolean> save) {
-        this(owner, modal, iconManager, title, message, validator, save, () -> {});
+        this(owner, modal, iconManager, title, message, validator, save, Runnables.doNothing());
     }
     /**
      * Instantiates a new standard input dialog.
