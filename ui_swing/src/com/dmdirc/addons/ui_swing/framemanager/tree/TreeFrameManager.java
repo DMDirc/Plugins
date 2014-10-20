@@ -132,8 +132,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             @Override
             public void run() {
                 model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, swingEventBus, globalConfig,
-                        windowFactory, domain);
+                tree = new Tree(TreeFrameManager.this, model, swingEventBus, globalConfig, domain);
                 tree.setCellRenderer(
                         new TreeViewTreeCellRenderer(config, colourManager, TreeFrameManager.this));
                 tree.setVisible(true);
@@ -229,7 +228,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * @param parent Parent node
      * @param window Window to add
      */
-    public void addWindow(final MutableTreeNode parent, final Window window) {
+    public void addWindow(final MutableTreeNode parent, final TextFrame window) {
         UIUtilities.invokeAndWait(new Runnable() {
 
             @Override

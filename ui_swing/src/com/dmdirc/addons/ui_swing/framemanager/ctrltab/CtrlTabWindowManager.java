@@ -40,7 +40,6 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 
 import java.awt.event.InputEvent;
@@ -69,7 +68,7 @@ import net.engio.mbassy.listener.Invoke;
 public class CtrlTabWindowManager {
 
     /** Node storage, used for adding and deleting nodes correctly. */
-    private final Map<Window, TreeViewNode> nodes;
+    private final Map<TextFrame, TreeViewNode> nodes;
     /** Data model. */
     private final TreeViewModel model;
     /** Tree Scroller. */
