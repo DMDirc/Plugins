@@ -297,10 +297,10 @@ public class Tree extends JTree implements MouseMotionListener,
                 }
                 break;
             case "popout":
-                ((TextFrame) node.getWindow()).setPopout(true);
+                node.getWindow().setPopout(true);
                 break;
             case "popin":
-                ((TextFrame) node.getWindow()).setPopout(false);
+                node.getWindow().setPopout(false);
                 break;
         }
         final MutableTreeNode parentNode = (MutableTreeNode) node.getParent();
