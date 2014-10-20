@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_swing.framemanager.windowmenu;
 
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.ui.Window;
 
 import java.awt.Font;
 import java.util.Optional;
@@ -46,9 +46,9 @@ import net.engio.mbassy.listener.References;
 public class WindowSelectionFontChanger {
 
     private final JComponent component;
-    private final Window window;
+    private final TextFrame window;
 
-    public WindowSelectionFontChanger(final JComponent component, final Window window) {
+    public WindowSelectionFontChanger(final JComponent component, final TextFrame window) {
         this.component = component;
         this.window = window;
     }
@@ -57,7 +57,7 @@ public class WindowSelectionFontChanger {
             final SwingEventBus eventBus) {
         eventBus.subscribe(this);
         selectionChanged(new SwingWindowSelectedEvent(
-                Optional.ofNullable((Window) activeFrameMaanger.getActiveFrame())));
+                Optional.ofNullable(activeFrameMaanger.getActiveFrame())));
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 
 import com.google.common.collect.Maps;
@@ -59,7 +58,7 @@ public class WindowMenuFrameManager extends JMenu {
     /** Window selection font changer. */
     private final WindowSelectionFontChangerFactory windowSelectionFontChanger;
     /** Window to item mapping. */
-    private final Map<Window, AbstractButton> menuItems;
+    private final Map<TextFrame, AbstractButton> menuItems;
     /** Swing event bus. */
     private final SwingEventBus swingEventBus;
     /** Close menu item. */
@@ -156,11 +155,11 @@ public class WindowMenuFrameManager extends JMenu {
         add(item);
     }
 
-    private void deleteTopLevelWindow(final Window window) {
+    private void deleteTopLevelWindow(final TextFrame window) {
         remove(menuItems.get(window));
     }
 
-    private void deleteChildWindow(final Window parent, final Window child) {
+    private void deleteChildWindow(final TextFrame parent, final TextFrame child) {
         menuItems.get(parent).remove(menuItems.get(child));
     }
 }

@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.events.NotificationSetEvent;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -53,7 +53,7 @@ public class NodeLabel extends JPanel {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The window this node represents in the tree. */
-    private final Window window;
+    private final TextFrame window;
     /** Colour used to show if the mouse is over this node. */
     private boolean rollover;
     /** Colour used to show if this node has an active notification. */
@@ -74,7 +74,7 @@ public class NodeLabel extends JPanel {
      *
      * @param window Window for this node
      */
-    public NodeLabel(final Window window, final IconManager iconManager) {
+    public NodeLabel(final TextFrame window, final IconManager iconManager) {
         this.window = window;
         this.iconManager = iconManager;
 

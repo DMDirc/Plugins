@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -73,8 +72,6 @@ public class Tree extends JTree implements MouseMotionListener,
     private boolean dragButton;
     /** Show handles. */
     private boolean showHandles;
-    /** Factory to use to retrieve swing windows. */
-    private final SwingWindowFactory windowFactory;
 
     /**
      * Specialised JTree for frame manager.
@@ -84,20 +81,17 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param eventBus          The swing event bus to post events to.
      * @param globalConfig      The config to read settings from.
      * @param domain            The domain to read settings from.
-     * @param windowFactory     The factory to use to get swing windows.
      */
     public Tree(
             final TreeFrameManager manager,
             final TreeModel model,
             final SwingEventBus eventBus,
             final AggregateConfigProvider globalConfig,
-            final SwingWindowFactory windowFactory,
             final String domain) {
         super(model);
 
         this.manager = manager;
         this.config = globalConfig;
-        this.windowFactory = windowFactory;
         this.eventBus = eventBus;
 
         putClientProperty("JTree.lineStyle", "Angled");
@@ -243,8 +237,7 @@ public class Tree extends JTree implements MouseMotionListener,
     void processMouseEvents(final MouseEvent e) {
         final TreePath localPath = getPathForLocation(e.getX(), e.getY());
         if (localPath != null && e.isPopupTrigger()) {
-            final TextFrame frame = (TextFrame) ((TreeViewNode) localPath.getLastPathComponent())
-                    .getWindow();
+            final TextFrame frame = ((TreeViewNode) localPath.getLastPathComponent()).getWindow();
 
             if (frame == null) {
                 return;

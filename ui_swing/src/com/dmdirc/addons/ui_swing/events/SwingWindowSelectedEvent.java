@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
 import java.util.Optional;
 
@@ -31,13 +31,13 @@ import java.util.Optional;
  */
 public class SwingWindowSelectedEvent extends SwingEvent {
 
-    private final Optional<Window> selectedWindow;
+    private final Optional<TextFrame> selectedWindow;
 
-    public SwingWindowSelectedEvent(final Optional<Window> selectedWindow) {
+    public SwingWindowSelectedEvent(final Optional<TextFrame> selectedWindow) {
         this.selectedWindow = selectedWindow;
     }
 
-    public Optional<Window> getWindow() {
+    public Optional<TextFrame> getWindow() {
         return selectedWindow;
     }
 }
