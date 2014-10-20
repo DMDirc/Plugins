@@ -25,19 +25,19 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.BooleanSupplier;
 
 import javax.swing.JButton;
+import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Standard input dialog.
  */
-public abstract class StandardQuestionDialog extends StandardDialog {
+public class StandardQuestionDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -46,7 +46,11 @@ public abstract class StandardQuestionDialog extends StandardDialog {
     /** Blurb label. */
     private TextLabel blurb;
     /** Question result. */
-    private boolean result = false;
+    private boolean result;
+    /** Function to call when the dialog is saved. */
+    private final BooleanSupplier save;
+    /** Function to call when the dialog is cancelled. */
+    private final Runnable cancel;
 
     /**
      * Instantiates a new standard input dialog.
@@ -58,30 +62,52 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      */
     public StandardQuestionDialog(
             final Window owner, final ModalityType modal, final String title,
-            final String message) {
+            final String message,
+            final BooleanSupplier save) {
+        this(owner, modal, title, message, save, () -> {});
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner   Dialog owner
+     * @param modal   modality type
+     * @param title   Dialog title
+     * @param message Dialog message
+     */
+    public StandardQuestionDialog(
+            final Window owner, final ModalityType modal, final String title,
+            final String message,
+            final Runnable save) {
+        this(owner, modal, title, message, () -> {save.run(); return true; }, () -> {});
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner   Dialog owner
+     * @param modal   modality type
+     * @param title   Dialog title
+     * @param message Dialog message
+     */
+    public StandardQuestionDialog(
+            final Window owner, final ModalityType modal, final String title,
+            final String message,
+            final BooleanSupplier save,
+            final Runnable cancel) {
         super(owner, modal);
 
         this.message = message;
+        this.save = save;
+        this.cancel = cancel;
 
         setTitle(title);
-        setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         initComponents();
         addListeners();
         layoutComponents();
     }
-
-    /**
-     * Called when the dialog's OK button is clicked.
-     *
-     * @return whether the dialog can close
-     */
-    public abstract boolean save();
-
-    /**
-     * Called when the dialog's cancel button is clicked, or otherwise closed.
-     */
-    public abstract void cancelled();
 
     /**
      * Initialises the components.
@@ -97,23 +123,15 @@ public abstract class StandardQuestionDialog extends StandardDialog {
      * Adds the listeners.
      */
     private void addListeners() {
-        getOkButton().addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (save()) {
-                    result = true;
-                    dispose();
-                }
-            }
-        });
-        getCancelButton().addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                cancelled();
+        getOkButton().addActionListener(e -> {
+            if (save.getAsBoolean()) {
+                result = true;
                 dispose();
             }
+        });
+        getCancelButton().addActionListener(e -> {
+            cancel.run();
+            dispose();
         });
         addWindowListener(new WindowAdapter() {
 
@@ -125,7 +143,7 @@ public abstract class StandardQuestionDialog extends StandardDialog {
             @Override
             public void windowClosed(final WindowEvent e) {
                 if (!result) {
-                    cancelled();
+                    cancel.run();
                 }
             }
         });

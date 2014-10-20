@@ -32,7 +32,7 @@ import com.dmdirc.util.URLBuilder;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Creates a placeholder DCC Frame.
@@ -61,7 +61,7 @@ public class PlaceholderContainer extends FrameContainer {
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
         super(null, "dcc", "DCCs", "DCCs", config, colourManagerFactory, urlBuilder, eventBus,
-                Arrays.asList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
+                Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;
     }
@@ -70,10 +70,10 @@ public class PlaceholderContainer extends FrameContainer {
     public void close() {
         int dccs = 0;
         for (FrameContainer window : getChildren()) {
-            if ((window instanceof TransferContainer
-                    && ((TransferContainer) window).getDCC().isActive())
-                    || (window instanceof ChatContainer
-                    && ((ChatContainer) window).getDCC().isActive())) {
+            if (window instanceof TransferContainer
+                    && ((TransferContainer) window).getDCC().isActive()
+                    || window instanceof ChatContainer
+                    && ((ChatContainer) window).getDCC().isActive()) {
                 dccs++;
             }
         }
@@ -82,26 +82,8 @@ public class PlaceholderContainer extends FrameContainer {
             new StandardQuestionDialog(parentWindow, ModalityType.MODELESS,
                     "Close confirmation",
                     "Closing this window will cause all existing DCCs "
-                    + "to terminate, are you sure you want to do this?") {
-                        /**
-                         * A version number for this class. It should be changed whenever the class
-                         * structure is changed (or anything else that would prevent serialized
-                         * objects being unserialized with the new class).
-                         */
-                        private static final long serialVersionUID = 1;
-
-                        @Override
-                        public boolean save() {
-                            PlaceholderContainer.super.close();
-                            plugin.removeContainer();
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            // Don't close!
-                        }
-                    }.display();
+                    + "to terminate, are you sure you want to do this?",
+                    () -> { close(); plugin.removeContainer();}).display();
         } else {
             super.close();
             plugin.removeContainer();

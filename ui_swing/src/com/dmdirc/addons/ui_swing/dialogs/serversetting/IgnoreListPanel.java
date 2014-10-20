@@ -92,7 +92,7 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
         this.connection = connection;
         this.parentWindow = parentWindow;
 
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
         addListeners();
         populateList();
@@ -204,23 +204,11 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
             new StandardQuestionDialog(parentWindow,
                     ModalityType.APPLICATION_MODAL,
                     "Confirm deletion",
-                    "Are you sure you want to delete this item?") {
-                        /** A version number for this class. */
-                        private static final long serialVersionUID = 1;
-
-                        @Override
-                        public boolean save() {
-                            cachedIgnoreList.remove(list.getSelectedIndex());
-
-                            updateList();
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            //Ignore
-                        }
-                    }.display();
+                    "Are you sure you want to delete this item?",
+                    () -> {
+                        cachedIgnoreList.remove(list.getSelectedIndex());
+                        updateList();
+                    }).display();
         } else if (e.getSource() == viewToggle) {
             listModel.setIsSimple(!viewToggle.isSelected());
         }

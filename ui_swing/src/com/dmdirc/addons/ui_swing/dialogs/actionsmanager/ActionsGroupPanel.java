@@ -130,15 +130,14 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
      */
     private void initComponents() {
         scrollPane = new JScrollPane();
-        model = new ActionTableModel(group == null ? new ArrayList<Action>() : group.getActions());
+        model = new ActionTableModel(group == null ? new ArrayList<>() : group.getActions());
         table = new PackingTable(model, scrollPane, false) {
             /** A version number for this class. */
             private static final long serialVersionUID = 1;
             /** Action type renderer. */
-            private final ActionTypeTableCellRenderer typeRenderer
-                    = new ActionTypeTableCellRenderer();
+            private final TableCellRenderer typeRenderer = new ActionTypeTableCellRenderer();
             /** Action response renderer. */
-            private final ArrayCellRenderer arrayRenderer = new ArrayCellRenderer();
+            private final TableCellRenderer arrayRenderer = new ArrayCellRenderer();
 
             @Override
             public TableCellRenderer getCellRenderer(final int row, final int column) {
@@ -235,25 +234,7 @@ public class ActionsGroupPanel extends JPanel implements ActionListener,
             new StandardQuestionDialog(parent,
                     ModalityType.APPLICATION_MODAL, "Confirm deletion",
                     "Are you sure you wish to delete the action '" + action.
-                    getName() + "'?") {
-                        /**
-                         * A version number for this class. It should be changed whenever the class
-                         * structure is changed (or anything else that would prevent serialized
-                         * objects being unserialized with the new class).
-                         */
-                        private static final long serialVersionUID = 1;
-
-                        @Override
-                        public boolean save() {
-                            group.deleteAction(action);
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            //Ignore
-                        }
-                    }.display();
+                    getName() + "'?", () -> group.deleteAction(action)).display();
         }
     }
 

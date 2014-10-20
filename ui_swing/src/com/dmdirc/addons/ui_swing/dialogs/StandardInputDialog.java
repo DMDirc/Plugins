@@ -29,13 +29,12 @@ import com.dmdirc.util.validators.ValidationResponse;
 import com.dmdirc.util.validators.Validator;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JButton;
+import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
@@ -75,13 +74,7 @@ public abstract class StandardInputDialog extends StandardDialog {
     public StandardInputDialog(
             final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message) {
-        this(owner, modal, iconManager, title, message, new Validator<String>() {
-
-            @Override
-            public ValidationResponse validate(final String object) {
-                return new ValidationResponse();
-            }
-        });
+        this(owner, modal, iconManager, title, message, o -> new ValidationResponse());
     }
 
     /**
@@ -105,7 +98,7 @@ public abstract class StandardInputDialog extends StandardDialog {
         this.iconManager = iconManager;
 
         setTitle(title);
-        setDefaultCloseOperation(StandardInputDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         initComponents();
         addListeners();
@@ -138,22 +131,14 @@ public abstract class StandardInputDialog extends StandardDialog {
      * Adds the listeners.
      */
     private void addListeners() {
-        getOkButton().addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (save()) {
-                    dispose();
-                }
-            }
-        });
-        getCancelButton().addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                cancelled();
+        getOkButton().addActionListener(e -> {
+            if (save()) {
                 dispose();
             }
+        });
+        getCancelButton().addActionListener(e -> {
+            cancelled();
+            dispose();
         });
         addWindowListener(new WindowAdapter() {
 
