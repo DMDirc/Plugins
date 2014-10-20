@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.ui.Window;
 
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ import net.engio.mbassy.listener.Handler;
  */
 public class SimpleActiveFrameManager implements ActiveFrameManager {
 
-    private Optional<Window> window;
+    private Optional<TextFrame> window;
 
     @Inject
     public SimpleActiveFrameManager() {
@@ -52,6 +51,6 @@ public class SimpleActiveFrameManager implements ActiveFrameManager {
 
     @Override
     public TextFrame getActiveFrame() {
-        return (TextFrame) window.orElse(null);
+        return window.orElse(null);
     }
 }

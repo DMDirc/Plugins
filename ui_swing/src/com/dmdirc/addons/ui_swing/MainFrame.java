@@ -80,7 +80,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
     /** Focus queue. */
-    private final QueuedLinkedHashSet<Optional<Window>> focusOrder;
+    private final QueuedLinkedHashSet<Optional<TextFrame>> focusOrder;
     /** Apple instance. */
     private final Apple apple;
     /** Controller to use to end the program. */
@@ -106,7 +106,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** The frame manager that's being used. */
     private FrameManager mainFrameManager;
     /** Active frame. */
-    private Optional<Window> activeFrame;
+    private Optional<TextFrame> activeFrame;
     /** Panel holding frame. */
     private JPanel framePanel;
     /** Main panel. */
@@ -493,7 +493,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         activeFrame = event.getWindow();
 
         if (activeFrame.isPresent()) {
-            framePanel.add(((TextFrame) activeFrame.get()).getDisplayFrame(), "grow");
+            framePanel.add((activeFrame.get()).getDisplayFrame(), "grow");
             setTitle(activeFrame.get().getContainer().getTitle());
         } else {
             framePanel.add(new JPanel(), "grow");
@@ -503,7 +503,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         framePanel.setVisible(true);
 
         if (activeFrame.isPresent()) {
-            final TextFrame textFrame = (TextFrame) activeFrame.get();
+            final TextFrame textFrame = activeFrame.get();
             textFrame.requestFocus();
             textFrame.requestFocusInWindow();
             textFrame.activateFrame();
@@ -522,7 +522,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Handler
     public void doWindowDeleted(final SwingWindowDeletedEvent event) {
-        final Optional<Window> window = Optional.of(event.getChildWindow());
+        final Optional<TextFrame> window = Optional.of(event.getChildWindow());
         focusOrder.remove(window);
         if (activeFrame.equals(window)) {
             activeFrame = null;

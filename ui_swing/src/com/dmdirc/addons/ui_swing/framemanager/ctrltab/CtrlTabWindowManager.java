@@ -95,7 +95,8 @@ public class CtrlTabWindowManager {
             protected void setPath(final TreePath path) {
                 super.setPath(path);
                 swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional
-                        .ofNullable(((TreeViewNode) path.getLastPathComponent()).getWindow())));
+                        .ofNullable((TextFrame) ((TreeViewNode) path.getLastPathComponent())
+                                .getWindow())));
             }
         };
 
