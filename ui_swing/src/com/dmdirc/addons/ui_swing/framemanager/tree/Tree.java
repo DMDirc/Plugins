@@ -181,7 +181,7 @@ public class Tree extends JTree implements MouseMotionListener,
             final TreeViewNode node = getNodeForLocation(e.getX(), e.getY());
             if (node != null) {
                 eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
-                        Optional.ofNullable((TextFrame) ((TreeViewNode) new TreePath(node.getPath())
+                        Optional.ofNullable(((TreeViewNode) new TreePath(node.getPath())
                                 .getLastPathComponent()).getWindow())));
             }
         }
