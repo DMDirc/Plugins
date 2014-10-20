@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 
@@ -59,8 +58,7 @@ public class TreeTreeScroller extends TreeScroller {
         checkNotNull(((TreeViewNode) path.getLastPathComponent()).getWindow());
         super.setPath(path);
         eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
-                Optional.ofNullable((TextFrame) ((TreeViewNode) path.getLastPathComponent())
-                        .getWindow())));
+                Optional.ofNullable(((TreeViewNode) path.getLastPathComponent()).getWindow())));
     }
 
 }
