@@ -70,6 +70,7 @@ import net.miginfocom.swing.MigLayout;
 import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
+import static java.util.function.Predicate.isEqual;
 
 /**
  * The main application frame.
@@ -79,7 +80,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** A version number for this class. */
     private static final long serialVersionUID = 9;
     /** Focus queue. */
-    private final QueuedLinkedHashSet<TextFrame> focusOrder;
+    private final QueuedLinkedHashSet<Optional<Window>> focusOrder;
     /** Apple instance. */
     private final Apple apple;
     /** Controller to use to end the program. */
@@ -105,7 +106,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** The frame manager that's being used. */
     private FrameManager mainFrameManager;
     /** Active frame. */
-    private TextFrame activeFrame;
+    private Optional<Window> activeFrame;
     /** Panel holding frame. */
     private JPanel framePanel;
     /** Main panel. */
@@ -489,30 +490,31 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         framePanel.setVisible(false);
         framePanel.removeAll();
 
-        activeFrame = (TextFrame) event.getWindow().get();
+        activeFrame = event.getWindow();
 
-        if (activeFrame == null) {
+        if (activeFrame.isPresent()) {
+            framePanel.add(((TextFrame) activeFrame.get()).getDisplayFrame(), "grow");
+            setTitle(activeFrame.get().getContainer().getTitle());
+        } else {
             framePanel.add(new JPanel(), "grow");
             setTitle(null);
-        } else {
-            framePanel.add(activeFrame.getDisplayFrame(), "grow");
-            setTitle(activeFrame.getContainer().getTitle());
         }
 
         framePanel.setVisible(true);
 
-        if (activeFrame != null) {
-            activeFrame.requestFocus();
-            activeFrame.requestFocusInWindow();
-            activeFrame.activateFrame();
+        if (activeFrame.isPresent()) {
+            final TextFrame textFrame = (TextFrame) activeFrame.get();
+            textFrame.requestFocus();
+            textFrame.requestFocusInWindow();
+            textFrame.activateFrame();
         }
 
-        swingEventBus.publish(new SwingWindowSelectedEvent(Optional.ofNullable((Window) activeFrame)));
+        swingEventBus.publish(new SwingWindowSelectedEvent(activeFrame));
     }
 
     @Handler
     public void doWindowAdded(final SwingWindowAddedEvent event) {
-        if (activeFrame == null) {
+        if (!activeFrame.isPresent()) {
             setActiveFrame(new SwingActiveWindowChangeRequestEvent(
                     Optional.of(event.getChildWindow())));
         }
@@ -520,10 +522,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Handler
     public void doWindowDeleted(final SwingWindowDeletedEvent event) {
-        final TextFrame window = event.getChildWindow();
-        if (window == null) {
-            return; //Deleting a window that doesnt exist will just cause problems, stop
-        }
+        final Optional<Window> window = Optional.of(event.getChildWindow());
         focusOrder.remove(window);
         if (activeFrame.equals(window)) {
             activeFrame = null;
@@ -533,24 +532,23 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             if (focusOrder.peek() == null) {
                 SwingUtilities.invokeLater(frameManager::scrollUp);
             } else {
-                setActiveFrame(new SwingActiveWindowChangeRequestEvent(
-                        Optional.of(focusOrder.peek())));
+                setActiveFrame(new SwingActiveWindowChangeRequestEvent(focusOrder.peek()));
             }
         }
     }
 
     @Handler
     public void titleChanged(final FrameTitleChangedEvent event) {
-        if (activeFrame != null && activeFrame.getContainer().equals(event.getContainer())) {
-            setTitle(event.getTitle());
-        }
+        activeFrame.map(Window::getContainer)
+                .filter(isEqual(event.getContainer()))
+                .ifPresent(c -> setTitle(event.getTitle()));
     }
 
     @Handler
     public void notificationSet(final NotificationSetEvent event) {
-        if (activeFrame != null && activeFrame.getContainer().equals(event.getWindow())) {
-            event.getWindow().clearNotification();
-        }
+        activeFrame.map(Window::getContainer)
+                .filter(isEqual(event.getWindow()))
+                .ifPresent(c -> event.getWindow().clearNotification());
     }
 
     @Override
