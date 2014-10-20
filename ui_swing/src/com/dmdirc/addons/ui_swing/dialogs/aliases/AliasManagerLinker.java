@@ -251,20 +251,8 @@ public class AliasManagerLinker {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add Alias", "Enter the alias name", model.getNewCommandValidator()) {
-
-                            private static final long serialVersionUID = 3;
-
-                    @Override
-                    public boolean save() {
-                        model.addAlias(getText(), 0, getText());
-                        return true;
-                            }
-
-                    @Override
-                    public void cancelled() {
-                            }
-                        }.display();
+                        "Add Alias", "Enter the alias name", model.getNewCommandValidator(),
+                        (String s) -> model.addAlias(s, 0, s)).display();
             }
         });
     }

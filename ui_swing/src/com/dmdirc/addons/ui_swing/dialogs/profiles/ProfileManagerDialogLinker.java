@@ -133,19 +133,8 @@ public class ProfileManagerDialogLinker {
      */
     public void bindAddNickname(final JButton addNickname) {
         addNickname.addActionListener(e -> new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
-                "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public boolean save() {
-                        controller.addNickname(getText());
-                        return true;
-                    }
-
-                    @Override
-                    public void cancelled() {
-                    }
-                }.display());
+                "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model),
+                controller::addNickname).display());
         model.addPropertyChangeListener("selectedprofile",
                 evt -> addNickname.setEnabled(model.isManipulateProfileAllowed()));
         model.addPropertyChangeListener("profiles",
@@ -163,19 +152,7 @@ public class ProfileManagerDialogLinker {
             final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
                     ModalityType.DOCUMENT_MODAL, iconManager,
                     "Add nickname", "Enter edited nickname:",
-                    new EditNicknameValidator(model)) {
-                        private static final long serialVersionUID = 1L;
-
-                        @Override
-                        public boolean save() {
-                            controller.editNickname(getText());
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                        }
-                    };
+                    new EditNicknameValidator(model), controller::editNickname);
             inputDialog.setText((String) model.getSelectedNickname());
             inputDialog.display();
         });
@@ -314,19 +291,7 @@ public class ProfileManagerDialogLinker {
             final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
                     ModalityType.DOCUMENT_MODAL, iconManager,
                     "Add profile", "New profile name:",
-                    new ProfileNameValidator(model.getProfiles())) {
-                        private static final long serialVersionUID = 1L;
-
-                        @Override
-                        public boolean save() {
-                            controller.addProfile(getText());
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                        }
-                    };
+                    new ProfileNameValidator(model.getProfiles()), controller::addProfile);
             inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
             inputDialog.setText((String) model.getSelectedNickname());
             inputDialog.display();

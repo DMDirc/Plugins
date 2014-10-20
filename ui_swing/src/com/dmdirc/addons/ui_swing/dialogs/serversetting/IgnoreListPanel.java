@@ -179,27 +179,8 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
 
             new StandardInputDialog(parentWindow,
                     ModalityType.MODELESS, iconManager, "New ignore list entry",
-                    "Please enter the new ignore list entry", validatorBuilder.build()) {
-                        /** A version number for this class. */
-                        private static final long serialVersionUID = 2;
-
-                        @Override
-                        public boolean save() {
-                            if (viewToggle.isSelected()) {
-                                cachedIgnoreList.add(getText());
-                            } else {
-                                cachedIgnoreList.addSimple(getText());
-                            }
-
-                            updateList();
-                            return true;
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            //Ignore
-                        }
-                    }.display();
+                    "Please enter the new ignore list entry", validatorBuilder.build(),
+                    this::addNewIgnoreEntry).display();
         } else if (e.getSource() == delButton && list.getSelectedIndex() != -1) {
             new StandardQuestionDialog(parentWindow,
                     ModalityType.APPLICATION_MODAL,
@@ -212,6 +193,15 @@ public final class IgnoreListPanel extends JPanel implements ActionListener, Lis
         } else if (e.getSource() == viewToggle) {
             listModel.setIsSimple(!viewToggle.isSelected());
         }
+    }
+
+    private void addNewIgnoreEntry(final String text) {
+        if (viewToggle.isSelected()) {
+            cachedIgnoreList.add(text);
+        } else {
+            cachedIgnoreList.addSimple(text);
+        }
+        updateList();
     }
 
     @Override
