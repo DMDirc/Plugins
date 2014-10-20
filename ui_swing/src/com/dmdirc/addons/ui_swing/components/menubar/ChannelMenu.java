@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.Channel;
+import com.dmdirc.ClientModule;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -75,7 +76,8 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public ChannelMenu(
             final ActiveFrameManager activeFrameManager,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
-            final MainFrame mainFrame, final IconManager iconManager,
+            final MainFrame mainFrame,
+            @ClientModule.GlobalConfig final IconManager iconManager,
             final DialogProvider<ChannelListDialog> channelListDialogProvider) {
         super("Channel");
         this.mainFrame = mainFrame;
@@ -119,6 +121,7 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
+                // TODO: This can NPE on both getActiveFrame and getConnection fix me.
                 new StandardInputDialog(mainFrame, Dialog.ModalityType.MODELESS, iconManager,
                         "Join Channel", "Enter the name of the channel to join.",
                         (String s) -> activeFrameManager.getActiveFrame().getContainer()
