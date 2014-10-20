@@ -32,6 +32,8 @@ import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
@@ -45,7 +47,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Standard input dialog.
  */
-public abstract class StandardInputDialog extends StandardDialog {
+public class StandardInputDialog extends StandardDialog {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -61,6 +63,10 @@ public abstract class StandardInputDialog extends StandardDialog {
     private final IconManager iconManager;
     /** Are we saving? */
     protected final AtomicBoolean saving = new AtomicBoolean(false);
+    /** Function to call when the dialog is saved. */
+    private final Function<String, Boolean> save;
+    /** Function to call when the dialog is cancelled. */
+    private final Runnable cancel;
 
     /**
      * Instantiates a new standard input dialog.
@@ -73,8 +79,44 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     public StandardInputDialog(
             final Window owner, final ModalityType modal, final IconManager iconManager,
-            final String title, final String message) {
-        this(owner, modal, iconManager, title, message, o -> new ValidationResponse());
+            final String title, final String message,
+            final Consumer<String> save) {
+        this(owner, modal, iconManager, title, message,
+                (s) -> { save.accept(s); return true; }, () -> {});
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner       Dialog owner
+     * @param modal       modality type
+     * @param iconManager The icon manager to use for validating text fields.
+     * @param title       Dialog title
+     * @param message     Dialog message
+     */
+    public StandardInputDialog(
+            final Window owner, final ModalityType modal, final IconManager iconManager,
+            final String title, final String message,
+            final Function<String, Boolean> save) {
+        this(owner, modal, iconManager, title, message, save, () -> {});
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner       Dialog owner
+     * @param modal       modality type
+     * @param iconManager The icon manager to use for validating text fields.
+     * @param title       Dialog title
+     * @param message     Dialog message
+     */
+    public StandardInputDialog(
+            final Window owner, final ModalityType modal, final IconManager iconManager,
+            final String title, final String message,
+            final Function<String, Boolean> save,
+            final Runnable cancel) {
+        this(owner, modal, iconManager, title, message, o -> new ValidationResponse(), save,
+                cancel);
     }
 
     /**
@@ -90,12 +132,72 @@ public abstract class StandardInputDialog extends StandardDialog {
     public StandardInputDialog(
             final Window owner, final ModalityType modal, final IconManager iconManager,
             final String title, final String message,
-            final Validator<String> validator) {
+            final Validator<String> validator,
+            final Consumer<String> save) {
+        this(owner, modal, iconManager, title, message, validator,
+                (String s) -> { save.accept(s); return true; }, () -> {});
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner       Dialog owner
+     * @param modal       modality type
+     * @param iconManager The icon manager to use for validating text fields.
+     * @param validator   Textfield validator
+     * @param title       Dialog title
+     * @param message     Dialog message
+     */
+    public StandardInputDialog(
+            final Window owner, final ModalityType modal, final IconManager iconManager,
+            final String title, final String message,
+            final Validator<String> validator,
+            final Function<String, Boolean> save) {
+        this(owner, modal, iconManager, title, message, validator, save, () -> {});
+    }
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner       Dialog owner
+     * @param modal       modality type
+     * @param iconManager The icon manager to use for validating text fields.
+     * @param validator   Textfield validator
+     * @param title       Dialog title
+     * @param message     Dialog message
+     */
+    public StandardInputDialog(
+            final Window owner, final ModalityType modal, final IconManager iconManager,
+            final String title, final String message,
+            final Validator<String> validator,
+            final Consumer<String> save,
+            final Runnable cancel) {
+        this(owner, modal, iconManager, title, message, validator,
+                (String s) -> { save.accept(s); return true; }, cancel);
+    }
+
+    /**
+     * Instantiates a new standard input dialog.
+     *
+     * @param owner       Dialog owner
+     * @param modal       modality type
+     * @param iconManager The icon manager to use for validating text fields.
+     * @param validator   Textfield validator
+     * @param title       Dialog title
+     * @param message     Dialog message
+     */
+    public StandardInputDialog(
+            final Window owner, final ModalityType modal, final IconManager iconManager,
+            final String title, final String message,
+            final Validator<String> validator,
+            final Function<String, Boolean> save,
+            final Runnable cancel) {
         super(owner, modal);
 
         this.validator = validator;
         this.message = message;
         this.iconManager = iconManager;
+        this.save = save;
+        this.cancel = cancel;
 
         setTitle(title);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -104,18 +206,6 @@ public abstract class StandardInputDialog extends StandardDialog {
         addListeners();
         layoutComponents();
     }
-
-    /**
-     * Called when the dialog's OK button is clicked.
-     *
-     * @return whether the dialog can close
-     */
-    public abstract boolean save();
-
-    /**
-     * Called when the dialog's cancel button is clicked, or otherwise closed.
-     */
-    public abstract void cancelled();
 
     /**
      * Initialises the components.
@@ -132,12 +222,12 @@ public abstract class StandardInputDialog extends StandardDialog {
      */
     private void addListeners() {
         getOkButton().addActionListener(e -> {
-            if (save()) {
+            if (save.apply(getText())) {
                 dispose();
             }
         });
         getCancelButton().addActionListener(e -> {
-            cancelled();
+            cancel.run();
             dispose();
         });
         addWindowListener(new WindowAdapter() {
@@ -149,7 +239,7 @@ public abstract class StandardInputDialog extends StandardDialog {
 
             @Override
             public void windowClosed(final WindowEvent e) {
-                cancelled();
+                cancel.run();
                 //dispose();
             }
         });

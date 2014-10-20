@@ -291,30 +291,14 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
                 iconManager, "Add new " + modeText,
                 "Please enter the hostmask for the new " + modeText,
-                new NotEmptyValidator()) {
-                    /**
-                     * A version number for this class. It should be changed whenever the class
-                     * structure is changed (or anything else that would prevent serialized objects
-                     * being unserialized with the new class).
-                     */
-                    private static final long serialVersionUID = 1;
+                new NotEmptyValidator(), (String s) -> doSaveAddListMode(s, selectedIndex)).display();
+    }
 
-                    @Override
-                    public boolean save() {
-                        final DefaultListModel<ChannelListModeItem> model
-                        = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(selectedIndex).
-                        getModel();
-                        model.addElement(new ChannelListModeItem(getText(), "",
-                                        System.currentTimeMillis() / 1000));
-                        updateModeCount();
-                        return true;
-                    }
-
-                    @Override
-                    public void cancelled() {
-                        //Ignore
-                    }
-                }.display();
+    private void doSaveAddListMode(final String text, final int index) {
+        final DefaultListModel<ChannelListModeItem> model =
+                (DefaultListModel<ChannelListModeItem>) listModesPanels.get(index).getModel();
+        model.addElement(new ChannelListModeItem(text, "",System.currentTimeMillis() / 1000));
+        updateModeCount();
     }
 
     /** Removes a list mode. */

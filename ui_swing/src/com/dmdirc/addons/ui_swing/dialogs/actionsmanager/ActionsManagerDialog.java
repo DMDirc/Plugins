@@ -316,33 +316,28 @@ public class ActionsManagerDialog extends StandardDialog implements
         final int index = groups.getSelectedIndex();
         groups.getSelectionModel().clearSelection();
         new StandardInputDialog(this, ModalityType.DOCUMENT_MODAL, iconManager, "New action group",
-                "Please enter the name of the new action group", validator) {
-                    /** Java Serialisation version ID. */
-                    private static final long serialVersionUID = 1;
+                "Please enter the name of the new action group", validator,
+                (String s) -> doSaveAddGroup(s, index), () -> doCancelledAddGroup(index))
+                .display(this);
+    }
 
-                    @Override
-                    public boolean save() {
-                        if (!saving.getAndSet(true)) {
-                            groups.setSelectedIndex(index);
-                            if (getText() == null || getText().isEmpty()
-                            && !ActionManager.getActionManager().getGroupsMap()
-                            .containsKey(getText())) {
-                                return false;
-                            } else {
-                                final ActionGroup group = ActionManager
-                                .getActionManager().createGroup(getText());
-                                reloadGroups(group);
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
+    private boolean doSaveAddGroup(final String text, final int index) {
+        if (!saving.getAndSet(true)) {
+            groups.setSelectedIndex(index);
+            if (text == null || text.isEmpty()
+                    && !ActionManager.getActionManager().getGroupsMap().containsKey(text)) {
+                return false;
+            } else {
+                final ActionGroup group = ActionManager.getActionManager().createGroup(text);
+                reloadGroups(group);
+                return true;
+            }
+        }
+        return false;
+    }
 
-                    @Override
-                    public void cancelled() {
-                        groups.setSelectedIndex(index);
-                    }
-                }.display(this);
+    private void doCancelledAddGroup(final int index) {
+        groups.setSelectedIndex(index);
     }
 
     /**
@@ -352,32 +347,23 @@ public class ActionsManagerDialog extends StandardDialog implements
         final String oldName = groups.getSelectedValue().getName();
         final StandardInputDialog inputDialog = new StandardInputDialog(
                 this, ModalityType.DOCUMENT_MODAL, iconManager, "Edit action group",
-                "Please enter the new name of the action group", validator) {
-                    /** Java Serialisation version ID. */
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean save() {
-                        if (!saving.getAndSet(true)) {
-                            if (getText() == null || getText().isEmpty()) {
-                                return false;
-                            } else {
-                                ActionManager.getActionManager().changeGroupName(
-                                        oldName, getText());
-                                reloadGroups();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public void cancelled() {
-                        //Ignore
-                    }
-                };
+                "Please enter the new name of the action group", validator,
+                (String s) -> doSaveEditGroup(oldName, s), () -> {});
         inputDialog.setText(oldName);
         inputDialog.display(this);
+    }
+
+    private boolean doSaveEditGroup(final String oldText, final String text) {
+        if (!saving.getAndSet(true)) {
+            if (text == null || text.isEmpty()) {
+                return false;
+            } else {
+                ActionManager.getActionManager().changeGroupName(oldText, text);
+                reloadGroups();
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

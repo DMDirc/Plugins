@@ -264,31 +264,21 @@ public class URLConfigPanel extends JPanel implements
             new StandardInputDialog(parentWindow,
                     ModalityType.MODELESS, iconManager, "New URL handler",
                     "Please enter the name of the new protocol.",
-                    new URLProtocolValidator(globalConfig)) {
-                        /** Serial version UID. */
-                        private static final long serialVersionUID = 1;
-
-                        @Override
-                        public boolean save() {
-                            try {
-                                final URI uri = new URI(getText() + "://example.test.com");
-                                model.addURI(uri);
-                                details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri,
-                                                true));
-                                return true;
-                            } catch (final URISyntaxException ex) {
-                                return false;
-                            }
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            //Ignore
-                        }
-                    }.display();
+                    new URLProtocolValidator(globalConfig), this::saveAddNewURLHandler).display();
 
         } else if (e.getSource() == remove) {
             model.removeURI(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
+        }
+    }
+
+    private boolean saveAddNewURLHandler(final String text) {
+        try {
+            final URI uri = new URI(text + "://example.test.com");
+            model.addURI(uri);
+            details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
+            return true;
+        } catch (final URISyntaxException ex) {
+            return false;
         }
     }
 

@@ -25,14 +25,18 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
-import com.dmdirc.addons.ui_swing.dialogs.ChannelJoinDialogFactory;
+import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.parser.common.ChannelJoinRequest;
+import com.dmdirc.ui.IconManager;
 
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -52,12 +56,14 @@ public class ChannelMenu extends JMenu implements ActionListener,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Icon manager. */
+    private final IconManager iconManager;
+    /** Main frame. */
+    private final MainFrame mainFrame;
     /** Dialog provider. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
     /** Channel list dialog provider. */
     private final DialogProvider<ChannelListDialog> channelListDialogProvider;
-    /** Channel join dialog factory. */
-    private final ChannelJoinDialogFactory channelJoinDialogFactory;
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** Menu items to be disabled/enabled. */
@@ -65,24 +71,17 @@ public class ChannelMenu extends JMenu implements ActionListener,
     private JMenuItem join;
     private JMenuItem list;
 
-    /**
-     * Creates a new channel menu.
-     *
-     * @param activeFrameManager        Active frame manager.
-     * @param dialogProvider            Channel settings dialog provider
-     * @param channelJoinDialogFactory  Channel join dialog factory
-     * @param channelListDialogProvider Channel list dialog provider
-     */
     @Inject
     public ChannelMenu(
             final ActiveFrameManager activeFrameManager,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
-            final ChannelJoinDialogFactory channelJoinDialogFactory,
+            final MainFrame mainFrame, final IconManager iconManager,
             final DialogProvider<ChannelListDialog> channelListDialogProvider) {
         super("Channel");
+        this.mainFrame = mainFrame;
+        this.iconManager = iconManager;
         this.activeFrameManager = activeFrameManager;
         this.dialogProvider = dialogProvider;
-        this.channelJoinDialogFactory = channelJoinDialogFactory;
         this.channelListDialogProvider = channelListDialogProvider;
         setMnemonic('c');
         addMenuListener(this);
@@ -120,14 +119,17 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
-                channelJoinDialogFactory.getChannelJoinDialog("Join channel",
-                        "Enter the name of the channel to join.").displayOrRequestFocus();
+                new StandardInputDialog(mainFrame, Dialog.ModalityType.MODELESS, iconManager,
+                        "Join Channel", "Enter the name of the channel to join.",
+                        (String s) -> activeFrameManager.getActiveFrame().getContainer()
+                                .getConnection().join(new ChannelJoinRequest(s)))
+                        .displayOrRequestFocus();
                 break;
             case "ChannelSettings":
                 final FrameContainer activeWindow = activeFrameManager.getActiveFrame().
                         getContainer();
                 if (activeWindow instanceof Channel) {
-                    dialogProvider.displayOrRequestFocus(((Channel) activeWindow));
+                    dialogProvider.displayOrRequestFocus((Channel) activeWindow);
                 }
                 break;
             case "ListChannels":
