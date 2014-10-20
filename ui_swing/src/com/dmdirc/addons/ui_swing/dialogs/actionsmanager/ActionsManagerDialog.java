@@ -385,36 +385,22 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     private void delGroup() {
         final String group = groups.getSelectedValue().getName();
-        new StandardQuestionDialog(this,
-                ModalityType.APPLICATION_MODAL,
-                "Confirm deletion",
-                "Are you sure you wish to delete the '" + group
-                + "' group and all actions within it?") {
-                    /** Java Serialisation version ID. */
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean save() {
-                        int location = ((DefaultListModel) groups.getModel()).indexOf(
-                                ActionManager.getActionManager().getOrCreateGroup(group));
-                        ActionManager.getActionManager().deleteGroup(group);
-                        reloadGroups();
-                        if (groups.getModel().getSize() == 0) {
-                            location = -1;
-                        } else if (location >= groups.getModel().getSize()) {
-                            location = groups.getModel().getSize();
-                        } else if (location <= 0) {
-                            location = 0;
-                        }
-                        groups.setSelectedIndex(location);
-                        return true;
-                    }
-
-                    @Override
-                    public void cancelled() {
-                        //Ignore
-                    }
-                }.display();
+        new StandardQuestionDialog(this, ModalityType.APPLICATION_MODAL, "Confirm deletion",
+                "Are you sure you wish to delete the '" + group +
+                        "' group and all actions within it?", () -> {
+            int location = ((DefaultListModel) groups.getModel())
+                    .indexOf(ActionManager.getActionManager().getOrCreateGroup(group));
+            ActionManager.getActionManager().deleteGroup(group);
+            reloadGroups();
+            if (groups.getModel().getSize() == 0) {
+                location = -1;
+            } else if (location >= groups.getModel().getSize()) {
+                location = groups.getModel().getSize();
+            } else if (location <= 0) {
+                location = 0;
+            }
+            groups.setSelectedIndex(location);
+        }).display();
     }
 
     @Override

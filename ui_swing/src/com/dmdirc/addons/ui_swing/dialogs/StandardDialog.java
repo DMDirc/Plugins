@@ -29,11 +29,9 @@ import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 
 /**
  * Provides common methods for dialogs.
@@ -43,21 +41,11 @@ public class StandardDialog extends JDialog {
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
     /** Parent window. */
-    private Window owner;
+    private Component owner;
     /** The OK button for this frame. */
     private JButton okButton;
     /** The cancel button for this frame. */
     private JButton cancelButton;
-
-    /**
-     * Creates a new instance of StandardDialog.
-     *
-     * @param owner The window that owns this dialog
-     * @param modal Whether to display modally or not
-     */
-    public StandardDialog(final Window owner, final boolean modal) {
-        this(owner, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
-    }
 
     /**
      * Creates a new instance of StandardDialog.
@@ -94,7 +82,7 @@ public class StandardDialog extends JDialog {
      *
      * @param parent Parent window
      */
-    public void displayOrRequestFocus(final Window parent) {
+    public void displayOrRequestFocus(final Component parent) {
         if (isVisible()) {
             requestFocus();
         } else {
@@ -107,7 +95,7 @@ public class StandardDialog extends JDialog {
      *
      * @param owner Window to center on
      */
-    public void display(final Window owner) {
+    public void display(final Component owner) {
         this.owner = owner;
         display();
     }
@@ -131,40 +119,6 @@ public class StandardDialog extends JDialog {
         centreOnOwner();
         setVisible(false);
         setVisible(true);
-    }
-
-    /**
-     * Displays the dialog centering on the parent window, blocking until complete.
-     */
-    public void displayBlocking() {
-        displayBlocking(owner);
-    }
-
-    /**
-     * Displays the dialog centering on the specified window, blocking until complete.
-     *
-     * @param owner Window to center on
-     */
-    public void displayBlocking(final Component owner) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            throw new IllegalStateException("Unable to display blocking dialog"
-                    + " in the EDT.");
-        }
-        final Semaphore semaphore = new Semaphore(0);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                display();
-                addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(final WindowEvent e) {
-                        semaphore.release();
-                    }
-                });
-            }
-        });
-        semaphore.acquireUninterruptibly();
     }
 
     /**

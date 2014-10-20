@@ -30,12 +30,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -44,8 +39,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Links the UI code with the model and controller.
@@ -78,42 +71,25 @@ public class ProfileManagerDialogLinker {
      * @param list List to bind
      */
     public void bindProfileList(final JList<Profile> list) {
-        list.setModel(new DefaultListModel<Profile>());
+        list.setModel(new DefaultListModel<>());
         final VetoableListSelectionModel listModel = new VetoableListSelectionModel();
         list.setSelectionModel(listModel);
-        listModel.addVetoableSelectionListener(new VetoableChangeListener() {
-
-            @Override
-            public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
-                if (!model.isChangeProfileAllowed()) {
-                    throw new PropertyVetoException("", evt);
-                }
+        listModel.addVetoableSelectionListener(evt -> {
+            if (!model.isChangeProfileAllowed()) {
+                throw new PropertyVetoException("", evt);
             }
         });
-        listModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                model.setSelectedProfile(list.getSelectedValue());
+        listModel.addListSelectionListener(e -> model.setSelectedProfile(list.getSelectedValue()));
+        model.addPropertyChangeListener("profiles", evt -> {
+            ((DefaultListModel) list.getModel()).clear();
+            for (Profile profile : model.getProfiles()) {
+                ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
+            }
+            if (list.getSelectedValue() != model.getSelectedProfile()) {
+                list.setSelectedValue(model.getSelectedProfile(), true);
             }
         });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                ((DefaultListModel) list.getModel()).clear();
-                for (Profile profile : model.getProfiles()) {
-                    ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
-                }
-                if (list.getSelectedValue() != model.getSelectedProfile()) {
-                    list.setSelectedValue(model.getSelectedProfile(), true);
-                }
-            }
-        });
-        model.addPropertyChangeListener("name", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                list.repaint();
-            }
-        });
+        model.addPropertyChangeListener("name", evt -> list.repaint());
         for (Profile profile : model.getProfiles()) {
             ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
         }
@@ -125,41 +101,27 @@ public class ProfileManagerDialogLinker {
      * @param nicknames list to bind
      */
     public void bindProfileNicknames(final ReorderableJList<String> nicknames) {
-        nicknames.setModel(new DefaultListModel<String>());
+        nicknames.setModel(new DefaultListModel<>());
         nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        nicknames.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                model.setSelectedNickname(nicknames.getSelectedValue());
+        nicknames.getSelectionModel().addListSelectionListener(
+                e -> model.setSelectedNickname(nicknames.getSelectedValue()));
+        model.addPropertyChangeListener("selectedprofile", evt -> {
+            nicknames.getModel().clear();
+            for (String nickname : model.getNicknames()) {
+                nicknames.getModel().addElement(nickname);
             }
+            nicknames.setSelectedValue(model.getSelectedNickname(), true);
+            nicknames.setEnabled(model.isManipulateProfileAllowed());
         });
-        model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                nicknames.getModel().clear();
-                for (String nickname : model.getNicknames()) {
-                    nicknames.getModel().addElement(nickname);
-                }
-                nicknames.setSelectedValue(model.getSelectedNickname(), true);
-                nicknames.setEnabled(model.isManipulateProfileAllowed());
+        model.addPropertyChangeListener("profiles",
+                evt -> nicknames.setEnabled(model.isManipulateProfileAllowed()));
+        model.addPropertyChangeListener("nicknames", evt -> {
+            nicknames.getModel().clear();
+            for (String nickname : model.getNicknames()) {
+                nicknames.getModel().addElement(nickname);
             }
-        });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                nicknames.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
-        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                nicknames.getModel().clear();
-                for (String nickname : model.getNicknames()) {
-                    nicknames.getModel().addElement(nickname);
-                }
-                nicknames.setSelectedValue(model.getSelectedNickname(), true);
-                nicknames.setEnabled(model.isManipulateProfileAllowed());
-            }
+            nicknames.setSelectedValue(model.getSelectedNickname(), true);
+            nicknames.setEnabled(model.isManipulateProfileAllowed());
         });
         nicknames.setEnabled(model.isManipulateProfileAllowed());
     }
@@ -170,37 +132,24 @@ public class ProfileManagerDialogLinker {
      * @param addNickname Button to bind
      */
     public void bindAddNickname(final JButton addNickname) {
-        addNickname.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
-                            private static final long serialVersionUID = 1L;
+        addNickname.addActionListener(e -> new StandardInputDialog(dialog, ModalityType.DOCUMENT_MODAL, iconManager,
+                "Add nickname", "Enter nickname to add:", new AddNicknameValidator(model)) {
+                    private static final long serialVersionUID = 1L;
 
-                            @Override
-                            public boolean save() {
-                                controller.addNickname(getText());
-                                return true;
-                            }
+                    @Override
+                    public boolean save() {
+                        controller.addNickname(getText());
+                        return true;
+                    }
 
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
-            }
-        });
-        model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                addNickname.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                addNickname.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
+                    @Override
+                    public void cancelled() {
+                    }
+                }.display());
+        model.addPropertyChangeListener("selectedprofile",
+                evt -> addNickname.setEnabled(model.isManipulateProfileAllowed()));
+        model.addPropertyChangeListener("profiles",
+                evt -> addNickname.setEnabled(model.isManipulateProfileAllowed()));
         addNickname.setEnabled(model.isManipulateProfileAllowed());
     }
 
@@ -210,41 +159,30 @@ public class ProfileManagerDialogLinker {
      * @param editNickname Button to bind
      */
     public void bindEditNickname(final JButton editNickname) {
-        editNickname.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
-                        ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add nickname", "Enter edited nickname:",
-                        new EditNicknameValidator(model)) {
-                            private static final long serialVersionUID = 1L;
+        editNickname.addActionListener(e -> {
+            final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
+                    ModalityType.DOCUMENT_MODAL, iconManager,
+                    "Add nickname", "Enter edited nickname:",
+                    new EditNicknameValidator(model)) {
+                        private static final long serialVersionUID = 1L;
 
-                            @Override
-                            public boolean save() {
-                                controller.editNickname(getText());
-                                return true;
-                            }
+                        @Override
+                        public boolean save() {
+                            controller.editNickname(getText());
+                            return true;
+                        }
 
-                            @Override
-                            public void cancelled() {
-                            }
-                        };
-                inputDialog.setText((String) model.getSelectedNickname());
-                inputDialog.display();
-            }
+                        @Override
+                        public void cancelled() {
+                        }
+                    };
+            inputDialog.setText((String) model.getSelectedNickname());
+            inputDialog.display();
         });
-        model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                editNickname.setEnabled(model.isManipulateNicknameAllowed());
-            }
-        });
-        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                editNickname.setEnabled(model.isManipulateNicknameAllowed());
-            }
-        });
+        model.addPropertyChangeListener("selectednickname",
+                evt -> editNickname.setEnabled(model.isManipulateNicknameAllowed()));
+        model.addPropertyChangeListener("nicknames",
+                evt -> editNickname.setEnabled(model.isManipulateNicknameAllowed()));
         editNickname.setEnabled(model.isManipulateNicknameAllowed());
     }
 
@@ -254,37 +192,13 @@ public class ProfileManagerDialogLinker {
      * @param deleteNickname Button to bind
      */
     public void bindDeleteNickname(final JButton deleteNickname) {
-        deleteNickname.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
-                        "Delete nickname?", "Are you sure you want to delete this nickname?") {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public boolean save() {
-                                controller.deleteNickname();
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
-            }
-        });
-        model.addPropertyChangeListener("selectednickname", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
-            }
-        });
-        model.addPropertyChangeListener("nicknames", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
-            }
-        });
+        deleteNickname.addActionListener(e -> new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
+                "Delete nickname?", "Are you sure you want to delete this nickname?",
+                controller::deleteNickname).display());
+        model.addPropertyChangeListener("selectednickname",
+                evt -> deleteNickname.setEnabled(model.isManipulateNicknameAllowed()));
+        model.addPropertyChangeListener("nicknames",
+                evt -> deleteNickname.setEnabled(model.isManipulateNicknameAllowed()));
         deleteNickname.setEnabled(model.isManipulateNicknameAllowed());
     }
 
@@ -315,19 +229,13 @@ public class ProfileManagerDialogLinker {
                 profileName.setEnabled(model.isManipulateProfileAllowed());
             }
         });
-        model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                profileName.setText(model.getName());
-                profileName.setEnabled(model.isManipulateProfileAllowed());
-            }
+        model.addPropertyChangeListener("selectedprofile", evt -> {
+            profileName.setText(model.getName());
+            profileName.setEnabled(model.isManipulateProfileAllowed());
         });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                profileName.setText(model.getName());
-                profileName.setEnabled(model.isManipulateProfileAllowed());
-            }
+        model.addPropertyChangeListener("profiles", evt -> {
+            profileName.setText(model.getName());
+            profileName.setEnabled(model.isManipulateProfileAllowed());
         });
         profileName.setEnabled(model.isManipulateProfileAllowed());
     }
@@ -357,12 +265,9 @@ public class ProfileManagerDialogLinker {
                 profileRealname.setEnabled(model.isManipulateProfileAllowed());
             }
         });
-        model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                profileRealname.setText(model.getRealname());
-                profileRealname.setEnabled(model.isManipulateProfileAllowed());
-            }
+        model.addPropertyChangeListener("selectedprofile", evt -> {
+            profileRealname.setText(model.getRealname());
+            profileRealname.setEnabled(model.isManipulateProfileAllowed());
         });
         profileRealname.setEnabled(model.isManipulateProfileAllowed());
     }
@@ -392,18 +297,10 @@ public class ProfileManagerDialogLinker {
                 profileIdent.setEnabled(model.isManipulateProfileAllowed());
             }
         });
-        model.addPropertyChangeListener("selectedprofile", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                profileIdent.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                profileIdent.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
+        model.addPropertyChangeListener("selectedprofile",
+                evt -> profileIdent.setEnabled(model.isManipulateProfileAllowed()));
+        model.addPropertyChangeListener("profiles",
+                evt -> profileIdent.setEnabled(model.isManipulateProfileAllowed()));
         profileIdent.setEnabled(model.isManipulateProfileAllowed());
     }
 
@@ -413,29 +310,26 @@ public class ProfileManagerDialogLinker {
      * @param addProfile Button to bind
      */
     public void bindAddProfile(final JButton addProfile) {
-        addProfile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
-                        ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add profile", "New profile name:",
-                        new ProfileNameValidator(model.getProfiles())) {
-                            private static final long serialVersionUID = 1L;
+        addProfile.addActionListener(e -> {
+            final StandardInputDialog inputDialog = new StandardInputDialog(dialog,
+                    ModalityType.DOCUMENT_MODAL, iconManager,
+                    "Add profile", "New profile name:",
+                    new ProfileNameValidator(model.getProfiles())) {
+                        private static final long serialVersionUID = 1L;
 
-                            @Override
-                            public boolean save() {
-                                controller.addProfile(getText());
-                                return true;
-                            }
+                        @Override
+                        public boolean save() {
+                            controller.addProfile(getText());
+                            return true;
+                        }
 
-                            @Override
-                            public void cancelled() {
-                            }
-                        };
-                inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
-                inputDialog.setText((String) model.getSelectedNickname());
-                inputDialog.display();
-            }
+                        @Override
+                        public void cancelled() {
+                        }
+                    };
+            inputDialog.setDocumentFilter(new ProfileNameDocumentFilter());
+            inputDialog.setText((String) model.getSelectedNickname());
+            inputDialog.display();
         });
     }
 
@@ -445,31 +339,11 @@ public class ProfileManagerDialogLinker {
      * @param deleteProfile Button to bind
      */
     public void bindDeleteProfile(final JButton deleteProfile) {
-        deleteProfile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
-                        "Delete profile?", "Are you sure you want to delete this profile?") {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public boolean save() {
-                                controller.deleteProfile();
-                                return true;
-                            }
-
-                            @Override
-                            public void cancelled() {
-                            }
-                        }.display();
-            }
-        });
-        model.addPropertyChangeListener("profiles", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                deleteProfile.setEnabled(model.isManipulateProfileAllowed());
-            }
-        });
+        deleteProfile.addActionListener(e -> new StandardQuestionDialog(dialog, ModalityType.DOCUMENT_MODAL,
+                "Delete profile?", "Are you sure you want to delete this profile?",
+                controller::deleteProfile).display());
+        model.addPropertyChangeListener("profiles",
+                evt -> deleteProfile.setEnabled(model.isManipulateProfileAllowed()));
         deleteProfile.setEnabled(model.isManipulateProfileAllowed());
     }
 
@@ -479,18 +353,8 @@ public class ProfileManagerDialogLinker {
      * @param okButton Button to bind
      */
     public void bindOKButton(final JButton okButton) {
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                controller.saveAndCloseDialog();
-            }
-        });
-        model.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                okButton.setEnabled(model.isOKAllowed());
-            }
-        });
+        okButton.addActionListener(e -> controller.saveAndCloseDialog());
+        model.addPropertyChangeListener(evt -> okButton.setEnabled(model.isOKAllowed()));
         okButton.setEnabled(model.isOKAllowed());
     }
 
@@ -500,12 +364,7 @@ public class ProfileManagerDialogLinker {
      * @param cancelButton Button to bind
      */
     public void bindCancelButton(final JButton cancelButton) {
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                controller.closeDialog();
-            }
-        });
+        cancelButton.addActionListener(e -> controller.closeDialog());
     }
 
 }

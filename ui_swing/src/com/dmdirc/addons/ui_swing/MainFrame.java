@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.dialogs.ConfirmQuitDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
@@ -51,6 +50,7 @@ import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -432,16 +432,9 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      */
     public void quit(final int exitCode) {
         if (exitCode == 0 && globalConfig.getOptionBool("ui", "confirmQuit")) {
-            final StandardQuestionDialog dialog = new ConfirmQuitDialog(this) {
-                /** Serial version UID. */
-                private static final long serialVersionUID = 9;
-
-                @Override
-                protected void handleQuit() {
-                    doQuit(exitCode);
-                }
-            };
-            dialog.display();
+            new StandardQuestionDialog(this, Dialog.ModalityType.APPLICATION_MODAL,
+                    "Quit confirm", "You are about to quit DMDirc, are you sure?",
+                    () -> { doQuit(0); return true;}).display();
             return;
         }
         doQuit(exitCode);
@@ -493,7 +486,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         activeFrame = event.getWindow();
 
         if (activeFrame.isPresent()) {
-            framePanel.add((activeFrame.get()).getDisplayFrame(), "grow");
+            framePanel.add(activeFrame.get().getDisplayFrame(), "grow");
             setTitle(activeFrame.get().getContainer().getTitle());
         } else {
             framePanel.add(new JPanel(), "grow");

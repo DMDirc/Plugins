@@ -43,6 +43,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneConstants;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -127,12 +128,10 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                 "These settings are specific to this network, any settings specified here will "
                 + "overwrite global settings");
 
-        if (settingsPanel != null) {
-            addSettings();
-        }
+        addSettings();
 
         final JScrollPane userModesSP = new JScrollPane(modesPanel);
-        userModesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        userModesSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         userModesSP.setOpaque(UIUtilities.getTabbedPaneOpaque());
         userModesSP.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
         userModesSP.setBorder(null);
@@ -174,20 +173,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
         } else {
             new StandardQuestionDialog(getOwner(), ModalityType.MODELESS,
                     "Server has been disconnected.", "Any changes you have " +
-                    "made will be lost, are you sure you want to close this " + "dialog?") {
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean save() {
-                    ServerSettingsDialog.this.dispose();
-                    return true;
-                }
-
-                @Override
-                public void cancelled() {
-                    //Ignore
-                }
-            }.display();
+                    "made will be lost, are you sure you want to close this " + "dialog?",
+                    () -> { dispose(); }).display();
         }
     }
 
