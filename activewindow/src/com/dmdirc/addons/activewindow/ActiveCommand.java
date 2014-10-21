@@ -50,6 +50,8 @@ public class ActiveCommand extends Command implements IntelligentCommand {
             + "executed in the active window", CommandType.TYPE_GLOBAL);
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
+    /** Tab-completer utilities. */
+    private final TabCompleterUtils tabUtils;
 
     /**
      * Creates a new active command.
@@ -58,11 +60,14 @@ public class ActiveCommand extends Command implements IntelligentCommand {
      * @param activeFrameManager The active window manager
      */
     @Inject
-    public ActiveCommand(final CommandController controller,
-            final ActiveFrameManager activeFrameManager) {
+    public ActiveCommand(
+            final CommandController controller,
+            final ActiveFrameManager activeFrameManager,
+            final TabCompleterUtils tabUtils) {
         super(controller);
 
         this.activeFrameManager = activeFrameManager;
+        this.tabUtils = tabUtils;
     }
 
     @Override
@@ -78,7 +83,7 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
-        return TabCompleterUtils.getIntelligentResults(arg, context, 0);
+        return tabUtils.getIntelligentResults(arg, context, 0);
     }
 
 }

@@ -59,6 +59,8 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
     private final ColourManagerFactory colourManagerFactory;
+    /** Tab-completer utilities. */
+    private final TabCompleterUtils tabCompleterUtils;
 
     /**
      * Creates a new instance of this command.
@@ -74,12 +76,14 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
+        this.tabCompleterUtils = tabCompleterUtils;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     @Override
     public AdditionalTabTargets getSuggestions(final int arg,
             final IntelligentCommandContext context) {
-        return TabCompleterUtils.getIntelligentResults(arg, context, 0);
+        return tabCompleterUtils.getIntelligentResults(arg, context, 0);
     }
 
 }

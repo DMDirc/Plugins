@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
+import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -66,8 +67,10 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final CommandController commandController,
             final CommandParser commandParser,
             final FrameContainer parentWindow,
+            final TabCompleterUtils tabCompleterUtils,
             final DMDircMBassador eventBus) {
-        super(serviceManager, target, commandController, commandParser, parentWindow, eventBus);
+        super(serviceManager, target, commandController, commandParser, parentWindow,
+                tabCompleterUtils, eventBus);
         this.eventBus = eventBus;
     }
 

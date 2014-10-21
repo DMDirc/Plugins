@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -48,6 +49,7 @@ public class PasteDialogFactory {
     private final CommandController commandController;
     private final DMDircMBassador eventBus;
     private final ColourManagerFactory colourManagerFactory;
+    private final TabCompleterUtils tabCompleterUtils;
 
     @Inject
     public PasteDialogFactory(
@@ -56,19 +58,21 @@ public class PasteDialogFactory {
             final PluginManager pluginManager,
             final CommandController commandController,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         this.iconManager = iconManager;
         this.config = config;
         this.pluginManager = pluginManager;
         this.commandController = commandController;
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
+        this.tabCompleterUtils = tabCompleterUtils;
     }
 
     public PasteDialog getPasteDialog(final InputTextFrame newParent, final String text,
             final Window parentWindow) {
         return new PasteDialog(iconManager, config, pluginManager, commandController, eventBus,
-                newParent, text, parentWindow, colourManagerFactory);
+                newParent, text, parentWindow, colourManagerFactory, tabCompleterUtils);
     }
 
 }

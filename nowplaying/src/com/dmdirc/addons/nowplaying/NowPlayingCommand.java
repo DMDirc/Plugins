@@ -55,6 +55,8 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             CommandType.TYPE_CHAT);
     /** Now playing manager to get and handle sources. */
     private final NowPlayingManager manager;
+    /** Tab-completer utilities. */
+    private final TabCompleterUtils tabCompleterUtils;
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** This plugin's settings domain. */
@@ -72,10 +74,12 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     public NowPlayingCommand(
             final CommandController controller,
             final NowPlayingManager manager,
+            final TabCompleterUtils tabCompleterUtils,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain) {
         super(controller);
         this.manager = manager;
+        this.tabCompleterUtils = tabCompleterUtils;
         this.globalConfig = globalConfig;
         this.domain = domain;
     }
@@ -179,7 +183,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                 "$bitrate", "$format", "$length", "$state", "$time");
 
         if (arg == 0) {
-            final AdditionalTabTargets res = TabCompleterUtils.
+            final AdditionalTabTargets res = tabCompleterUtils.
                     getIntelligentResults(arg, context, 0);
             res.add("--sources");
             res.add("--source");
@@ -195,12 +199,12 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
             return res;
         } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
-            final AdditionalTabTargets res = TabCompleterUtils
+            final AdditionalTabTargets res = tabCompleterUtils
                     .getIntelligentResults(arg, context, 2);
             res.addAll(subsList);
             return res;
         } else {
-            final AdditionalTabTargets res = TabCompleterUtils
+            final AdditionalTabTargets res = tabCompleterUtils
                     .getIntelligentResults(arg, context,
                             context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
             res.addAll(subsList);

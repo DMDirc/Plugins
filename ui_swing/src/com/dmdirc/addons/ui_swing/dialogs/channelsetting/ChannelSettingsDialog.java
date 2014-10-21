@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -119,7 +120,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final Clipboard clipboard,
             final CommandController commandController,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -136,12 +138,12 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
                 channel.getChannelInfo().getName());
         channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
 
-        initComponents();
+        initComponents(tabCompleterUtils);
         initListeners();
     }
 
     /** Initialises the main UI components. */
-    private void initComponents() {
+    private void initComponents(final TabCompleterUtils tabCompleterUtils) {
         tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -156,7 +158,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         getContentPane().add(getLeftButton(), "split 3, right");
         getContentPane().add(getRightButton(), "right");
 
-        initTopicTab();
+        initTopicTab(tabCompleterUtils);
 
         initIrcTab();
 
@@ -169,10 +171,10 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     }
 
     /** Initialises the Topic tab. */
-    private void initTopicTab() {
+    private void initTopicTab(final TabCompleterUtils tabCompleterUtils) {
         topicModesPane = new TopicPane(channel, channel.getIconManager(),
                 commandController, serviceManager,
-                this, channelWindow, clipboard, eventBus, colourManagerFactory);
+                this, channelWindow, clipboard, eventBus, colourManagerFactory, tabCompleterUtils);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 
