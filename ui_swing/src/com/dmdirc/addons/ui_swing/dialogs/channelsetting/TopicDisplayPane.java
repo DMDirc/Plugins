@@ -35,6 +35,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Color;
@@ -95,7 +96,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
             final CommandController commandController, final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         this.clipboard = clipboard;
         this.channel = channel;
         this.parent = parent;
@@ -104,7 +106,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         this.eventBus = eventBus;
 
         initComponents(iconManager, channel.getConfigManager(), serviceManager, commandController,
-                colourManagerFactory);
+                colourManagerFactory, tabCompleterUtils);
         addListeners();
         layoutComponents();
 
@@ -116,7 +118,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
             final AggregateConfigProvider config,
             final ServiceManager serviceManager,
             final CommandController commandController,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         topicLengthLabel = new JLabel();
         topicText = new TextAreaInputField(iconManager, colourManagerFactory, config, 100, 4);
         topicWho = new TextLabel();
@@ -128,7 +131,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
                 commandController, channel.getCommandParser(), channelWindow.getContainer(),
-                channel.getEventBus());
+                tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

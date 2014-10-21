@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -57,6 +58,7 @@ public class TopicBarFactory {
     private final Clipboard clipboard;
     private final CommandController commandController;
     private final DMDircMBassador eventBus;
+    private final TabCompleterUtils tabCompleterUtils;
 
     @Inject
     public TopicBarFactory(
@@ -67,7 +69,8 @@ public class TopicBarFactory {
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            final TabCompleterUtils tabCompleterUtils) {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;
@@ -76,6 +79,7 @@ public class TopicBarFactory {
         this.clipboard = clipboard;
         this.commandController = commandController;
         this.eventBus = eventBus;
+        this.tabCompleterUtils = tabCompleterUtils;
     }
 
     public TopicBar getTopicBar(
@@ -85,7 +89,7 @@ public class TopicBarFactory {
         return new TopicBar(parentWindow.get(), globalConfig, domain,
                 colourManagerFactory.getColourManager(channel.getConfigManager()),
                 pluginManager, clipboard, commandController, channel, window, iconManager,
-                eventBus);
+                tabCompleterUtils, eventBus);
     }
 
 }

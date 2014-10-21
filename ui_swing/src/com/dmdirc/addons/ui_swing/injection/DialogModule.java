@@ -55,6 +55,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -181,13 +182,15 @@ public class DialogModule {
             final Clipboard clipboard,
             final CommandController commandController,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager, compFactory, key,
-                        parentWindow, clipboard, commandController, eventBus, colourManagerFactory);
+                        parentWindow, clipboard, commandController, eventBus,
+                        colourManagerFactory, tabCompleterUtils);
             }
         };
     }

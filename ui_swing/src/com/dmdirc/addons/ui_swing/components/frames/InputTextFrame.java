@@ -40,6 +40,7 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
+import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -118,7 +119,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         commandController = deps.commandController;
         eventBus = deps.eventBus;
 
-        initComponents(inputFieldProvider);
+        initComponents(inputFieldProvider, deps.tabCompleterUtils);
 
         if (!UIUtilities.isGTKUI()) {
             //GTK users appear to dislike choice, ignore them if they want some.
@@ -157,10 +158,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
      *
      * @param inputFieldProvider The provider to use to create a new input field.
      */
-    private void initComponents(final Provider<SwingInputField> inputFieldProvider) {
+    private void initComponents(final Provider<SwingInputField> inputFieldProvider,
+            final TabCompleterUtils tabCompleterUtils) {
         inputField = inputFieldProvider.get();
         inputHandler = new SwingInputHandler(pluginManager, inputField, commandController,
-                getContainer().getCommandParser(), getContainer(), eventBus);
+                getContainer().getCommandParser(), getContainer(), tabCompleterUtils, eventBus);
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(frameParent.getTabCompleter());
 

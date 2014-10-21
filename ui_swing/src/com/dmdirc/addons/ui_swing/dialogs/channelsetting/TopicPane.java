@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.datatransfer.Clipboard;
@@ -75,7 +76,8 @@ public class TopicPane extends JPanel implements ActionListener {
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.channel = channel;
         this.parent = parent;
@@ -85,7 +87,8 @@ public class TopicPane extends JPanel implements ActionListener {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel(iconManager, serviceManager, commandController, eventBus, colourManagerFactory);
+        initTopicsPanel(iconManager, serviceManager, commandController, eventBus,
+                colourManagerFactory, tabCompleterUtils);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -98,9 +101,11 @@ public class TopicPane extends JPanel implements ActionListener {
             final ServiceManager serviceManager,
             final CommandController commandController,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
-                channelWindow, clipboard, commandController, eventBus, colourManagerFactory);
+                channelWindow, clipboard, commandController, eventBus, colourManagerFactory,
+                tabCompleterUtils);
         topicHistoryPane = new TopicHistoryPane(channel);
     }
 

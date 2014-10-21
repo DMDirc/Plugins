@@ -37,6 +37,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.Styliser;
 
@@ -131,6 +132,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final Channel channel,
             final ChannelFrame window,
             final IconManager iconManager,
+            final TabCompleterUtils tabCompleterUtils,
             final DMDircMBassador eventBus) {
         this.channel = channel;
         this.domain = domain;
@@ -155,7 +157,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
 
         final SwingInputHandler handler = new SwingInputHandler(
                 pluginManager, topicText, commandController, channel.getCommandParser(),
-                channel, channel.getEventBus());
+                channel, tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getTabCompleter());
 

@@ -33,6 +33,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -101,7 +102,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             final InputTextFrame newParent,
             final String text,
             final Window parentWindow,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         super(parentWindow, ModalityType.MODELESS);
 
         parent = newParent;
@@ -111,7 +113,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         this.pluginManager = pluginManager;
         this.commandController = commandController;
 
-        initComponents(eventBus, text, colourManagerFactory);
+        initComponents(eventBus, text, colourManagerFactory, tabCompleterUtils);
         initListeners();
 
         setFocusTraversalPolicy(new PasteDialogFocusTraversalPolicy(
@@ -128,7 +130,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      * @param text text to show in the dialog
      */
     private void initComponents(final DMDircMBassador eventBus, final String text,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final TabCompleterUtils tabCompleterUtils) {
         scrollPane = new JScrollPane();
         textField = new TextAreaInputField(iconManager, colourManagerFactory, config, text);
         editButton = new JButton("Edit");
@@ -152,7 +155,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
 
         new SwingInputHandler(pluginManager, textField, commandController,
                 parent.getContainer().getCommandParser(),
-                parent.getContainer(), eventBus).setTypes(false, false, true, false);
+                parent.getContainer(), tabCompleterUtils, eventBus)
+                .setTypes(false, false, true,false);
 
         scrollPane.setViewportView(textField);
         scrollPane.setVisible(false);

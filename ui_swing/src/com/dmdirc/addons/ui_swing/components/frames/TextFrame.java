@@ -61,6 +61,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
+import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -567,6 +568,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         final CommandController commandController;
         final ColourManagerFactory colourManagerFactory;
         final SwingEventBus swingEventBus;
+        final TabCompleterUtils tabCompleterUtils;
 
         @Inject
         public TextFrameDependencies(
@@ -583,7 +585,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
                 final Clipboard clipboard,
                 final CommandController commandController,
                 final ColourManagerFactory colourManagerFactory,
-                final SwingEventBus swingEventBus) {
+                final SwingEventBus swingEventBus,
+                final TabCompleterUtils tabCompleterUtils) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.mainWindow = mainWindow;
@@ -598,6 +601,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             this.commandController = commandController;
             this.colourManagerFactory = colourManagerFactory;
             this.swingEventBus = swingEventBus;
+            this.tabCompleterUtils = tabCompleterUtils;
         }
 
     }
