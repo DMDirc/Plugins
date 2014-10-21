@@ -41,6 +41,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
@@ -367,6 +368,11 @@ public class TransferContainer extends FrameContainer implements
     @Override
     public Connection getConnection() {
         return null;
+    }
+
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        return Optional.empty();
     }
 
 }

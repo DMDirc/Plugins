@@ -33,6 +33,7 @@ import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -85,6 +86,11 @@ public abstract class DCCFrameContainer extends FrameContainer {
     @Override
     public Connection getConnection() { //NOPMD - server will always be null
         return null;
+    }
+
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        return Optional.empty();
     }
 
     /**

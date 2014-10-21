@@ -33,6 +33,7 @@ import com.dmdirc.util.URLBuilder;
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Creates a placeholder DCC Frame.
@@ -93,6 +94,11 @@ public class PlaceholderContainer extends FrameContainer {
     @Override
     public Connection getConnection() {
         return null;
+    }
+
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        return Optional.empty();
     }
 
     @Override

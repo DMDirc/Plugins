@@ -32,6 +32,7 @@ import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * This class is used to show the parser debug in a window
@@ -79,6 +80,11 @@ public class DebugWindow extends FrameContainer {
     @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        return Optional.of(connection);
     }
 
     /**
