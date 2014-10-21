@@ -32,6 +32,7 @@ import com.dmdirc.util.URLBuilder;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Implements a fake input window, which sends echoed text to the specified chat window instead.
@@ -105,6 +106,11 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     @Override
     public Connection getConnection() {
         return target.getConnection();
+    }
+
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        return Optional.of(target.getConnection());
     }
 
 }

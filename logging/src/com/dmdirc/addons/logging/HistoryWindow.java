@@ -81,4 +81,10 @@ public class HistoryWindow extends FrameContainer {
         return parent.isPresent() ? parent.get().getConnection() : null;
     }
 
+    @Override
+    public Optional<Connection> getOptionalConnection() {
+        final Optional<FrameContainer> parent = getParent();
+        return Optional.ofNullable(parent.isPresent() ? parent.get().getConnection() : null);
+    }
+
 }
