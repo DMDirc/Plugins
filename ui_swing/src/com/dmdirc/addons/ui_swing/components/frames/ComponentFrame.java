@@ -22,12 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.util.URLBuilder;
+
+import java.util.function.Supplier;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -41,47 +40,30 @@ public class ComponentFrame extends TextFrame {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** URL builder to use when making components. */
-    private final URLBuilder urlBuilder;
-    /** Parent frame container. */
-    private final FrameContainer owner;
-    /** Parent controller. */
-    private final SwingController controller;
-    /** The global event bus. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of CustomFrame.
      *
-     * @param eventBus      The global event bus
      * @param deps          The dependencies required by text frames.
-     * @param urlBuilder    URL builder to use when making components.
      * @param owner         The frame container that owns this frame.
      * @param commandParser The parser to use to process commands.
+     * @param componentSupplier Supplier of components that will be in this frame.
      */
     public ComponentFrame(
-            final DMDircMBassador eventBus,
             final TextFrameDependencies deps,
-            final URLBuilder urlBuilder,
             final FrameContainer owner,
-            final CommandParser commandParser) {
+            final CommandParser commandParser,
+            final Iterable<Supplier<? extends JComponent>> componentSupplier) {
         super(owner, commandParser, deps);
-        this.eventBus = eventBus;
-        this.controller = deps.controller;
-        this.urlBuilder = urlBuilder;
-        this.owner = owner;
-        initComponents();
+        initComponents(componentSupplier);
     }
 
     /**
      * Initialises components in this frame.
      */
-    private void initComponents() {
+    private void initComponents(final Iterable<Supplier<? extends JComponent>> componentSupplier) {
         setLayout(new MigLayout("fill"));
-        for (JComponent comp : new ComponentCreator()
-                .initFrameComponents(this, controller, eventBus, urlBuilder, owner)) {
-            add(comp, "wrap, grow");
-        }
+        componentSupplier.forEach(c -> add(c.get(), "wrap, grow"));
     }
 
     @Override

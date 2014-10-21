@@ -31,6 +31,8 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.dcc.kde.KFileChooser;
+import com.dmdirc.addons.dcc.ui.PlaceholderPanel;
+import com.dmdirc.addons.dcc.ui.TransferPanel;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.frames.ComponentFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -56,6 +58,8 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
+import com.google.common.collect.Lists;
+
 import java.awt.Dialog;
 import java.awt.Window;
 import java.io.File;
@@ -65,9 +69,11 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -151,7 +157,9 @@ public class DCCManager {
                 new SwingWindowFactory.WindowProvider() {
                     @Override
                     public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container, commandParser);
+                        return componentFrameFactory.getComponentFrame(container, commandParser,
+                                Lists.<Supplier<? extends JComponent>>newArrayList(
+                                        PlaceholderPanel::new));
                     }
 
                     @Override
@@ -164,7 +172,9 @@ public class DCCManager {
                 new SwingWindowFactory.WindowProvider() {
                     @Override
                     public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container, commandParser);
+                        return componentFrameFactory.getComponentFrame(container, commandParser,
+                                Lists.<Supplier<? extends JComponent>>newArrayList(
+                                        () -> new TransferPanel(container, eventBus)));
                     }
 
                     @Override
