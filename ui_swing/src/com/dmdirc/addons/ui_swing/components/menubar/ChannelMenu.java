@@ -122,7 +122,6 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
-                // TODO: This can NPE on both getActiveFrame and getConnection fix me.
                 new StandardInputDialog(mainFrame, Dialog.ModalityType.APPLICATION_MODAL,
                         iconManager, "Join Channel", "Enter the name of the channel to join.",
                         this::doJoinChannel).displayOrRequestFocus();
