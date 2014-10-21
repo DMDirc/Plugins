@@ -25,10 +25,12 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.util.URLBuilder;
+
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.JComponent;
 
 import static com.dmdirc.addons.ui_swing.components.frames.TextFrame.TextFrameDependencies;
 
@@ -40,23 +42,21 @@ public class ComponentFrameFactory {
 
     private final DMDircMBassador eventBus;
     private final TextFrameDependencies dependencies;
-    private final URLBuilder urlBuilder;
 
     @Inject
     public ComponentFrameFactory(
             final DMDircMBassador eventBus,
-            final TextFrameDependencies dependencies,
-            final URLBuilder urlBuilder) {
+            final TextFrameDependencies dependencies) {
         this.eventBus = eventBus;
         this.dependencies = dependencies;
-        this.urlBuilder = urlBuilder;
     }
 
     public ComponentFrame getComponentFrame(
             final FrameContainer owner,
-            final CommandParser commandParser) {
-        final ComponentFrame frame = new ComponentFrame(eventBus, dependencies, urlBuilder, owner,
-                commandParser);
+            final CommandParser commandParser,
+            final Iterable<Supplier<? extends JComponent>> componentSupplier) {
+        final ComponentFrame frame = new ComponentFrame(dependencies, owner, commandParser,
+                componentSupplier);
         eventBus.subscribe(frame);
         return frame;
     }
