@@ -76,7 +76,6 @@ public class ComponentCreator {
         injector.addParameter(controller);
         injector.addParameter(controller.getMainFrame());
         injector.addParameter(urlBuilder);
-        injector.addParameter(controller.getDomain());
 
         for (String string : names) {
             Object object;
