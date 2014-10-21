@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 
@@ -121,12 +122,9 @@ public class ChannelMenu extends JMenu implements ActionListener,
     public void actionPerformed(final ActionEvent e) {
         switch (e.getActionCommand()) {
             case "JoinChannel":
-                // TODO: This can NPE on both getActiveFrame and getConnection fix me.
-                new StandardInputDialog(mainFrame, Dialog.ModalityType.MODELESS, iconManager,
-                        "Join Channel", "Enter the name of the channel to join.",
-                        (String s) -> activeFrameManager.getActiveFrame().getContainer()
-                                .getConnection().join(new ChannelJoinRequest(s)))
-                        .displayOrRequestFocus();
+                new StandardInputDialog(mainFrame, Dialog.ModalityType.APPLICATION_MODAL,
+                        iconManager, "Join Channel", "Enter the name of the channel to join.",
+                        this::doJoinChannel).displayOrRequestFocus();
                 break;
             case "ChannelSettings":
                 final FrameContainer activeWindow = activeFrameManager.getActiveFrame().
@@ -138,6 +136,16 @@ public class ChannelMenu extends JMenu implements ActionListener,
             case "ListChannels":
                 channelListDialogProvider.displayOrRequestFocus();
                 break;
+        }
+    }
+
+    private void doJoinChannel(final String text) {
+        if (activeFrameManager.getActiveFrame() != null) {
+            final Connection connection = activeFrameManager.getActiveFrame()
+                    .getContainer().getConnection();
+            if (connection != null) {
+                connection.join(new ChannelJoinRequest(text));
+            }
         }
     }
 
