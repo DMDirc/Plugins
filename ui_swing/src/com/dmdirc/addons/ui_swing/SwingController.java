@@ -88,13 +88,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
 
         swingManager.load();
 
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                getMainFrame().setVisible(true);
-            }
-        });
+        UIUtilities.invokeAndWait(() -> getMainFrame().setVisible(true));
 
         super.onLoad();
     }

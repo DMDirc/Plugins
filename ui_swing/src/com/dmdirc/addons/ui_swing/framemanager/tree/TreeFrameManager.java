@@ -199,25 +199,21 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     @Handler
     public void doDeleteWindow(final SwingWindowDeletedEvent event) {
         final TextFrame window = event.getChildWindow();
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                if (nodes.get(window) == null) {
-                    return;
-                }
-                final DefaultMutableTreeNode node = nodes.get(window);
-                if (node.getLevel() == 0) {
-                    eventBus.publishAsync(
-                            new UserErrorEvent(ErrorLevel.MEDIUM, new IllegalArgumentException(),
-                                    "delServer triggered for root node" + node, ""));
-                } else {
-                    model.removeNodeFromParent(nodes.get(window));
-                }
-                synchronized (nodes) {
-                    eventBus.unsubscribe(nodes.get(window).getLabel());
-                    nodes.remove(window);
-                }
+        UIUtilities.invokeAndWait(() -> {
+            if (nodes.get(window) == null) {
+                return;
+            }
+            final DefaultMutableTreeNode node = nodes.get(window);
+            if (node.getLevel() == 0) {
+                eventBus.publishAsync(
+                        new UserErrorEvent(ErrorLevel.MEDIUM, new IllegalArgumentException(),
+                                "delServer triggered for root node" + node, ""));
+            } else {
+                model.removeNodeFromParent(nodes.get(window));
+            }
+            synchronized (nodes) {
+                eventBus.unsubscribe(nodes.get(window).getLabel());
+                nodes.remove(window);
             }
         });
     }
@@ -229,35 +225,31 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * @param window Window to add
      */
     public void addWindow(final MutableTreeNode parent, final TextFrame window) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                final NodeLabel label = new NodeLabel(window, iconManager);
-                eventBus.subscribe(label);
-                swingEventBus.subscribe(label);
-                final TreeViewNode node = new TreeViewNode(label, window);
-                synchronized (nodes) {
-                    nodes.put(window, node);
-                }
-                if (parent == null) {
-                    model.insertNodeInto(node, model.getRootNode());
-                } else {
-                    model.insertNodeInto(node, parent);
-                }
-                tree.expandPath(new TreePath(node.getPath()).getParentPath());
-                final Rectangle view = tree.getRowBounds(tree.getRowForPath(new TreePath(node.
-                        getPath())));
-                if (view != null) {
-                    tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(), 0, 0));
-                }
-
-                // TODO: Should this colour be configurable?
-                node.getLabel().notificationSet(new NotificationSetEvent(window.getContainer(),
-                        window.getContainer().getNotification().orElse(Colour.BLACK)));
-                node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
-                        window.getContainer().getIcon()));
+        UIUtilities.invokeAndWait(() -> {
+            final NodeLabel label = new NodeLabel(window, iconManager);
+            eventBus.subscribe(label);
+            swingEventBus.subscribe(label);
+            final TreeViewNode node = new TreeViewNode(label, window);
+            synchronized (nodes) {
+                nodes.put(window, node);
             }
+            if (parent == null) {
+                model.insertNodeInto(node, model.getRootNode());
+            } else {
+                model.insertNodeInto(node, parent);
+            }
+            tree.expandPath(new TreePath(node.getPath()).getParentPath());
+            final Rectangle view = tree.getRowBounds(tree.getRowForPath(new TreePath(node.
+                    getPath())));
+            if (view != null) {
+                tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(), 0, 0));
+            }
+
+            // TODO: Should this colour be configurable?
+            node.getLabel().notificationSet(new NotificationSetEvent(window.getContainer(),
+                    window.getContainer().getNotification().orElse(Colour.BLACK)));
+            node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
+                    window.getContainer().getIcon()));
         });
     }
 

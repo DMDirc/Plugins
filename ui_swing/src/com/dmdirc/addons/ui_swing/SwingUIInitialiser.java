@@ -95,44 +95,40 @@ public class SwingUIInitialiser {
      * Initialises the global UI settings for the Swing UI.
      */
     private void initUISettings() {
-        UIUtilities.invokeAndWait(new Runnable() {
+        UIUtilities.invokeAndWait(() -> {
+            // This will do nothing on non OS X Systems
+            if (Apple.isApple()) {
+                apple.setUISettings();
+                apple.setListener();
+            }
 
-            @Override
-            public void run() {
-                // This will do nothing on non OS X Systems
-                if (Apple.isApple()) {
-                    apple.setUISettings();
-                    apple.setListener();
-                }
+            final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
+            if (UIManager.getFont("TextField.font") == null) {
+                UIManager.put("TextField.font", defaultFont);
+            }
+            if (UIManager.getFont("TextPane.font") == null) {
+                UIManager.put("TextPane.font", defaultFont);
+            }
+            addonConfig.setOption("ui", "textPaneFontName",
+                    UIManager.getFont("TextPane.font").getFamily());
+            addonConfig.setOption("ui", "textPaneFontSize",
+                    UIManager.getFont("TextPane.font").getSize());
 
-                final Font defaultFont = new Font(Font.DIALOG, Font.TRUETYPE_FONT, 12);
-                if (UIManager.getFont("TextField.font") == null) {
-                    UIManager.put("TextField.font", defaultFont);
-                }
-                if (UIManager.getFont("TextPane.font") == null) {
-                    UIManager.put("TextPane.font", defaultFont);
-                }
-                addonConfig.setOption("ui", "textPaneFontName",
-                        UIManager.getFont("TextPane.font").getFamily());
-                addonConfig.setOption("ui", "textPaneFontSize",
-                        UIManager.getFont("TextPane.font").getSize());
+            try {
+                UIUtilities.initUISettings();
+                UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
+                        globalConfig.getOption("ui", "lookandfeel")));
+                UIUtilities.setUIFont(new Font(globalConfig.getOption("ui", "textPaneFontName"),
+                        Font.PLAIN, 12));
+            } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
+                    IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
+                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
+                        "Unable to set UI Settings", ""));
+            }
 
-                try {
-                    UIUtilities.initUISettings();
-                    UIManager.setLookAndFeel(UIUtilities.getLookAndFeel(
-                            globalConfig.getOption("ui", "lookandfeel")));
-                    UIUtilities.setUIFont(new Font(globalConfig.getOption("ui", "textPaneFontName"),
-                            Font.PLAIN, 12));
-                } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
-                        IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                            "Unable to set UI Settings", ""));
-                }
-
-                if ("Metal".equals(UIManager.getLookAndFeel().getName())
-                        || Apple.isAppleUI()) {
-                    PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
-                }
+            if ("Metal".equals(UIManager.getLookAndFeel().getName())
+                    || Apple.isAppleUI()) {
+                PlatformDefaults.setPlatform(PlatformDefaults.WINDOWS_XP);
             }
         });
     }
@@ -141,14 +137,8 @@ public class SwingUIInitialiser {
      * Installs the dialog key listener.
      */
     private void installKeyListener() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                        .addKeyEventDispatcher(dialogKeyListener);
-            }
-        });
+        UIUtilities.invokeAndWait(() -> KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(dialogKeyListener));
     }
 
     /**
@@ -163,13 +153,8 @@ public class SwingUIInitialiser {
      * Installs the DMDirc event queue.
      */
     private void installEventQueue() {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue);
-            }
-        });
+        UIUtilities.invokeAndWait(
+                () -> Toolkit.getDefaultToolkit().getSystemEventQueue().push(eventQueue));
     }
 
     /**

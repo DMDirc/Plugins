@@ -160,40 +160,36 @@ public class CategoryPanel extends JPanel {
 
     private void categoryLoaded(final PreferencesCategory category) {
         if (this.category == category) {
-            UIUtilities.invokeAndWait(new Runnable() {
-
-                @Override
-                public void run() {
-                    final JPanel panel = panels.get(category);
-                    scrollPane.setViewportView(panel);
-                    //Hack around mig bug
-                    panel.invalidate();
-                    panel.validate();
-                    for (final Component component : panel.getComponents()) {
-                        if (component instanceof JPanel) {
-                            component.invalidate();
-                            component.validate();
-                        }
+            UIUtilities.invokeAndWait(() -> {
+                final JPanel panel = panels.get(category);
+                scrollPane.setViewportView(panel);
+                //Hack around mig bug
+                panel.invalidate();
+                panel.validate();
+                for (final Component component : panel.getComponents()) {
+                    if (component instanceof JPanel) {
+                        component.invalidate();
+                        component.validate();
                     }
-                    //And for good measure, hack the crap out of it some more :(
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            panel.invalidate();
-                            panel.validate();
-                            for (final Component component : panel.getComponents()) {
-                                if (component instanceof JPanel) {
-                                    component.invalidate();
-                                    component.validate();
-                                }
+                }
+                //And for good measure, hack the crap out of it some more :(
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        panel.invalidate();
+                        panel.validate();
+                        for (final Component component : panel.getComponents()) {
+                            if (component instanceof JPanel) {
+                                component.invalidate();
+                                component.validate();
                             }
                         }
-                    });
-                    if (category == null) {
-                        title.setText("Preferences");
-                    } else {
-                        title.setText(category.getPath());
                     }
+                });
+                if (category == null) {
+                    title.setText("Preferences");
+                } else {
+                    title.setText(category.getPath());
                 }
             });
         }
@@ -216,12 +212,7 @@ public class CategoryPanel extends JPanel {
         if (panels.containsKey(category)) {
             categoryLoaded(category);
         } else {
-            UIUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    scrollPane.setViewportView(loading);
-                }
-            });
+            UIUtilities.invokeAndWait(() -> scrollPane.setViewportView(loading));
 
             worker = new PrefsCategoryLoader(factory, eventBus, this, category);
             worker.execute();
@@ -234,13 +225,7 @@ public class CategoryPanel extends JPanel {
      * @param b Loading state
      */
     public void setWaiting(final boolean b) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                scrollPane.setViewportView(waitingCategory);
-            }
-        });
+        UIUtilities.invokeLater(() -> scrollPane.setViewportView(waitingCategory));
     }
 
     /**
