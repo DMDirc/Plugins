@@ -128,21 +128,18 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
         this.swingEventBus = swingEventBus;
         this.iconManager = iconManager;
 
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                model = new TreeViewModel(config, new TreeViewNode(null, null));
-                tree = new Tree(TreeFrameManager.this, model, swingEventBus, globalConfig, domain);
-                tree.setCellRenderer(
-                        new TreeViewTreeCellRenderer(config, colourManager, TreeFrameManager.this));
-                tree.setVisible(true);
+        UIUtilities.invokeLater(() -> {
+            model = new TreeViewModel(config, new TreeViewNode(null, null));
+            tree = new Tree(this, model, swingEventBus, globalConfig, domain);
+            tree.setCellRenderer(
+                    new TreeViewTreeCellRenderer(config, colourManager, this));
+            tree.setVisible(true);
 
-                config.addChangeListener("treeview", TreeFrameManager.this);
-                config.addChangeListener("ui", "sortrootwindows", TreeFrameManager.this);
-                config.addChangeListener("ui", "sortchildwindows", TreeFrameManager.this);
-                config.addChangeListener("ui", "backgroundcolour", TreeFrameManager.this);
-                config.addChangeListener("ui", "foregroundcolour", TreeFrameManager.this);
-            }
+            config.addChangeListener("treeview", this);
+            config.addChangeListener("ui", "sortrootwindows", this);
+            config.addChangeListener("ui", "sortchildwindows", this);
+            config.addChangeListener("ui", "backgroundcolour", this);
+            config.addChangeListener("ui", "foregroundcolour", this);
         });
     }
 
@@ -158,27 +155,23 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     @Override
     public void setParent(final JComponent parent) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            final JScrollPane scrollPane = new JScrollPane(tree);
+            scrollPane.setAutoscrolls(true);
+            scrollPane.setHorizontalScrollBarPolicy(
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-            @Override
-            public void run() {
-                final JScrollPane scrollPane = new JScrollPane(tree);
-                scrollPane.setAutoscrolls(true);
-                scrollPane.setHorizontalScrollBarPolicy(
-                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            parent.setVisible(false);
+            parent.setLayout(new MigLayout("ins 0, fill"));
+            parent.add(scrollPane, "grow");
+            parent.setFocusable(false);
+            parent.setVisible(true);
 
-                parent.setVisible(false);
-                parent.setLayout(new MigLayout("ins 0, fill"));
-                parent.add(scrollPane, "grow");
-                parent.setFocusable(false);
-                parent.setVisible(true);
+            setColours();
 
-                setColours();
-
-                eventBus.subscribe(TreeFrameManager.this);
-                swingEventBus.subscribe(TreeFrameManager.this);
-                redoTreeView();
-            }
+            eventBus.subscribe(this);
+            swingEventBus.subscribe(this);
+            redoTreeView();
         });
     }
 
@@ -308,30 +301,26 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      * Starts the tree from scratch taking into account new sort orders.
      */
     private void redoTreeView() {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeLater(() -> {
+            ((DefaultTreeModel) tree.getModel()).setRoot(null);
+            ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(null, null));
+            if (scroller != null) {
+                scroller.unregister();
+            }
+            scroller = new TreeTreeScroller(swingEventBus, tree);
 
-            @Override
-            public void run() {
-                ((DefaultTreeModel) tree.getModel()).setRoot(null);
-                ((DefaultTreeModel) tree.getModel()).setRoot(new TreeViewNode(null, null));
-                if (scroller != null) {
-                    scroller.unregister();
+            for (FrameContainer window : windowManager.getRootWindows()) {
+                addWindow(null, windowFactory.getSwingWindow(window));
+                final Collection<FrameContainer> childWindows = window.getChildren();
+                for (FrameContainer childWindow : childWindows) {
+                    addWindow(nodes.get(windowFactory.getSwingWindow(window)),
+                            windowFactory.getSwingWindow(childWindow));
                 }
-                scroller = new TreeTreeScroller(swingEventBus, tree);
+            }
 
-                for (FrameContainer window : windowManager.getRootWindows()) {
-                    addWindow(null, windowFactory.getSwingWindow(window));
-                    final Collection<FrameContainer> childWindows = window.getChildren();
-                    for (FrameContainer childWindow : childWindows) {
-                        addWindow(nodes.get(windowFactory.getSwingWindow(window)),
-                                windowFactory.getSwingWindow(childWindow));
-                    }
-                }
-
-                if (activeFrameManager.getActiveFrame() != null) {
-                    selectionChanged(new SwingWindowSelectedEvent(
-                            Optional.ofNullable(activeFrameManager.getActiveFrame())));
-                }
+            if (activeFrameManager.getActiveFrame() != null) {
+                selectionChanged(new SwingWindowSelectedEvent(
+                        Optional.ofNullable(activeFrameManager.getActiveFrame())));
             }
         });
     }
@@ -339,17 +328,13 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel())
-                            .getPathToRoot(nodes.get(event.getWindow().get()));
-                    if (treePath != null && treePath.length > 0) {
-                        final TreePath path = new TreePath(treePath);
-                        tree.setTreePath(path);
-                        tree.scrollPathToVisible(path);
-                    }
+            UIUtilities.invokeLater(() -> {
+                final TreeNode[] treePath = ((DefaultTreeModel) tree.getModel())
+                        .getPathToRoot(nodes.get(event.getWindow().get()));
+                if (treePath != null && treePath.length > 0) {
+                    final TreePath path = new TreePath(treePath);
+                    tree.setTreePath(path);
+                    tree.scrollPathToVisible(path);
                 }
             });
         }

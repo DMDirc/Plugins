@@ -134,12 +134,7 @@ public class Tree extends JTree implements MouseMotionListener,
      * @param path Path
      */
     public void setTreePath(final TreePath path) {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setSelectionPath(path);
-            }
-        });
+        UIUtilities.invokeLater(() -> setSelectionPath(path));
     }
 
     /**

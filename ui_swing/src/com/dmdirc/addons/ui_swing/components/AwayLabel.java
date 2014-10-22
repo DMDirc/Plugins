@@ -74,38 +74,24 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         useAwayIndicator = container.getConfigManager()
                 .getOptionBool("ui", AWAY_INDICATOR);
         if (!useAwayIndicator) {
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    setVisible(false);
-                }
-            });
+            UIUtilities.invokeLater(() -> setVisible(false));
         }
     }
 
     @Override
     public void onAway(final String reason) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (useAwayIndicator) {
-                    setVisible(true);
-                }
+        UIUtilities.invokeLater(() -> {
+            if (useAwayIndicator) {
+                setVisible(true);
             }
         });
     }
 
     @Override
     public void onBack() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (useAwayIndicator) {
-                    setVisible(false);
-                }
+        UIUtilities.invokeLater(() -> {
+            if (useAwayIndicator) {
+                setVisible(false);
             }
         });
     }

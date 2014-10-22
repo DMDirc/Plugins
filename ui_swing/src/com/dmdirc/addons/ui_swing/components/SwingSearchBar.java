@@ -368,24 +368,12 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     @Override
     public void addKeyListener(final KeyListener l) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                listeners.add(KeyListener.class, l);
-            }
-        });
+        UIUtilities.invokeLater(() -> listeners.add(KeyListener.class, l));
     }
 
     @Override
     public void removeKeyListener(final KeyListener l) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                listeners.remove(KeyListener.class, l);
-            }
-        });
+        UIUtilities.invokeLater(() -> listeners.remove(KeyListener.class, l));
     }
 
     @Override

@@ -92,25 +92,21 @@ public class ThemePanel extends AddonPanel {
         final List<Theme> list = new ArrayList<>(themeManager.getAllThemes().values());
         Collections.sort(list);
 
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                ((DefaultTableModel) addonList.getModel()).setRowCount(0);
-                for (final Theme theme : list) {
-                    ((DefaultTableModel) addonList.getModel()).addRow(
-                            new AddonCell[]{
-                                new AddonCell(
-                                        new AddonToggle(
-                                                updateManager,
-                                                userConfig,
-                                                themeManager,
-                                                theme),
-                                        iconManager),});
-                }
-
-                addonList.repaint();
+        UIUtilities.invokeLater(() -> {
+            ((DefaultTableModel) addonList.getModel()).setRowCount(0);
+            for (final Theme theme : list) {
+                ((DefaultTableModel) addonList.getModel()).addRow(
+                        new AddonCell[]{
+                            new AddonCell(
+                                    new AddonToggle(
+                                            updateManager,
+                                            userConfig,
+                                            themeManager,
+                                            theme),
+                                    iconManager),});
             }
+
+            addonList.repaint();
         });
         return addonList;
     }

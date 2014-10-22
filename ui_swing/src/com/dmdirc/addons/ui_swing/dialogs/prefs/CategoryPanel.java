@@ -33,7 +33,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.ui.IconManager;
 
-import java.awt.Component;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -166,25 +166,20 @@ public class CategoryPanel extends JPanel {
                 //Hack around mig bug
                 panel.invalidate();
                 panel.validate();
-                for (final Component component : panel.getComponents()) {
-                    if (component instanceof JPanel) {
-                        component.invalidate();
-                        component.validate();
-                    }
-                }
+                Arrays.stream(panel.getComponents()).filter(c -> c instanceof JPanel)
+                        .forEach(c -> {
+                            c.invalidate();
+                            c.validate();
+                        });
                 //And for good measure, hack the crap out of it some more :(
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        panel.invalidate();
-                        panel.validate();
-                        for (final Component component : panel.getComponents()) {
-                            if (component instanceof JPanel) {
-                                component.invalidate();
-                                component.validate();
-                            }
-                        }
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    panel.invalidate();
+                    panel.validate();
+                    Arrays.stream(panel.getComponents()).filter(c -> c instanceof JPanel)
+                            .forEach(c -> {
+                                c.invalidate();
+                                c.validate();
+                            });
                 });
                 if (category == null) {
                     title.setText("Preferences");
@@ -234,17 +229,13 @@ public class CategoryPanel extends JPanel {
      * @param message Message to display
      */
     public void setError(final String message) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final JPanel panel = new JPanel(new MigLayout("fillx"));
-                panel.add(new TextLabel("An error has occurred loading the "
-                        + "preferences dialog, an error has been raised: "),
-                        "wrap");
-                panel.add(new TextLabel(message));
-                scrollPane.setViewportView(panel);
-            }
+        UIUtilities.invokeLater(() -> {
+            final JPanel panel = new JPanel(new MigLayout("fillx"));
+            panel.add(new TextLabel("An error has occurred loading the "
+                    + "preferences dialog, an error has been raised: "),
+                    "wrap");
+            panel.add(new TextLabel(message));
+            scrollPane.setViewportView(panel);
         });
     }
 

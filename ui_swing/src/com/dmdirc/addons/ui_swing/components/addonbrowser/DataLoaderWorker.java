@@ -35,13 +35,7 @@ import com.dmdirc.util.io.ConfigFile;
 import com.dmdirc.util.io.DownloadListener;
 import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
-import net.miginfocom.swing.MigLayout;
 
-import javax.swing.Box;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.text.StyleConstants;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -50,6 +44,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import javax.swing.Box;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.text.StyleConstants;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Loads the addon data feed into the addon browser.
@@ -195,24 +197,12 @@ public class DataLoaderWorker
 
     @Override
     public void downloadProgress(final float percent) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                jpb.setValue((int) percent);
-            }
-        });
+        UIUtilities.invokeLater(() -> jpb.setValue((int) percent));
     }
 
     @Override
     public void setIndeterminate(final boolean indeterminate) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                jpb.setIndeterminate(indeterminate);
-            }
-        });
+        UIUtilities.invokeLater(() -> jpb.setIndeterminate(indeterminate));
     }
 
 }

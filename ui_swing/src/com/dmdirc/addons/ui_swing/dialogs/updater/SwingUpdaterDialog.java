@@ -216,20 +216,16 @@ public class SwingUpdaterDialog extends StandardDialog implements
     @Override
     public void updateManagerStatusChanged(final UpdateManager manager,
             final UpdateManagerStatus status) {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeLater(() -> {
+            getOkButton().setEnabled(status != UpdateManagerStatus.WORKING);
 
-            @Override
-            public void run() {
-                getOkButton().setEnabled(status != UpdateManagerStatus.WORKING);
-
-                if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
-                    if (isVisible()) {
-                        restartDialogProvider.displayOrRequestFocus();
-                    }
-                    dispose();
-                } else {
-                    getCancelButton().setVisible(true);
+            if (status == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
+                if (isVisible()) {
+                    restartDialogProvider.displayOrRequestFocus();
                 }
+                dispose();
+            } else {
+                getCancelButton().setVisible(true);
             }
         });
     }

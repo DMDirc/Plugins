@@ -198,20 +198,17 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      * Adds the categories from the preferences manager, clearing existing categories first.
      */
     private void addCategories(final List<PreferencesCategory> categories) {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                tabList.removeListSelectionListener(SwingPreferencesDialog.this);
-                for (PreferencesCategory category : categories) {
-                    if (!category.isInline()) {
-                        ((DefaultListModel<PreferencesCategory>) tabList.getModel()).addElement(
-                                category);
-                    }
-                    addCategories(category.getSubcats());
+        UIUtilities.invokeLater(() -> {
+            tabList.removeListSelectionListener(this);
+            for (PreferencesCategory category : categories) {
+                if (!category.isInline()) {
+                    ((DefaultListModel<PreferencesCategory>) tabList.getModel()).addElement(
+                            category);
                 }
-                tabList.addListSelectionListener(SwingPreferencesDialog.this);
-                tabList.setSelectedIndex(0);
+                addCategories(category.getSubcats());
             }
+            tabList.addListSelectionListener(this);
+            tabList.setSelectedIndex(0);
         });
         mainPanel.setWaiting(false);
     }

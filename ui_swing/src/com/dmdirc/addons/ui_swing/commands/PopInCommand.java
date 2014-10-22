@@ -67,17 +67,13 @@ public class PopInCommand extends Command {
     @Override
     public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
             final CommandContext context) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
-                if (swingWindow == null) {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
-                            + " currently no window to pop in.");
-                } else {
-                    swingWindow.setPopout(false);
-                }
+        UIUtilities.invokeLater(() -> {
+            final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
+            if (swingWindow == null) {
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
+                        + " currently no window to pop in.");
+            } else {
+                swingWindow.setPopout(false);
             }
         });
     }

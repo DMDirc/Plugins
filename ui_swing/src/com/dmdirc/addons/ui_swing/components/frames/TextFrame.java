@@ -220,12 +220,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      * Called when the frame has been selected in the UI.
      */
     public void activateFrame() {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frameParent.clearNotification();
-            }
-        });
+        UIUtilities.invokeLater(frameParent::clearNotification);
     }
 
     /**

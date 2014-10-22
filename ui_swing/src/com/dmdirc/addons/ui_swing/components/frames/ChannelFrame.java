@@ -173,15 +173,11 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         if ("channelSplitPanePosition".equals(key)) {
             final int splitPanePosition = getContainer().getConfigManager()
                     .getOptionInt("ui", "channelSplitPanePosition");
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    nicklist.setPreferredSize(
-                            new Dimension(splitPanePosition, 0));
-                    splitPane.setDividerLocation(splitPane.getWidth() - splitPane.
-                            getDividerSize() - splitPanePosition);
-                }
+            UIUtilities.invokeLater(() -> {
+                nicklist.setPreferredSize(
+                        new Dimension(splitPanePosition, 0));
+                splitPane.setDividerLocation(splitPane.getWidth() - splitPane.
+                        getDividerSize() - splitPanePosition);
             });
         }
         if ("shownicklist".equals(key)) {

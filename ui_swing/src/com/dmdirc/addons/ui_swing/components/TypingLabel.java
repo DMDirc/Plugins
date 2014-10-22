@@ -68,13 +68,7 @@ public class TypingLabel extends JLabel implements ConfigChangeListener {
     public void configChanged(final String domain, final String key) {
         useTypingIndicator = container.getConfigManager().getOptionBool("ui", CONFIG_KEY);
         if (!useTypingIndicator) {
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    setVisible(false);
-                }
-            });
+            UIUtilities.invokeLater(() -> setVisible(false));
         }
     }
 

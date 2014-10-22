@@ -140,14 +140,11 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
             protected void done() {
                 super.done();
                 scrollPane.setViewportView(addonList);
-                UIUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        addonList.getSelectionModel()
-                                .addListSelectionListener(AddonPanel.this);
-                        addonList.getSelectionModel()
-                                .setSelectionInterval(0, 0);
-                    }
+                UIUtilities.invokeLater(() -> {
+                    addonList.getSelectionModel()
+                            .addListSelectionListener(AddonPanel.this);
+                    addonList.getSelectionModel()
+                            .setSelectionInterval(0, 0);
                 });
             }
         }.execute();

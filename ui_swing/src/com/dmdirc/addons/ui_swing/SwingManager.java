@@ -162,13 +162,8 @@ public class SwingManager {
         eventBus.subscribe(this);
         eventBus.subscribe(mainFrame);
         eventBus.subscribe(linkHandler);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                errorListDialogProvider.get().load(ErrorManager.getErrorManager());
-            }
-        });
+        SwingUtilities.invokeLater(
+                () -> errorListDialogProvider.get().load(ErrorManager.getErrorManager()));
     }
 
     /**
@@ -180,13 +175,7 @@ public class SwingManager {
         }
         windowManager.removeListener(windowFactory.get());
         windowFactory.get().dispose();
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                errorListDialogProvider.get().dispose();
-            }
-        });
+        SwingUtilities.invokeLater(() -> errorListDialogProvider.get().dispose());
         swingEventBus.unsubscribe(mainFrame);
         swingEventBus.unsubscribe(ctrlTabManager);
         mainFrame.dispose();
@@ -225,25 +214,13 @@ public class SwingManager {
     public void showURLDialog(final UnknownURLEvent event) {
         if (!event.isHandled()) {
             event.setHandled(true);
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    urlDialogFactory.getURLDialog(event.getURI()).display();
-                }
-            });
+            UIUtilities.invokeLater(() -> urlDialogFactory.getURLDialog(event.getURI()).display());
         }
     }
 
     @Handler
     public void showFeedbackNag(final FeedbackNagEvent event) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                feedbackNagProvider.get();
-            }
-        });
+        UIUtilities.invokeLater(feedbackNagProvider::get);
     }
 
 }

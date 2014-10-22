@@ -118,22 +118,19 @@ public class SwingWindowFactory implements FrameListener {
     @Override
     public void addWindow(final FrameContainer parent, final FrameContainer window,
             final boolean focus) {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final TextFrame parentWindow = getSwingWindow(parent);
-                final TextFrame childWindow = doAddWindow(window);
+        UIUtilities.invokeLater(() -> {
+            final TextFrame parentWindow = getSwingWindow(parent);
+            final TextFrame childWindow = doAddWindow(window);
 
-                if (childWindow == null) {
-                    return;
-                }
-                swingEventBus.publish(new SwingWindowAddedEvent(
-                        Optional.ofNullable(parentWindow), childWindow));
+            if (childWindow == null) {
+                return;
+            }
+            swingEventBus.publish(new SwingWindowAddedEvent(
+                    Optional.ofNullable(parentWindow), childWindow));
 
-                if (focus) {
-                    swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
-                                    Optional.ofNullable(childWindow)));
-                }
+            if (focus) {
+                swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(
+                                Optional.ofNullable(childWindow)));
             }
         });
     }
@@ -170,13 +167,8 @@ public class SwingWindowFactory implements FrameListener {
         final TextFrame parentWindow = getSwingWindow(parent);
         final TextFrame childWindow = getSwingWindow(window);
         windows.remove(window);
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                swingEventBus.publish(new SwingWindowDeletedEvent(
-                        Optional.ofNullable(parentWindow), childWindow));
-            }
-        });
+        UIUtilities.invokeLater(() -> swingEventBus.publish(new SwingWindowDeletedEvent(
+                Optional.ofNullable(parentWindow), childWindow)));
     }
 
     /**
@@ -193,9 +185,7 @@ public class SwingWindowFactory implements FrameListener {
 
     /** Disposes of this window factory, removing all listeners. */
     public void dispose() {
-        for (TextFrame frame : windows.values()) {
-            frame.dispose();
-        }
+        windows.values().forEach(TextFrame::dispose);
     }
 
     /**

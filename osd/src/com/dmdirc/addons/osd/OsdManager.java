@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.Callable;
 
 /**
  * Class to manage OSD Windows.
@@ -43,8 +42,6 @@ public class OsdManager {
     private final Window mainFrame;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
-    /** The Plugin that owns this OSD Manager. */
-    private final OsdPlugin plugin;
     /** The colour manager to use to parse colours. */
     private final ColourManager colourManager;
     /** List of OSD Windows. */
@@ -55,11 +52,9 @@ public class OsdManager {
     private final String domain;
 
     public OsdManager(final Window mainFrame, final IdentityController identityController,
-            final OsdPlugin plugin, final ColourManager colourManager,
-            final PluginInfo pluginInfo) {
+            final ColourManager colourManager, final PluginInfo pluginInfo) {
         this.mainFrame = mainFrame;
         this.identityController = identityController;
-        this.plugin = plugin;
         this.colourManager = colourManager;
         this.domain = pluginInfo.getDomain();
     }
@@ -95,10 +90,10 @@ public class OsdManager {
      * <p>
      * This method needs to be synchronised to ensure that the window list is not modified in
      * between the invocation of
-     * {@link OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)} and the point at which
+     * {@link OsdPolicy#getYPosition(OsdManager, int)} and the point at which
      * the {@link OsdWindow} is added to the windowList.
      *
-     * @see OsdPolicy#getYPosition(com.dmdirc.addons.osd.OsdManager, int)
+     * @see OsdPolicy#getYPosition(OsdManager, int)
      * @param message Text to display in the OSD window.
      */
     private synchronized void displayWindow(final int timeout, final String message) {
@@ -107,20 +102,12 @@ public class OsdManager {
         final int startY = identityController.getGlobalConfiguration()
                 .getOptionInt(domain, "locationY");
 
-        windowList.add(UIUtilities.invokeAndWait(
-                new Callable<OsdWindow>() {
-
-                    @Override
-                    public OsdWindow call() {
-                        return new OsdWindow(
-                                mainFrame,
-                                identityController, OsdManager.this, colourManager,
-                                timeout, message, false,
-                                identityController.getGlobalConfiguration().getOptionInt(
-                                        domain, "locationX"), policy.getYPosition(OsdManager.this,
-                                        startY), domain);
-                    }
-                }));
+        windowList.add(UIUtilities.invokeAndWait(() -> new OsdWindow(
+                mainFrame,
+                identityController, this, colourManager,
+                timeout, message, false,
+                identityController.getGlobalConfiguration().getOptionInt(
+                        domain, "locationX"), policy.getYPosition(this, startY), domain)));
     }
 
     /**
@@ -142,13 +129,7 @@ public class OsdManager {
 
         windowList.remove(window);
 
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                window.dispose();
-            }
-        });
+        UIUtilities.invokeLater(window::dispose);
 
         final List<OsdWindow> newList = getWindowList();
         for (OsdWindow otherWindow : newList.subList(closedIndex, newList.size())) {
@@ -165,9 +146,7 @@ public class OsdManager {
      * Destroy all OSD Windows.
      */
     public void closeAll() {
-        for (OsdWindow window : getWindowList()) {
-            closeWindow(window);
-        }
+        getWindowList().forEach(this::closeWindow);
     }
 
     /**
@@ -186,15 +165,6 @@ public class OsdManager {
      */
     public int getWindowCount() {
         return windowList.size();
-    }
-
-    /**
-     * Return the current plugin.
-     *
-     * @return Returns current plugin instance.
-     */
-    public OsdPlugin getPlugin() {
-        return plugin;
     }
 
 }

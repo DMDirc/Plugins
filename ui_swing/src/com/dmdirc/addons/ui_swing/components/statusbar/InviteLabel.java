@@ -129,17 +129,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
      * Updates the invite label for the currently active server.
      */
     private void update() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (activeConnection == null || activeConnection.getInvites().isEmpty()) {
-                    setVisible(false);
-                    closeDialog();
-                } else {
-                    refreshDialog();
-                    setVisible(true);
-                }
+        UIUtilities.invokeLater(() -> {
+            if (activeConnection == null || activeConnection.getInvites().isEmpty()) {
+                setVisible(false);
+                closeDialog();
+            } else {
+                refreshDialog();
+                setVisible(true);
             }
         });
     }
