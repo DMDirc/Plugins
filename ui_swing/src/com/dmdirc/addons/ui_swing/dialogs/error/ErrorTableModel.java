@@ -45,13 +45,13 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
     /** Data list. */
     private final List<ProgramError> errors;
     /** Are we ready? */
-    private boolean ready = false;
+    private boolean ready;
 
     /**
      * Creates a new instance of ErrorTableModel.
      */
     public ErrorTableModel() {
-        this.errors = Collections.synchronizedList(new ArrayList<ProgramError>());
+        this.errors = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void load(final ErrorManager errorManager) {
@@ -236,37 +236,21 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
 
     @Override
     public void errorAdded(final ProgramError error) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                addRow(error);
-            }
-        });
+        UIUtilities.invokeLater(() -> addRow(error));
     }
 
     @Override
     public void errorDeleted(final ProgramError error) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                removeRow(error);
-            }
-        });
+        UIUtilities.invokeLater(() -> removeRow(error));
     }
 
     @Override
     public void errorStatusChanged(final ProgramError error) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                synchronized (errors) {
-                    final int errorRow = indexOf(error);
-                    if (errorRow != -1 && errorRow < getRowCount()) {
-                        fireTableRowsUpdated(errorRow, errorRow);
-                    }
+        UIUtilities.invokeLater(() -> {
+            synchronized (errors) {
+                final int errorRow = indexOf(error);
+                if (errorRow != -1 && errorRow < getRowCount()) {
+                    fireTableRowsUpdated(errorRow, errorRow);
                 }
             }
         });

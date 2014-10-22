@@ -112,24 +112,20 @@ public class PluginPanel extends AddonPanel {
             }
         }
 
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                ((DefaultTableModel) table.getModel()).setNumRows(0);
-                for (final PluginInfo plugin : sortedList) {
-                    ((DefaultTableModel) table.getModel()).addRow(
-                            new AddonCell[]{
-                                new AddonCell(
-                                        new AddonToggle(
-                                                updateManager,
-                                                userConfig,
-                                                pluginManager,
-                                                plugin),
-                                        iconManager),});
-                }
-                table.repaint();
+        UIUtilities.invokeLater(() -> {
+            ((DefaultTableModel) table.getModel()).setNumRows(0);
+            for (final PluginInfo plugin : sortedList) {
+                ((DefaultTableModel) table.getModel()).addRow(
+                        new AddonCell[]{
+                            new AddonCell(
+                                    new AddonToggle(
+                                            updateManager,
+                                            userConfig,
+                                            pluginManager,
+                                            plugin),
+                                    iconManager),});
             }
+            table.repaint();
         });
         return table;
     }

@@ -149,13 +149,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      */
     private void updateCachedSettings() {
         quickCopy = manager.getOptionBool("ui", "quickCopy");
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                recalc();
-            }
-        });
+        UIUtilities.invokeLater(this::recalc);
     }
 
     private void paintOntoGraphics(final Graphics2D g) {

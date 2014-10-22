@@ -281,13 +281,7 @@ public class OsdWindow extends JDialog implements MouseListener, MouseMotionList
         this.desiredX = x;
         this.desiredY = y;
 
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                setLocation(getDesiredX(), getDesiredY());
-            }
-        });
+        UIUtilities.invokeLater(() -> setLocation(getDesiredX(), getDesiredY()));
     }
 
     @Override

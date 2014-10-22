@@ -173,26 +173,22 @@ public class TransferPanel extends JPanel implements ActionListener,
 
     @Override
     public void socketClosed(final DCCTransfer dcc) {
-        UIUtilities.invokeLater(new Runnable() {
+        UIUtilities.invokeLater(() -> {
+            if (transferContainer.isComplete()) {
+                status.setText("Status: Transfer Complete.");
 
-            @Override
-            public void run() {
-                if (transferContainer.isComplete()) {
-                    status.setText("Status: Transfer Complete.");
+                if (transferContainer.shouldShowOpenButton()) {
+                    openButton.setVisible(true);
+                }
 
-                    if (transferContainer.shouldShowOpenButton()) {
-                        openButton.setVisible(true);
-                    }
-
-                    progress.setValue(100);
-                    button.setText("Close Window");
+                progress.setValue(100);
+                button.setText("Close Window");
+            } else {
+                status.setText("Status: Transfer Failed.");
+                if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+                    button.setText("Resend");
                 } else {
-                    status.setText("Status: Transfer Failed.");
-                    if (dcc.getType() == DCCTransfer.TransferType.SEND) {
-                        button.setText("Resend");
-                    } else {
-                        button.setText("Close Window");
-                    }
+                    button.setText("Close Window");
                 }
             }
         });
@@ -200,49 +196,39 @@ public class TransferPanel extends JPanel implements ActionListener,
 
     @Override
     public void socketOpened(final DCCTransfer dcc) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                status.setText("Status: Socket Opened");
-            }
-        });
+        UIUtilities.invokeLater(() -> status.setText("Status: Socket Opened"));
     }
 
     @Override
     public void dataTransferred(final DCCTransfer dcc, final int bytes) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (dcc.getType() == DCCTransfer.TransferType.SEND) {
-                    status.setText("Status: Sending");
-                } else {
-                    status.setText("Status: Receiving");
-                }
-
-                progress.setValue((int) transferContainer.getPercent());
-
-                final double bytesPerSecond = transferContainer
-                        .getBytesPerSecond();
-
-                if (bytesPerSecond > 1048576) {
-                    speed.setText(String.format("Speed: %.2f MiB/s",
-                            bytesPerSecond / 1048576));
-                } else if (bytesPerSecond > 1024) {
-                    speed.setText(String.format("Speed: %.2f KiB/s",
-                            bytesPerSecond / 1024));
-                } else {
-                    speed.setText(String.format("Speed: %.2f B/s",
-                            bytesPerSecond));
-                }
-
-                remaining.setText(String.format("Time Remaining: %s",
-                        DateUtils.formatDurationAsTime((int) transferContainer.getRemainingTime())));
-                taken.setText(String.format("Time Taken: %s", transferContainer
-                        .getStartTime() == 0 ? "N/A" : DateUtils.formatDurationAsTime(
-                        (int) transferContainer.getElapsedTime())));
+        UIUtilities.invokeLater(() -> {
+            if (dcc.getType() == DCCTransfer.TransferType.SEND) {
+                status.setText("Status: Sending");
+            } else {
+                status.setText("Status: Receiving");
             }
+
+            progress.setValue((int) transferContainer.getPercent());
+
+            final double bytesPerSecond = transferContainer
+                    .getBytesPerSecond();
+
+            if (bytesPerSecond > 1048576) {
+                speed.setText(String.format("Speed: %.2f MiB/s",
+                        bytesPerSecond / 1048576));
+            } else if (bytesPerSecond > 1024) {
+                speed.setText(String.format("Speed: %.2f KiB/s",
+                        bytesPerSecond / 1024));
+            } else {
+                speed.setText(String.format("Speed: %.2f B/s",
+                        bytesPerSecond));
+            }
+
+            remaining.setText(String.format("Time Remaining: %s",
+                    DateUtils.formatDurationAsTime((int) transferContainer.getRemainingTime())));
+            taken.setText(String.format("Time Taken: %s", transferContainer
+                    .getStartTime() == 0 ? "N/A" : DateUtils.formatDurationAsTime(
+                    (int) transferContainer.getElapsedTime())));
         });
     }
 

@@ -220,30 +220,26 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             public void actionPerformed(final ActionEvent e) {
                 final String line = target.getText();
                 target.setText("");
-                UIUtilities.invokeLater(new Runnable() {
+                UIUtilities.invokeLater(() -> {
+                    final JTextField source;
+                    if (e.getSource() instanceof SwingInputField) {
+                        source = ((SwingInputField) e.getSource())
+                                .getTextField();
+                    } else if (e.getSource() instanceof JTextField) {
+                        source = (JTextField) e.getSource();
+                    } else {
+                        throw new IllegalArgumentException(
+                                        "Event is not from known source.");
+                    }
+                    if (source.isEditable()) {
+                        new LoggingSwingWorker<Object, Void>(eventBus) {
 
-                    @Override
-                    public void run() {
-                        final JTextField source;
-                        if (e.getSource() instanceof SwingInputField) {
-                            source = ((SwingInputField) e.getSource())
-                                    .getTextField();
-                        } else if (e.getSource() instanceof JTextField) {
-                            source = (JTextField) e.getSource();
-                        } else {
-                            throw new IllegalArgumentException(
-                                            "Event is not from known source.");
-                        }
-                        if (source.isEditable()) {
-                            new LoggingSwingWorker<Object, Void>(eventBus) {
-
-                                @Override
-                                protected Object doInBackground() {
-                                    enterPressed(line);
-                                    return null;
-                                }
-                            }.execute();
-                        }
+                            @Override
+                            protected Object doInBackground() {
+                                enterPressed(line);
+                                return null;
+                            }
+                        }.execute();
                     }
                 });
             }

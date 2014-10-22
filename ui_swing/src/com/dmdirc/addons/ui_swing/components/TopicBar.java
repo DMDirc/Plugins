@@ -225,26 +225,22 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
 
     @Override
     public final void topicChanged(final Channel channel, final Topic topic) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (topicText.isEditable()) {
-                    return;
-                }
-                topicText.setText("");
-                if (topic != null) {
-                channel.getStyliser().addStyledString(
-                        (StyledDocument) topicText.getDocument(),
-                        new String[]{Styliser.CODE_HEXCOLOUR
-                            + UIUtilities.getHex(foregroundColour)
-                                + topic.getTopic(),}, as);
-                }
-                topicText.setCaretPosition(0);
-                validateTopic();
-                setVisible(false);
-                setVisible(true);
+        UIUtilities.invokeLater(() -> {
+            if (topicText.isEditable()) {
+                return;
             }
+            topicText.setText("");
+            if (topic != null) {
+            channel.getStyliser().addStyledString(
+                    (StyledDocument) topicText.getDocument(),
+                    new String[]{Styliser.CODE_HEXCOLOUR
+                        + UIUtilities.getHex(foregroundColour)
+                            + topic.getTopic(),}, as);
+            }
+            topicText.setCaretPosition(0);
+            validateTopic();
+            setVisible(false);
+            setVisible(true);
         });
     }
 
@@ -379,13 +375,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param position New position
      */
     public void setCaretPosition(final int position) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                topicText.setCaretPosition(position);
-            }
-        });
+        UIUtilities.invokeLater(() -> topicText.setCaretPosition(position));
     }
 
     /**
@@ -394,24 +384,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param optionColour Colour for the caret
      */
     public void setCaretColor(final Color optionColour) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                topicText.setCaretColor(optionColour);
-            }
-        });
+        UIUtilities.invokeLater(() -> topicText.setCaretColor(optionColour));
     }
 
     @Override
     public void setForeground(final Color optionColour) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                topicText.setForeground(optionColour);
-            }
-        });
+        UIUtilities.invokeLater(() -> topicText.setForeground(optionColour));
     }
 
     /**
@@ -420,24 +398,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param optionColour Colour for the disabled text
      */
     public void setDisabledTextColour(final Color optionColour) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                topicText.setDisabledTextColor(optionColour);
-            }
-        });
+        UIUtilities.invokeLater(() -> topicText.setDisabledTextColor(optionColour));
     }
 
     @Override
     public void setBackground(final Color optionColour) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                topicText.setBackground(optionColour);
-            }
-        });
+        UIUtilities.invokeLater(() -> topicText.setBackground(optionColour));
     }
 
     @Override
@@ -471,24 +437,20 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * Validates the topic text and shows errors as appropriate.
      */
     public void validateTopic() {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (topicText.isEditable()) {
-                    final int charsLeft = topicLengthMax - topicText.getText().
-                            length();
-                    if (charsLeft < 0) {
-                        errorIcon.setVisible(true);
-                        errorIcon.setToolTipText("Topic too long: " + topicText.
-                                getText().length() + " of " + topicLengthMax);
-                    } else {
-                        errorIcon.setVisible(false);
-                        errorIcon.setToolTipText(null);
-                    }
+        UIUtilities.invokeLater(() -> {
+            if (topicText.isEditable()) {
+                final int charsLeft = topicLengthMax - topicText.getText().
+                        length();
+                if (charsLeft < 0) {
+                    errorIcon.setVisible(true);
+                    errorIcon.setToolTipText("Topic too long: " + topicText.
+                            getText().length() + " of " + topicLengthMax);
                 } else {
                     errorIcon.setVisible(false);
+                    errorIcon.setToolTipText(null);
                 }
+            } else {
+                errorIcon.setVisible(false);
             }
         });
     }
@@ -524,12 +486,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     public void insertUpdate(final DocumentEvent e) {
         validateTopic();
         if (topicText.isEditable()) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    applyAttributes();
-                }
-            });
+            SwingUtilities.invokeLater(this::applyAttributes);
         }
     }
 

@@ -82,17 +82,13 @@ public class WindowMenuScroller implements ConfigChangeListener {
 
     @Override
     public void configChanged(final String domain, final String key) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                scroller.dispose();
-                scroller = new MenuScroller(menu,
-                        config.getOptionInt(configDomain, "windowMenuItems"),
-                        config.getOptionInt(configDomain, "windowMenuScrollInterval"),
-                        fixedCount, 0);
-                scroller.setShowSeperators(false);
-            }
+        UIUtilities.invokeLater(() -> {
+            scroller.dispose();
+            scroller = new MenuScroller(menu,
+                    config.getOptionInt(configDomain, "windowMenuItems"),
+                    config.getOptionInt(configDomain, "windowMenuScrollInterval"),
+                    fixedCount, 0);
+            scroller.setShowSeperators(false);
         });
     }
 

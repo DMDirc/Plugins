@@ -96,7 +96,7 @@ public class OsdPlugin extends BaseCommandPlugin implements
         this.colourManager = colourManager;
         this.mainFrame = swingController.getMainFrame();
         this.domain = pluginInfo.getDomain();
-        osdManager = new OsdManager(mainFrame, identityController, this, colourManager, pluginInfo);
+        osdManager = new OsdManager(mainFrame, identityController, colourManager, pluginInfo);
         registerCommand(new OsdCommand(commandController, osdManager), OsdCommand.INFO);
     }
 

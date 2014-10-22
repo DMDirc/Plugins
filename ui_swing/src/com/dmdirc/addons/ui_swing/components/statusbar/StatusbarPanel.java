@@ -102,14 +102,11 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      * Closes and reopens the dialog to update information and border positions.
      */
     public final void refreshDialog() {
-        UIUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (StatusbarPanel.this) {
-                    if (dialog != null) {
-                        closeDialog();
-                        openDialog();
-                    }
+        UIUtilities.invokeLater(() -> {
+            synchronized (this) {
+                if (dialog != null) {
+                    closeDialog();
+                    openDialog();
                 }
             }
         });
@@ -119,7 +116,7 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      * Opens the information dialog.
      */
     protected void openDialog() {
-        synchronized (StatusbarPanel.this) {
+        synchronized (this) {
             if (dialog == null) {
                 setBackground(getPopupBackground());
                 setForeground(getPopupForeground());
@@ -134,7 +131,7 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      * Closes the information dialog.
      */
     protected void closeDialog() {
-        synchronized (StatusbarPanel.this) {
+        synchronized (this) {
             if (dialog != null) {
                 setBackground(null);
                 setForeground(null);
@@ -152,11 +149,8 @@ public abstract class StatusbarPanel<T extends JComponent> extends JPanel
      * @return is the dialog open
      */
     protected final boolean isDialogOpen() {
-        synchronized (StatusbarPanel.this) {
-            if (dialog != null) {
-                return dialog.isVisible();
-            }
-            return false;
+        synchronized (this) {
+            return dialog != null && dialog.isVisible();
         }
     }
 

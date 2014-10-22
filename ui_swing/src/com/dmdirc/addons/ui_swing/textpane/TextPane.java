@@ -399,13 +399,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     /** Clears the TextPane. */
     public void clear() {
-        UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                document.clear();
-            }
-        });
+        UIUtilities.invokeLater(document::clear);
     }
 
     /** Clears the selection. */
@@ -435,56 +429,44 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     @Override
     public void trimmed(final int newSize, final int numTrimmed) {
-        UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                lastSeenLine -= numTrimmed;
-                final LinePosition selectedRange = getSelectedRange();
-                selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
-                selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
-                if (selectedRange.getStartLine() < 0) {
-                    selectedRange.setStartLine(0);
-                }
-                if (selectedRange.getEndLine() < 0) {
-                    selectedRange.setEndLine(0);
-                }
-                setSelectedText(selectedRange);
-                if (scrollModel.getValue() == scrollModel.getMaximum()) {
-                    setRangeProperties(newSize, newSize);
-                } else {
-                    setRangeProperties(newSize, scrollModel.getValue() - numTrimmed);
-                }
+        UIUtilities.invokeLater(() -> {
+            lastSeenLine -= numTrimmed;
+            final LinePosition selectedRange = getSelectedRange();
+            selectedRange.setStartLine(selectedRange.getStartLine() - numTrimmed);
+            selectedRange.setEndLine(selectedRange.getEndLine() - numTrimmed);
+            if (selectedRange.getStartLine() < 0) {
+                selectedRange.setStartLine(0);
+            }
+            if (selectedRange.getEndLine() < 0) {
+                selectedRange.setEndLine(0);
+            }
+            setSelectedText(selectedRange);
+            if (scrollModel.getValue() == scrollModel.getMaximum()) {
+                setRangeProperties(newSize, newSize);
+            } else {
+                setRangeProperties(newSize, scrollModel.getValue() - numTrimmed);
             }
         });
     }
 
     @Override
     public void cleared() {
-        UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                scrollModel.setMaximum(0);
-                scrollModel.setValue(0);
-                canvas.recalc();
-            }
+        UIUtilities.invokeLater(() -> {
+            scrollModel.setMaximum(0);
+            scrollModel.setValue(0);
+            canvas.recalc();
         });
     }
 
     @Override
     public void linesAdded(final int line, final int length, final int size) {
-        UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                if (scrollModel.getValue() == scrollModel.getMaximum()) {
-                    setRangeProperties(size, size);
-                } else {
-                    setRangeProperties(size, scrollModel.getValue());
-                    if (showNotification) {
-                        newLineIndicator.setVisible(true);
-                    }
+        UIUtilities.invokeLater(() -> {
+            if (scrollModel.getValue() == scrollModel.getMaximum()) {
+                setRangeProperties(size, size);
+            } else {
+                setRangeProperties(size, scrollModel.getValue());
+                if (showNotification) {
+                    newLineIndicator.setVisible(true);
                 }
             }
         });
@@ -492,13 +474,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     @Override
     public void repaintNeeded() {
-        UIUtilities.invokeLater(new Runnable() {
-            /** {@inheritDoc}. */
-            @Override
-            public void run() {
-                canvas.recalc();
-            }
-        });
+        UIUtilities.invokeLater(canvas::recalc);
     }
 
     /**
@@ -542,13 +518,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         showNotification = frame.getContainer().getConfigManager()
                 .getOptionBool(configDomain, "textpanelinenotification");
         if (!showNotification) {
-            UIUtilities.invokeLater(new Runnable() {
-                /** {@inheritDoc}. */
-                @Override
-                public void run() {
-                    newLineIndicator.setVisible(false);
-                }
-            });
+            UIUtilities.invokeLater(() -> newLineIndicator.setVisible(false));
         }
     }
 

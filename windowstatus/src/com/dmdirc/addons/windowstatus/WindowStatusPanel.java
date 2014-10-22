@@ -52,13 +52,7 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
      * @param text New text
      */
     public void setText(final String text) {
-        UIUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                label.setText(Styliser.stipControlCodes(text));
-            }
-        });
+        UIUtilities.invokeLater(() -> label.setText(Styliser.stipControlCodes(text)));
     }
 
 }

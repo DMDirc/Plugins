@@ -182,13 +182,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
                     super.processMouseEvent(e, comp);
                 }
             };
-            UIUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    ((JXLayer<JComponent>) component).setUI(layerUI);
-                }
-            });
+            UIUtilities.invokeLater(() -> ((JXLayer<JComponent>) component).setUI(layerUI));
         } else {
             component.addMouseListener(this);
         }
