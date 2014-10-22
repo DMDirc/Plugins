@@ -50,11 +50,7 @@ public class EdtHandlerInvocation extends ReflectiveHandlerInvocation {
     @Override
     protected void invokeHandler(final Object message, final Object listener,
             final Method handler) {
-        UIUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                EdtHandlerInvocation.super.invokeHandler(message, listener, handler);
-            }
-        });
+        UIUtilities.invokeAndWait(
+                () -> EdtHandlerInvocation.super.invokeHandler(message, listener, handler));
     }
 }

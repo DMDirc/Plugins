@@ -118,27 +118,16 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     private void addLicensesToNode(final Map<String, InputStream> licences,
             final DefaultMutableTreeNode root) {
-        UIUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                model.insertNodeInto(root, (MutableTreeNode) model.
-                        getRoot(), model.getChildCount(model.getRoot()));
-            }
-        });
+        UIUtilities.invokeAndWait(() -> model.insertNodeInto(root,
+                (MutableTreeNode) model.getRoot(), model.getChildCount(model.getRoot())));
         for (Entry<String, InputStream> entry : licences.entrySet()) {
             final Licence licence = createLicence(entry);
             if (licence == null) {
                 continue;
             }
-            UIUtilities.invokeAndWait(new Runnable() {
-
-                @Override
-                public void run() {
-                    model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
-                            model.getChildCount(root));
-                }
-            });
+            UIUtilities.invokeAndWait(
+                    () -> model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
+                            model.getChildCount(root)));
         }
     }
 
