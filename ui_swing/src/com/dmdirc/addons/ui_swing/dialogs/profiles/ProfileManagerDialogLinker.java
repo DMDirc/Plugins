@@ -81,7 +81,7 @@ public class ProfileManagerDialogLinker {
         });
         listModel.addListSelectionListener(e -> model.setSelectedProfile(list.getSelectedValue()));
         model.addPropertyChangeListener("profiles", evt -> {
-            ((DefaultListModel) list.getModel()).clear();
+            ((DefaultListModel<Profile>) list.getModel()).clear();
             for (Profile profile : model.getProfiles()) {
                 ((DefaultListModel<Profile>) list.getModel()).addElement(profile);
             }

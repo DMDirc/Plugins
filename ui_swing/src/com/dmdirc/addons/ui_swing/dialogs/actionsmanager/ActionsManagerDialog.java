@@ -256,7 +256,7 @@ public class ActionsManagerDialog extends StandardDialog implements
      * @param selectedGroup Newly selected group
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
-        ((DefaultListModel) groups.getModel()).clear();
+        ((DefaultListModel<ActionGroup>) groups.getModel()).clear();
         for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
             ((DefaultListModel<ActionGroup>) groups.getModel()).addElement(group);
         }
@@ -374,7 +374,7 @@ public class ActionsManagerDialog extends StandardDialog implements
         new StandardQuestionDialog(this, ModalityType.APPLICATION_MODAL, "Confirm deletion",
                 "Are you sure you wish to delete the '" + group +
                         "' group and all actions within it?", () -> {
-            int location = ((DefaultListModel) groups.getModel())
+            int location = ((DefaultListModel<ActionGroup>) groups.getModel())
                     .indexOf(ActionManager.getActionManager().getOrCreateGroup(group));
             ActionManager.getActionManager().deleteGroup(group);
             reloadGroups();
