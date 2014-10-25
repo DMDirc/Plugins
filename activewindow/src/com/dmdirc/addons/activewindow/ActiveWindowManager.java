@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.messages.MessageSinkManager;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import javax.inject.Inject;
 

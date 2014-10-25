@@ -25,8 +25,8 @@ package com.dmdirc.addons.activewindow;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.messages.MessageSink;
-import com.dmdirc.messages.MessageSinkManager;
+import com.dmdirc.ui.messages.sink.MessageSink;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.util.Date;
 import java.util.regex.Pattern;
