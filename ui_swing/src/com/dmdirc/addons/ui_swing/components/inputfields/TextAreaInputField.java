@@ -30,7 +30,6 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -107,18 +106,15 @@ public class TextAreaInputField extends JTextArea implements InputField,
         if (config.getOptionBool("general", "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(TextAreaInputField.this,
                     colourManager, iconManager, irc, hex);
-            colourPicker.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    try {
-                        getDocument().insertString(getCaretPosition(),
-                                actionEvent.getActionCommand(), null);
-                    } catch (final BadLocationException ex) {
-                        //Ignore, wont happen
-                    }
-                    colourPicker.dispose();
-                    colourPicker = null;
+            colourPicker.addActionListener(actionEvent -> {
+                try {
+                    getDocument().insertString(getCaretPosition(),
+                            actionEvent.getActionCommand(), null);
+                } catch (final BadLocationException ex) {
+                    //Ignore, wont happen
                 }
+                colourPicker.dispose();
+                colourPicker = null;
             });
             colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),

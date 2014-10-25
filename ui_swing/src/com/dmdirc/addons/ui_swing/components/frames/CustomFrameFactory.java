@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.ui.core.components.WindowComponent;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +61,7 @@ public class CustomFrameFactory implements SwingWindowFactory.WindowProvider {
 
     @Override
     public Set<String> getComponents() {
-        return new HashSet<>(Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+        return new HashSet<>(Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
     }
 
 }

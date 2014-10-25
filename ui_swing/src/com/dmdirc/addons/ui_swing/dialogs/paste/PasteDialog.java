@@ -233,12 +233,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                     + " lines.");
             setResizable(true);
             pack();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    setLocationRelativeTo(parentWindow);
-                }
-            });
+            SwingUtilities.invokeLater(() -> setLocationRelativeTo(parentWindow));
         } else if (getCancelButton().equals(actionEvent.getSource())) {
             dispose();
         }

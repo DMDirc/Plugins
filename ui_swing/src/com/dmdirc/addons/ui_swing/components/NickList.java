@@ -253,47 +253,25 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
 
     @Override
     public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                nicklistModel.replace(clients);
-            }
-        });
+        SwingUtilities.invokeLater(() -> nicklistModel.replace(clients));
     }
 
     @Override
     public void clientListUpdated() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                nicklistModel.sort();
-                repaint();
-            }
+        SwingUtilities.invokeLater(() -> {
+            nicklistModel.sort();
+            repaint();
         });
     }
 
     @Override
     public void clientAdded(final ChannelClientInfo client) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                nicklistModel.add(client);
-            }
-        });
+        SwingUtilities.invokeLater(() -> nicklistModel.add(client));
     }
 
     @Override
     public void clientRemoved(final ChannelClientInfo client) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                nicklistModel.remove(client);
-            }
-        });
+        SwingUtilities.invokeLater(() -> nicklistModel.remove(client));
     }
 
 }

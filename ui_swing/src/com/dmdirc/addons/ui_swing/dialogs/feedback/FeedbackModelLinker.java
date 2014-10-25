@@ -25,8 +25,6 @@ package com.dmdirc.addons.ui_swing.dialogs.feedback;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.ui.core.feedback.FeedbackDialogModelAdapter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -152,13 +150,7 @@ public class FeedbackModelLinker {
     }
 
     public void bindDMDircInfo(final JCheckBox dmdircInfo) {
-        dmdircInfo.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.setIncludeDMDircInfo(dmdircInfo.isSelected());
-            }
-        });
+        dmdircInfo.addActionListener(e -> model.setIncludeDMDircInfo(dmdircInfo.isSelected()));
         model.addListener(new FeedbackDialogModelAdapter() {
 
             @Override
@@ -172,13 +164,7 @@ public class FeedbackModelLinker {
     }
 
     public void bindServerInfo(final JCheckBox serverInfo) {
-        serverInfo.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.setIncludeServerInfo(serverInfo.isSelected());
-            }
-        });
+        serverInfo.addActionListener(e -> model.setIncludeServerInfo(serverInfo.isSelected()));
         model.addListener(new FeedbackDialogModelAdapter() {
 
             @Override
@@ -192,13 +178,9 @@ public class FeedbackModelLinker {
     }
 
     public void bindOKButton(final JButton okButton) {
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.save();
-                dialog.dispose();
-            }
+        okButton.addActionListener(e -> {
+            model.save();
+            dialog.dispose();
         });
         model.addListener(new FeedbackDialogModelAdapter() {
 
@@ -235,13 +217,7 @@ public class FeedbackModelLinker {
     }
 
     public void bindCancelButton(final JButton cancelButton) {
-        cancelButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                dialog.dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> dialog.dispose());
     }
 
 }

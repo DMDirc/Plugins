@@ -166,7 +166,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private void initComponents() {
         mainPanel = categoryPanelProvider.get();
 
-        tabList = new JList<>(new DefaultListModel<PreferencesCategory>());
+        tabList = new JList<>(new DefaultListModel<>());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.addListSelectionListener(this);
         ListScroller.register(tabList);

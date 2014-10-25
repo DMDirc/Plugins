@@ -57,8 +57,7 @@ public class WrapLabelView extends LabelView {
                     len);
             try {
                 //if the view contains line break char break the view
-                final int index = getDocument().getText(p0, p1 - p0)
-                        .indexOf("\r");
+                final int index = getDocument().getText(p0, p1 - p0).indexOf('\r');
                 if (index >= 0) {
                     return createFragment(p0, p0 + index + 1);
                 }

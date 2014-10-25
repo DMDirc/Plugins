@@ -30,7 +30,7 @@ import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionsPanel;
 import com.dmdirc.interfaces.actions.ActionType;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.swing.SwingUtilities;
 
@@ -64,37 +64,31 @@ public class ActionSubstitutionsPanel extends SubstitutionsPanel<ActionType> {
      */
     @Override
     public void setType(final ActionType type) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            substitutions = new ArrayList<>();
 
-            @Override
-            public void run() {
-                substitutions = new ArrayList<>();
+            if (type != null) {
+                final ActionSubstitutor sub = substitutorFactory.getActionSubstitutor(type);
 
-                if (type != null) {
-                    final ActionSubstitutor sub = substitutorFactory.getActionSubstitutor(type);
+                substitutions.addAll(sub.getComponentSubstitutions().
+                        entrySet().stream()
+                        .map(entry -> new SubstitutionLabel(
+                                new Substitution(entry.getValue(), entry.getKey())))
+                        .collect(Collectors.toList()));
 
-                    for (final Entry<String, String> entry : sub.getComponentSubstitutions().
-                            entrySet()) {
-                        substitutions.add(new SubstitutionLabel(new Substitution(entry.getValue(),
-                                entry.getKey())));
-                    }
+                substitutions.addAll(sub.getConfigSubstitutions().stream()
+                        .map(entry -> new SubstitutionLabel(new Substitution(entry, entry)))
+                        .collect(Collectors.toList()));
 
-                    for (final String entry : sub.getConfigSubstitutions()) {
-                        substitutions.add(new SubstitutionLabel(new Substitution(entry,
-                                entry)));
-                    }
-
-                    for (final Entry<String, String> entry : sub.getServerSubstitutions().
-                            entrySet()) {
-                        substitutions.add(new SubstitutionLabel(new Substitution(entry.getValue(),
-                                entry.getKey())));
-                    }
-                }
-
-                layoutComponents();
-                validate();
-                layoutComponents();
+                substitutions.addAll(sub.getServerSubstitutions().entrySet().stream()
+                        .map(entry -> new SubstitutionLabel(
+                                new Substitution(entry.getValue(), entry.getKey())))
+                        .collect(Collectors.toList()));
             }
+
+            layoutComponents();
+            validate();
+            layoutComponents();
         });
     }
 

@@ -30,13 +30,8 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.core.newserver.NewServerDialogModelAdapter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -158,40 +153,24 @@ public class NewServerLinker {
         } else if (comboBoxModel.getSize() > 0) {
             comboBoxModel.setSelectedItem(comboBoxModel.getElementAt(0));
         }
-        comboBoxModel.addVetoableSelectionListener(new VetoableChangeListener() {
-
-            @Override
-            public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
-                if (evt.getNewValue() == null) {
-                    throw new PropertyVetoException("Selection cannot be null", evt);
-                }
+        comboBoxModel.addVetoableSelectionListener(evt -> {
+            if (evt.getNewValue() == null) {
+                throw new PropertyVetoException("Selection cannot be null", evt);
             }
         });
-        profilesCombobox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(final ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    model.setSelectedProfile(Optional.ofNullable((ConfigProvider) e.getItem()));
-                }
+        profilesCombobox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                model.setSelectedProfile(Optional.ofNullable((ConfigProvider) e.getItem()));
             }
         });
         profilesCombobox.setRenderer(new PropertyListCellRenderer<>(profilesCombobox.getRenderer(),
                 ConfigProvider.class, "name"));
-        for (ConfigProvider profile : model.getProfileList()) {
-            comboBoxModel.addElement(profile);
-        }
+        model.getProfileList().forEach(comboBoxModel::addElement);
     }
 
     public void bindEditProfiles(final JButton edit,
             final DialogProvider<ProfileManagerDialog> profileManagerDialog) {
-        edit.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                profileManagerDialog.displayOrRequestFocus();
-            }
-        });
+        edit.addActionListener(e -> profileManagerDialog.displayOrRequestFocus());
         model.addListener(new NewServerDialogModelAdapter() {
 
             @Override
@@ -204,35 +183,20 @@ public class NewServerLinker {
     }
 
     public void bindSSL(final JCheckBox sslCheckbox) {
-        sslCheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.setSSL(sslCheckbox.isSelected());
-            }
-        });
+        sslCheckbox.addActionListener(e -> model.setSSL(sslCheckbox.isSelected()));
         sslCheckbox.setSelected(model.getSSL());
     }
 
     public void bindSaveAsDefault(final JCheckBox saveAsDefaultCheckbox) {
-        saveAsDefaultCheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.setSaveAsDefault(saveAsDefaultCheckbox.isSelected());
-            }
-        });
+        saveAsDefaultCheckbox.addActionListener(
+                e -> model.setSaveAsDefault(saveAsDefaultCheckbox.isSelected()));
         saveAsDefaultCheckbox.setSelected(model.getSaveAsDefault());
     }
 
     public void bindOKButton(final JButton okButton) {
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.save();
-                dialog.dispose();
-            }
+        okButton.addActionListener(e -> {
+            model.save();
+            dialog.dispose();
         });
         model.addListener(new NewServerDialogModelAdapter() {
 
@@ -247,13 +211,7 @@ public class NewServerLinker {
     }
 
     public void bindCancelButton(final JButton cancelButton) {
-        cancelButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                dialog.dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> dialog.dispose());
     }
 
 }

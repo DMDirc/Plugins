@@ -139,7 +139,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         listModesArray = channel.getConnection().getParser().getListChannelModes().
                 toCharArray();
         existingListItems = new MapList<>();
-        listModesMenu = new JComboBox<>(new DefaultComboBoxModel<String>());
+        listModesMenu = new JComboBox<>(new DefaultComboBoxModel<>());
         addListModeButton = new JButton("Add");
         removeListModeButton = new JButton("Remove");
         removeListModeButton.setEnabled(false);
@@ -171,9 +171,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                     = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(i).getModel();
 
             model.removeAllElements();
-            for (ChannelListModeItem listItem : listItems) {
-                model.addElement(listItem);
-            }
+            listItems.forEach(model::addElement);
         }
     }
 
@@ -194,11 +192,11 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             String modeText = mode + " list";
             if (channel.getConfigManager().hasOptionString("server", "mode" + mode)) {
                 modeText = channel.getConfigManager().getOption("server",
-                        "mode" + mode) + " list [+" + mode + "]";
+                        "mode" + mode) + " list [+" + mode + ']';
             }
             model.addElement(modeText);
 
-            list = new JList<>(new DefaultListModel<ChannelListModeItem>());
+            list = new JList<>(new DefaultListModel<>());
             list.setCellRenderer(renderer);
             list.setVisibleRowCount(8);
             list.addListSelectionListener(this);
@@ -364,7 +362,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                     + " set");
         } else {
             modeCount.setText(current + " mode" + (current == 1 ? "" : "s")
-                    + " set (maximum of " + maxModes + ")");
+                    + " set (maximum of " + maxModes + ')');
         }
     }
 

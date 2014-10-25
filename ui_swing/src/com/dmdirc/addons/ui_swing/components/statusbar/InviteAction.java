@@ -45,7 +45,7 @@ class InviteAction extends AbstractAction {
      * @param invite Invite for the action
      */
     public InviteAction(final Invite invite) {
-        super(invite.getChannel() + " (" + invite.getSource()[0] + ")");
+        super(invite.getChannel() + " (" + invite.getSource()[0] + ')');
 
         this.invite = invite;
     }
@@ -57,8 +57,8 @@ class InviteAction extends AbstractAction {
 
     @Override
     public String toString() {
-        return invite.getChannel() + "(" + Arrays.toString(invite.getSource())
-                + ")";
+        return invite.getChannel() + '(' + Arrays.toString(invite.getSource())
+                + ')';
     }
 
 }

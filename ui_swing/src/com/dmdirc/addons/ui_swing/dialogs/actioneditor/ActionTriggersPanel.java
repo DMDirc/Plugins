@@ -44,6 +44,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
@@ -155,7 +156,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      *
      * @param triggers Sets the triggers.
      */
-    public void setTriggers(final ActionType[] triggers) {
+    public void setTriggers(final ActionType... triggers) {
         triggerList.clearTriggers();
 
         for (final ActionType localTrigger : triggers) {
@@ -229,16 +230,15 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         itemModel.removeAllElements();
         final List<ActionType> types = triggerList.getTriggers();
 
-        for (final ActionType thisType : ActionManager.getActionManager().findCompatibleTypes(
-                primaryType)) {
-            if (!types.contains(thisType)) {
-                compatibleTriggers.add(thisType);
-                itemModel.addElement(thisType);
-                if (groupModel.getIndexOf(thisType.getType().getGroup()) == -1) {
-                    groupModel.addElement(thisType.getType().getGroup());
-                }
-            }
-        }
+        ActionManager.getActionManager().findCompatibleTypes(primaryType).stream()
+                .filter(thisType -> !types.contains(thisType))
+                .forEach(thisType -> {
+                    compatibleTriggers.add(thisType);
+                    itemModel.addElement(thisType);
+                    if (groupModel.getIndexOf(thisType.getType().getGroup()) == -1) {
+                        groupModel.addElement(thisType.getType().getGroup());
+                    }
+                });
         triggerGroup.setSelectedIndex(-1);
         triggerItem.setSelectedIndex(-1);
         if (itemModel.getSize() == 0) {
@@ -264,12 +264,9 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         comboChange = true;
         ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
         Collections.sort(list, new ActionTypeComparator());
-        for (final ActionType entry : list) {
-            if (compatibleTriggers.isEmpty()
-                    || compatibleTriggers.contains(entry)) {
-                ((DefaultComboBoxModel<Object>) triggerItem.getModel()).addElement(entry);
-            }
-        }
+        list.stream()
+                .filter(entry -> compatibleTriggers.isEmpty() || compatibleTriggers.contains(entry))
+                .forEach(entry -> ((MutableComboBoxModel<Object>) triggerItem.getModel()).addElement(entry));
         triggerItem.setSelectedIndex(-1);
         triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
         triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);

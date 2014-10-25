@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -69,20 +70,7 @@ public class ActionConditionsListPanel extends JPanel implements
      */
     public ActionConditionsListPanel(final IconManager iconManager,
             final ActionConditionsTreePanel treePanel) {
-        this(iconManager, null, new ArrayList<ActionConditionDisplayPanel>(),
-                treePanel);
-    }
-
-    /**
-     * Instantiates the panel.
-     *
-     * @param iconManager Icon manager
-     * @param trigger     Action trigger
-     * @param treePanel   Condition tree panel.
-     */
-    public ActionConditionsListPanel(final IconManager iconManager,
-            final ActionType trigger, final ActionConditionsTreePanel treePanel) {
-        this(iconManager, trigger, new ArrayList<ActionConditionDisplayPanel>(),
+        this(iconManager, null, new ArrayList<>(),
                 treePanel);
     }
 
@@ -131,7 +119,6 @@ public class ActionConditionsListPanel extends JPanel implements
     private void layoutComponents() {
         setVisible(false);
         removeAll();
-        int index = 0;
         if (trigger == null) {
             add(new TextLabel(
                     "You must add at least one trigger before you can add conditions."),
@@ -140,6 +127,7 @@ public class ActionConditionsListPanel extends JPanel implements
             add(new TextLabel("Trigger does not have any arguments."),
                     "alignx center, aligny top, grow, push, w 90%!");
         } else {
+            int index = 0;
             synchronized (conditions) {
                 for (final ActionConditionDisplayPanel condition : conditions) {
                     add(new JLabel(index + "."), "aligny top");
@@ -217,9 +205,9 @@ public class ActionConditionsListPanel extends JPanel implements
         final List<ActionCondition> conditionList = new ArrayList<>();
 
         synchronized (conditions) {
-            for (final ActionConditionDisplayPanel condition : conditions) {
-                conditionList.add(condition.getCondition());
-            }
+            conditionList.addAll(conditions.stream()
+                    .map(ActionConditionDisplayPanel::getCondition)
+                    .collect(Collectors.toList()));
         }
 
         return conditionList;

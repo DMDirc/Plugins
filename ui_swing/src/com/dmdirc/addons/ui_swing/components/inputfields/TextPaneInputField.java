@@ -30,7 +30,6 @@ import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -85,18 +84,15 @@ public class TextPaneInputField extends JEditorPane implements InputField,
         if (globalConfig.getOptionBool("general", "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(this, colourManager,
                     iconManager, irc, hex, parentWindow);
-            colourPicker.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    try {
-                        getDocument().insertString(getCaretPosition(),
-                                actionEvent.getActionCommand(), null);
-                    } catch (final BadLocationException ex) {
-                        //Ignore, wont happen
-                    }
-                    colourPicker.dispose();
-                    colourPicker = null;
+            colourPicker.addActionListener(actionEvent -> {
+                try {
+                    getDocument().insertString(getCaretPosition(),
+                            actionEvent.getActionCommand(), null);
+                } catch (final BadLocationException ex) {
+                    //Ignore, wont happen
                 }
+                colourPicker.dispose();
+                colourPicker = null;
             });
             colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),

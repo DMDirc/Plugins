@@ -88,9 +88,7 @@ public class WizardPanel extends JPanel implements ActionListener {
         initComponents();
         layoutComponents();
 
-        for (Step step : steps) {
-            addStep(step);
-        }
+        steps.forEach(this::addStep);
     }
 
     /** Initialises the components. */

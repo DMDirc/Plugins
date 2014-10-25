@@ -75,7 +75,7 @@ public class ActionResponsePanel extends JPanel {
         response = new TextAreaInputField(iconManager, colourManagerFactory, config, "");
         scrollPane = new JScrollPane(response);
         response.setRows(4);
-        formatter = new JComboBox<>(new DefaultComboBoxModel<String>());
+        formatter = new JComboBox<>(new DefaultComboBoxModel<>());
 
         final MutableComboBoxModel<String> model =
                 (MutableComboBoxModel<String>) formatter.getModel();
@@ -85,9 +85,7 @@ public class ActionResponsePanel extends JPanel {
         final Collection<String> formatters = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         formatters.addAll(config.getOptions("formatter").keySet());
 
-        for (final String format : formatters) {
-            model.addElement(format);
-        }
+        formatters.forEach(model::addElement);
     }
 
     /** Adds the listeners. */

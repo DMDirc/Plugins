@@ -71,8 +71,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
     /** Dismiss menu. */
     private final JPopupMenu menu;
-    /** Dismiss menu item. */
-    private final JMenuItem dismiss;
     /** Show menu item. */
     private final JMenuItem show;
     /** Error list dialog provider. */
@@ -103,7 +101,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         defaultIcon = iconManager.getIcon("normal");
 
         menu = new JPopupMenu();
-        dismiss = new JMenuItem("Clear All");
+        final JMenuItem dismiss = new JMenuItem("Clear All");
         show = new JMenuItem("Open");
         label.setIcon(defaultIcon);
         setVisible(errorManager.getErrorCount() > 0);
@@ -143,24 +141,19 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
 
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            clearError();
+            final List<ProgramError> errors = errorManager.getErrors();
 
-            @Override
-            public void run() {
-                clearError();
-                final List<ProgramError> errors = errorManager.getErrors();
-
-                if (errors.isEmpty()) {
-                    setVisible(false);
-                } else {
-                    for (final ProgramError error : errors) {
-                        if (errorLevel == null || !error.getLevel().moreImportant(errorLevel)) {
-                            errorLevel = error.getLevel();
-                            label.setIcon(iconManager.getIcon(errorLevel.getIcon()));
-                        }
-                    }
-                    setVisible(true);
-                }
+            if (errors.isEmpty()) {
+                setVisible(false);
+            } else {
+                errors.stream().filter(error -> errorLevel == null ||
+                                !error.getLevel().moreImportant(errorLevel)).forEach(error -> {
+                    errorLevel = error.getLevel();
+                    label.setIcon(iconManager.getIcon(errorLevel.getIcon()));
+                });
+                setVisible(true);
             }
         });
     }

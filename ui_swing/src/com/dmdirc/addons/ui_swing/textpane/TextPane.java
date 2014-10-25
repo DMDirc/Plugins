@@ -118,7 +118,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 urlBuilder, eventBus, configDomain, "textpanebackground",
                 "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this, document);
-        final JXLayer<JComponent> layer = new JXLayer<JComponent>(canvas);
+        final JXLayer<JComponent> layer = new JXLayer<>(canvas);
         layer.setUI(backgroundPainter);
         add(layer, "dock center");
         add(newLineIndicator, "dock south, center, grow");

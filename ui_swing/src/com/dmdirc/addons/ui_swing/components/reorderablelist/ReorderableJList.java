@@ -75,7 +75,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel<T>());
+        this(new DefaultListModel<>());
     }
 
     /**

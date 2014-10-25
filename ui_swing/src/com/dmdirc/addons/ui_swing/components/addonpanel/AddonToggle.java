@@ -150,10 +150,7 @@ public final class AddonToggle {
      * @return True if the plugin is or should be updated, false otherwise.
      */
     public boolean getUpdateState() {
-        if (pi != null) {
-            return updateState;
-        }
-        return false;
+        return pi != null && updateState;
     }
 
     /**
@@ -217,10 +214,7 @@ public final class AddonToggle {
      * @return true iff unloadable
      */
     public boolean isUnloadable() {
-        if (pi != null) {
-            return pi.isUnloadable();
-        }
-        return true;
+        return pi == null || pi.isUnloadable();
     }
 
     /**

@@ -46,7 +46,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public GenericListModel() {
 
-        this.list = Collections.synchronizedList(new ArrayList<T>());
+        this.list = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**

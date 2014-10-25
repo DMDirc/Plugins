@@ -28,8 +28,6 @@ import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +57,7 @@ public class ActionTriggersListPanel extends JPanel {
      * @param iconManager Icon Manager
      */
     public ActionTriggersListPanel(final IconManager iconManager) {
-        this(iconManager, new ArrayList<ActionType>());
+        this(iconManager, new ArrayList<>());
     }
 
     /**
@@ -80,8 +78,6 @@ public class ActionTriggersListPanel extends JPanel {
 
     /**
      * Initialises the components.
-     *
-     * @param iconManager Icon Manager
      */
     private void initComponents() {
         setOpaque(false);
@@ -99,13 +95,7 @@ public class ActionTriggersListPanel extends JPanel {
                 final ImageButton<?> button = new ImageButton<>(
                         "delete", iconManager.getIcon("close-inactive"),
                         iconManager.getIcon("close-active"));
-                button.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        delTrigger(trigger);
-                    }
-                });
+                button.addActionListener(e -> delTrigger(trigger));
 
                 button.setEnabled(isEnabled());
 
@@ -130,17 +120,13 @@ public class ActionTriggersListPanel extends JPanel {
      * @param trigger Trigger to add
      */
     public void addTrigger(final ActionType trigger) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            synchronized (triggers) {
+                triggers.add(trigger);
+                firePropertyChange("triggerCount", triggers.size() - 1,
+                        triggers.size());
 
-            @Override
-            public void run() {
-                synchronized (triggers) {
-                    triggers.add(trigger);
-                    firePropertyChange("triggerCount", triggers.size() - 1,
-                            triggers.size());
-
-                    layoutComponents();
-                }
+                layoutComponents();
             }
         });
     }
@@ -151,18 +137,14 @@ public class ActionTriggersListPanel extends JPanel {
      * @param trigger Trigger to delete
      */
     public void delTrigger(final ActionType trigger) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            synchronized (triggers) {
+                triggers.remove(trigger);
+                fireTriggerRemoved(trigger);
+                firePropertyChange("triggerCount", triggers.size() + 1,
+                        triggers.size());
 
-            @Override
-            public void run() {
-                synchronized (triggers) {
-                    triggers.remove(trigger);
-                    fireTriggerRemoved(trigger);
-                    firePropertyChange("triggerCount", triggers.size() + 1,
-                            triggers.size());
-
-                    layoutComponents();
-                }
+                layoutComponents();
             }
         });
     }
@@ -171,9 +153,7 @@ public class ActionTriggersListPanel extends JPanel {
      * Clears the trigger list.
      */
     public void clearTriggers() {
-        for (final ActionType trigger : triggers) {
-            delTrigger(trigger);
-        }
+        triggers.forEach(this::delTrigger);
     }
 
     /**
@@ -248,13 +228,7 @@ public class ActionTriggersListPanel extends JPanel {
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                layoutComponents();
-            }
-        });
+        SwingUtilities.invokeLater(this::layoutComponents);
     }
 
     /** Validates the triggers. */
