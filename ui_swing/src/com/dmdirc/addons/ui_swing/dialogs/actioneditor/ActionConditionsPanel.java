@@ -159,9 +159,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     public void setConditions(final List<ActionCondition> conditions) {
         list.clearConditions();
 
-        for (final ActionCondition condition : conditions) {
-            list.addCondition(condition);
-        }
+        conditions.forEach(list::addCondition);
     }
 
     /**

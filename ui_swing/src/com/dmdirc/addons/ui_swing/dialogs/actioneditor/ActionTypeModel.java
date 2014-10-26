@@ -63,9 +63,7 @@ public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
             final List<ActionType> types = entry.getValue();
             Collections.sort(types, new ActionTypeComparator());
 
-            for (ActionType type : types) {
-                addElement(type);
-            }
+            types.forEach(this::addElement);
         }
     }
 
@@ -102,9 +100,7 @@ public final class ActionTypeModel extends DefaultComboBoxModel<Object> {
             final List<ActionType> types = entry.getValue();
             Collections.sort(types, new ActionTypeComparator());
 
-            for (ActionType type : types) {
-                addElement(type);
-            }
+            types.forEach(this::addElement);
         }
     }
 

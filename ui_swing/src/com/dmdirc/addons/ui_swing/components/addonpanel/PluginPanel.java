@@ -37,6 +37,7 @@ import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,22 +96,18 @@ public class PluginPanel extends AddonPanel {
     @Override
     protected JTable populateList(final JTable table) {
         final List<PluginInfo> list = new ArrayList<>();
-        final List<PluginInfo> sortedList = new ArrayList<>();
+        final Collection<PluginInfo> sortedList = new ArrayList<>();
         list.addAll(pluginManager.getPluginInfos());
         Collections.sort(list);
-        for (final PluginInfo plugin : list) {
-            if (plugin.getMetaData().getParent() == null) {
-                final List<PluginInfo> childList = new ArrayList<>();
-                sortedList.add(plugin);
-                for (final PluginInfo child : plugin.getChildren()) {
-                    if (!childList.contains(child)) {
-                        childList.add(child);
-                    }
-                }
-                Collections.sort(childList);
-                sortedList.addAll(childList);
-            }
-        }
+        list.stream().filter(plugin -> plugin.getMetaData().getParent() == null).forEach(plugin -> {
+            final List<PluginInfo> childList = new ArrayList<>();
+            sortedList.add(plugin);
+            plugin.getChildren().stream()
+                    .filter(child -> !childList.contains(child))
+                    .forEach(childList::add);
+            Collections.sort(childList);
+            sortedList.addAll(childList);
+        });
 
         UIUtilities.invokeLater(() -> {
             ((DefaultTableModel) table.getModel()).setNumRows(0);

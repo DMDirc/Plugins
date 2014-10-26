@@ -172,9 +172,9 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
             closeAndSave();
         } else {
             new StandardQuestionDialog(getOwner(), ModalityType.MODELESS,
-                    "Server has been disconnected.", "Any changes you have " +
-                    "made will be lost, are you sure you want to close this " + "dialog?",
-                    () -> { dispose(); }).display();
+                    "Server has been disconnected.", "Any changes you have made will be lost, " +
+                    "are you sure you want to close this dialog?",
+                    this::dispose).display();
         }
     }
 

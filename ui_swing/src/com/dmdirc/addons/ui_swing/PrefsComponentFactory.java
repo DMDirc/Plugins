@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.OptionalJSpinner;
 import com.dmdirc.addons.ui_swing.components.colours.OptionalColourChooser;
 import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
-import com.dmdirc.addons.ui_swing.components.durationeditor.DurationListener;
 import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
@@ -42,8 +41,6 @@ import com.dmdirc.util.validators.Validator;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Map;
@@ -59,8 +56,6 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -195,14 +190,8 @@ public final class PrefsComponentFactory {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.setOpaque(false);
-        option.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                setting.setValue(String.valueOf(((JCheckBox) e.getSource())
-                        .isSelected()));
-            }
-        });
+        option.addChangeListener(e -> setting.setValue(String.valueOf(((JCheckBox) e.getSource())
+                .isSelected())));
 
         return option;
     }
@@ -228,16 +217,11 @@ public final class PrefsComponentFactory {
             }
         }
 
-        option.addActionListener(new ActionListener() {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public void actionPerformed(final ActionEvent e) {
-                final Object selected = ((JComboBox<?>) e.getSource())
-                        .getSelectedItem();
-                if (selected != null) {
-                    setting.setValue(((Map.Entry<String, String>) selected).getKey());
-                }
+        option.addActionListener(e -> {
+            final Object selected = ((JComboBox<?>) e.getSource())
+                    .getSelectedItem();
+            if (selected != null) {
+                setting.setValue(((Map.Entry<String, String>) selected).getKey());
             }
         });
 
@@ -278,14 +262,8 @@ public final class PrefsComponentFactory {
             option = new JSpinner(new SpinnerNumberModel());
         }
 
-        option.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                setting.setValue(((JSpinner) e.getSource()).getValue().
-                        toString());
-            }
-        });
+        option.addChangeListener(e -> setting.setValue(((JSpinner) e.getSource()).getValue().
+                toString()));
 
         return option;
     }
@@ -331,15 +309,9 @@ public final class PrefsComponentFactory {
             option = new OptionalJSpinner(new SpinnerNumberModel(), state);
         }
 
-        option.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                setting.setValue(((OptionalJSpinner) e.getSource()).isSelected()
-                        + ":" + ((OptionalJSpinner) e.getSource()).getValue().
-                        toString());
-            }
-        });
+        option.addChangeListener(e -> setting.setValue(((OptionalJSpinner) e.getSource()).isSelected()
+                + ":" + ((OptionalJSpinner) e.getSource()).getValue().
+                toString()));
 
         return option;
     }
@@ -361,13 +333,7 @@ public final class PrefsComponentFactory {
             option = new DurationDisplay(iconManager);
         }
 
-        option.addDurationListener(new DurationListener() {
-
-            @Override
-            public void durationUpdated(final int newDuration) {
-                setting.setValue(String.valueOf(newDuration));
-            }
-        });
+        option.addDurationListener(newDuration -> setting.setValue(String.valueOf(newDuration)));
 
         return option;
     }
@@ -384,13 +350,9 @@ public final class PrefsComponentFactory {
         final OptionalColourChooser option = new OptionalColourChooser(
                 iconManager, colourManager, setting.getValue(), true, true, true);
 
-        option.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final OptionalColourChooser chooser = (OptionalColourChooser) e.getSource();
-                setting.setValue(chooser.isEnabled() + ":" + chooser.getColour());
-            }
+        option.addActionListener(e -> {
+            final OptionalColourChooser chooser = (OptionalColourChooser) e.getSource();
+            setting.setValue(chooser.isEnabled() + ":" + chooser.getColour());
         });
 
         return option;
@@ -413,15 +375,9 @@ public final class PrefsComponentFactory {
         final OptionalColourChooser option = new OptionalColourChooser(
                 iconManager, colourManager, colour, state, true, true);
 
-        option.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setting.setValue(((OptionalColourChooser) e.getSource())
-                        .isEnabled() + ":" + ((OptionalColourChooser) e
-                        .getSource()).getColour());
-            }
-        });
+        option.addActionListener(e -> setting.setValue(((OptionalColourChooser) e.getSource())
+                .isEnabled() + ":" + ((OptionalColourChooser) e
+                .getSource()).getColour()));
 
         return option;
     }
@@ -438,17 +394,13 @@ public final class PrefsComponentFactory {
 
         final FontPicker option = new FontPicker(eventBus, value);
 
-        option.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final Object value = ((FontPicker) e.getSource())
-                        .getSelectedItem();
-                if (value instanceof Font) {
-                    setting.setValue(((Font) value).getFamily());
-                } else {
-                    setting.setValue(null);
-                }
+        option.addActionListener(e -> {
+            final Object value1 = ((FontPicker) e.getSource())
+                    .getSelectedItem();
+            if (value1 instanceof Font) {
+                setting.setValue(((Font) value1).getFamily());
+            } else {
+                setting.setValue(null);
             }
         });
 
@@ -467,13 +419,7 @@ public final class PrefsComponentFactory {
             final PreferencesSetting setting, final int type) {
         final FileBrowser option = new FileBrowser(iconManager, setting, type);
 
-        option.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setting.setValue(option.getPath());
-            }
-        });
+        option.addActionListener(e -> setting.setValue(option.getPath()));
 
         option.addKeyListener(new KeyAdapter() {
 

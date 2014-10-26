@@ -137,11 +137,7 @@ public class ValidatingJTextField extends JIconTextField implements DocumentList
      * @return true iif the text validates
      */
     public boolean validateText() {
-        if (isEnabled()) {
-            return !validator.validate(getText()).isFailure();
-        } else {
-            return true;
-        }
+        return !isEnabled() || !validator.validate(getText()).isFailure();
     }
 
     @Override

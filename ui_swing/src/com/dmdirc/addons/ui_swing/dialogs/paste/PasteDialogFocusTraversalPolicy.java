@@ -55,6 +55,7 @@ public final class PasteDialogFocusTraversalPolicy extends FocusTraversalPolicy 
         this.sendButton = sendButton;
     }
 
+    @Override
     public Component getComponentAfter(final Container aContainer,
             final Component aComponent) {
         if (aComponent.equals(cancelButton)) {

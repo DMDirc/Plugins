@@ -38,12 +38,10 @@ import com.dmdirc.util.io.InvalidConfigFileException;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JPanel;
@@ -158,11 +156,9 @@ public class DataLoaderWorker
             return Collections.emptyList();
         }
 
-        final List<AddonInfo> list = new ArrayList<>();
-        for (final Map<String, String> entry : data.getKeyDomains().values()) {
-            list.add(new AddonInfo(globalConfig, updateManager, urlBuilder, entry));
-        }
-        return list;
+        return data.getKeyDomains().values().stream()
+                .map(entry -> new AddonInfo(globalConfig, updateManager, urlBuilder, entry))
+                .collect(Collectors.toList());
     }
 
     @Override

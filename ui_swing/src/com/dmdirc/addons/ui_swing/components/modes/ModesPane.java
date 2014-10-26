@@ -183,7 +183,7 @@ public abstract class ModesPane extends JPanel {
      */
     private String getModeText(final String mode) {
         if (hasModeValue(mode)) {
-            return getModeValue(mode) + " [+" + mode + "]";
+            return getModeValue(mode) + " [+" + mode + ']';
         } else {
             return "Mode " + mode;
         }

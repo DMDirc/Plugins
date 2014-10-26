@@ -32,9 +32,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -150,16 +151,14 @@ public final class UIUtilities {
      * @param font New font
      */
     public static void setUIFont(final Font font) {
-        final Enumeration<?> keys = UIManager.getDefaults().keys();
-        while (keys.hasMoreElements()) {
-            final Object key = keys.nextElement();
+        for(Object key : UIManager.getDefaults().keySet()) {
             final Object value = UIManager.get(key);
             if (value instanceof FontUIResource) {
                 final FontUIResource orig = (FontUIResource) value;
                 UIManager.put(key, new UIDefaults.ProxyLazyValue(
                         "javax.swing.plaf.FontUIResource", new Object[]{
-                            font.getFontName(), orig.getStyle(), orig.getSize()
-                        }));
+                        font.getFontName(), orig.getStyle(), orig.getSize()
+                }));
             }
         }
     }
@@ -312,7 +311,7 @@ public final class UIUtilities {
      * @since 0.6
      */
     public static int getCtrlDownMask() {
-        return Apple.isAppleUI() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+        return Apple.isAppleUI() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
     }
 
     /**
@@ -323,7 +322,7 @@ public final class UIUtilities {
      * @since 0.6
      */
     public static int getCtrlMask() {
-        return Apple.isAppleUI() ? KeyEvent.META_MASK : KeyEvent.CTRL_MASK;
+        return Apple.isAppleUI() ? InputEvent.META_MASK : InputEvent.CTRL_MASK;
     }
 
     /**
@@ -350,7 +349,7 @@ public final class UIUtilities {
      */
     public static String clipStringifNeeded(final JComponent component,
             final String string, final int avaiableWidth) {
-        if ((string == null) || (string.isEmpty())) {
+        if (string == null || string.isEmpty()) {
             return "";
         }
         final FontMetrics fm = component.getFontMetrics(component.getFont());
@@ -372,7 +371,7 @@ public final class UIUtilities {
      */
     public static String clipString(final JComponent component,
             final String string, final int avaiableWidth) {
-        if ((string == null) || (string.isEmpty())) {
+        if (string == null || string.isEmpty()) {
             return "";
         }
         final FontMetrics fm = component.getFontMetrics(component.getFont());
@@ -397,13 +396,9 @@ public final class UIUtilities {
      * @since 0.6.3m1
      */
     public static void resetScrollPane(final JScrollPane scrollPane) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                scrollPane.getHorizontalScrollBar().setValue(0);
-                scrollPane.getVerticalScrollBar().setValue(0);
-            }
+        SwingUtilities.invokeLater(() -> {
+            scrollPane.getHorizontalScrollBar().setValue(0);
+            scrollPane.getVerticalScrollBar().setValue(0);
         });
     }
 
@@ -442,7 +437,7 @@ public final class UIUtilities {
         }
     }
 
-    private static void paintNoBackground(final Graphics2D g, final Rectangle bounds) {
+    private static void paintNoBackground(final Graphics2D g, final Shape bounds) {
         g.fill(bounds);
     }
 
@@ -453,8 +448,8 @@ public final class UIUtilities {
 
     private static void paintCenterBackground(final Graphics2D g,
             final Rectangle bounds, final Image backgroundImage) {
-        final int x = (bounds.width / 2) - (backgroundImage.getWidth(null) / 2);
-        final int y = (bounds.height / 2) - (backgroundImage.getHeight(null) / 2);
+        final int x = bounds.width / 2 - backgroundImage.getWidth(null) / 2;
+        final int y = bounds.height / 2 - backgroundImage.getHeight(null) / 2;
         g.drawImage(backgroundImage, x, y, backgroundImage.getWidth(null),
                 backgroundImage.getHeight(null), null);
     }
@@ -469,8 +464,8 @@ public final class UIUtilities {
         final int width = (int) (backgroundImage.getWidth(null) * ratio);
         final int height = (int) (backgroundImage.getWidth(null) * ratio);
 
-        final int x = (bounds.width / 2) - (width / 2);
-        final int y = (bounds.height / 2) - (height / 2);
+        final int x = bounds.width / 2 - width / 2;
+        final int y = bounds.height / 2 - height / 2;
         g.drawImage(backgroundImage, x, y, width, height, null);
     }
 

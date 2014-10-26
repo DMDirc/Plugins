@@ -101,19 +101,15 @@ public class SwingStatusBar extends JPanel {
                 "Error adding status bar component, " +
                         "component must be an instance of java.awt.component");
         if (!Arrays.asList(getComponents()).contains(event.getComponent())) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    remove(updaterLabel);
-                    remove(errorLabel);
-                    remove(inviteLabel);
-                    add((Component) event.getComponent(), componentConstraints);
-                    add(updaterLabel, componentConstraints);
-                    add(inviteLabel, componentConstraints);
-                    add(errorLabel, componentConstraints);
-                    validate();
-                }
+            SwingUtilities.invokeLater(() -> {
+                remove(updaterLabel);
+                remove(errorLabel);
+                remove(inviteLabel);
+                add((Component) event.getComponent(), componentConstraints);
+                add(updaterLabel, componentConstraints);
+                add(inviteLabel, componentConstraints);
+                add(errorLabel, componentConstraints);
+                validate();
             });
         }
     }
@@ -123,13 +119,9 @@ public class SwingStatusBar extends JPanel {
         Preconditions.checkArgument(event.getComponent() instanceof Component,
                 "Error removing status bar component" +
                         "component must be an instance of java.awt.component");
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                remove((Component) event.getComponent());
-                validate();
-            }
+        SwingUtilities.invokeLater(() -> {
+            remove((Component) event.getComponent());
+            validate();
         });
     }
 }

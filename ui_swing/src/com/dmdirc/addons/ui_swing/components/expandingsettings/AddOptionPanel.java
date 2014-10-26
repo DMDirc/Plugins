@@ -144,7 +144,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     /**
      * Swaps the input field type to the appropriate type.
      *
-     * @param type Option type
+     * @param setting New setting to use
      */
     private void switchInputField(final JComponent setting) {
         if (setting == null) {

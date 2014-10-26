@@ -97,9 +97,6 @@ public class CurrentOptionsPanel extends JPanel implements
     /**
      * Adds an option to the current options pane.
      *
-     * @param configName  config option name
-     * @param displayName config option display name
-     * @param panel       parent panel
      * @param component   Option component to add
      */
     private void addCurrentOption(final JComponent component) {
@@ -127,9 +124,7 @@ public class CurrentOptionsPanel extends JPanel implements
 
         removeAll();
 
-        for (final JComponent setting : settings) {
-            addCurrentOption(setting);
-        }
+        settings.forEach(this::addCurrentOption);
 
         setVisible(true);
     }

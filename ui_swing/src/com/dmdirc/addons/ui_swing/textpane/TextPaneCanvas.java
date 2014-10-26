@@ -301,13 +301,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
                 MouseEventType.RELEASED, e);
         if (quickCopy) {
             textPane.copy((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    clearSelection();
-                }
-            });
+            SwingUtilities.invokeLater(this::clearSelection);
         }
         if (e.getButton() == MouseEvent.BUTTON1) {
             highlightEvent(MouseEventType.RELEASED, e);

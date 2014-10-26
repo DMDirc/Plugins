@@ -33,11 +33,7 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.aliases.AliasDialogModelAdapter;
 
 import java.awt.Dialog;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -47,12 +43,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Links the Alias Manager Dialog with its controller and model.
@@ -79,30 +71,23 @@ public class AliasManagerLinker {
                 Alias.class, "name"));
         commandList.setModel(commandModel);
         commandList.setSelectionModel(selectionModel);
-        commandList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                if (e.getValueIsAdjusting()) {
-                    return;
-                }
-                final int index = commandList.getSelectedIndex();
-                if (index == -1 || commandModel.getSize() == 0) {
-                    model.setSelectedAlias(Optional.<Alias>empty());
-                } else if (index >= commandModel.getSize()) {
-                    model.setSelectedAlias(Optional.ofNullable(commandModel.
-                            getElementAt(index - 1)));
-                } else {
-                    model.setSelectedAlias(Optional.ofNullable(commandModel.getElementAt(index)));
-                }
+        commandList.getSelectionModel().addListSelectionListener(e -> {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            final int index = commandList.getSelectedIndex();
+            if (index == -1 || commandModel.getSize() == 0) {
+                model.setSelectedAlias(Optional.<Alias>empty());
+            } else if (index >= commandModel.getSize()) {
+                model.setSelectedAlias(Optional.ofNullable(commandModel.
+                        getElementAt(index - 1)));
+            } else {
+                model.setSelectedAlias(Optional.ofNullable(commandModel.getElementAt(index)));
             }
         });
-        selectionModel.addVetoableSelectionListener(new VetoableChangeListener() {
-
-            @Override
-            public void vetoableChange(final PropertyChangeEvent evt) throws PropertyVetoException {
-                if (!model.isChangeAliasAllowed()) {
-                    throw new PropertyVetoException("Currently selected alias is invalid.", evt);
-                }
+        selectionModel.addVetoableSelectionListener(evt -> {
+            if (!model.isChangeAliasAllowed()) {
+                throw new PropertyVetoException("Currently selected alias is invalid.", evt);
             }
         });
         model.addListener(new AliasDialogModelAdapter() {
@@ -191,13 +176,8 @@ public class AliasManagerLinker {
     public void bindArgumentsNumber(final JSpinner argumentsNumber) {
         argumentsNumber.setEnabled(false);
         argumentsNumber.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        argumentsNumber.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                model.setSelectedAliasMinimumArguments((Integer) argumentsNumber.getValue());
-            }
-        });
+        argumentsNumber.addChangeListener(
+                e -> model.setSelectedAliasMinimumArguments((Integer) argumentsNumber.getValue()));
 
         model.addListener(new AliasDialogModelAdapter() {
 
@@ -246,27 +226,17 @@ public class AliasManagerLinker {
     }
 
     public void bindAddAlias(final JButton addAlias) {
-        addAlias.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
-                        "Add Alias", "Enter the alias name", model.getNewCommandValidator(),
-                        (String s) -> model.addAlias(s, 0, s)).display();
-            }
-        });
+        addAlias.addActionListener(e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
+                "Add Alias", "Enter the alias name", model.getNewCommandValidator(),
+                (String s) -> model.addAlias(s, 0, s)).display());
     }
 
     public void bindDeleteAlias(final JButton deleteAlias) {
         deleteAlias.setEnabled(false);
-        deleteAlias.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final Optional<Alias> alias = model.getSelectedAlias();
-                if (alias.isPresent()) {
-                    model.removeAlias(alias.get().getName());
-                }
+        deleteAlias.addActionListener(e -> {
+            final Optional<Alias> alias = model.getSelectedAlias();
+            if (alias.isPresent()) {
+                model.removeAlias(alias.get().getName());
             }
         });
         model.addListener(new AliasDialogModelAdapter() {
@@ -280,13 +250,9 @@ public class AliasManagerLinker {
     }
 
     public void bindOKButton(final JButton okButton) {
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                model.save();
-                dialog.dispose();
-            }
+        okButton.addActionListener(e -> {
+            model.save();
+            dialog.dispose();
         });
         model.addListener(new AliasDialogModelAdapter() {
 
@@ -300,13 +266,7 @@ public class AliasManagerLinker {
 
     public void bindCancelButton(final JButton cancelButton) {
         cancelButton.setEnabled(true);
-        cancelButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                dialog.dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> dialog.dispose());
     }
 
 }

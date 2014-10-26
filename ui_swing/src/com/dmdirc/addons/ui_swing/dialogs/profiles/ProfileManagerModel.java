@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -84,9 +85,8 @@ public class ProfileManagerModel {
      */
     public void load() {
         final List<ConfigProvider> identities = identityController.getProvidersByType("profile");
-        for (ConfigProvider identity : identities) {
-            profiles.add(new Profile(identityFactory, identity));
-        }
+        profiles.addAll(identities.stream().map(identity -> new Profile(identityFactory, identity))
+                .collect(Collectors.toList()));
         updateDisplayedProfiles();
         if (!profiles.isEmpty()) {
             selectedProfile = profiles.get(0);
@@ -105,11 +105,9 @@ public class ProfileManagerModel {
      */
     private void updateDisplayedProfiles() {
         displayedProfiles.clear();
-        for (Profile profile : profiles) {
-            if (!profile.isDeleted()) {
-                displayedProfiles.add(profile);
-            }
-        }
+        displayedProfiles.addAll(profiles.stream()
+                .filter(profile -> !profile.isDeleted())
+                .collect(Collectors.toList()));
     }
 
     /**

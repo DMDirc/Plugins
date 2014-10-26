@@ -99,9 +99,7 @@ public class PerformPanel extends JPanel {
 
         this.performWrapper = performWrapper;
 
-        for (final PerformDescription perform : performs) {
-            addPerform(perform);
-        }
+        performs.forEach(this::addPerform);
         setLayout(new MigLayout("ins 0, fill"));
         performSpace = new TextAreaInputField(iconManager, colourManagerFactory, config, "");
         add(new JScrollPane(performSpace), "grow, push");
@@ -170,7 +168,7 @@ public class PerformPanel extends JPanel {
      *
      * @return A string containing each element of lines, separated by a LF.
      */
-    private String implode(final String[] lines) {
+    private String implode(final String... lines) {
         final StringBuilder res = new StringBuilder();
 
         for (final String line : lines) {

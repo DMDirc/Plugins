@@ -28,7 +28,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.addons.ui_swing.wizard.Step;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
@@ -94,7 +93,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
         this.profileDialogProvider = profileDialogProvider;
         this.eventBus = eventBus;
 
-        wizardDialog = new WizardDialog("Setup wizard", new ArrayList<Step>(), parentWindow,
+        wizardDialog = new WizardDialog("Setup wizard", new ArrayList<>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
         wizardDialog.setIconImage(iconManager.getImage("icon"));
         wizardDialog.addWizardListener(this);
