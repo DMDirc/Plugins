@@ -262,7 +262,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
      */
     private void addList(final List<ActionType> list) {
         comboChange = true;
-        ((DefaultComboBoxModel) triggerItem.getModel()).removeAllElements();
+        ((DefaultComboBoxModel<Object>) triggerItem.getModel()).removeAllElements();
         Collections.sort(list, new ActionTypeComparator());
         for (final ActionType entry : list) {
             if (compatibleTriggers.isEmpty()

@@ -56,6 +56,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -188,7 +189,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             addListModeButton.setEnabled(true);
         }
 
-        final DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) listModesMenu.
+        final MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) listModesMenu.
                 getModel();
         for (char mode : listModesArray) {
             String modeText = mode + " list";
@@ -249,8 +250,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         for (int i = 0; i < listModesArray.length;
                 i++) {
             final char mode = listModesArray[i];
-            final Enumeration<?> values = ((DefaultListModel) listModesPanels.get(i).getModel()).
-                    elements();
+            final Enumeration<?> values = ((DefaultListModel<ChannelListModeItem>) listModesPanels
+                    .get(i).getModel()).elements();
             final List<ChannelListModeItem> listItems = existingListItems.get(mode);
 
             for (ChannelListModeItem listItem : listItems) {
@@ -306,7 +307,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         final int selectedIndex = listModesMenu.getSelectedIndex();
         final JList<ChannelListModeItem> removeList = listModesPanels.get(selectedIndex);
         for (ChannelListModeItem mode : removeList.getSelectedValuesList()) {
-            ((DefaultListModel) removeList.getModel()).removeElement(mode);
+            ((DefaultListModel<ChannelListModeItem>) removeList.getModel()).removeElement(mode);
         }
         updateModeCount();
     }
@@ -338,7 +339,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     @Override
     public void valueChanged(final ListSelectionEvent event) {
         if (!event.getValueIsAdjusting()) {
-            final int selected = ((JList) event.getSource()).getSelectedIndex();
+            final int selected = ((JList<?>) event.getSource()).getSelectedIndex();
             if (selected == -1) {
                 removeListModeButton.setEnabled(false);
             } else {

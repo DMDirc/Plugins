@@ -141,7 +141,7 @@ public class PerformTab extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final PerformDescription perform = (PerformDescription) ((JComboBox) e.getSource()).
+        final PerformDescription perform = (PerformDescription) ((JComboBox<?>) e.getSource()).
                 getSelectedItem();
         performPanel.switchPerform(perform);
     }
