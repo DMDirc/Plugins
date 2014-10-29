@@ -54,7 +54,6 @@ public abstract class ComponentValidator<T, V extends JComponent> {
      * Current validation state.
      */
     private boolean isFailure;
-
     /**
      * Creates a new component validator.
      *
@@ -67,6 +66,7 @@ public abstract class ComponentValidator<T, V extends JComponent> {
         this.listeners = new ListenerList();
         this.validator = validator;
         this.component = component;
+        component.addPropertyChangeListener("enabled", e -> validate());
     }
 
     /**
