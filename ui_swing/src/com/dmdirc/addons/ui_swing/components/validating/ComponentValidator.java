@@ -67,6 +67,7 @@ public abstract class ComponentValidator<T, V extends JComponent> {
         this.listeners = new ListenerList();
         this.validator = validator;
         this.component = component;
+        component.addPropertyChangeListener("enabled", e -> validate());
     }
 
     /**
