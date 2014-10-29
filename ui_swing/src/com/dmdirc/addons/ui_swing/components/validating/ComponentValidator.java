@@ -54,6 +54,7 @@ public abstract class ComponentValidator<T, V extends JComponent> {
      * Current validation state.
      */
     private boolean isFailure;
+
     /**
      * Creates a new component validator.
      *
