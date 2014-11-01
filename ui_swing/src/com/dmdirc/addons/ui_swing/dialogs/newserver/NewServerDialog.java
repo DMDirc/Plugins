@@ -30,6 +30,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.IconManager;
@@ -64,7 +65,7 @@ public class NewServerDialog extends StandardDialog {
         final JTextField hostname = new JTextField();
         final JTextField port = new JTextField();
         final JTextField password = new JTextField();
-        final JComboBox<ConfigProvider> profiles = new JComboBox<>();
+        final JComboBox<Profile> profiles = new JComboBox<>();
         final JButton edit = new JButton("Edit");
         final JCheckBox ssl = new NoBorderJCheckBox("Use a secure (SSL) connection?");
         final JCheckBox saveAsDefault
