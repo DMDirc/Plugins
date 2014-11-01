@@ -83,7 +83,7 @@ public class SettingsMenu extends JMenu {
 
         if (!Apple.isAppleUI()) {
             menuItem = new JMenuItem();
-            menuItem.setText("Settings");
+            menuItem.setText("Preferences");
             menuItem.setMnemonic('p');
             menuItem.addActionListener(e -> prefsDialogProvider.displayOrRequestFocus());
             add(menuItem);
