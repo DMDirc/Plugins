@@ -108,7 +108,7 @@ public class CategoryPanel extends JPanel {
         this.factory = factory;
         this.eventBus = eventBus;
 
-        panels = Collections.synchronizedMap(new HashMap<PreferencesCategory, JPanel>());
+        panels = Collections.synchronizedMap(new HashMap<>());
 
         loading = new JPanel(new MigLayout("fillx"));
         loading.add(new TextLabel("Loading..."));

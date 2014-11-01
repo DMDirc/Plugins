@@ -96,9 +96,7 @@ public class CertificateChainPanel extends JPanel {
         if (certificateChain == null) {
             model.clear();
         } else {
-            for (final CertificateChainEntry entry : certificateChain) {
-                model.addElement(entry);
-            }
+            certificateChain.forEach(model::addElement);
         }
     }
 

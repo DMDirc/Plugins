@@ -69,7 +69,6 @@ import com.dmdirc.util.URLBuilder;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.util.concurrent.Callable;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -135,21 +134,15 @@ public class SwingModule {
             final Provider<FrameManager> frameManagerProvider,
             final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus) {
-        return UIUtilities.invokeAndWait(new Callable<MainFrame>() {
-
-            @Override
-            public MainFrame call() {
-                return new MainFrame(
-                        apple,
-                        lifecycleController,
-                        globalConfig,
-                        quitWorker,
-                        new IconManager(globalConfig, urlBuilder),
-                        frameManagerProvider,
-                        eventBus,
-                        swingEventBus);
-            }
-        });
+        return UIUtilities.invokeAndWait(() -> new MainFrame(
+                apple,
+                lifecycleController,
+                globalConfig,
+                quitWorker,
+                new IconManager(globalConfig, urlBuilder),
+                frameManagerProvider,
+                eventBus,
+                swingEventBus));
     }
 
     @Provides
@@ -175,13 +168,9 @@ public class SwingModule {
             final UpdaterLabel updaterLabel,
             final MessageLabel messageLabel,
             final DMDircMBassador eventBus) {
-        final SwingStatusBar sb = UIUtilities.invokeAndWait(new Callable<SwingStatusBar>() {
-            @Override
-            public SwingStatusBar call() {
-                return new SwingStatusBar(eventBus, inviteLabel, updaterLabel, errorLabel,
-                        messageLabel);
-            }
-        });
+        final SwingStatusBar sb = UIUtilities.invokeAndWait(
+                () -> new SwingStatusBar(eventBus, inviteLabel, updaterLabel, errorLabel,
+                        messageLabel));
         eventBus.subscribe(messageLabel);
         eventBus.subscribe(sb);
         return sb;

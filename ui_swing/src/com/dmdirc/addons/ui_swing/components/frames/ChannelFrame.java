@@ -236,6 +236,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         popupMenu.add(settingsMI);
     }
 
+    @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
         saveSplitPanePosition();

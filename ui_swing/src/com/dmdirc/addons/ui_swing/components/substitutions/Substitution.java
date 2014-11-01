@@ -40,7 +40,7 @@ public final class Substitution {
      */
     public Substitution(final String name, final String value) {
         this.name = name;
-        this.value = "$" + value;
+        this.value = '$' + value;
     }
 
     /**

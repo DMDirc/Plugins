@@ -30,7 +30,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.Validator;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.text.BadLocationException;
@@ -103,18 +102,15 @@ public class ValidatingTextFieldInputField extends ValidatingJTextField
     public void showColourPicker(final boolean irc, final boolean hex) {
         if (globalConfig.getOptionBool("general", "showcolourdialog")) {
             colourPicker = new ColourPickerDialog(this, colourManager, iconManager, irc, hex);
-            colourPicker.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    try {
-                        getDocument().insertString(getCaretPosition(),
-                                actionEvent.getActionCommand(), null);
-                    } catch (final BadLocationException ex) {
-                        //Ignore, wont happen
-                    }
-                    colourPicker.dispose();
-                    colourPicker = null;
+            colourPicker.addActionListener(actionEvent -> {
+                try {
+                    getDocument().insertString(getCaretPosition(),
+                            actionEvent.getActionCommand(), null);
+                } catch (final BadLocationException ex) {
+                    //Ignore, wont happen
                 }
+                colourPicker.dispose();
+                colourPicker = null;
             });
             colourPicker.setVisible(true);
             colourPicker.setLocation((int) getLocationOnScreen().getX(),

@@ -34,6 +34,8 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
+import java.awt.Component;
+import java.awt.MenuContainer;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
@@ -51,14 +53,11 @@ import net.miginfocom.swing.MigLayout;
 public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
     /** Panel gap. */
-    private final int padding = (int) PlatformDefaults.getUnitValueX("related").
-            getValue();
+    private final int padding = (int) PlatformDefaults.getUnitValueX("related").getValue();
     /** Panel left padding. */
-    private final int leftPadding = (int) PlatformDefaults.getPanelInsets(1).
-            getValue();
+    private final int leftPadding = (int) PlatformDefaults.getPanelInsets(1).getValue();
     /** Panel right padding. */
-    private final int rightPadding = (int) PlatformDefaults.getPanelInsets(3).
-            getValue();
+    private final int rightPadding = (int) PlatformDefaults.getPanelInsets(3).getValue();
     /** Error panel. */
     private JPanel errorCategory;
     /** Category panel. */
@@ -113,7 +112,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     public JPanel getPanel() {
         JPanel panel;
         try {
-            panel = super.get();
+            panel = get();
         } catch (InterruptedException ex) {
             panel = errorCategory;
         } catch (ExecutionException ex) {
@@ -153,7 +152,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
                         "Custom preferences objects" + " for this UI must extend JPanel.");
             }
 
-            panel.add((JPanel) category.getObject(), "growx, pushx");
+            panel.add((Component) category.getObject(), "growx, pushx");
 
             return;
         }
@@ -163,11 +162,8 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         }
 
         if (!category.isInlineBefore()) {
-            for (PreferencesCategory child : category.getSubcats()) {
-                if (child.isInline()) {
-                    addInlineCategory(child, panel);
-                }
-            }
+            category.getSubcats().stream().filter(PreferencesCategory::isInline)
+                    .forEach(child -> addInlineCategory(child, panel));
         }
     }
 
@@ -218,7 +214,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      * @return Tooltip text for the setting
      */
     private String getTooltipText(final PreferencesSetting setting,
-            final JComponent component) {
+            final MenuContainer component) {
         if (setting.isRestartNeeded()) {
             final int size = component.getFont().getSize();
             return "<html>" + setting.getHelptext() + "<br>"
@@ -265,7 +261,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
             final JPanel panel1 = new NoRemovePanel(
                     new MigLayout("fillx, gap unrel, wrap 2, pack, "
                             + "hidemode 3, wmax 470-"
-                            + leftPadding + "-" + rightPadding + "-2*" + padding));
+                            + leftPadding + '-' + rightPadding + "-2*" + padding));
             panel1.setName(category.getPath());
             return panel1;
         });

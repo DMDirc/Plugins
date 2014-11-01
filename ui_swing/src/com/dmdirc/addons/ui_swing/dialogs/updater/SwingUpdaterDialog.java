@@ -42,8 +42,8 @@ import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.swing.JButton;
@@ -123,13 +123,10 @@ public class SwingUpdaterDialog extends StandardDialog implements
         header = new TextLabel("An update is available for one or more "
                 + "components of DMDirc:");
 
-        final List<UpdateComponent> updates = new ArrayList<>();
-        for (UpdateComponent component : updateManager.getComponents()) {
-            if (updateManager.getStatus(component) != UpdateStatus.IDLE
-                    && updateManager.getStatus(component) != UpdateStatus.CHECKING_NOT_PERMITTED) {
-                updates.add(component);
-            }
-        }
+        final List<UpdateComponent> updates = updateManager.getComponents().stream()
+                .filter(component -> updateManager.getStatus(component) != UpdateStatus.IDLE
+                        && updateManager.getStatus(component) != UpdateStatus.CHECKING_NOT_PERMITTED)
+                .collect(Collectors.toList());
 
         scrollPane = new JScrollPane();
         table = new PackingTable(new UpdateTableModel(updateManager, updates), scrollPane) {
@@ -189,11 +186,9 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
                 @Override
                 protected Void doInBackground() {
-                    for (UpdateComponent update : ((UpdateTableModel) table.getModel()).getUpdates()) {
-                        if (((UpdateTableModel) table.getModel()).isEnabled(update)) {
-                            updateManager.install(update);
-                        }
-                    }
+                    ((UpdateTableModel) table.getModel()).getUpdates().stream()
+                            .filter(update -> ((UpdateTableModel) table.getModel())
+                                    .isEnabled(update)).forEach(updateManager::install);
                     return null;
                 }
             }.execute();

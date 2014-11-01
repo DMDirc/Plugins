@@ -112,12 +112,9 @@ public class MDIBar extends JPanel implements ActionListener, ConfigChangeListen
      * Checks whether this MDI bar should be visible and active and sets itself accordingly.
      */
     private void check() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setVisible(visibility);
-                setEnabled(activeFrameManager.getActiveFrame() != null);
-            }
+        SwingUtilities.invokeLater(() -> {
+            setVisible(visibility);
+            setEnabled(activeFrameManager.getActiveFrame() != null);
         });
     }
 

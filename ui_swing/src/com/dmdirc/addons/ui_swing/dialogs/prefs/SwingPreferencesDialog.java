@@ -41,8 +41,6 @@ import com.dmdirc.ui.IconManager;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -53,6 +51,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -151,7 +150,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private void setPrefsManager(final PreferencesDialogModel manager) {
         this.manager = manager;
 
-        ((DefaultListModel) tabList.getModel()).clear();
+        ((DefaultListModel<PreferencesCategory>) tabList.getModel()).clear();
         mainPanel.setCategory(null);
 
         final int count = countCategories(manager.getCategories());
@@ -166,13 +165,13 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     private void initComponents() {
         mainPanel = categoryPanelProvider.get();
 
-        tabList = new JList<>(new DefaultListModel<PreferencesCategory>());
+        tabList = new JList<>(new DefaultListModel<>());
         tabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabList.addListSelectionListener(this);
         ListScroller.register(tabList);
         final JScrollPane tabListScrollPane = new JScrollPane(tabList);
         tabListScrollPane.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Preferences");
@@ -185,9 +184,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
         getOkButton().addActionListener(this);
         getCancelButton().addActionListener(this);
 
-        final MigLayout layout
-                = new MigLayout("pack, hmin min(80sp, 700), " + "hmax min(700, 80sp)");
-        setLayout(layout);
+        setLayout(new MigLayout("pack, hmin min(80sp, 700), " + "hmax min(700, 80sp)"));
         add(tabListScrollPane, "w 150!, growy, pushy");
         add(mainPanel, "wrap, w 480!, pushy, growy, pushy");
         add(getLeftButton(), "span, split, right");
@@ -197,7 +194,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /**
      * Adds the categories from the preferences manager, clearing existing categories first.
      */
-    private void addCategories(final List<PreferencesCategory> categories) {
+    private void addCategories(final Iterable<PreferencesCategory> categories) {
         UIUtilities.invokeLater(() -> {
             tabList.removeListSelectionListener(this);
             for (PreferencesCategory category : categories) {
@@ -222,8 +219,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
      *
      * @since 0.6.3m1rc3
      */
-    protected int countCategories(
-            final Collection<PreferencesCategory> categories) {
+    private int countCategories(final Iterable<PreferencesCategory> categories) {
         int count = 0;
 
         for (PreferencesCategory cat : categories) {
@@ -297,7 +293,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
     @Override
     public void dispose() {
-        synchronized (SwingPreferencesDialog.this) {
+        synchronized (this) {
             if (!worker.isDone()) {
                 worker.cancel(true);
             }

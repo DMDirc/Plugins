@@ -55,7 +55,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      */
     public NicklistListModel(final AggregateConfigProvider config) {
         this(config, Collections.synchronizedList(
-                new ArrayList<ChannelClientInfo>()));
+                new ArrayList<>()));
     }
 
     /**

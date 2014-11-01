@@ -99,17 +99,17 @@ public class ActionConditionEditorPanel extends JPanel implements
 
     /** Initialises the components. */
     private void initComponents() {
-        arguments = new JComboBox<>(new DefaultComboBoxModel<String>());
+        arguments = new JComboBox<>(new DefaultComboBoxModel<>());
         arguments.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         arguments.setName("argument");
         UIUtilities.addComboBoxWidthModifier(arguments);
-        components = new JComboBox<>(new DefaultComboBoxModel<ActionComponent>());
+        components = new JComboBox<>(new DefaultComboBoxModel<>());
         components.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         components.setName("component");
         UIUtilities.addComboBoxWidthModifier(components);
-        comparisons = new JComboBox<>(new DefaultComboBoxModel<ActionComparison>());
+        comparisons = new JComboBox<>(new DefaultComboBoxModel<>());
         comparisons.putClientProperty("JComboBox.isTableCellEditor",
                 Boolean.TRUE);
         comparisons.setName("comparison");

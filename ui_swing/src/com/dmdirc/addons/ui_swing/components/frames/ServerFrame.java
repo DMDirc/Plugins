@@ -167,12 +167,9 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void certificateProblemResolved(final CertificateManager manager) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (sslDialog != null) {
-                    sslDialog.dispose();
-                }
+        SwingUtilities.invokeLater(() -> {
+            if (sslDialog != null) {
+                sslDialog.dispose();
             }
         });
     }

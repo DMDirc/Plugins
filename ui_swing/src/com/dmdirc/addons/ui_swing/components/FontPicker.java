@@ -85,22 +85,10 @@ public class FontPicker extends JComboBox<Object> {
     private void loadFonts(final String... fonts) {
         final int size = getFont().getSize();
         for (final String font : fonts) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    ((DefaultComboBoxModel<Object>) getModel()).addElement(new Font(
-                            font, Font.PLAIN, size));
-                }
-            });
+            SwingUtilities.invokeLater(() -> ((DefaultComboBoxModel<Object>) getModel()).addElement(new Font(
+                    font, Font.PLAIN, size)));
         }
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                setSelectedItem(new Font(fontFamily, Font.PLAIN, size));
-            }
-        });
+        SwingUtilities.invokeLater(() -> setSelectedItem(new Font(fontFamily, Font.PLAIN, size)));
     }
 
 }

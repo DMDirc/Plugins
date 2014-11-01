@@ -112,40 +112,37 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
 
     /** Updates the panels details. */
     private void updateDetails() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                details.setText("");
-                if (error == null) {
-                    id.setText("");
-                    date.setText("");
-                    level.setText("");
-                    reportStatus.setText("");
+        SwingUtilities.invokeLater(() -> {
+            details.setText("");
+            if (error == null) {
+                id.setText("");
+                date.setText("");
+                level.setText("");
+                reportStatus.setText("");
 
-                    return;
-                }
-
-                id.setText(String.valueOf(error.getID()));
-                date.setText(error.occurrencesString());
-                level.setText(error.getLevel().toString());
-                reportStatus.setText(error.getReportStatus().toString());
-
-                details.append(error.getMessage() + '\n');
-                final String[] trace = error.getTrace();
-                if (trace.length > 0) {
-                    details.append("\n");
-                }
-                for (String traceLine : trace) {
-                    details.append(traceLine + '\n');
-                }
-                try {
-                    details.getDocument().remove(details.getDocument().getLength() - 1, 1);
-                } catch (BadLocationException ex) {
-                    //Ignore
-                }
-
-                UIUtilities.resetScrollPane(scrollPane);
+                return;
             }
+
+            id.setText(String.valueOf(error.getID()));
+            date.setText(error.occurrencesString());
+            level.setText(error.getLevel().toString());
+            reportStatus.setText(error.getReportStatus().toString());
+
+            details.append(error.getMessage() + '\n');
+            final String[] trace = error.getTrace();
+            if (trace.length > 0) {
+                details.append("\n");
+            }
+            for (String traceLine : trace) {
+                details.append(traceLine + '\n');
+            }
+            try {
+                details.getDocument().remove(details.getDocument().getLength() - 1, 1);
+            } catch (BadLocationException ex) {
+                //Ignore
+            }
+
+            UIUtilities.resetScrollPane(scrollPane);
         });
     }
 

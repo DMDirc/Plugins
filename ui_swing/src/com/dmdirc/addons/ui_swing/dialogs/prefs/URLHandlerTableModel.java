@@ -52,7 +52,7 @@ public class URLHandlerTableModel extends AbstractTableModel {
      * @param configManager Config manager
      */
     public URLHandlerTableModel(final AggregateConfigProvider configManager) {
-        this(configManager, new ArrayList<URI>(), new ArrayList<String>());
+        this(configManager, new ArrayList<>(), new ArrayList<>());
     }
 
     /**

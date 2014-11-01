@@ -132,7 +132,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
         /**
          * Creates a new message history window.
          *
-         * @param window Parent window
+         * @param parent Parent window
          */
         public MessageHistoryPanel(final JPanel parent) {
             super(parent, parentWindow);

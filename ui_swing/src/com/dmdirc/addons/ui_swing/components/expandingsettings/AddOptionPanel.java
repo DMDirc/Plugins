@@ -35,6 +35,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.MutableComboBoxModel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -115,7 +116,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      * @param setting Setting to add
      */
     protected void addOption(final JComponent setting) {
-        ((DefaultComboBoxModel<Object>) addOptionComboBox.getModel()).addElement(setting);
+        ((MutableComboBoxModel<Object>) addOptionComboBox.getModel()).addElement(setting);
         addOptionButton.setEnabled(true);
         addOptionComboBox.setEnabled(true);
     }
@@ -126,8 +127,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
      * @param setting Setting to add
      */
     protected void delOption(final JComponent setting) {
-        ((DefaultComboBoxModel) addOptionComboBox.getModel())
-                .removeElement(setting);
+        ((MutableComboBoxModel<Object>) addOptionComboBox.getModel()).removeElement(setting);
         if (addOptionComboBox.getModel().getSize() == 0) {
             addOptionComboBox.setEnabled(false);
             addOptionButton.setEnabled(false);
@@ -144,7 +144,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
     /**
      * Swaps the input field type to the appropriate type.
      *
-     * @param type Option type
+     * @param setting New setting to use
      */
     private void switchInputField(final JComponent setting) {
         if (setting == null) {
@@ -165,7 +165,7 @@ public class AddOptionPanel extends JPanel implements ActionListener {
                 addOptionComboBox.setEnabled(false);
                 addOptionButton.setEnabled(false);
             }
-            switchInputField(((JComponent) addOptionComboBox.getSelectedItem()));
+            switchInputField((JComponent) addOptionComboBox.getSelectedItem());
         } else if (e.getSource() == addOptionButton) {
             parent.addCurrentOption((JComponent) addOptionComboBox.getSelectedItem());
             delOption((JComponent) addOptionComboBox.getSelectedItem());

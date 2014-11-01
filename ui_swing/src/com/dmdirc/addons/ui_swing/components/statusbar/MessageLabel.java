@@ -130,30 +130,26 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
      * Updates the message label to show the current message info.
      */
     private void updateCurrentMessage() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                LOG.info("Updating current message: {}", currentMessage);
-                if (currentMessage.getIconType() == null) {
-                    label.setIcon(null);
-                } else {
-                    label.setIcon(iconManager.getIcon(currentMessage.getIconType()));
-                }
-                label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
-                        currentMessage.getMessage(), getWidth()));
-                if (messageTimer != null && System.currentTimeMillis()
-                        - messageTimer.scheduledExecutionTime() <= 0) {
-                    LOG.debug("Cancelling message timer.");
-                    messageTimer.cancel();
-                }
-                if (!defaultMessage.equals(currentMessage)) {
-                    LOG.debug("Starting new message timer.");
-                    messageTimer = new MessageTimerTask(eventBus);
-                    new Timer("SwingStatusBar messageTimer").schedule(
-                            messageTimer, new Date(System.currentTimeMillis()
-                                    + 250 + currentMessage.getTimeout() * 1000L));
-                }
+        SwingUtilities.invokeLater(() -> {
+            LOG.info("Updating current message: {}", currentMessage);
+            if (currentMessage.getIconType() == null) {
+                label.setIcon(null);
+            } else {
+                label.setIcon(iconManager.getIcon(currentMessage.getIconType()));
+            }
+            label.setText(UIUtilities.clipStringifNeeded(MessageLabel.this,
+                    currentMessage.getMessage(), getWidth()));
+            if (messageTimer != null && System.currentTimeMillis()
+                    - messageTimer.scheduledExecutionTime() <= 0) {
+                LOG.debug("Cancelling message timer.");
+                messageTimer.cancel();
+            }
+            if (!defaultMessage.equals(currentMessage)) {
+                LOG.debug("Starting new message timer.");
+                messageTimer = new MessageTimerTask(eventBus);
+                new Timer("SwingStatusBar messageTimer").schedule(
+                        messageTimer, new Date(System.currentTimeMillis()
+                                + 250 + currentMessage.getTimeout() * 1000L));
             }
         });
     }

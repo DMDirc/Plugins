@@ -185,32 +185,24 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
     /** {@inheritDoc}. */
     @Override
     public void open() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                validator.setValidates(true);
-                searchBox.checkError();
-                setVisible(true);
-                getFocus();
-            }
+        SwingUtilities.invokeLater(() -> {
+            validator.setValidates(true);
+            searchBox.checkError();
+            setVisible(true);
+            getFocus();
         });
     }
 
     /** {@inheritDoc}. */
     @Override
     public void close() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                setVisible(false);
-                if (parent instanceof InputTextFrame) {
-                    ((InputTextFrame) parent).getInputField().
-                            requestFocusInWindow();
-                } else {
-                    parent.requestFocusInWindow();
-                }
+        SwingUtilities.invokeLater(() -> {
+            setVisible(false);
+            if (parent instanceof InputTextFrame) {
+                ((InputTextFrame) parent).getInputField().
+                        requestFocusInWindow();
+            } else {
+                parent.requestFocusInWindow();
             }
         });
     }
@@ -319,14 +311,10 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Focuses the search box in the search bar. */
     public void getFocus() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                searchBox.requestFocusInWindow();
-                searchBox.setSelectionStart(0);
-                searchBox.setSelectionEnd(searchBox.getText().length());
-            }
+        SwingUtilities.invokeLater(() -> {
+            searchBox.requestFocusInWindow();
+            searchBox.setSelectionStart(0);
+            searchBox.setSelectionEnd(searchBox.getText().length());
         });
     }
 

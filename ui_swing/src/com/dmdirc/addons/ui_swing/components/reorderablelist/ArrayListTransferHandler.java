@@ -75,13 +75,11 @@ public final class ArrayListTransferHandler<T> extends TransferHandler {
 
         try {
             if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList<T>) comp, (ArrayList<T>) t.getTransferData(
-                        localArrayListFlavor));
-            } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-                return doImport((JList<T>) comp, (ArrayList<T>) t.
-                        getTransferData(serialArrayListFlavor));
+                return doImport((JList<T>) comp, (ArrayList<T>) t.getTransferData(localArrayListFlavor));
             } else {
-                return false;
+                return hasSerialArrayListFlavor(t.getTransferDataFlavors()) &&
+                        doImport((JList<T>) comp,
+                                (ArrayList<T>) t.getTransferData(serialArrayListFlavor));
             }
         } catch (UnsupportedFlavorException | IOException e) {
             //Don't transfer if this fails

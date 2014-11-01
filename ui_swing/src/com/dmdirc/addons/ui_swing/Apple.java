@@ -36,14 +36,15 @@ import com.dmdirc.util.URIParser;
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,17 +62,17 @@ import net.engio.mbassy.listener.Handler;
 public class Apple implements InvocationHandler {
 
     /** Store any addresses that are opened before CLIENT_OPENED. */
-    private final List<URI> addresses = new ArrayList<>();
+    private final Collection<URI> addresses = new ArrayList<>();
     /** Config manager used to read settings. */
     private final AggregateConfigProvider configManager;
     /** The "Application" object used to do stuff on OS X. */
     private Object application;
     /** Whether we're listening or not. */
-    private boolean isListener = false;
+    private boolean isListener;
     /** The MenuBar for the application. */
-    private MenuBar menuBar = null;
+    private MenuBar menuBar;
     /** Whether the CLIENT_OPENED action has been called or not. */
-    private boolean clientOpened = false;
+    private boolean clientOpened;
     /** The server manager to use to connect to URLs. */
     private final ConnectionManager connectionManager;
     /** Event bus. */
@@ -129,7 +130,7 @@ public class Apple implements InvocationHandler {
      * @return Output from method.invoke()
      */
     private Object reflectMethod(final Object obj, final String className, final String methodName,
-            final Class<?>[] classes, final Object[] objects) {
+            final Class<?>[] classes, final Object... objects) {
         try {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
             final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0]
@@ -152,7 +153,7 @@ public class Apple implements InvocationHandler {
      * @return Output from method.invoke()
      */
     private Object doAppleMethod(final String methodName, final Class<?>[] classes,
-            final Object[] objects) {
+            final Object... objects) {
         if (!isApple()) {
             return null;
         }
@@ -191,8 +192,8 @@ public class Apple implements InvocationHandler {
      */
     public static boolean isAppleUI() {
         final String name = UIManager.getLookAndFeel().getClass().getName();
-        return isApple() && (name.equals("apple.laf.AquaLookAndFeel") || name.equals(
-                "com.apple.laf.AquaLookAndFeel"));
+        return isApple() && ("apple.laf.AquaLookAndFeel".equals(name)
+                || "com.apple.laf.AquaLookAndFeel".equals(name));
     }
 
     /**
@@ -222,7 +223,7 @@ public class Apple implements InvocationHandler {
      *                   only the foremost one
      */
     public void requestForeground(final boolean allWindows) {
-        doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, new Object[]{allWindows});
+        doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, allWindows);
     }
 
     /**
@@ -234,7 +235,7 @@ public class Apple implements InvocationHandler {
      *                   until clicked on.
      */
     public void requestUserAttention(final boolean isCritical) {
-        doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, new Object[]{isCritical});
+        doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, isCritical);
     }
 
     /**
@@ -243,7 +244,7 @@ public class Apple implements InvocationHandler {
      * @param menu the PopupMenu to attach to this application's Dock icon
      */
     public void setDockMenu(final PopupMenu menu) {
-        doAppleMethod("setDockMenu", new Class<?>[]{PopupMenu.class}, new Object[]{menu});
+        doAppleMethod("setDockMenu", new Class<?>[]{PopupMenu.class}, menu);
     }
 
     /**
@@ -253,7 +254,7 @@ public class Apple implements InvocationHandler {
      */
     public PopupMenu getDockMenu() {
         final Object result = doAppleMethod("getDockMenu", null, null);
-        return (result instanceof PopupMenu) ? (PopupMenu) result : null;
+        return result instanceof PopupMenu ? (PopupMenu) result : null;
     }
 
     /**
@@ -262,7 +263,7 @@ public class Apple implements InvocationHandler {
      * @param image The image to use
      */
     public void setDockIconImage(final Image image) {
-        doAppleMethod("setDockIconImage", new Class<?>[]{Image.class}, new Object[]{image});
+        doAppleMethod("setDockIconImage", new Class<?>[]{Image.class}, image);
     }
 
     /**
@@ -272,7 +273,7 @@ public class Apple implements InvocationHandler {
      */
     public Image getDockIconImage() {
         final Object result = doAppleMethod("getDockIconImage", null, null);
-        return (result instanceof Image) ? (Image) result : null;
+        return result instanceof Image ? (Image) result : null;
     }
 
     /**
@@ -281,7 +282,7 @@ public class Apple implements InvocationHandler {
      * @param badge textual label to affix to the Dock icon
      */
     public void setDockIconBadge(final String badge) {
-        doAppleMethod("setDockIconBadge", new Class<?>[]{String.class}, new Object[]{badge});
+        doAppleMethod("setDockIconBadge", new Class<?>[]{String.class}, badge);
     }
 
     /**
@@ -291,7 +292,7 @@ public class Apple implements InvocationHandler {
      * @param menuBar to use when no other frames are active
      */
     public void setDefaultMenuBar(final JMenuBar menuBar) {
-        doAppleMethod("setDefaultMenuBar", new Class<?>[]{JMenuBar.class}, new Object[]{menuBar});
+        doAppleMethod("setDefaultMenuBar", new Class<?>[]{JMenuBar.class}, menuBar);
     }
 
     /**
@@ -353,7 +354,7 @@ public class Apple implements InvocationHandler {
                     classes[i] = EventObject.class;
                 } else {
                     final Class<?> c = args[i].getClass();
-                    if (c.getCanonicalName().equals("com.apple.eawt.QuitResponse")) {
+                    if ("com.apple.eawt.QuitResponse".equals(c.getCanonicalName())) {
                         classes[i] = Object.class;
                     } else {
                         classes[i] = c;
@@ -361,10 +362,10 @@ public class Apple implements InvocationHandler {
                 }
             }
 
-            final Method thisMethod = this.getClass().getMethod(method.getName(), classes);
+            final Method thisMethod = getClass().getMethod(method.getName(), classes);
             return thisMethod.invoke(this, args);
         } catch (final NoSuchMethodException e) {
-            if (method.getName().equals("equals") && args.length == 1) {
+            if ("equals".equals(method.getName()) && args.length == 1) {
                 return proxy == args[0];
             }
         }
@@ -410,8 +411,8 @@ public class Apple implements InvocationHandler {
 
         for (int i = 0; i < menuBar.getMenuCount(); i++) {
             final JMenu menu = menuBar.getMenu(i);
-            if (menu instanceof java.awt.event.ActionListener) {
-                ((java.awt.event.ActionListener) menu).actionPerformed(actionEvent);
+            if (menu instanceof ActionListener) {
+                ((ActionListener) menu).actionPerformed(actionEvent);
             }
         }
     }
@@ -443,9 +444,7 @@ public class Apple implements InvocationHandler {
     public void handleClientOpened(final ClientOpenedEvent event) {
         synchronized (addresses) {
             clientOpened = true;
-            for (final URI addr : addresses) {
-                connectionManager.connectToAddress(addr);
-            }
+            addresses.forEach(connectionManager::connectToAddress);
             addresses.clear();
         }
     }
