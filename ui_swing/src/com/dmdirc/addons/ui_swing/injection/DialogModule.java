@@ -38,7 +38,7 @@ import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
@@ -51,10 +51,12 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
+import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
+import com.dmdirc.ui.core.profiles.CoreProfilesDialogModel;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -104,6 +106,11 @@ public class DialogModule {
     }
 
     @Provides
+    public ProfilesDialogModel getProfileDialogModel(final CoreProfilesDialogModel model) {
+        return model;
+    }
+
+    @Provides
     @Singleton
     public DialogProvider<NewServerDialog> getNewServerDialogProvider(
             final Provider<NewServerDialog> provider) {
@@ -112,7 +119,14 @@ public class DialogModule {
 
     @Provides
     @Singleton
-    public DialogProvider<ProfileManagerDialog> getProfileManagerDialogProvider(
+    public DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog> getOldProfileManagerDialogProvider(
+            final Provider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<ProfileManagerDialog> getNewProfileManagerDialogProvider(
             final Provider<ProfileManagerDialog> provider) {
         return new DialogProvider<>(provider);
     }
