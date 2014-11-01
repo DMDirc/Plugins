@@ -26,11 +26,8 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
-import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,12 +38,16 @@ import javax.swing.JMenuItem;
  * A menu to add settings related commands to the menu bar.
  */
 @Singleton
-public class SettingsMenu extends JMenu implements ActionListener {
+public class SettingsMenu extends JMenu {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    /** Old provider of profile manager dialogs. */
+    private final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog>
+            oldProfileDialogProvider;
     /** Provider of profile manager dialogs. */
-    private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
+    private final DialogProvider<ProfileManagerDialog>
+            newProfileDialogProvider;
     /** Provider of action manager dialogs. */
     private final DialogProvider<ActionsManagerDialog> actionsDialogProvider;
     /** Provider of preferences dialogs. */
@@ -56,12 +57,16 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
     @Inject
     public SettingsMenu(
-            final DialogProvider<ProfileManagerDialog> profileDialogProvider,
+            final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog>
+                    oldProfileDialogProvider,
+            final DialogProvider<ProfileManagerDialog>
+                    newProfileDialogProvider,
             final DialogProvider<ActionsManagerDialog> actionsDialogProvider,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
             final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
         super("Settings");
-        this.profileDialogProvider = profileDialogProvider;
+        this.oldProfileDialogProvider = oldProfileDialogProvider;
+        this.newProfileDialogProvider = newProfileDialogProvider;
         this.actionsDialogProvider = actionsDialogProvider;
         this.prefsDialogProvider = prefsDialogProvider;
         this.aliasDialogProvider = aliasDialogProvider;
@@ -80,49 +85,33 @@ public class SettingsMenu extends JMenu implements ActionListener {
             menuItem = new JMenuItem();
             menuItem.setText("Preferences");
             menuItem.setMnemonic('p');
-            menuItem.setActionCommand("Preferences");
-            menuItem.addActionListener(this);
+            menuItem.addActionListener(e -> prefsDialogProvider.displayOrRequestFocus());
             add(menuItem);
         }
 
         menuItem = new JMenuItem();
-        menuItem.setMnemonic('m');
-        menuItem.setText("Profile Manager");
-        menuItem.setActionCommand("Profile");
-        menuItem.addActionListener(this);
+        menuItem.setMnemonic('p');
+        menuItem.setText("Old Profile Manager");
+        menuItem.addActionListener(e -> oldProfileDialogProvider.displayOrRequestFocus());
+        add(menuItem);
+
+        menuItem = new JMenuItem();
+        menuItem.setMnemonic('p');
+        menuItem.setText("New Profile Manager");
+        menuItem.addActionListener(e -> newProfileDialogProvider.displayOrRequestFocus());
         add(menuItem);
 
         menuItem = new JMenuItem();
         menuItem.setMnemonic('a');
         menuItem.setText("Actions Manager");
-        menuItem.setActionCommand("Actions");
-        menuItem.addActionListener(this);
+        menuItem.addActionListener(e -> actionsDialogProvider.displayOrRequestFocus());
         add(menuItem);
 
         menuItem = new JMenuItem();
         menuItem.setMnemonic('l');
         menuItem.setText("Alias Manager");
-        menuItem.setActionCommand("Aliases");
-        menuItem.addActionListener(this);
+        menuItem.addActionListener(e -> aliasDialogProvider.displayOrRequestFocus());
         add(menuItem);
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Preferences":
-                prefsDialogProvider.displayOrRequestFocus();
-                break;
-            case "Profile":
-                profileDialogProvider.displayOrRequestFocus();
-                break;
-            case "Actions":
-                actionsDialogProvider.displayOrRequestFocus();
-                break;
-            case "Aliases":
-                aliasDialogProvider.displayOrRequestFocus();
-                break;
-        }
     }
 
 }
