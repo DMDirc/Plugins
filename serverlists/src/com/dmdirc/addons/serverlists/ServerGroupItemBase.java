@@ -26,6 +26,8 @@ import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.config.profiles.ProfileManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
+import com.google.common.collect.Iterables;
+
 /**
  * Abstract base class for {@link ServerGroupItem}s.
  *
@@ -108,7 +110,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         }
 
         if (getParent() == null) {
-            return profileManager.getProfiles().get(0);
+            return profileManager.getDefault();
         } else {
             return getParent().getProfileIdentity();
         }
