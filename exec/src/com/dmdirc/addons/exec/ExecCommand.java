@@ -84,13 +84,14 @@ public class ExecCommand extends Command {
                         "Could not execute: " + commandArray[0] + " does not exist.");
             } else {
                 final Process p = Runtime.getRuntime().exec(commandArray);
-                final List<String> execOutput = args.isSilent()
-                        ? null : new LinkedList<String>();
-                final List<String> errorOutput = args.isSilent()
-                        ? null : new LinkedList<String>();
-                StreamUtils.readStreamIntoList(p.getInputStream(), execOutput);
-                StreamUtils.readStreamIntoList(p.getErrorStream(), errorOutput);
-                if (!args.isSilent()) {
+                if (args.isSilent()) {
+                    StreamUtils.readStream(p.getInputStream());
+                    StreamUtils.readStream(p.getErrorStream());
+                } else {
+                    final List<String> execOutput = new LinkedList<>();
+                    final List<String> errorOutput = new LinkedList<>();
+                    StreamUtils.readStreamIntoList(p.getInputStream(), execOutput);
+                    StreamUtils.readStreamIntoList(p.getErrorStream(), errorOutput);
                     for (String line : execOutput) {
                         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
                     }
@@ -100,8 +101,8 @@ public class ExecCommand extends Command {
                 }
             }
         } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to run application: "
-                    + ex.getMessage(), ""));
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
+                    "Unable to run application: " + ex.getMessage(), ""));
         }
     }
 
