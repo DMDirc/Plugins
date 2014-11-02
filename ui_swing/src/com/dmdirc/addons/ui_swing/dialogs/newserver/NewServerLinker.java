@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.newserver;
 
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
-import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;

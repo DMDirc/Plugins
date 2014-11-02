@@ -27,11 +27,10 @@ import com.dmdirc.addons.ui_swing.components.NoBorderJCheckBox;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.profiles.Profile;
-import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.IconManager;
 
