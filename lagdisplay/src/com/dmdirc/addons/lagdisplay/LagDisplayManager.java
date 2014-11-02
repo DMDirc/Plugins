@@ -181,10 +181,7 @@ public class LagDisplayManager implements ConfigChangeListener {
         }
         final boolean useAlternate = ((FrameContainer) event.getConnection()).getConfigManager()
                 .getOptionBool(domain, "usealternate");
-        final boolean isActive = activeFrameManager.getActiveFrame().isPresent()
-                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
-                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().get().equals(event.getConnection());
+        final boolean isActive = isActiveWindow(event.getConnection());
         final String[] args = event.getArgs();
         if (useAlternate && args[3].startsWith("LAGCHECK_")) {
             try {
@@ -207,10 +204,7 @@ public class LagDisplayManager implements ConfigChangeListener {
 
     @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
-        final boolean isActive = activeFrameManager.getActiveFrame().isPresent()
-                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
-                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().get().equals(event.getConnection());
+        final boolean isActive = isActiveWindow(event.getConnection());
         if (isActive) {
                 panel.getComponent().setText("Not connected");
                 pings.remove(event.getConnection());
@@ -225,10 +219,7 @@ public class LagDisplayManager implements ConfigChangeListener {
                 getOptionBool(domain, "usealternate")) {
             return;
         }
-        final boolean isActive = activeFrameManager.getActiveFrame().isPresent()
-                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
-                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().get().equals(event.getConnection());
+        final boolean isActive = isActiveWindow(event.getConnection());
         final String value = formatTime(event.getPing());
 
         getHistory(event.getConnection()).add(event.getPing());
@@ -247,10 +238,7 @@ public class LagDisplayManager implements ConfigChangeListener {
                 getOptionBool(domain, "usealternate")) {
             return;
         }
-        final boolean isActive = activeFrameManager.getActiveFrame().isPresent()
-                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
-                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().get().equals(event.getConnection());
+        final boolean isActive = isActiveWindow(event.getConnection());
         final String value = formatTime(event.getPing()) + '+';
 
         pings.put(event.getConnection(), value);
@@ -302,6 +290,13 @@ public class LagDisplayManager implements ConfigChangeListener {
     @Override
     public void configChanged(final String domain, final String key) {
         readConfig();
+    }
+
+    private boolean isActiveWindow(final Connection connection) {
+        return activeFrameManager.getActiveFrame().isPresent()
+                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
+                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
+                .getOptionalConnection().get().equals(connection);
     }
 
 }
