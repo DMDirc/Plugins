@@ -53,11 +53,9 @@ public class WindowSelectionFontChanger {
         this.window = window;
     }
 
-    public void init(final ActiveFrameManager activeFrameMaanger,
-            final SwingEventBus eventBus) {
+    public void init(final ActiveFrameManager activeFrameMaanger, final SwingEventBus eventBus) {
         eventBus.subscribe(this);
-        selectionChanged(new SwingWindowSelectedEvent(
-                Optional.ofNullable(activeFrameMaanger.getActiveFrame())));
+        selectionChanged(new SwingWindowSelectedEvent(activeFrameMaanger.getActiveFrame()));
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

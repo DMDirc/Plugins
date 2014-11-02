@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_swing.interfaces;
 
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
+import java.util.Optional;
+
 /**
  * Interface to the management of the active window in the swing ui.
  */
@@ -34,5 +36,5 @@ public interface ActiveFrameManager {
      *
      * @return The active window
      */
-    TextFrame getActiveFrame();
+    Optional<TextFrame> getActiveFrame();
 }

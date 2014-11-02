@@ -51,7 +51,7 @@ import net.engio.mbassy.listener.Handler;
  * Provides an MDI style bar for closing frames.
  */
 @Singleton
-public class MDIBar extends JPanel implements ActionListener, ConfigChangeListener {
+public class MDIBar extends JPanel implements ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = -8028057596226636245L;
@@ -97,7 +97,8 @@ public class MDIBar extends JPanel implements ActionListener, ConfigChangeListen
 
         eventBus.subscribe(this);
 
-        closeButton.addActionListener(this);
+        closeButton.addActionListener(e -> activeFrameManager.getActiveFrame()
+                .ifPresent(f -> f.getContainer().close()));
         config.addChangeListener(configDomain, "mdiBarVisibility", this);
 
         check();
@@ -114,7 +115,7 @@ public class MDIBar extends JPanel implements ActionListener, ConfigChangeListen
     private void check() {
         SwingUtilities.invokeLater(() -> {
             setVisible(visibility);
-            setEnabled(activeFrameManager.getActiveFrame() != null);
+            setEnabled(activeFrameManager.getActiveFrame().isPresent());
         });
     }
 
@@ -126,16 +127,6 @@ public class MDIBar extends JPanel implements ActionListener, ConfigChangeListen
     @Handler
     public void windowDeleted(final SwingWindowDeletedEvent event) {
         check();
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (activeFrameManager.getActiveFrame() == null) {
-            return;
-        }
-        if (closeButton.equals(e.getSource())) {
-            activeFrameManager.getActiveFrame().getContainer().close();
-        }
     }
 
     @Override

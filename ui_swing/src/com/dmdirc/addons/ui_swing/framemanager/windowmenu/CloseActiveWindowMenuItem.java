@@ -43,7 +43,7 @@ import net.engio.mbassy.listener.Invoke;
 /**
  * A Menu item that closes the active window when triggered.
  */
-public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListener {
+public class CloseActiveWindowMenuItem extends JMenuItem {
 
     private final ActiveFrameManager activeFrameManager;
     private final SwingEventBus eventBus;
@@ -67,13 +67,9 @@ public class CloseActiveWindowMenuItem extends JMenuItem implements ActionListen
      * Initialises the menu item adding listeners as required.
      */
     public void init() {
-        addActionListener(this);
+        addActionListener(l -> activeFrameManager.getActiveFrame()
+                .ifPresent(c -> c.getContainer().close()));
         eventBus.subscribe(this);
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        activeFrameManager.getActiveFrame().getContainer().close();
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

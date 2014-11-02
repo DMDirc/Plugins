@@ -22,10 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -33,9 +31,6 @@ import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,8 +43,7 @@ import javax.swing.event.MenuListener;
  * A menu providing server related commands to the menu bar.
  */
 @Singleton
-public class ServerMenu extends JMenu implements ActionListener,
-        MenuListener {
+public class ServerMenu extends JMenu implements MenuListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -57,13 +51,13 @@ public class ServerMenu extends JMenu implements ActionListener,
     private final ActiveFrameManager activeFrameManager;
     /** Lifecycle controller. */
     private final LifecycleController lifecycleController;
-    /** Menu items which can be enabled/disabled. */
-    private JMenuItem ssd;
-    private JMenuItem disconnect;
     /** Provider to use to retrieve NSD instances. */
     private final DialogProvider<NewServerDialog> newServerProvider;
     /** Provider for server settings dialogs. */
     private final KeyedDialogProvider<Connection, ServerSettingsDialog> ssdProvider;
+    /** Menu items which can be enabled/disabled. */
+    private JMenuItem ssd;
+    private JMenuItem disconnect;
 
     /**
      * Creates a new Server menu.
@@ -95,65 +89,43 @@ public class ServerMenu extends JMenu implements ActionListener,
      * Initialises the server menu.
      */
     private void initServerMenu() {
-        JMenuItem menuItem = new JMenuItem();
-        menuItem.setText("New Server...");
-        menuItem.setMnemonic('n');
-        menuItem.setActionCommand("NewServer");
-        menuItem.addActionListener(this);
-        add(menuItem);
+        final JMenuItem newServer = new JMenuItem();
+        newServer.setText("New Server...");
+        newServer.setMnemonic('n');
+        newServer.addActionListener(e -> newServerProvider.displayOrRequestFocus());
+        add(newServer);
 
         disconnect = new JMenuItem();
         disconnect.setText("Disconnect");
         disconnect.setMnemonic('d');
-        disconnect.setActionCommand("Disconnect");
-        disconnect.addActionListener(this);
+        disconnect.addActionListener(e -> activeFrameManager.getActiveFrame()
+                .ifPresent(f -> f.getContainer().getOptionalConnection()
+                        .ifPresent(c -> c.disconnect())));
         add(disconnect);
 
         ssd = new JMenuItem();
         ssd.setMnemonic('s');
         ssd.setText("Server settings");
-        ssd.setActionCommand("ServerSettings");
-        ssd.addActionListener(this);
+        ssd.addActionListener(e -> activeFrameManager.getActiveFrame()
+                .ifPresent(f -> f.getContainer().getOptionalConnection()
+                        .ifPresent(ssdProvider::displayOrRequestFocus)));
         add(ssd);
 
         if (!Apple.isAppleUI()) {
-            menuItem = new JMenuItem();
-            menuItem.setText("Exit");
-            menuItem.setMnemonic('x');
-            menuItem.setActionCommand("Exit");
-            menuItem.addActionListener(this);
-            add(menuItem);
-        }
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "NewServer":
-                newServerProvider.displayOrRequestFocus();
-                break;
-            case "Exit":
-                lifecycleController.quit();
-                break;
-            case "ServerSettings":
-                ssdProvider.displayOrRequestFocus(
-                        activeFrameManager.getActiveFrame().getContainer().getConnection());
-                break;
-            case "Disconnect":
-                activeFrameManager.getActiveFrame().getContainer().getConnection().disconnect();
-                break;
+            final JMenuItem exit = new JMenuItem();
+            exit.setText("Exit");
+            exit.setMnemonic('x');
+            exit.addActionListener(e -> lifecycleController.quit());
+            add(exit);
         }
     }
 
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
-        final FrameContainer activeWindow = activeFrame == null ? null
-                : activeFrame.getContainer();
-
-        final boolean connected = activeWindow != null
-                && activeWindow.getConnection() != null
-                && activeWindow.getConnection().getState() == ServerState.CONNECTED;
+        final boolean connected = activeFrameManager.getActiveFrame().isPresent()
+                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
+                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
+                .getOptionalConnection().get().getState() == ServerState.CONNECTED;
 
         ssd.setEnabled(connected);
         disconnect.setEnabled(connected);
