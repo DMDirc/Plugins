@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.serverlists;
 
-import com.dmdirc.interfaces.config.IdentityController;
+import com.dmdirc.config.profiles.ProfileManager;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,25 +52,25 @@ public class ServerGroup extends ServerGroupItemBase {
     /**
      * Creates a new server group with the specified name and no parent.
      *
-     * @param identityController The controller to read/write settings with.
-     * @param name               The name to be used for this group
+     * @param profileManager The manager to retrieve profiles from.
+     * @param name           The name to be used for this group
      */
-    public ServerGroup(final IdentityController identityController, final String name) {
-        this(identityController, null, name);
+    public ServerGroup(final ProfileManager profileManager, final String name) {
+        this(profileManager, null, name);
     }
 
     /**
      * Creates a new server group with the specified name.
      *
-     * @param identityController The controller to read/write settings with.
+     * @param profileManager     The manager to retrieve settings from
      * @param parent             The parent of this group, or <code>null</code> for roots.
      * @param name               The name to be used for this group
      */
     public ServerGroup(
-            final IdentityController identityController,
+            final ProfileManager profileManager,
             final ServerGroup parent,
             final String name) {
-        super(identityController);
+        super(profileManager);
 
         this.parent = parent;
         setName(name);

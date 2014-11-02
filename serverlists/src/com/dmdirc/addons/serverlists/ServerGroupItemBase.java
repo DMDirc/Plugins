@@ -22,8 +22,11 @@
 
 package com.dmdirc.addons.serverlists;
 
+import com.dmdirc.config.profiles.Profile;
+import com.dmdirc.config.profiles.ProfileManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.interfaces.config.IdentityController;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Abstract base class for {@link ServerGroupItem}s.
@@ -32,8 +35,8 @@ import com.dmdirc.interfaces.config.IdentityController;
  */
 public abstract class ServerGroupItemBase implements ServerGroupItem {
 
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** Manager to get profiles from */
+    private final ProfileManager profileManager;
     /** Whether or not this item has been modified. */
     private boolean modified;
     /** The name of the item. */
@@ -41,8 +44,8 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
     /** The name of the profile to use. */
     private String profile;
 
-    public ServerGroupItemBase(final IdentityController identityController) {
-        this.identityController = identityController;
+    public ServerGroupItemBase(final ProfileManager profileManager) {
+        this.profileManager = profileManager;
     }
 
     @Override
@@ -97,9 +100,9 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
      *
      * @return This server's profile identity
      */
-    protected ConfigProvider getProfileIdentity() {
+    protected Profile getProfileIdentity() {
         if (profile != null) {
-            for (ConfigProvider identity : identityController.getProvidersByType("profile")) {
+            for (Profile identity : profileManager.getProfiles()) {
                 if (profile.equals(identity.getName())) {
                     return identity;
                 }
@@ -107,7 +110,7 @@ public abstract class ServerGroupItemBase implements ServerGroupItem {
         }
 
         if (getParent() == null) {
-            return identityController.getProvidersByType("profile").get(0);
+            return profileManager.getDefault();
         } else {
             return getParent().getProfileIdentity();
         }

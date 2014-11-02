@@ -28,8 +28,8 @@ import com.dmdirc.addons.serverlists.ServerEntry;
 import com.dmdirc.addons.serverlists.ServerGroup;
 import com.dmdirc.addons.serverlists.ServerGroupItem;
 import com.dmdirc.addons.serverlists.ServerList;
+import com.dmdirc.config.profiles.ProfileManager;
 import com.dmdirc.interfaces.ConnectionManager;
-import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.net.URI;
@@ -52,23 +52,23 @@ public class ServerListModel {
     private ServerGroupItem activeItem;
     /** ServerManager that ServerEntrys use to create servers */
     private final ConnectionManager connectionManager;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** The manager to retrieve settings from. */
+    private final ProfileManager profileManager;
 
     /**
      * Creates a new server list model.
      *
-     * @param connectionManager      ServerManager currently in use.
-     * @param identityController The controller to read/write settings with.
+     * @param connectionManager  ServerManager currently in use.
+     * @param profileManager     The manager to retrieve settings from.
      * @param serverList         The server list to use for the top-level entries.
      */
     @Inject
     public ServerListModel(
             final ConnectionManager connectionManager,
-            final IdentityController identityController,
+            final ProfileManager profileManager,
             final ServerList serverList) {
         this.connectionManager = connectionManager;
-        this.identityController = identityController;
+        this.profileManager = profileManager;
         list = serverList;
         listeners = new ListenerList();
     }
@@ -204,7 +204,7 @@ public class ServerListModel {
      */
     public void addGroup(final ServerGroup parentGroup,
             final String groupName, final String networkName) {
-        final ServerGroup sg = new ServerGroup(identityController, groupName);
+        final ServerGroup sg = new ServerGroup(profileManager, groupName);
         if (networkName != null && !networkName.isEmpty()) {
             sg.setNetwork(networkName);
         }
@@ -227,7 +227,7 @@ public class ServerListModel {
      */
     public void addEntry(final ServerGroup parentGroup, final String entryName,
             final URI url) {
-        final ServerGroupItem sg = new ServerEntry(identityController, connectionManager,
+        final ServerGroupItem sg = new ServerEntry(profileManager, connectionManager,
                 parentGroup, entryName, url, null);
         parentGroup.addItem(sg);
         for (ServerListListener listener : listeners.get(

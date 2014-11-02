@@ -23,6 +23,7 @@
 package com.dmdirc.addons.serverlists.io;
 
 import com.dmdirc.addons.serverlists.ServerGroup;
+import com.dmdirc.config.profiles.ProfileManager;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -42,23 +43,23 @@ public class ServerGroupReader {
     private final ConfigProvider identity;
     /** The reader we'll use for individual servers. */
     private final ServerEntryReader entryReader;
-    /** The controller to read/write settings with. */
-    private final IdentityController identityController;
+    /** The manager to retrieve profiles from. */
+    private final ProfileManager profileManager;
 
     /**
      * Creates a new ServerGroupReader that will read from the specified identity.
      *
-     * @param connectionManager      The server manager to use to connect to servers.
-     * @param identityController The identity controller to use.
+     * @param connectionManager  The server manager to use to connect to servers.
+     * @param profileManager     The manager to retrieve profiles from
      * @param identity           The identity describing the server group
      */
     public ServerGroupReader(
             final ConnectionManager connectionManager,
-            final IdentityController identityController,
+            final ProfileManager profileManager,
             final ConfigProvider identity) {
         this.identity = identity;
-        this.identityController = identityController;
-        this.entryReader = new ServerEntryReader(connectionManager, identityController, identity);
+        this.profileManager = profileManager;
+        this.entryReader = new ServerEntryReader(connectionManager, profileManager, identity);
     }
 
     /**
@@ -93,7 +94,7 @@ public class ServerGroupReader {
             throw new IllegalArgumentException("ServerGroup '" + name + "' not defined");
         }
 
-        final ServerGroup group = new ServerGroup(identityController, parent,
+        final ServerGroup group = new ServerGroup(profileManager, parent,
                 identity.getOption(name, "name"));
 
         if (identity.hasOptionString(name, "description")) {

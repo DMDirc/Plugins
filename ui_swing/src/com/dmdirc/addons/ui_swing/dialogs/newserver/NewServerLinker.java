@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.ui.core.newserver.NewServerDialogModelAdapter;
 
@@ -145,8 +145,8 @@ public class NewServerLinker {
         passwordField.setText(model.getPassword().isPresent() ? model.getPassword().get() : "");
     }
 
-    public void bindProfiles(final JComboBox<ConfigProvider> profilesCombobox) {
-        final VetoableComboBoxModel<ConfigProvider> comboBoxModel = new VetoableComboBoxModel<>();
+    public void bindProfiles(final JComboBox<Profile> profilesCombobox) {
+        final VetoableComboBoxModel<Profile> comboBoxModel = new VetoableComboBoxModel<>();
         profilesCombobox.setModel(comboBoxModel);
         if (model.getSelectedProfile().isPresent()) {
             comboBoxModel.setSelectedItem(model.getSelectedProfile().get());
@@ -160,11 +160,11 @@ public class NewServerLinker {
         });
         profilesCombobox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                model.setSelectedProfile(Optional.ofNullable((ConfigProvider) e.getItem()));
+                model.setSelectedProfile(Optional.ofNullable((Profile) e.getItem()));
             }
         });
         profilesCombobox.setRenderer(new PropertyListCellRenderer<>(profilesCombobox.getRenderer(),
-                ConfigProvider.class, "name"));
+                Profile.class, "name"));
         model.getProfileList().forEach(comboBoxModel::addElement);
     }
 
@@ -174,8 +174,8 @@ public class NewServerLinker {
         model.addListener(new NewServerDialogModelAdapter() {
 
             @Override
-            public void selectedProfileChanged(final Optional<ConfigProvider> oldProfile,
-                    final Optional<ConfigProvider> newProfile) {
+            public void selectedProfileChanged(final Optional<Profile> oldProfile,
+                    final Optional<Profile> newProfile) {
                 edit.setEnabled(model.isProfileListValid()
                         && model.getSelectedProfile().isPresent());
             }
