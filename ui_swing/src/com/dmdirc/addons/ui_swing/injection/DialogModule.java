@@ -119,13 +119,6 @@ public class DialogModule {
 
     @Provides
     @Singleton
-    public DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog> getOldProfileManagerDialogProvider(
-            final Provider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog> provider) {
-        return new DialogProvider<>(provider);
-    }
-
-    @Provides
-    @Singleton
     public DialogProvider<ProfileManagerDialog> getNewProfileManagerDialogProvider(
             final Provider<ProfileManagerDialog> provider) {
         return new DialogProvider<>(provider);

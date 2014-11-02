@@ -42,12 +42,8 @@ public class SettingsMenu extends JMenu {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Old provider of profile manager dialogs. */
-    private final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog>
-            oldProfileDialogProvider;
     /** Provider of profile manager dialogs. */
-    private final DialogProvider<ProfileManagerDialog>
-            newProfileDialogProvider;
+    private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
     /** Provider of action manager dialogs. */
     private final DialogProvider<ActionsManagerDialog> actionsDialogProvider;
     /** Provider of preferences dialogs. */
@@ -57,16 +53,12 @@ public class SettingsMenu extends JMenu {
 
     @Inject
     public SettingsMenu(
-            final DialogProvider<com.dmdirc.addons.ui_swing.dialogs.profiles.ProfileManagerDialog>
-                    oldProfileDialogProvider,
-            final DialogProvider<ProfileManagerDialog>
-                    newProfileDialogProvider,
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider,
             final DialogProvider<ActionsManagerDialog> actionsDialogProvider,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
             final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
         super("Settings");
-        this.oldProfileDialogProvider = oldProfileDialogProvider;
-        this.newProfileDialogProvider = newProfileDialogProvider;
+        this.profileDialogProvider = profileDialogProvider;
         this.actionsDialogProvider = actionsDialogProvider;
         this.prefsDialogProvider = prefsDialogProvider;
         this.aliasDialogProvider = aliasDialogProvider;
@@ -91,14 +83,8 @@ public class SettingsMenu extends JMenu {
 
         menuItem = new JMenuItem();
         menuItem.setMnemonic('p');
-        menuItem.setText("Old Profile Manager");
-        menuItem.addActionListener(e -> oldProfileDialogProvider.displayOrRequestFocus());
-        add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('p');
-        menuItem.setText("New Profile Manager");
-        menuItem.addActionListener(e -> newProfileDialogProvider.displayOrRequestFocus());
+        menuItem.setText("Profile Manager");
+        menuItem.addActionListener(e -> profileDialogProvider.displayOrRequestFocus());
         add(menuItem);
 
         menuItem = new JMenuItem();
