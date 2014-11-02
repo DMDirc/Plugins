@@ -31,7 +31,7 @@ import dagger.Provides;
 /**
  * DI module for the lag display plugin.
  */
-@Module(injects = {LagDisplayManager.class}, addsTo = SwingModule.class)
+@Module(injects = LagDisplayManager.class, addsTo = SwingModule.class)
 public class LagDisplayModule {
 
     /** The domain for plugin settings. */

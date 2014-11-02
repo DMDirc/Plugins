@@ -47,6 +47,7 @@ import com.dmdirc.util.collections.RollingList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.WeakHashMap;
 
 import javax.inject.Inject;
@@ -135,7 +136,7 @@ public class LagDisplayManager implements ConfigChangeListener {
      */
     protected RollingList<Long> getHistory(final Connection connection) {
         if (!history.containsKey(connection)) {
-            history.put(connection, new RollingList<Long>(historySize));
+            history.put(connection, new RollingList<>(historySize));
         }
         return history.get(connection);
     }
@@ -162,11 +163,12 @@ public class LagDisplayManager implements ConfigChangeListener {
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
-            final Connection connection = event.getWindow().get().getContainer().getConnection();
-            if (connection != null && connection.getState() != ServerState.CONNECTED) {
+            final Optional<Connection> connection = event.getWindow().get().getContainer()
+                    .getOptionalConnection();
+            if (connection.isPresent() && connection.get().getState() != ServerState.CONNECTED) {
                 panel.getComponent().setText("Not connected");
             } else {
-                panel.getComponent().setText(getTime(connection));
+                panel.getComponent().setText(getTime(connection.get()));
             }
         } else {
             panel.getComponent().setText("Unknown");
@@ -293,10 +295,9 @@ public class LagDisplayManager implements ConfigChangeListener {
     }
 
     private boolean isActiveWindow(final Connection connection) {
-        return activeFrameManager.getActiveFrame().isPresent()
-                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
-                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().get().equals(connection);
+        return activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
+                .flatMap(FrameContainer::getOptionalConnection)
+                .filter(connection::equals).isPresent();
     }
 
 }
