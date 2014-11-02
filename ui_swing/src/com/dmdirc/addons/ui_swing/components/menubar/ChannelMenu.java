@@ -139,8 +139,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
         final Optional<ServerState> activeConnectionState = activeFrameManager.getActiveFrame()
                 .map(TextFrame::getContainer).flatMap(FrameContainer::getOptionalConnection)
                 .map(Connection::getState);
-        final boolean connected = activeConnectionState.isPresent() &&
-                activeConnectionState.get() == ServerState.CONNECTED;
+        final boolean connected = activeConnectionState.equals(Optional.of(ServerState.CONNECTED));
 
         join.setEnabled(connected);
         csd.setEnabled(connected);
