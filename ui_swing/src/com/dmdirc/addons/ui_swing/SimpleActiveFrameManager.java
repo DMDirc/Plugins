@@ -50,7 +50,7 @@ public class SimpleActiveFrameManager implements ActiveFrameManager {
     }
 
     @Override
-    public TextFrame getActiveFrame() {
-        return window.orElse(null);
+    public Optional<TextFrame> getActiveFrame() {
+        return window;
     }
 }

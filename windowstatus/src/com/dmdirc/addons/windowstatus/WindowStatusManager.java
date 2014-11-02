@@ -90,13 +90,7 @@ public class WindowStatusManager implements ConfigChangeListener {
      * Loads the plugin.
      */
     public void onLoad() {
-        panel = UIUtilities.invokeAndWait(new Callable<WindowStatusPanel>() {
-
-            @Override
-            public WindowStatusPanel call() {
-                return new WindowStatusPanel();
-            }
-        });
+        panel = UIUtilities.invokeAndWait(WindowStatusPanel::new);
         eventBus.publishAsync(new StatusBarComponentAddedEvent(panel));
         swingEventBus.subscribe(this);
         identityController.getGlobalConfiguration().addChangeListener(domain, this);
@@ -132,11 +126,7 @@ public class WindowStatusManager implements ConfigChangeListener {
 
     /** Update the window status using the current active window. */
     public void updateStatus() {
-        final TextFrame active = activeFrameManager.getActiveFrame();
-
-        if (active != null) {
-            updateStatus(active.getContainer());
-        }
+        activeFrameManager.getActiveFrame().ifPresent(c -> updateStatus(c.getContainer()));
     }
 
     /**

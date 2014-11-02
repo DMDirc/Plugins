@@ -64,8 +64,12 @@ public class PingHistoryPanel extends JPanel {
         setOpaque(false);
 
         this.manager = manager;
-        history = manager.getHistory(activeFrameManager.getActiveFrame().getContainer().
-                getConnection());
+        if (activeFrameManager.getActiveFrame().isPresent()) {
+            history = manager.getHistory(activeFrameManager.getActiveFrame().get().getContainer()
+                    .getOptionalConnection().orElse(null));
+        } else {
+            history = manager.getHistory(null);
+        }
 
         for (Long value : history.getList()) {
             maximum = Math.max(value, maximum);

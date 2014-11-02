@@ -64,7 +64,7 @@ public class WindowMenuSeparator extends JPopupMenu.Separator implements ActionL
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        activeFrameManager.getActiveFrame().getContainer().close();
+        activeFrameManager.getActiveFrame().ifPresent(c -> c.getContainer().close());
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)

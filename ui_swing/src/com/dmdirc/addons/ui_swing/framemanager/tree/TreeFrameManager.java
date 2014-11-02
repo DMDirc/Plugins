@@ -319,8 +319,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             }
 
             if (activeFrameManager.getActiveFrame() != null) {
-                selectionChanged(new SwingWindowSelectedEvent(
-                        Optional.ofNullable(activeFrameManager.getActiveFrame())));
+                selectionChanged(new SwingWindowSelectedEvent(activeFrameManager.getActiveFrame()));
             }
         });
     }

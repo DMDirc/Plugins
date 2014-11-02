@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -43,7 +44,7 @@ public class ChannelListDialog extends StandardDialog implements ActionListener 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** List panel. */
-    private final ChannelListPanel list;
+    private final JPanel list;
     /** Size label. */
     private final JLabel total;
 
@@ -54,8 +55,14 @@ public class ChannelListDialog extends StandardDialog implements ActionListener 
         super(mainWindow, ModalityType.MODELESS);
         setTitle("Channel List");
         total = new JLabel("No results.");
-        list = new ChannelListPanel(
-                activeFrameManager.getActiveFrame().getContainer().getConnection(), total);
+        if (activeFrameManager.getActiveFrame().isPresent()
+                && activeFrameManager.getActiveFrame().get().getContainer()
+                .getOptionalConnection().isPresent()) {
+            list = new ChannelListPanel(activeFrameManager.getActiveFrame().get()
+                    .getContainer().getOptionalConnection().get(), total);
+        } else {
+            list = new JPanel();
+        }
         layoutComponents();
         getCancelButton().setText("Close");
         getCancelButton().addActionListener(this);

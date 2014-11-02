@@ -73,11 +73,8 @@ public class ActiveCommand extends Command implements IntelligentCommand {
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final TextFrame frame = activeFrameManager.getActiveFrame();
-        if (frame.getContainer().isWritable()) {
-            frame.getContainer().getCommandParser().parseCommand(frame.getContainer(),
-                    args.getArgumentsAsString());
-        }
+        activeFrameManager.getActiveFrame().ifPresent(f -> f.getContainer().getCommandParser()
+                .parseCommand(f.getContainer(), args.getArgumentsAsString()));
     }
 
     @Override

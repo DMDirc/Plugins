@@ -24,23 +24,18 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
-import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Dialog;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,8 +48,7 @@ import javax.swing.event.MenuListener;
  * A menu to provide channel related commands in the menu bar.
  */
 @Singleton
-public class ChannelMenu extends JMenu implements ActionListener,
-        MenuListener {
+public class ChannelMenu extends JMenu implements MenuListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -99,65 +93,49 @@ public class ChannelMenu extends JMenu implements ActionListener,
         join = new JMenuItem();
         join.setText("Join Channel...");
         join.setMnemonic('j');
-        join.setActionCommand("JoinChannel");
-        join.addActionListener(this);
+        join.addActionListener(e -> joinChannel());
         add(join);
 
         csd = new JMenuItem();
         csd.setMnemonic('c');
         csd.setText("Channel Settings");
-        csd.setActionCommand("ChannelSettings");
-        csd.addActionListener(this);
+        csd.addActionListener(l -> showChannelSettings());
         add(csd);
 
         list = new JMenuItem();
         list.setText("List channels...");
         list.setMnemonic('l');
-        list.setActionCommand("ListChannels");
-        list.addActionListener(this);
+        list.addActionListener(e -> channelListDialogProvider.displayOrRequestFocus());
         add(list);
     }
 
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "JoinChannel":
-                new StandardInputDialog(mainFrame, Dialog.ModalityType.APPLICATION_MODAL,
-                        iconManager, "Join Channel", "Enter the name of the channel to join.",
-                        this::doJoinChannel).displayOrRequestFocus();
-                break;
-            case "ChannelSettings":
-                final FrameContainer activeWindow = activeFrameManager.getActiveFrame().
-                        getContainer();
-                if (activeWindow instanceof Channel) {
-                    dialogProvider.displayOrRequestFocus((Channel) activeWindow);
-                }
-                break;
-            case "ListChannels":
-                channelListDialogProvider.displayOrRequestFocus();
-                break;
-        }
+    private void joinChannel() {
+        new StandardInputDialog(mainFrame,
+                Dialog.ModalityType.APPLICATION_MODAL, iconManager, "Join Channel",
+                "Enter the name of the channel to join.", this::doJoinChannel)
+                .displayOrRequestFocus();
+    }
+
+    private void showChannelSettings() {
+        activeFrameManager.getActiveFrame().ifPresent(f -> {
+            if (f.getContainer() instanceof Channel) {
+                dialogProvider.displayOrRequestFocus((Channel) f.getContainer());
+            }
+        });
     }
 
     private void doJoinChannel(final String text) {
-        if (activeFrameManager.getActiveFrame() != null) {
-            final Connection connection = activeFrameManager.getActiveFrame()
-                    .getContainer().getConnection();
-            if (connection != null) {
-                connection.join(new ChannelJoinRequest(text));
-            }
-        }
+        activeFrameManager.getActiveFrame()
+                .ifPresent(f -> f.getContainer().getOptionalConnection()
+                        .ifPresent(c -> c.join(new ChannelJoinRequest(text))));
     }
 
     @Override
     public final void menuSelected(final MenuEvent e) {
-        final TextFrame activeFrame = activeFrameManager.getActiveFrame();
-        final FrameContainer activeWindow = activeFrame == null ? null
-                : activeFrame.getContainer();
-
-        final boolean connected = activeWindow != null
-                && activeWindow.getConnection() != null
-                && activeWindow.getConnection().getState() == ServerState.CONNECTED;
+        final boolean connected = activeFrameManager.getActiveFrame().isPresent()
+                && activeFrameManager.getActiveFrame().get().getContainer().getOptionalConnection()
+                .isPresent() && activeFrameManager.getActiveFrame().get().getContainer()
+                .getOptionalConnection().get().getState() == ServerState.CONNECTED;
 
         join.setEnabled(connected);
         csd.setEnabled(connected);
