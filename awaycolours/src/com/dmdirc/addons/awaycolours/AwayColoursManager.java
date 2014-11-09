@@ -31,6 +31,7 @@ import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
 import javax.inject.Inject;
@@ -44,17 +45,19 @@ public class AwayColoursManager {
 
     private final DMDircMBassador eventBus;
     private final ConfigBinder binder;
-    private Colour colour;
+    private final ColourManager colourManager;
+    private Colour colour = Colour.BLACK;
     private boolean nicklist = true;
     private boolean text = true;
 
     @Inject
     public AwayColoursManager(final DMDircMBassador eventBus,
             @GlobalConfig final AggregateConfigProvider config,
-            @PluginDomain(AwayColoursPlugin.class) final String domain) {
+            @PluginDomain(AwayColoursPlugin.class) final String domain,
+            @GlobalConfig final ColourManager colourManager) {
         this.eventBus = eventBus;
+        this.colourManager = colourManager;
         binder = new ConfigBinder(config, domain);
-
     }
 
     public void load() {
@@ -68,8 +71,8 @@ public class AwayColoursManager {
     }
 
     @ConfigBinding(key = "colour")
-    public void handleColourChange(final Colour colour) {
-        this.colour = colour;
+    public void handleColourChange(final String colour) {
+        this.colour = colourManager.getColourFromString(colour, Colour.GRAY);
     }
 
     @ConfigBinding(key = "nicklist")
