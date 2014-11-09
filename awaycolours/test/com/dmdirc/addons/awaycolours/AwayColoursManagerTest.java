@@ -40,6 +40,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,12 +68,14 @@ public class AwayColoursManagerTest {
         black = "black";
         redColour = Colour.RED;
         blackColour = Colour.BLACK;
-        instance = new AwayColoursManager(eventBus, config, "test", colourManager);
         when(awayEvent.getUser()).thenReturn(user);
         when(backEvent.getUser()).thenReturn(user);
         when(user.getMap()).thenReturn(map);
+        when(config.getBinder()).thenReturn(binder);
+        when(binder.withDefaultDomain(anyString())).thenReturn(binder);
         when(colourManager.getColourFromString(red, Colour.GRAY)).thenReturn(redColour);
         when(colourManager.getColourFromString(black, Colour.GRAY)).thenReturn(blackColour);
+        instance = new AwayColoursManager(eventBus, config, "test", colourManager);
     }
 
     @Test
