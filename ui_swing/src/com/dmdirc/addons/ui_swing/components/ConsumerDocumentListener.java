@@ -20,47 +20,50 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.profile;
+package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
-* Applies changes in the profile name's document to the model.
-*/
-public class ProfileNameDocumentListener implements DocumentListener {
+ * Simple @{link DocumentListener} that calls the specified function on any change.
+ */
+public class ConsumerDocumentListener implements DocumentListener {
 
-    private final JTextField name;
-    private final ProfilesDialogModel model;
+    public static final Logger LOGGER = LoggerFactory.getLogger(ConsumerDocumentListener.class);
+    private final Consumer<String> function;
 
-    public ProfileNameDocumentListener(final ProfilesDialogModel model, final JTextField name) {
-        this.name = name;
-        this.model = model;
+    public ConsumerDocumentListener(final Consumer<String> function) {
+        this.function = function;
     }
 
     @Override
     public void insertUpdate(final DocumentEvent e) {
-        changed();
+        changed(e);
     }
 
     @Override
     public void removeUpdate(final DocumentEvent e) {
-        changed();
+        changed(e);
     }
 
     @Override
     public void changedUpdate(final DocumentEvent e) {
-        changed();
+        changed(e);
     }
 
-    private void changed() {
-        if (model.isSelectedProfileNameValid()) {
-            model.setSelectedProfileName(Optional.ofNullable(name.getText()));
+    private void changed(final DocumentEvent e) {
+        try {
+            function.accept(e.getDocument().getText(0, e.getDocument().getLength()));
+        } catch (BadLocationException e1) {
+            LOGGER.warn("Unable to fire document change", (Throwable) e);
         }
     }
 }

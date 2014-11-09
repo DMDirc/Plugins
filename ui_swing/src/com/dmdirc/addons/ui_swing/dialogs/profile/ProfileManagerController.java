@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profile;
 
+import com.dmdirc.addons.ui_swing.components.ConsumerDocumentListener;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
@@ -152,7 +153,11 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     private void setupProfileName(final JTextField name) {
         name.setEnabled(model.getSelectedProfileName().isPresent());
         name.setText(model.getSelectedProfileName().orElse(""));
-        name.getDocument().addDocumentListener(new ProfileNameDocumentListener(model, name));
+        name.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileName(Optional.of(s));
+            }
+        }));
     }
 
     private void setupProfileNicknames(final ReorderableJList<String> nicknames) {
@@ -165,14 +170,21 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     private void setupProfileRealname(final JTextField realname) {
         realname.setEnabled(model.getSelectedProfileRealname().isPresent());
         realname.setText(model.getSelectedProfileRealname().orElse(""));
-        realname.getDocument().addDocumentListener(
-                new ProfileRealnameDocumentListener(model, realname));
+        realname.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileRealname(Optional.of(s));
+            }
+        }));
     }
 
     private void setupProfileIdent(final JTextField ident) {
         ident.setEnabled(model.getSelectedProfileIdent().isPresent());
         ident.setText(model.getSelectedProfileIdent().orElse(""));
-        ident.getDocument().addDocumentListener(new ProfileIdentDocumentListener(model, ident));
+        ident.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileIdent(Optional.of(s));
+            }
+        }));
     }
 
     @Override
