@@ -77,8 +77,7 @@ public class SplitPane extends JSplitPane {
 
         getActionMap().setParent(null);
         getActionMap().clear();
-
-        new ConfigBinder(manager).bind(this, SplitPane.class);
+        manager.getBinder().bind(this, SplitPane.class);
     }
 
     @ConfigBinding(domain = "ui", key = "useOneTouchExpandable")
