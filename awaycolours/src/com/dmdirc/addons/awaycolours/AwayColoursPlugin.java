@@ -23,14 +23,14 @@
 package com.dmdirc.addons.awaycolours;
 
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import dagger.ObjectGraph;
 
 /**
  * Away Colours Plugin.
  */
-public final class AwayColoursPlugin extends BaseCommandPlugin {
+public final class AwayColoursPlugin extends BasePlugin {
 
     private AwayColoursManager manager;
 
