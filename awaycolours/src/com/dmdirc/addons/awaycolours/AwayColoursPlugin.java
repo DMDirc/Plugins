@@ -38,7 +38,7 @@ public final class AwayColoursPlugin extends BaseCommandPlugin {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new AwayColoursModule()));
+        setObjectGraph(graph.plus(new AwayColoursModule(pluginInfo.getDomain())));
         manager = getObjectGraph().get(AwayColoursManager.class);
     }
 
