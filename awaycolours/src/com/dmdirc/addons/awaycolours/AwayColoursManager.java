@@ -57,7 +57,7 @@ public class AwayColoursManager {
             @GlobalConfig final ColourManager colourManager) {
         this.eventBus = eventBus;
         this.colourManager = colourManager;
-        binder = new ConfigBinder(config, domain);
+        binder = config.getBinder().withDefaultDomain(domain);
     }
 
     public void load() {
