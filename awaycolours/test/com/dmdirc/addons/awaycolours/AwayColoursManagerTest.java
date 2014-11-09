@@ -29,6 +29,7 @@ import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
+import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
 import java.util.Map;
@@ -53,16 +54,25 @@ public class AwayColoursManagerTest {
     @Mock private ChannelUserBackEvent backEvent;
     @Mock private ChannelClientInfo user;
     @Mock private Map<Object, Object> map;
+    @Mock private ColourManager colourManager;
     private AwayColoursManager instance;
-    private Colour colour;
+    private String red;
+    private Colour redColour;
+    private String black;
+    private Colour blackColour;
 
     @Before
     public void setUp() throws Exception {
-        colour = Colour.RED;
-        instance = new AwayColoursManager(eventBus, config, "test");
+        red = "red";
+        black = "black";
+        redColour = Colour.RED;
+        blackColour = Colour.BLACK;
+        instance = new AwayColoursManager(eventBus, config, "test", colourManager);
         when(awayEvent.getUser()).thenReturn(user);
         when(backEvent.getUser()).thenReturn(user);
         when(user.getMap()).thenReturn(map);
+        when(colourManager.getColourFromString(red, Colour.GRAY)).thenReturn(redColour);
+        when(colourManager.getColourFromString(black, Colour.GRAY)).thenReturn(blackColour);
     }
 
     @Test
@@ -79,50 +89,50 @@ public class AwayColoursManagerTest {
 
     @Test
     public void testHandleColourChange() throws Exception {
-        instance.handleColourChange(colour);
+        instance.handleColourChange(red);
         instance.handleNicklistChange(true);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, colour);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, colour);
-        instance.handleColourChange(Colour.BLACK);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, redColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, redColour);
+        instance.handleColourChange(black);
         instance.handleNicklistChange(true);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, Colour.BLACK);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, Colour.BLACK);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, blackColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, blackColour);
     }
 
     @Test
     public void testHandleNicklistChange() throws Exception {
-        instance.handleColourChange(colour);
+        instance.handleColourChange(red);
         instance.handleNicklistChange(true);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, colour);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, colour);
-        instance.handleColourChange(Colour.BLACK);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, redColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, redColour);
+        instance.handleColourChange(black);
         instance.handleNicklistChange(false);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map, never()).put(ChannelClientProperty.NICKLIST_FOREGROUND, Colour.BLACK);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, Colour.BLACK);
+        verify(map, never()).put(ChannelClientProperty.NICKLIST_FOREGROUND, blackColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, blackColour);
     }
 
     @Test
     public void testHandleTextChange() throws Exception {
-        instance.handleColourChange(colour);
+        instance.handleColourChange(red);
         instance.handleNicklistChange(true);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, colour);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, colour);
-        instance.handleColourChange(Colour.BLACK);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, redColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, redColour);
+        instance.handleColourChange(black);
         instance.handleNicklistChange(true);
         instance.handleTextChange(false);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, Colour.BLACK);
-        verify(map, never()).put(ChannelClientProperty.TEXT_FOREGROUND, Colour.BLACK);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, blackColour);
+        verify(map, never()).put(ChannelClientProperty.TEXT_FOREGROUND, blackColour);
     }
 
     @Test
@@ -136,11 +146,11 @@ public class AwayColoursManagerTest {
 
     @Test
     public void testHandleBackEvent() throws Exception {
-        instance.handleColourChange(colour);
+        instance.handleColourChange(red);
         instance.handleNicklistChange(true);
         instance.handleTextChange(true);
         instance.handleAwayEvent(awayEvent);
-        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, colour);
-        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, colour);
+        verify(map).put(ChannelClientProperty.NICKLIST_FOREGROUND, redColour);
+        verify(map).put(ChannelClientProperty.TEXT_FOREGROUND, redColour);
     }
 }
