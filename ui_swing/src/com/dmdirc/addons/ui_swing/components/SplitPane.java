@@ -23,6 +23,8 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 
@@ -33,33 +35,17 @@ import javax.swing.JSplitPane;
 /**
  * JSplit pane that snaps around its components preferred size.
  */
-public class SplitPane extends JSplitPane implements ConfigChangeListener {
+public class SplitPane extends JSplitPane {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** use one touch expandable? */
-    private boolean useOneTouchExpandable;
-    /** Global config manager. */
-    private final AggregateConfigProvider config;
 
     /** Orientation type . */
     public enum Orientation {
-
         /** Horizontal orientation. */
         HORIZONTAL,
         /** Vertical orientation. */
         VERTICAL
-
-    }
-
-    /**
-     * Instantiates a new snapping split pane. Defaults to using a horizontal split, two null
-     * components and snapping to the left component.
-     *
-     * @param manager Config manager to read values from
-     */
-    public SplitPane(final AggregateConfigProvider manager) {
-        this(manager, Orientation.HORIZONTAL, null, null);
     }
 
     /**
@@ -84,29 +70,18 @@ public class SplitPane extends JSplitPane implements ConfigChangeListener {
      */
     public SplitPane(final AggregateConfigProvider manager, final Orientation orientation,
             final Component leftComponent, final Component rightComponent) {
-        super((orientation.equals(Orientation.HORIZONTAL))
-                ? HORIZONTAL_SPLIT : VERTICAL_SPLIT,
-                true, leftComponent, rightComponent);
+        super(orientation == Orientation.HORIZONTAL ? HORIZONTAL_SPLIT : VERTICAL_SPLIT, true,
+                leftComponent, rightComponent);
 
-        config = manager;
-        useOneTouchExpandable = config.getOptionBool(
-                "ui", "useOneTouchExpandable");
-
-        setOneTouchExpandable(useOneTouchExpandable);
         setContinuousLayout(true);
 
         getActionMap().setParent(null);
         getActionMap().clear();
-
-        config.addChangeListener("ui", "useOneTouchExpandable", this);
+        manager.getBinder().bind(this, SplitPane.class);
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        useOneTouchExpandable = config.getOptionBool(
-                "ui", "useOneTouchExpandable");
-
-        UIUtilities.invokeLater(() -> setOneTouchExpandable(useOneTouchExpandable));
+    @ConfigBinding(domain = "ui", key = "useOneTouchExpandable")
+    public void oneTouchChanged(final boolean value) {
+        UIUtilities.invokeLater(() -> setOneTouchExpandable(value));
     }
-
 }
