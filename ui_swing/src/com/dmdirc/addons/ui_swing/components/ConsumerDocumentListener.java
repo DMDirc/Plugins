@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Simple @{link DocumentListener} that calls the specified function on any change.
+ * Simple {@link DocumentListener} that calls the specified function on any change.
  */
 public class ConsumerDocumentListener implements DocumentListener {
 
