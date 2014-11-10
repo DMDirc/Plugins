@@ -130,7 +130,7 @@ public class Apple implements InvocationHandler {
      * @return Output from method.invoke()
      */
     private Object reflectMethod(final Object obj, final String className, final String methodName,
-            final Class<?>[] classes, final Object... objects) {
+            final Class<?>[] classes, final Object[] objects) {
         try {
             final Class<?> clazz = className == null ? obj.getClass() : Class.forName(className);
             final Method method = clazz.getMethod(methodName, classes == null ? new Class<?>[0]
@@ -153,7 +153,7 @@ public class Apple implements InvocationHandler {
      * @return Output from method.invoke()
      */
     private Object doAppleMethod(final String methodName, final Class<?>[] classes,
-            final Object... objects) {
+            final Object[] objects) {
         if (!isApple()) {
             return null;
         }
@@ -223,7 +223,7 @@ public class Apple implements InvocationHandler {
      *                   only the foremost one
      */
     public void requestForeground(final boolean allWindows) {
-        doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, allWindows);
+        doAppleMethod("requestForeground", new Class<?>[]{Boolean.TYPE}, new Object[]{allWindows});
     }
 
     /**
@@ -235,7 +235,7 @@ public class Apple implements InvocationHandler {
      *                   until clicked on.
      */
     public void requestUserAttention(final boolean isCritical) {
-        doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, isCritical);
+        doAppleMethod("requestUserAttention", new Class<?>[]{Boolean.TYPE}, new Object[]{isCritical});
     }
 
     /**
@@ -244,7 +244,7 @@ public class Apple implements InvocationHandler {
      * @param menu the PopupMenu to attach to this application's Dock icon
      */
     public void setDockMenu(final PopupMenu menu) {
-        doAppleMethod("setDockMenu", new Class<?>[]{PopupMenu.class}, menu);
+        doAppleMethod("setDockMenu", new Class<?>[]{PopupMenu.class}, new Object[]{menu});
     }
 
     /**
@@ -263,7 +263,7 @@ public class Apple implements InvocationHandler {
      * @param image The image to use
      */
     public void setDockIconImage(final Image image) {
-        doAppleMethod("setDockIconImage", new Class<?>[]{Image.class}, image);
+        doAppleMethod("setDockIconImage", new Class<?>[]{Image.class}, new Object[]{image});
     }
 
     /**
@@ -282,7 +282,7 @@ public class Apple implements InvocationHandler {
      * @param badge textual label to affix to the Dock icon
      */
     public void setDockIconBadge(final String badge) {
-        doAppleMethod("setDockIconBadge", new Class<?>[]{String.class}, badge);
+        doAppleMethod("setDockIconBadge", new Class<?>[]{String.class}, new Object[]{badge});
     }
 
     /**
@@ -292,7 +292,7 @@ public class Apple implements InvocationHandler {
      * @param menuBar to use when no other frames are active
      */
     public void setDefaultMenuBar(final JMenuBar menuBar) {
-        doAppleMethod("setDefaultMenuBar", new Class<?>[]{JMenuBar.class}, menuBar);
+        doAppleMethod("setDefaultMenuBar", new Class<?>[]{JMenuBar.class}, new Object[]{menuBar});
     }
 
     /**
