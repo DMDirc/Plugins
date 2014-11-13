@@ -1,4 +1,0 @@
-dependencies {
-  compile plugin('ui_swing')
-  compile plugin('serverlists')
-}
