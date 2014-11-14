@@ -63,7 +63,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
     /** Shows some alternate content. */
     public void showEE() {
         about.setText("<html><center><br><br><br>"
-                + "<img src=\"http://www.dmdirc.com/res/about.png\"></html>");
+                + "<img src=\"https://www.dmdirc.com/res/about.png\"></html>");
     }
 
     /** Initialises the components. */
