@@ -138,7 +138,7 @@ public class DataLoaderWorker
             loadingPanel.add(jpb, "growx, wrap");
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
-                downloader.downloadPage("http://addons.dmdirc.com/feed",
+                downloader.downloadPage("https://addons.dmdirc.com/feed",
                         Paths.get(tempDirectory, "addons.feed"), this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
