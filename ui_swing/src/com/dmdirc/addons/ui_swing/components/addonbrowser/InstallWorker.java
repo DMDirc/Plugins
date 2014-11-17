@@ -77,8 +77,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     protected String doInBackground() {
         try {
             final Path file = Paths.get(tempDirectory, "." + info.getId());
-            downloader.downloadPage("http://addons.dmdirc.com/addondownload/"
-                    + info.getDownload(), file);
+            downloader.downloadPage(info.getDownload(), file);
 
             switch (info.getType()) {
                 case TYPE_ACTION_PACK:
