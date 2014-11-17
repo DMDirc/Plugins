@@ -1,6 +1,7 @@
 /build
 */build
 /dist
+/dist-versioned
 /lib
 *.iml
 /.gradle
