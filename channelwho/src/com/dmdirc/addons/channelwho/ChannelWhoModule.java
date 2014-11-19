@@ -31,7 +31,7 @@ import dagger.Provides;
 /**
  * Dagger injection module for the Channel Who plugin.
  */
-@Module(injects = ChannelWhoModule.class, addsTo = ClientModule.class)
+@Module(injects = ChannelWhoPlugin.class, addsTo = ClientModule.class)
 public class ChannelWhoModule {
     private final String domain;
 
