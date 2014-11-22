@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.awaycolours;
 
+import com.dmdirc.Channel;
 import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
@@ -54,6 +55,7 @@ public class AwayColoursManagerTest {
     @Mock private ChannelUserAwayEvent awayEvent;
     @Mock private ChannelUserBackEvent backEvent;
     @Mock private ChannelClientInfo user;
+    @Mock private Channel channel;
     @Mock private Map<Object, Object> map;
     @Mock private ColourManager colourManager;
     private AwayColoursManager instance;
@@ -69,7 +71,9 @@ public class AwayColoursManagerTest {
         redColour = Colour.RED;
         blackColour = Colour.BLACK;
         when(awayEvent.getUser()).thenReturn(user);
+        when(awayEvent.getChannel()).thenReturn(channel);
         when(backEvent.getUser()).thenReturn(user);
+        when(backEvent.getChannel()).thenReturn(channel);
         when(user.getMap()).thenReturn(map);
         when(config.getBinder()).thenReturn(binder);
         when(binder.withDefaultDomain(anyString())).thenReturn(binder);
