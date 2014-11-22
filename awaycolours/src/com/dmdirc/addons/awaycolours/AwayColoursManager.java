@@ -93,6 +93,9 @@ public class AwayColoursManager {
         if (text) {
             event.getUser().getMap().put(ChannelClientProperty.TEXT_FOREGROUND, colour);
         }
+        if (nicklist || text) {
+            event.getChannel().refreshClients();
+        }
     }
 
     @Handler
@@ -102,6 +105,9 @@ public class AwayColoursManager {
         }
         if (text) {
             event.getUser().getMap().remove(ChannelClientProperty.TEXT_FOREGROUND);
+        }
+        if (nicklist || text) {
+            event.getChannel().refreshClients();
         }
     }
 }
