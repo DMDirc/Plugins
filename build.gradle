@@ -34,13 +34,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/'
-        }
-        maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/snapshots/'
-        }
-        maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/releases/'
+            url 'http://artifactory.dmdirc.com/artifactory/repo'
         }
     }
 
@@ -132,7 +126,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/'
+            url 'http://artifactory.dmdirc.com/artifactory/repo'
         }
     }
 
