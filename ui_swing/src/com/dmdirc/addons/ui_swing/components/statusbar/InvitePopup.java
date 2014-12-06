@@ -27,9 +27,11 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.util.DateUtils;
 
 import java.awt.Window;
+import java.util.Optional;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  * Shows information about received invites.
@@ -41,7 +43,7 @@ public class InvitePopup extends StatusbarPopupWindow {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** The connection to show invites for. */
-    private final Connection connection;
+    private final Optional<Connection> connection;
 
     /**
      * Creates a new InvitePopup for the specified panel and connection.
@@ -51,22 +53,23 @@ public class InvitePopup extends StatusbarPopupWindow {
      * @param parentWindow Parent window
      */
     public InvitePopup(final JPanel parent,
-            final Connection connection, final Window parentWindow) {
+            final Optional<Connection> connection, final Window parentWindow) {
         super(parent, parentWindow);
         this.connection = connection;
     }
 
     @Override
     protected void initContent(final JPanel panel) {
-        for (final Invite invite : connection.getInvites()) {
-            panel.add(new JLabel(invite.getChannel()), "growx, pushx");
-            panel.add(new JLabel(invite.getSource()[0], JLabel.CENTER),
-                    "growx, pushx, al center");
-            panel.add(new JLabel(DateUtils.formatDuration((int) (System.currentTimeMillis()
-                    - invite.getTimestamp())
-                    / 1000) + " ago", JLabel.RIGHT),
-                    "growx, pushx, al right, wrap");
+        if (connection.isPresent()) {
+            for (final Invite invite : connection.get().getInvites()) {
+                panel.add(new JLabel(invite.getChannel()), "growx, pushx");
+                panel.add(new JLabel(invite.getSource()[0], SwingConstants.CENTER),
+                        "growx, pushx, al center");
+                panel.add(new JLabel(DateUtils.formatDuration(
+                                (int) (System.currentTimeMillis() - invite.getTimestamp()) / 1000)
+                                + " ago", SwingConstants.RIGHT),
+                        "growx, pushx, al right, wrap");
+            }
         }
     }
-
 }

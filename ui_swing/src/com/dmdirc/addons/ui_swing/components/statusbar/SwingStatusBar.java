@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 
@@ -47,8 +46,6 @@ public class SwingStatusBar extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
-    /** Event bus to post events to. */
-    private final DMDircMBassador eventBus;
     /** Mig layout component restraints. */
     private final String componentConstraints;
     /** error panel. */
@@ -61,14 +58,12 @@ public class SwingStatusBar extends JPanel {
     /**
      * Creates a new instance of SwingStatusBar.
      *
-     * @param eventBus     The event bus to post events to (should be removed soon)
      * @param inviteLabel  The invite label to add to the status bar.
      * @param updaterLabel The updater label to add to the status bar.
      * @param errorLabel   The error label to add to the status bar.
      * @param messageLabel The message label to add to the status bar.
      */
     public SwingStatusBar(
-            final DMDircMBassador eventBus,
             final InviteLabel inviteLabel,
             final UpdaterLabel updaterLabel,
             final ErrorPanel errorLabel,
@@ -81,10 +76,11 @@ public class SwingStatusBar extends JPanel {
         componentConstraints = "sgy components, hmax " + height + ", hmin " + height
                 + ", wmin 20, shrink 0";
 
-        this.eventBus = eventBus;
         this.errorLabel = errorLabel;
         this.updaterLabel = updaterLabel;
         this.inviteLabel = inviteLabel;
+
+        inviteLabel.init();
 
         setLayout(new MigLayout("fill, ins 0, hidemode 3"));
 

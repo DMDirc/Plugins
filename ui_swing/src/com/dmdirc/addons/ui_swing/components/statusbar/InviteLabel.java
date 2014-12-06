@@ -39,10 +39,9 @@ import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.swing.BorderFactory;
@@ -52,13 +51,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 
 /**
  * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
-public class InviteLabel extends StatusbarPopupPanel<JLabel>
-        implements InviteListener, ActionListener {
+public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -70,8 +67,14 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
     private final JMenuItem accept;
     /** Parent window that will own popup windows. */
     private final Window parentWindow;
+    /** The client event bus to use for invite events. */
+    private final DMDircMBassador eventBus;
+    /** The swing event bus to use for selection events. */
+    private final SwingEventBus swingEventBus;
     /** Active connection. */
-    private Connection activeConnection;
+    private Optional<Connection> activeConnection;
+    /** Connection manager. */
+    private final ConnectionManager connectionManager;
 
     @Inject
     public InviteLabel(
@@ -83,25 +86,28 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
         super(new JLabel());
 
         this.parentWindow = mainFrame;
+        this.connectionManager = connectionManager;
+        this.eventBus = eventBus;
+        this.swingEventBus = swingEventBus;
+        this.activeConnection = Optional.empty();
 
         setBorder(BorderFactory.createEtchedBorder());
         label.setIcon(iconManager.getIcon("invite"));
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
-        dismiss.setActionCommand("dismissAll");
-        dismiss.addActionListener(this);
+        dismiss.addActionListener(e -> activeConnection.ifPresent(Connection::removeInvites));
         accept = new JMenuItem("Accept all invites");
-        accept.setActionCommand("acceptAll");
-        accept.addActionListener(this);
+        accept.addActionListener(e -> activeConnection.ifPresent(Connection::acceptInvites));
+    }
 
-        for (final Connection connection : connectionManager.getConnections()) {
-            connection.addInviteListener(this);
-        }
-
+    /**
+     * Initialises the invite label, adding appropriate listeners.
+     */
+    public void init() {
+        connectionManager.getConnections().forEach(c-> c.addInviteListener(this));
         swingEventBus.subscribe(this);
         eventBus.subscribe(this);
-
         update();
     }
 
@@ -116,9 +122,11 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
     private void popuplateMenu() {
         menu.removeAll();
 
-        final Collection<Invite> invites = activeConnection.getInvites();
-        for (final Invite invite : invites) {
-            menu.add(new JMenuItem(new InviteAction(invite)));
+        if (activeConnection.isPresent()) {
+            final Collection<Invite> invites = activeConnection.get().getInvites();
+            for (final Invite invite : invites) {
+                menu.add(new JMenuItem(new InviteAction(invite)));
+            }
         }
         menu.add(new JSeparator());
         menu.add(accept);
@@ -130,7 +138,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
      */
     private void update() {
         UIUtilities.invokeLater(() -> {
-            if (activeConnection == null || activeConnection.getInvites().isEmpty()) {
+            if (!activeConnection.isPresent() || activeConnection.get().getInvites().isEmpty()) {
                 setVisible(false);
                 closeDialog();
             } else {
@@ -178,26 +186,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
         }
     }
 
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "acceptAll":
-                activeConnection.acceptInvites();
-                break;
-            case "dismissAll":
-                activeConnection.removeInvites();
-                break;
-        }
-    }
-
     @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
-            activeConnection = event.getWindow().get().getContainer().getConnection();
+            activeConnection = event.getWindow().get().getContainer().getOptionalConnection();
         } else {
             activeConnection = null;
         }
         update();
     }
-
 }
