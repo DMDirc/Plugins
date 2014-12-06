@@ -190,7 +190,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel>
         }
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
             activeConnection = event.getWindow().get().getContainer().getConnection();

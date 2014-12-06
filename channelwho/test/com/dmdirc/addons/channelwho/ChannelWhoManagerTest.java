@@ -20,26 +20,30 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.audio;
+package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.ClientModule;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.awt.Toolkit;
+@RunWith(MockitoJUnitRunner.class)
+public class ChannelWhoManagerTest {
 
-import javax.inject.Singleton;
+    private ChannelWhoManager instance;
 
-import dagger.Module;
-import dagger.Provides;
+    @Before
+    public void setUp() throws Exception {
+        instance = new ChannelWhoManager("test");
+    }
 
-/**
- * Dependency injection module for the audio plugin.
- */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+    @Test
+    public void testLoad() throws Exception {
 
-    @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    }
+
+    @Test
+    public void testUnload() throws Exception {
+
     }
 }

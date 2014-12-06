@@ -1,5 +1,10 @@
 // DMDirc plugins build script
 subprojects {
+    def jgit = new org.mdonoughe.JGitDescribeTask()
+    jgit.dir = new File(projectDir.parent, '.git')
+    jgit.subDir = projectDir
+    project.version = jgit.getDescription() + '-SNAPSHOT'
+
     apply plugin: 'java'
     apply plugin: 'findbugs'
     apply plugin: 'pmd'
@@ -14,20 +19,12 @@ subprojects {
 
     sourceSets {
         main {
-            java {
-                srcDir 'src'
-            }
-            resources {
-                srcDir 'res'
-            }
+            java.srcDirs = ['src']
+            resources.srcDirs = ['res']
         }
         test {
-            java {
-                srcDir 'test'
-            }
-            resources {
-                srcDir 'test-res'
-            }
+            java.srcDirs = ['test']
+            resources.srcDirs = ['test-res']
         }
     }
 
@@ -37,13 +34,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/'
-        }
-        maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/snapshots/'
-        }
-        maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/releases/'
+            url 'http://artifactory.dmdirc.com/artifactory/repo'
         }
     }
 
@@ -63,15 +54,8 @@ subprojects {
     }
 
     task updatePluginConfig(dependsOn: copyPluginConfig) << {
-        def gitDir = new File(projectDir.parent, '.git')
-
-        def jgit = new org.mdonoughe.JGitDescribeTask()
-        jgit.dir = gitDir
-        jgit.subDir = projectDir
-
-        ext.version = jgit.getDescription()
         def targetFile = new File(buildDir, 'plugin.config')
-        targetFile << "\n\nversion:\n  number=${version}"
+        targetFile << "\n\nversion:\n  number=${project.version}"
 
         targetFile << "\n\nbuildenv:\n"
         def compileConfiguration = project.configurations.getByName("compile")
@@ -117,8 +101,15 @@ subprojects {
             into "../dist/"
             rename ".*", "${project.name}.jar"
         }
+
+        copy {
+            from jar.archivePath
+            into "../dist-versioned/"
+            rename ".*", "${project.name}-${project.version}.jar"
+        }
     }
     jar.outputs.file "../dist/${project.name}.jar"
+    jar.outputs.file "../dist-versioned/${project.name}-${project.version}.jar"
 
     jar.dependsOn updatePluginConfig
 }
@@ -135,7 +126,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url 'http://nexus.dmdirc.com/nexus/content/repositories/thirdparty/'
+            url 'http://artifactory.dmdirc.com/artifactory/repo'
         }
     }
 
@@ -146,7 +137,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.2.1'
 }
 
 subprojects.each { evaluationDependsOn it.path }

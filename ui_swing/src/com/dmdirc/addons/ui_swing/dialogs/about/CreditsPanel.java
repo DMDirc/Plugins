@@ -63,7 +63,7 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
     /** Shows some alternate content. */
     public void showEE() {
         about.setText("<html><center><br><br><br>"
-                + "<img src=\"http://www.dmdirc.com/res/about.png\"></html>");
+                + "<img src=\"https://www.dmdirc.com/res/about.png\"></html>");
     }
 
     /** Initialises the components. */
@@ -71,13 +71,12 @@ public final class CreditsPanel extends JPanel implements HyperlinkListener {
         about = new TextLabel("<html>"
                 + "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Main developers:</h3>"
                 + "<ul style='list-style-type: circle; margin-top: 0px;'>"
-                + "<li><a href=\"http://www.md87.co.uk\">Chris 'MD87' Smith</a></li>"
-                + "<li><a href=\"http://www.greboid.com\">Gregory 'Greboid' Holmes</a></li>"
+                + "<li><a href=\"https://www.md87.co.uk\">Chris 'MD87' Smith</a></li>"
+                + "<li><a href=\"https://www.greboid.com\">Gregory 'Greboid' Holmes</a></li>"
                 + "<li><a href=\"http://home.dataforce.org.uk\">Shane 'Dataforce' Mc Cormack</a></li>"
                 + "</ul>"
                 + "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Additional developers:</h3>"
                 + "<ul style='list-style-type: circle; margin-top: 0px;'>"
-                + "<li><a href=\"http://www.zipplet.co.uk\">Michael 'Zipplet' Nixon</a></li>"
                 + "<li><a href=\"http://simonmott.co.uk/\">Simon 'Demented-Idiot' Mott</a></li>"
                 + "</ul>"
                 + "</html>");

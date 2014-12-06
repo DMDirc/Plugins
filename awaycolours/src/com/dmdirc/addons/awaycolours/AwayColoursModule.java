@@ -20,26 +20,29 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.audio;
+package com.dmdirc.addons.awaycolours;
 
 import com.dmdirc.ClientModule;
-
-import java.awt.Toolkit;
-
-import javax.inject.Singleton;
+import com.dmdirc.plugins.PluginDomain;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Dependency injection module for the audio plugin.
+ * Dagger injection module for the Away Colours plugin.
  */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+@Module(injects = AwayColoursManager.class, addsTo = ClientModule.class)
+public class AwayColoursModule {
+
+    private final String domain;
+    
+    public AwayColoursModule(final String domain) {
+        this.domain = domain;
+    }
 
     @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    @PluginDomain(AwayColoursPlugin.class)
+    public String getSettingsDomain() {
+        return domain;
     }
 }

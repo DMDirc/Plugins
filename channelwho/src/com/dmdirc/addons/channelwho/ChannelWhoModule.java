@@ -20,26 +20,28 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.audio;
+package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.ClientModule;
-
-import java.awt.Toolkit;
-
-import javax.inject.Singleton;
+import com.dmdirc.plugins.PluginDomain;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Dependency injection module for the audio plugin.
+ * Dagger injection module for the Channel Who plugin.
  */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+@Module(injects = ChannelWhoManager.class, addsTo = ClientModule.class)
+public class ChannelWhoModule {
+    private final String domain;
+
+    public ChannelWhoModule(final String domain) {
+        this.domain = domain;
+    }
 
     @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    @PluginDomain(ChannelWhoPlugin.class)
+    public String getSettingsDomain() {
+        return domain;
     }
 }

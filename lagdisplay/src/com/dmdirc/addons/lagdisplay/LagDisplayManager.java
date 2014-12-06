@@ -55,7 +55,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 
 /**
  * Manages the lifecycle of the lag display plugin.
@@ -160,7 +159,7 @@ public class LagDisplayManager implements ConfigChangeListener {
         return showLabels;
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
             final Optional<Connection> connection = event.getWindow().get().getContainer()

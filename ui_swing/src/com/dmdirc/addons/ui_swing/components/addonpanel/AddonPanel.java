@@ -120,7 +120,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
                 + getTypeName().substring(1) + " allow you to extend the "
                 + "functionality of DMDirc.");
         getMoreLabel = new TextLabel(
-                "<a href=\"http://addons.dmdirc.com\">Get more addons</a>");
+                "<a href=\"https://addons.dmdirc.com\">Get more addons</a>");
         getMoreLabel.addHyperlinkListener(this);
         addonInfo = new AddonInfoPanel();
         addonInfo.addListener(this);

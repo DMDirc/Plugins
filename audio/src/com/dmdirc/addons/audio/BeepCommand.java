@@ -44,21 +44,24 @@ public class BeepCommand extends Command {
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("beep",
             "beep - emits a beep", CommandType.TYPE_GLOBAL);
+    private final Toolkit toolkit;
 
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
+     * @param toolkit    The toolkit used to beep
      */
     @Inject
-    public BeepCommand(final CommandController controller) {
+    public BeepCommand(final CommandController controller, final Toolkit toolkit) {
         super(controller);
+        this.toolkit = toolkit;
     }
 
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        Toolkit.getDefaultToolkit().beep();
+        toolkit.beep();
     }
 
 }

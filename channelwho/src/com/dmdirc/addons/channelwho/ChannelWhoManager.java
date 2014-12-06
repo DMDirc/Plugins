@@ -20,26 +20,24 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.audio;
+package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.ClientModule;
+import com.dmdirc.plugins.PluginDomain;
 
-import java.awt.Toolkit;
-
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Inject;
 
 /**
- * Dependency injection module for the audio plugin.
+ * Provides channel who support in DMDirc.
  */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+public class ChannelWhoManager {
 
-    @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    @Inject
+    public ChannelWhoManager(@PluginDomain(ChannelWhoPlugin.class) final String domain) {
+    }
+
+    public void load() {
+    }
+
+    public void unload() {
     }
 }

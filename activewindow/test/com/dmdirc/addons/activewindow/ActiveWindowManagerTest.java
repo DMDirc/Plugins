@@ -20,26 +20,39 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.audio;
+package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.ClientModule;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
-import java.awt.Toolkit;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.inject.Singleton;
+import static org.mockito.Mockito.verify;
 
-import dagger.Module;
-import dagger.Provides;
+@RunWith(MockitoJUnitRunner.class)
+public class ActiveWindowManagerTest {
 
-/**
- * Dependency injection module for the audio plugin.
- */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+    @Mock private MessageSinkManager messageSinkManager;
+    @Mock private ActiveWindowMessageSink activeWindowMessageSink;
+    private ActiveWindowManager activeWindowManager;
 
-    @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    @Before
+    public void setUp() throws Exception {
+        activeWindowManager = new ActiveWindowManager(messageSinkManager, activeWindowMessageSink);
+    }
+
+    @Test
+    public void testRegister() throws Exception {
+        activeWindowManager.register();
+        verify(messageSinkManager).addSink(activeWindowMessageSink);
+    }
+
+    @Test
+    public void testUnregister() throws Exception {
+        activeWindowManager.unregister();
+        verify(messageSinkManager).removeSink(activeWindowMessageSink);
     }
 }

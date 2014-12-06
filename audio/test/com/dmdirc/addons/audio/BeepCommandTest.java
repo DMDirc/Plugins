@@ -22,24 +22,39 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.ClientModule;
+import com.dmdirc.FrameContainer;
+import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.CommandController;
 
 import java.awt.Toolkit;
 
-import javax.inject.Singleton;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import dagger.Module;
-import dagger.Provides;
+import static org.mockito.Mockito.verify;
 
-/**
- * Dependency injection module for the audio plugin.
- */
-@Module(injects = {AudioCommand.class, BeepCommand.class}, addsTo = ClientModule.class)
-public class AudioPluginModule {
+@RunWith(MockitoJUnitRunner.class)
+public class BeepCommandTest {
 
-    @Provides
-    @Singleton
-    public Toolkit getToolKit() {
-        return Toolkit.getDefaultToolkit();
+    @Mock private Toolkit toolkit;
+    @Mock private CommandController commandController;
+    @Mock private FrameContainer frameContainer;
+    @Mock private CommandArguments commandArguments;
+    @Mock private CommandContext commandContext;
+    private BeepCommand beepCommand;
+
+    @Before
+    public void setUp() throws Exception {
+        beepCommand = new BeepCommand(commandController, toolkit);
+    }
+
+    @Test
+    public void testExecute() throws Exception {
+        beepCommand.execute(frameContainer, commandArguments, commandContext);
+        verify(toolkit).beep();
     }
 }

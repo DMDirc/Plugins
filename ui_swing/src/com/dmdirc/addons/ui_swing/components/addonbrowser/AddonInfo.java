@@ -40,20 +40,11 @@ public class AddonInfo {
 
     /** Addon site ID. */
     private final int id;
-    /**
-     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
-     * to get a full URL.
-     */
+    /** Stable download name. */
     private final String stableDownload;
-    /**
-     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
-     * to get a full URL.
-     */
+    /** Unstable download name. */
     private final String unstableDownload;
-    /**
-     * Stable download name. This should be prepended with http://addons.dmdirc.com/addondownload/
-     * to get a full URL.
-     */
+    /** Nightly download name. */
     private final String nightlyDownload;
     /** Addon title. */
     private final String title;
@@ -104,13 +95,12 @@ public class AddonInfo {
         verified = entry.get("verified").equals("yes");
         date = Integer.parseInt(entry.get("date"));
         if (entry.get("screenshot").equals("yes")) {
-            screenshot = new ImageIcon(urlBuilder.getUrl(
-                    "http://addons.dmdirc.com/addonimg/" + id));
+            screenshot = new ImageIcon(
+                    urlBuilder.getUrl("https://addons.dmdirc.com/addonimg/" + id));
             screenshot.setImage(screenshot.getImage().
                     getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         } else {
-            screenshot = new ImageIcon(urlBuilder.getUrl(
-                    "dmdirc://com/dmdirc/res/logo.png"));
+            screenshot = new ImageIcon(urlBuilder.getUrl("dmdirc://com/dmdirc/res/logo.png"));
         }
 
         UpdateChannel tempChannel;
