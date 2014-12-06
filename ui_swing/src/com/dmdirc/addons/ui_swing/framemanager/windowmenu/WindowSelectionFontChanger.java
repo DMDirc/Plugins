@@ -29,13 +29,11 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 
 import java.awt.Font;
-import java.util.Optional;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 import net.engio.mbassy.listener.Listener;
 import net.engio.mbassy.listener.References;
 
@@ -58,7 +56,7 @@ public class WindowSelectionFontChanger {
         selectionChanged(new SwingWindowSelectedEvent(activeFrameMaanger.getActiveFrame()));
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         // TODO: Check children and set italic
         if (event.getWindow().isPresent() && window.equals(event.getWindow().get())) {

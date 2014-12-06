@@ -59,7 +59,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 
 /**
  * A Window manager to handle ctrl[+shift]+tab switching between windows.
@@ -167,7 +166,7 @@ public class CtrlTabWindowManager {
         treeScroller.changeFocus(false);
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
             final TreeNode[] path = model.getPathToRoot(nodes.get(event.getWindow().get()));
