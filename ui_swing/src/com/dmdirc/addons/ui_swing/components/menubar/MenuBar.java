@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.components.MDIBar;
-import com.dmdirc.addons.ui_swing.framemanager.windowmenu.WindowMenuFrameManager;
 
 import java.awt.Component;
 import java.util.HashMap;
@@ -59,7 +58,6 @@ public class MenuBar extends JMenuBar {
      * @param serverMenu   The server menu to use.
      * @param channelMenu  The channel menu to use.
      * @param settingsMenu The settings menu to use.
-     * @param windowMenu   The window menu to use.
      * @param helpMenu     The help menu to use.
      * @param mdiBar       The MDI bar to use.
      */
@@ -68,7 +66,6 @@ public class MenuBar extends JMenuBar {
             final ServerMenu serverMenu,
             final ChannelMenu channelMenu,
             final SettingsMenu settingsMenu,
-            final WindowMenuFrameManager windowMenu,
             final HelpMenu helpMenu,
             final MDIBar mdiBar) {
         menuItems = new HashMap<>();
@@ -77,7 +74,6 @@ public class MenuBar extends JMenuBar {
         add(serverMenu);
         add(channelMenu);
         add(settingsMenu);
-        add(windowMenu);
         add(helpMenu);
         final int tempCount = getComponentCount();
         add(Box.createHorizontalGlue(), "growx, pushx");
@@ -85,7 +81,6 @@ public class MenuBar extends JMenuBar {
         add(Box.createHorizontalStrut(PlatformDefaults.getPanelInsets(1)
                 .getUnit()));
         menuItemCount = getComponentCount() - tempCount;
-        windowMenu.init();
 
         getActionMap().setParent(null);
         getActionMap().clear();
