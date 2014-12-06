@@ -46,6 +46,9 @@ subprojects {
 
         testCompile group: 'junit', name: 'junit', version: '4.11'
         testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+
+        pmd group: 'net.sourceforge.pmd', name: 'pmd-core', version: '5.2.2'
+        pmd group: 'net.sourceforge.pmd', name: 'pmd-java', version: '5.2.2'
     }
 
     task copyPluginConfig(type: Copy) {
@@ -70,6 +73,8 @@ subprojects {
     pmd {
         ruleSets = []
         ruleSetFiles = files("$rootDir/etc/pmd/full.xml")
+        toolVersion = '5.2.2'
+        ignoreFailures = true
     }
 
     tasks.withType(FindBugs) {
