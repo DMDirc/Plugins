@@ -28,7 +28,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -42,12 +41,9 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 
-import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 
 /**
  * Displays information related to the current window in the status bar.
@@ -106,7 +102,7 @@ public class WindowStatusManager implements ConfigChangeListener {
         panel = null;
     }
 
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
             updateStatus(event.getWindow().get().getContainer());
