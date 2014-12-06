@@ -169,8 +169,7 @@ public class SwingModule {
             final MessageLabel messageLabel,
             final DMDircMBassador eventBus) {
         final SwingStatusBar sb = UIUtilities.invokeAndWait(
-                () -> new SwingStatusBar(eventBus, inviteLabel, updaterLabel, errorLabel,
-                        messageLabel));
+                () -> new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel));
         eventBus.subscribe(messageLabel);
         eventBus.subscribe(sb);
         return sb;
