@@ -25,11 +25,6 @@ package com.dmdirc.addons.dns;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import dagger.ObjectGraph;
 
 /**
@@ -44,44 +39,4 @@ public final class DNSPlugin extends BaseCommandPlugin {
         setObjectGraph(graph.plus(new DNSModule()));
         registerCommand(DNSCommand.class, DNSCommand.INFO);
     }
-
-    /**
-     * Returns the IP(s) for a hostname.
-     *
-     * @param hostname Hostname to resolve.
-     *
-     * @return Resolved IP(s)
-     */
-    public static String getIPs(final String hostname) {
-        Collection<String> results = new ArrayList<>();
-
-        try {
-            final InetAddress[] ips = InetAddress.getAllByName(hostname);
-
-            for (InetAddress ip : ips) {
-                results.add(ip.getHostAddress());
-            }
-
-        } catch (UnknownHostException ex) {
-            results = new ArrayList<>();
-        }
-
-        return results.toString();
-    }
-
-    /**
-     * Returns the hostname for an ip.
-     *
-     * @param ip IP to resolve
-     *
-     * @return Resolved hostname
-     */
-    public static String getHostname(final String ip) {
-        try {
-            return InetAddress.getByName(ip).getHostName();
-        } catch (UnknownHostException ex) {
-            return "";
-        }
-    }
-
 }

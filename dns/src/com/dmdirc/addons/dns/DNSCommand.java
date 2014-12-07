@@ -31,6 +31,12 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 
+import com.google.common.net.InetAddresses;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,17 +76,45 @@ public class DNSCommand extends Command {
 
             @Override
             public void run() {
-                if (args.getArguments()[0].matches("\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b")) {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolved: "
-                            + args.getArguments()[0] + ": "
-                            + DNSPlugin.getHostname(args.getArguments()[0]));
-                } else {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolved: "
-                            + args.getArguments()[0] + ": "
-                            + DNSPlugin.getIPs(args.getArguments()[0]));
-                }
+                resolve(origin, args.isSilent(), args.getArguments()[0]);
             }
         }, 0);
+    }
+
+    private void resolve(@Nonnull final FrameContainer origin, final boolean isSilent,
+            final String arg) {
+        try {
+            final InetAddress address = InetAddresses.forString(arg);
+            sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+                    + arg + ": " + address.getCanonicalHostName());
+        } catch (IllegalArgumentException ex) {
+            sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+                    + arg + ": " + getIPs(arg));
+        }
+    }
+
+    /**
+     * Returns the IP(s) for a hostname.
+     *
+     * @param hostname Hostname to resolve.
+     *
+     * @return Resolved IP(s)
+     */
+    private String getIPs(final String hostname) {
+        final Collection<String> results = new ArrayList<>();
+
+        try {
+            final InetAddress[] ips = InetAddress.getAllByName(hostname);
+
+            for (InetAddress ip : ips) {
+                results.add(ip.getHostAddress());
+            }
+
+        } catch (UnknownHostException ex) {
+            return "[]";
+        }
+
+        return results.toString();
     }
 
 }
