@@ -104,6 +104,7 @@ public class AliasManagerDialog extends StandardDialog {
         linker.bindDeleteAlias(deleteAlias);
         linker.bindOKButton(getOkButton());
         linker.bindCancelButton(getCancelButton());
+        linker.init();
         model.loadModel();
     }
 
