@@ -77,6 +77,15 @@ subprojects {
         ignoreFailures = true
     }
 
+    pmdMain.doLast {
+        copy {
+            from pmd.reportsDir
+            into "../pmd/"
+            include "*.html"
+            rename "main.html", "${project.name}-main.html"
+        }
+    }
+
     tasks.withType(FindBugs) {
         reports {
             html.enabled = true
