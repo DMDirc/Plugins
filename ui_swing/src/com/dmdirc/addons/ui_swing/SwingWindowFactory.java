@@ -33,7 +33,6 @@ import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -46,7 +45,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -61,8 +59,6 @@ public class SwingWindowFactory implements FrameListener {
     private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
     private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
-    /** Active window manager. */
-    private final Provider<ActiveFrameManager> activeFrameManager;
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
     /** The swing event bus. */
@@ -71,7 +67,6 @@ public class SwingWindowFactory implements FrameListener {
     /**
      * Creates a new window factory for the specified controller.
      *
-     * @param activeFrameManager      The provider for the active frame manager.
      * @param customFrameFactory      The factory to use to produce custom frames.
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
@@ -81,14 +76,12 @@ public class SwingWindowFactory implements FrameListener {
      */
     @Inject
     public SwingWindowFactory(
-            final Provider<ActiveFrameManager> activeFrameManager,
             final CustomFrameFactory customFrameFactory,
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
             final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus) {
-        this.activeFrameManager = activeFrameManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
 
