@@ -71,6 +71,7 @@ public class NewServerDialog extends StandardDialog {
                 = new NoBorderJCheckBox("Save these settings as the defaults?");
 
         model.loadModel();
+        linker.init(edit, getOkButton(), hostname);
         linker.bindHostname(hostname);
         linker.bindPort(port);
         linker.bindPassword(password);
