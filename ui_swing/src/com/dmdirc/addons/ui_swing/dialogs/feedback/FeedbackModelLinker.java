@@ -22,8 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.feedback;
 
+import com.dmdirc.addons.ui_swing.components.ConsumerDocumentListener;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
-import com.dmdirc.ui.core.feedback.FeedbackDialogModelAdapter;
+import com.dmdirc.interfaces.ui.FeedbackDialogModelListener;
 
 import java.util.Optional;
 
@@ -31,187 +32,68 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  * Links the Feedback Dialog with its model.
  */
-public class FeedbackModelLinker {
+public class FeedbackModelLinker implements FeedbackDialogModelListener {
 
     private final FeedbackDialog dialog;
     private final FeedbackDialogModel model;
+    private JTextField emailField;
+    private JTextField nameField;
+    private JTextArea feedbackField;
+    private JButton okButton;
+    private JCheckBox serverInfo;
+    private JCheckBox dmdircInfo;
 
     public FeedbackModelLinker(final FeedbackDialog dialog, final FeedbackDialogModel model) {
         this.dialog = dialog;
         this.model = model;
     }
 
+    public void init() {
+        model.addListener(this);
+    }
+
     public void bindName(final JTextField nameField) {
-        nameField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                model.setName(Optional.ofNullable(nameField.getText()));
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            @Override
-            public void nameChanged(final Optional<String> name) {
-                if (!name.equals(Optional.ofNullable(nameField.getText()))) {
-                    nameField.setText(name.orElse(null));
-                }
-            }
-        });
+        this.nameField = nameField;
+        nameField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> model.setName(Optional.ofNullable(s))));
         nameField.setText("");
     }
 
     public void bindEmail(final JTextField emailField) {
-        emailField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                model.setEmail(Optional.ofNullable(emailField.getText()));
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            @Override
-            public void emailChanged(final Optional<String> email) {
-                if (!email.equals(Optional.ofNullable(emailField.getText()))) {
-                    emailField.setText(email.orElse(null));
-                }
-            }
-        });
+        this.emailField = emailField;
+        emailField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> model.setEmail(Optional.ofNullable(emailField.getText()))));
         emailField.setText("");
     }
 
     public void bindFeedback(final JTextArea feedbackField) {
-        feedbackField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                model.setFeedback(Optional.ofNullable(feedbackField.getText()));
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            @Override
-            public void feedbackChanged(final Optional<String> feedback) {
-                if (!feedback.equals(Optional.ofNullable(feedbackField.getText()))) {
-                    feedbackField.setText(feedback.orElse(null));
-                }
-            }
-        });
+        this.feedbackField = feedbackField;
+        feedbackField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> model.setFeedback(Optional.ofNullable(feedbackField.getText()))));
         feedbackField.setText("");
     }
 
     public void bindDMDircInfo(final JCheckBox dmdircInfo) {
+        this.dmdircInfo = dmdircInfo;
         dmdircInfo.addActionListener(e -> model.setIncludeDMDircInfo(dmdircInfo.isSelected()));
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            @Override
-            public void includeDMDircInfoChanged(final boolean includeDMDircInfo) {
-                if (includeDMDircInfo != dmdircInfo.isSelected()) {
-                    dmdircInfo.setSelected(includeDMDircInfo);
-                }
-            }
-        });
         dmdircInfo.setSelected(false);
     }
 
     public void bindServerInfo(final JCheckBox serverInfo) {
+        this.serverInfo = serverInfo;
         serverInfo.addActionListener(e -> model.setIncludeServerInfo(serverInfo.isSelected()));
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            @Override
-            public void includeServerInfoChanged(final boolean includeServerInfo) {
-                if (includeServerInfo != serverInfo.isSelected()) {
-                    serverInfo.setSelected(includeServerInfo);
-                }
-            }
-        });
         serverInfo.setSelected(false);
     }
 
     public void bindOKButton(final JButton okButton) {
+        this.okButton = okButton;
         okButton.addActionListener(e -> {
             model.save();
             dialog.dispose();
-        });
-        model.addListener(new FeedbackDialogModelAdapter() {
-
-            private void update() {
-                okButton.setEnabled(model.isSaveAllowed());
-            }
-
-            @Override
-            public void includeDMDircInfoChanged(final boolean includeDMDircInfo) {
-                update();
-            }
-
-            @Override
-            public void includeServerInfoChanged(final boolean includeServerInfo) {
-                update();
-            }
-
-            @Override
-            public void feedbackChanged(final Optional<String> feedback) {
-                update();
-            }
-
-            @Override
-            public void emailChanged(final Optional<String> email) {
-                update();
-            }
-
-            @Override
-            public void nameChanged(final Optional<String> name) {
-                update();
-            }
         });
         okButton.setEnabled(model.isSaveAllowed());
     }
@@ -220,4 +102,43 @@ public class FeedbackModelLinker {
         cancelButton.addActionListener(e -> dialog.dispose());
     }
 
+    @Override
+    public void nameChanged(final Optional<String> name) {
+        if (!name.equals(Optional.ofNullable(nameField.getText()))) {
+            nameField.setText(name.orElse(null));
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
+
+    @Override
+    public void emailChanged(final Optional<String> email) {
+        if (!email.equals(Optional.ofNullable(emailField.getText()))) {
+            emailField.setText(email.orElse(null));
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
+
+    @Override
+    public void feedbackChanged(final Optional<String> feedback) {
+        if (!feedback.equals(Optional.ofNullable(feedbackField.getText()))) {
+            feedbackField.setText(feedback.orElse(null));
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
+
+    @Override
+    public void includeServerInfoChanged(final boolean includeServerInfo) {
+        if (includeServerInfo != serverInfo.isSelected()) {
+            serverInfo.setSelected(includeServerInfo);
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
+
+    @Override
+    public void includeDMDircInfoChanged(final boolean includeDMDircInfo) {
+        if (includeDMDircInfo != dmdircInfo.isSelected()) {
+            dmdircInfo.setSelected(includeDMDircInfo);
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
 }

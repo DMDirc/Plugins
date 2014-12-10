@@ -55,6 +55,7 @@ public class FeedbackDialog extends StandardDialog {
             @ClientModule.GlobalConfig final IconManager iconManager) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final FeedbackModelLinker linker = new FeedbackModelLinker(this, model);
+        linker.init();
 
         setTitle("Feedback");
 
