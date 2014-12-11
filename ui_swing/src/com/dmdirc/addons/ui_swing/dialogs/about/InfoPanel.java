@@ -56,22 +56,19 @@ public final class InfoPanel extends JPanel {
     private final AggregateConfigProvider globalConfig;
     /** The base directory used for settings. */
     private final String baseDirectory;
+    /** Used to get information about the client. */
+    private final ClientInfo clientInfo;
 
-    /**
-     * Creates a new instance of InfoPanel.
-     *
-     * @param controller    Parent swing controller
-     * @param globalConfig  The config to read settings from.
-     * @param baseDirectory The base directory that DMDirc is using for settings.
-     */
     @Inject
     public InfoPanel(
             final SwingController controller,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            @Directory(DirectoryType.BASE) final String baseDirectory) {
+            @Directory(DirectoryType.BASE) final String baseDirectory,
+            final ClientInfo clientInfo) {
         this.controller = controller;
         this.globalConfig = globalConfig;
         this.baseDirectory = baseDirectory;
+        this.clientInfo = clientInfo;
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
@@ -87,21 +84,21 @@ public final class InfoPanel extends JPanel {
                 + font.getSize() + "pt; }");
 
         infoPane.setText("<html>"
-                + "<b>DMDirc version: </b>" + ClientInfo.getVersionInformation() + "<br>"
+                + "<b>DMDirc version: </b>" + clientInfo.getVersionInformation() + "<br>"
                 + "<b>Mode Aliases version: </b>"
                 + globalConfig.getOption("identity", "modealiasversion")
                 + "<br>"
                 + "<b>Swing UI version: </b>" + controller.getVersion() + "<br>"
-                + "<b>OS Version: </b>" + ClientInfo.getOperatingSystemInformation() + "<br>"
+                + "<b>OS Version: </b>" + clientInfo.getOperatingSystemInformation() + "<br>"
                 + "<b>Profile directory: </b>" + baseDirectory + "<br>"
-                + "<b>Java version: </b>" + ClientInfo.getJavaInformation() + "<br>"
+                + "<b>Java version: </b>" + clientInfo.getJavaInformation() + "<br>"
                 + "<b>Look and Feel: </b>" + SwingController.getLookAndFeel()
                 + "<br>"
                 + "<b>MiG Layout version: </b>" + LayoutUtil.getVersion()
                 + "<br>"
                 + "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>"
                 + "<b>Client Uptime: </b>"
-                + DateUtils.formatDuration((int) ClientInfo.getUptime() / 1000) + "<br>"
+                + DateUtils.formatDuration((int) clientInfo.getUptime() / 1000) + "<br>"
                 + "</html>");
         infoPane.setEditable(false);
         scrollPane.setViewportView(infoPane);
