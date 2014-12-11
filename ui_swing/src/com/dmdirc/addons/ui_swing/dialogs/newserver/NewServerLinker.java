@@ -22,131 +22,80 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.newserver;
 
+import com.dmdirc.addons.ui_swing.components.ConsumerDocumentListener;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableComboBoxModel;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
-import com.dmdirc.ui.core.newserver.NewServerDialogModelAdapter;
+import com.dmdirc.interfaces.ui.NewServerDialogModelListener;
 
 import java.awt.event.ItemEvent;
 import java.beans.PropertyVetoException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  * Links the New Server Dialog with its model.
  */
-public class NewServerLinker {
+public class NewServerLinker implements NewServerDialogModelListener {
 
     private final NewServerDialogModel model;
     private final NewServerDialog dialog;
+    private JButton okButton;
+    private JButton edit;
+    private JTextField hostnameField;
+    private VetoableComboBoxModel<Profile> comboBoxModel;
 
     public NewServerLinker(final NewServerDialogModel model, final NewServerDialog dialog) {
         this.model = model;
         this.dialog = dialog;
     }
 
+    public void init(final JButton edit, final JButton okButton,
+            final JTextField hostnameField) {
+        this.edit = edit;
+        this.hostnameField = hostnameField;
+        this.okButton = okButton;
+        comboBoxModel = new VetoableComboBoxModel<>();
+        model.addListener(this);
+    }
+
     public void bindHostname(final JTextField hostnameField) {
-        hostnameField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                model.setHostname(Optional.ofNullable(hostnameField.getText()));
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
-        model.addListener(new NewServerDialogModelAdapter() {
-
-            @Override
-            public void serverDetailsChanged(final Optional<String> hostname,
-                    final Optional<Integer> port, final Optional<String> password,
-                    final boolean ssl, final boolean saveAsDefault) {
-                if (!hostname.equals(Optional.ofNullable(hostnameField.getText()))) {
-                    hostnameField.setText(hostname.isPresent() ? hostname.get() : "");
-                }
-            }
-        });
+        hostnameField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> model.setHostname(Optional.ofNullable(s))
+        ));
         hostnameField.setText(model.getHostname().isPresent() ? model.getHostname().get() : "");
     }
 
     public void bindPort(final JTextField portField) {
-        portField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                try {
-                    model.setPort(Optional.ofNullable(Integer.valueOf(portField.getText())));
-                } catch (NumberFormatException ex) {
-                    //Do nothing, it'll have to be corrected and its handled by the validator.
+        portField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> {
+                    try {
+                        model.setPort(Optional.ofNullable(Integer.valueOf(s)));
+                    } catch (NumberFormatException ex) {
+                        //Do nothing, it'll have to be corrected and its handled by the validator.
+                    }
                 }
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
-        portField.setText(model.getPort().isPresent() ? Integer.toString(model.getPort().get())
-                : "");
+        ));
+        portField.setText(
+                model.getPort().isPresent() ? Integer.toString(model.getPort().get()) : "");
     }
 
     public void bindPassword(final JTextField passwordField) {
-        passwordField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                model.setPassword(Optional.ofNullable(passwordField.getText()));
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                update();
-            }
-        });
+        passwordField.getDocument().addDocumentListener(new ConsumerDocumentListener(
+                s -> model.setPassword(Optional.ofNullable(s))
+        ));
         passwordField.setText(model.getPassword().isPresent() ? model.getPassword().get() : "");
     }
 
     public void bindProfiles(final JComboBox<Profile> profilesCombobox) {
-        final VetoableComboBoxModel<Profile> comboBoxModel = new VetoableComboBoxModel<>();
         profilesCombobox.setModel(comboBoxModel);
         if (model.getSelectedProfile().isPresent()) {
             comboBoxModel.setSelectedItem(model.getSelectedProfile().get());
@@ -171,15 +120,6 @@ public class NewServerLinker {
     public void bindEditProfiles(final JButton edit,
             final DialogProvider<ProfileManagerDialog> profileManagerDialog) {
         edit.addActionListener(e -> profileManagerDialog.displayOrRequestFocus());
-        model.addListener(new NewServerDialogModelAdapter() {
-
-            @Override
-            public void selectedProfileChanged(final Optional<Profile> oldProfile,
-                    final Optional<Profile> newProfile) {
-                edit.setEnabled(model.isProfileListValid()
-                        && model.getSelectedProfile().isPresent());
-            }
-        });
     }
 
     public void bindSSL(final JCheckBox sslCheckbox) {
@@ -198,15 +138,6 @@ public class NewServerLinker {
             model.save();
             dialog.dispose();
         });
-        model.addListener(new NewServerDialogModelAdapter() {
-
-            @Override
-            public void serverDetailsChanged(final Optional<String> hostname,
-                    final Optional<Integer> port, final Optional<String> password,
-                    final boolean ssl, final boolean saveAsDefault) {
-                okButton.setEnabled(model.isSaveAllowed());
-            }
-        });
         okButton.setEnabled(model.isSaveAllowed());
     }
 
@@ -214,4 +145,26 @@ public class NewServerLinker {
         cancelButton.addActionListener(e -> dialog.dispose());
     }
 
+    @Override
+    public void selectedProfileChanged(final Optional<Profile> oldProfile,
+            final Optional<Profile> newProfile) {
+        edit.setEnabled(model.isProfileListValid() && model.getSelectedProfile().isPresent());
+    }
+
+    @Override
+    public void profileListChanged(final List<Profile> profiles) {
+        comboBoxModel.removeAllElements();
+        profiles.forEach(comboBoxModel::addElement);
+        edit.setEnabled(model.isProfileListValid() && model.getSelectedProfile().isPresent());
+        okButton.setEnabled(model.isSaveAllowed());
+    }
+
+    @Override
+    public void serverDetailsChanged(final Optional<String> hostname, final Optional<Integer> port,
+            final Optional<String> password, final boolean ssl, final boolean saveAsDefault) {
+        if (!hostname.equals(Optional.ofNullable(hostnameField.getText()))) {
+            hostnameField.setText(hostname.isPresent() ? hostname.get() : "");
+        }
+        okButton.setEnabled(model.isSaveAllowed());
+    }
 }
