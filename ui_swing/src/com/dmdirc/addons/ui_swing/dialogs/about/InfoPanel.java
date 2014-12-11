@@ -22,19 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.util.ClientInfo;
-import com.dmdirc.util.DateUtils;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
 
 import java.awt.Font;
-import java.nio.charset.Charset;
 
-import javax.inject.Inject;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -42,38 +34,20 @@ import javax.swing.UIManager;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-import net.miginfocom.layout.LayoutUtil;
 import net.miginfocom.swing.MigLayout;
 
 /** Info panel. */
 public final class InfoPanel extends JPanel {
 
-    /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Parent controller. */
-    private final SwingController controller;
-    /** The config to read settings from. */
-    private final AggregateConfigProvider globalConfig;
-    /** The base directory used for settings. */
-    private final String baseDirectory;
-    /** Used to get information about the client. */
-    private final ClientInfo clientInfo;
+    private final AboutDialogModel model;
 
-    @Inject
-    public InfoPanel(
-            final SwingController controller,
-            @GlobalConfig final AggregateConfigProvider globalConfig,
-            @Directory(DirectoryType.BASE) final String baseDirectory,
-            final ClientInfo clientInfo) {
-        this.controller = controller;
-        this.globalConfig = globalConfig;
-        this.baseDirectory = baseDirectory;
-        this.clientInfo = clientInfo;
+    public InfoPanel(final AboutDialogModel model) {
+        this.model = model;
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 
-    /** Initialises the components. */
     private void initComponents() {
         final JScrollPane scrollPane = new JScrollPane();
         final JEditorPane infoPane = new JEditorPane();
@@ -83,23 +57,14 @@ public final class InfoPanel extends JPanel {
                 + "{ font-family: " + font.getFamily() + "; " + "font-size: "
                 + font.getSize() + "pt; }");
 
-        infoPane.setText("<html>"
-                + "<b>DMDirc version: </b>" + clientInfo.getVersionInformation() + "<br>"
-                + "<b>Mode Aliases version: </b>"
-                + globalConfig.getOption("identity", "modealiasversion")
-                + "<br>"
-                + "<b>Swing UI version: </b>" + controller.getVersion() + "<br>"
-                + "<b>OS Version: </b>" + clientInfo.getOperatingSystemInformation() + "<br>"
-                + "<b>Profile directory: </b>" + baseDirectory + "<br>"
-                + "<b>Java version: </b>" + clientInfo.getJavaInformation() + "<br>"
-                + "<b>Look and Feel: </b>" + SwingController.getLookAndFeel()
-                + "<br>"
-                + "<b>MiG Layout version: </b>" + LayoutUtil.getVersion()
-                + "<br>"
-                + "<b>Java Default charset: </b>" + Charset.defaultCharset().displayName() + "<br>"
-                + "<b>Client Uptime: </b>"
-                + DateUtils.formatDuration((int) clientInfo.getUptime() / 1000) + "<br>"
-                + "</html>");
+        final StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        model.getInfo().forEach(i -> {
+            sb.append("<b>").append(i.getDescription()).append(": ").append("</b>");
+            sb.append(i.getInformation()).append("<br>");
+        });
+        sb.append("</html>");
+        infoPane.setText(sb.toString());
         infoPane.setEditable(false);
         scrollPane.setViewportView(infoPane);
 

@@ -22,64 +22,58 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.events.ClientInfoRequestEvent;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
+import com.dmdirc.ui.core.about.InfoItem;
+import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import net.miginfocom.layout.LayoutUtil;
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * About dialog.
  */
-public class AboutDialog extends StandardDialog implements ActionListener, ChangeListener {
+public class AboutDialog extends StandardDialog {
 
-    /** Serial version UID. */
     private static final long serialVersionUID = 5;
-    /** Tabbed pane to use. */
-    private JTabbedPane tabbedPane;
-    /** Credits panel. */
-    private CreditsPanel cp;
-    /** Tab history. */
-    private int history;
+    private final URLHandler urlHandler;
+    private final AboutDialogModel model;
+    private final SwingController controller;
 
-    /**
-     * Creates a new instance of AboutDialog.
-     *
-     * @param parentWindow  Parent window
-     * @param infoPanel     The info panel to display.
-     * @param creditsPanel  The credits panel to display.
-     * @param licensesPanel The licenses panel to display.
-     * @param aboutPanel    The about panel to display.
-     */
     @Inject
     public AboutDialog(
             @MainWindow final Window parentWindow,
-            final InfoPanel infoPanel,
-            final CreditsPanel creditsPanel,
-            final LicencesPanel licensesPanel,
-            final AboutPanel aboutPanel) {
+            final AboutDialogModel model,
+            final URLHandler urlHandler,
+            final DMDircMBassador eventBus,
+            final SwingController controller,
+            final LicencesPanel licensesPanel) {
         super(parentWindow, ModalityType.MODELESS);
+        this.urlHandler = urlHandler;
+        this.model = model;
+        this.controller = controller;
 
-        initComponents(infoPanel, creditsPanel, licensesPanel, aboutPanel);
+        eventBus.subscribe(this);
+        model.load();
+        initComponents(licensesPanel);
     }
 
     /** Initialises the main UI components. */
-    private void initComponents(
-            final InfoPanel infoPanel,
-            final CreditsPanel creditsPanel,
-            final LicencesPanel licensesPanel,
-            final AboutPanel aboutPanel) {
-        tabbedPane = new JTabbedPane();
+    private void initComponents(final LicencesPanel licensesPanel) {
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About");
@@ -87,16 +81,13 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
 
         orderButtons(new JButton(), new JButton());
 
-        getOkButton().addActionListener(this);
-        getCancelButton().addActionListener(this);
+        getOkButton().addActionListener(e -> dispose());
+        getCancelButton().addActionListener(e -> dispose());
 
-        cp = creditsPanel;
-
-        tabbedPane.add("About", aboutPanel);
-        tabbedPane.add("Credits", cp);
+        tabbedPane.add("About", new AboutPanel(urlHandler, model));
+        tabbedPane.add("Credits", new CreditsPanel(urlHandler, model));
         tabbedPane.add("Licences", licensesPanel);
-        tabbedPane.add("Information", infoPanel);
-        tabbedPane.addChangeListener(this);
+        tabbedPane.add("Information", new InfoPanel(model));
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, "
                 + "wmin 600, wmax 600, hmin 400, hmax 400"));
@@ -104,30 +95,11 @@ public class AboutDialog extends StandardDialog implements ActionListener, Chang
         getContentPane().add(getOkButton(), "right");
     }
 
-    /**
-     * {@inheritDoc}.
-     *
-     * @param e Action event
-     */
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        dispose();
+    @Handler
+    public void handleInfoRequest(final ClientInfoRequestEvent event) {
+        event.addInfoItem(InfoItem.create("Swing UI Version", controller.getVersion().toString()),
+                InfoItem.create("Look and Feel", SwingController.getLookAndFeel()),
+                InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
+        );
     }
-
-    @Override
-    public boolean enterPressed() {
-        executeAction(getOkButton());
-        return true;
-    }
-
-    @Override
-    public void stateChanged(final ChangeEvent e) {
-        history = 10 * (history % 10000) + tabbedPane.getSelectedIndex();
-
-        if (history / 10 % 100 == 32 && (history & 1) == 1
-                && history >> 8 == 118) {
-            cp.showEE();
-        }
-    }
-
 }

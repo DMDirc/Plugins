@@ -24,58 +24,38 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.util.URLHandler;
 
-import javax.inject.Inject;
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkEvent.EventType;
-import javax.swing.event.HyperlinkListener;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * About DMDirc panel.
  */
-public final class AboutPanel extends JPanel implements HyperlinkListener {
+public final class AboutPanel extends JPanel {
 
-    /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The URL Handler to use to handle clicked links. */
     private final URLHandler urlHandler;
+    private final AboutDialogModel model;
 
-    /**
-     * Creates a new instance of AboutPanel.
-     *
-     * @param urlHandler The URL Handler to use to handle clicked links
-     */
-    @Inject
-    public AboutPanel(final URLHandler urlHandler) {
+    public AboutPanel(final URLHandler urlHandler, final AboutDialogModel model) {
         this.urlHandler = urlHandler;
+        this.model = model;
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 
-    /** Initialises the components. */
     private void initComponents() {
-        final TextLabel about = new TextLabel("<html><center>"
-                + "<h1 style=\"margin-bottom: 0px;\">DMDirc</h1>"
-                + "<span style=\"font-style: italic;\">The intelligent IRC client.</span>"
-                + "<p>Easy to use, cross-platform IRC client.</p>"
-                + "<p><a href=\"http://www.dmdirc.com\">www.dmdirc.com</a></p>"
-                + "</center></html>", false);
-        about.addHyperlinkListener(this);
-
+        final TextLabel about = new TextLabel(model.getAbout(), false);
+        about.addHyperlinkListener(e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                urlHandler.launchApp(e.getURL());
+            }
+        });
         setLayout(new MigLayout("ins rel, fill"));
-
         add(about, "align center");
     }
-
-    @Override
-    public void hyperlinkUpdate(final HyperlinkEvent e) {
-        if (e.getEventType() == EventType.ACTIVATED) {
-            urlHandler.launchApp(e.getURL());
-        }
-    }
-
 }

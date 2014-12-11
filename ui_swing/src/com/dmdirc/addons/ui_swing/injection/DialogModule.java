@@ -48,11 +48,13 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
@@ -107,6 +109,11 @@ public class DialogModule {
 
     @Provides
     public ProfilesDialogModel getProfileDialogModel(final CoreProfilesDialogModel model) {
+        return model;
+    }
+
+    @Provides
+    public AboutDialogModel getAboutDialogModel(final CoreAboutDialogModel model) {
         return model;
     }
 
