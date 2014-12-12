@@ -24,76 +24,63 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
+import com.dmdirc.ui.core.about.Developer;
 import com.dmdirc.ui.core.util.URLHandler;
 
-import javax.inject.Inject;
+import java.util.function.Consumer;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
-import javax.swing.event.HyperlinkListener;
 
 import net.miginfocom.swing.MigLayout;
 
 /**
  * Authors Panel.
  */
-public final class CreditsPanel extends JPanel implements HyperlinkListener {
+public final class CreditsPanel extends JPanel {
 
-    /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** HTML label we're using. */
-    private TextLabel about;
-    /** URL Handler to use to open clicked links. */
     private final URLHandler urlHandler;
+    private final AboutDialogModel model;
 
-    /**
-     * Creates a new instance of CreditsPanel.
-     *
-     * @param urlHandler The URL handler to use to open clicked links
-     */
-    @Inject
-    public CreditsPanel(final URLHandler urlHandler) {
+    public CreditsPanel(final URLHandler urlHandler, final AboutDialogModel model) {
         this.urlHandler = urlHandler;
+        this.model = model;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         initComponents();
     }
 
-    /** Shows some alternate content. */
-    public void showEE() {
-        about.setText("<html><center><br><br><br>"
-                + "<img src=\"https://www.dmdirc.com/res/about.png\"></html>");
-    }
-
     /** Initialises the components. */
     private void initComponents() {
-        about = new TextLabel("<html>"
-                + "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Main developers:</h3>"
-                + "<ul style='list-style-type: circle; margin-top: 0px;'>"
-                + "<li><a href=\"https://www.md87.co.uk\">Chris 'MD87' Smith</a></li>"
-                + "<li><a href=\"https://www.greboid.com\">Gregory 'Greboid' Holmes</a></li>"
-                + "<li><a href=\"http://home.dataforce.org.uk\">Shane 'Dataforce' Mc Cormack</a></li>"
-                + "</ul>"
-                + "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Additional developers:</h3>"
-                + "<ul style='list-style-type: circle; margin-top: 0px;'>"
-                + "<li><a href=\"http://simonmott.co.uk/\">Simon 'Demented-Idiot' Mott</a></li>"
-                + "</ul>"
-                + "</html>");
-        about.addHyperlinkListener(this);
+        final StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Main Developers:</h3>");
+        sb.append("<ul style='margin-top: 0px;'>");
+        final Consumer<Developer> developerConsumer = i -> {
+                sb.append("<li><a href=\"").append(i.getWebsite()).append("\">");
+                sb.append(i.getName()).append("</a>").append("</li>");
+        };
+        model.getMainDevelopers().forEach(developerConsumer);
+        sb.append("</ul>");
+        sb.append("<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>Other Developers: </h3>");
+        sb.append("<ul style='margin-top: 0px;'>");
+        model.getOtherDevelopers().forEach(developerConsumer);
+        sb.append("</ul></html>");
+        final TextLabel about = new TextLabel(sb.toString());
+        about.addHyperlinkListener(e -> {
+            if (e.getEventType() == EventType.ACTIVATED) {
+                urlHandler.launchApp(e.getURL());
+            }
+        });
 
         setLayout(new MigLayout("ins rel, fill"));
         final JScrollPane scrollPane = new JScrollPane(about);
         scrollPane.setOpaque(UIUtilities.getTabbedPaneOpaque());
         scrollPane.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
         add(scrollPane, "grow, push");
-    }
-
-    @Override
-    public void hyperlinkUpdate(final HyperlinkEvent e) {
-        if (e.getEventType() == EventType.ACTIVATED) {
-            urlHandler.launchApp(e.getURL());
-        }
     }
 
 }
