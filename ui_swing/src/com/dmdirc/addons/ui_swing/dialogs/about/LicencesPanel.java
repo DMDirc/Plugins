@@ -22,18 +22,17 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
+import com.dmdirc.ui.core.about.Licence;
+import com.dmdirc.ui.core.about.LicensedComponent;
 
 import java.awt.Font;
 import java.awt.Rectangle;
 
-import javax.inject.Inject;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -69,20 +68,12 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     /** Licence list. */
     private JTree list;
 
-    /**
-     * Creates a new instance of LicencesPanel.
-     *
-     * @param globalConfig  The config to read settings from.
-     * @param pluginManager The manager to use to find plugins (to display their licenses).
-     * @param eventBus      The event bus to post errors to.
-     */
-    @Inject
-    public LicencesPanel(
-            @GlobalConfig final AggregateConfigProvider globalConfig,
-            final PluginManager pluginManager, final DMDircMBassador eventBus) {
+    public LicencesPanel(final AboutDialogModel model,
+            final AggregateConfigProvider globalConfig,
+            final DMDircMBassador eventBus) {
         config = globalConfig;
         initComponents();
-        new LicenceLoader(pluginManager.getPluginInfos(), list, listModel, eventBus).execute();
+        new LicenceLoader(model, list, listModel, eventBus).execute();
         addListeners();
         layoutComponents();
     }
@@ -148,16 +139,14 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
         final Object userObject = ((DefaultMutableTreeNode) e.getPath().
                 getLastPathComponent()).getUserObject();
         if (userObject instanceof Licence) {
-            licence.setText(((Licence) userObject).getBody());
-        } else if (userObject instanceof PluginInfo) {
-            final PluginInfo pi = (PluginInfo) userObject;
+            licence.setText(
+                    "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>"
+                            + ((Licence) userObject).getName() + "</h3>"
+                            + ((Licence) userObject).getBody().replaceAll("\\n", "<br>"));
+        } else if (userObject instanceof LicensedComponent) {
+            final LicensedComponent lc = (LicensedComponent) userObject;
             licence.setText("<b>Name:</b> "
-                    + pi.getMetaData().getFriendlyName() + "<br>"
-                    + "<b>Version:</b> "
-                    + pi.getMetaData().getFriendlyVersion() + "<br>"
-                    + "<b>Author:</b> " + pi.getMetaData().getAuthor() + "<br>"
-                    + "<b>Description:</b> "
-                    + pi.getMetaData().getDescription() + "<br>");
+                    + lc.getName() + "<br>");
         } else {
             licence.setText("<b>Name:</b> DMDirc<br>"
                     + "<b>Version:</b> " + config
