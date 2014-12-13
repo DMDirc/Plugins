@@ -22,11 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.ClientInfoRequestEvent;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.about.InfoItem;
 import com.dmdirc.ui.core.util.URLHandler;
@@ -52,27 +54,31 @@ public class AboutDialog extends StandardDialog {
     private final URLHandler urlHandler;
     private final AboutDialogModel model;
     private final SwingController controller;
+    private final DMDircMBassador eventBus;
+    private final AggregateConfigProvider config;
 
     @Inject
     public AboutDialog(
+            @GlobalConfig final AggregateConfigProvider config,
             @MainWindow final Window parentWindow,
             final AboutDialogModel model,
             final URLHandler urlHandler,
             final DMDircMBassador eventBus,
-            final SwingController controller,
-            final LicencesPanel licensesPanel) {
+            final SwingController controller) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
         this.controller = controller;
+        this.eventBus = eventBus;
+        this.config = config;
 
         eventBus.subscribe(this);
         model.load();
-        initComponents(licensesPanel);
+        initComponents();
     }
 
     /** Initialises the main UI components. */
-    private void initComponents(final LicencesPanel licensesPanel) {
+    private void initComponents() {
         final JTabbedPane tabbedPane = new JTabbedPane();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -86,7 +92,7 @@ public class AboutDialog extends StandardDialog {
 
         tabbedPane.add("About", new AboutPanel(urlHandler, model));
         tabbedPane.add("Credits", new CreditsPanel(urlHandler, model));
-        tabbedPane.add("Licences", licensesPanel);
+        tabbedPane.add("Licences", new LicencesPanel(model, config, eventBus));
         tabbedPane.add("Information", new InfoPanel(model));
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, "

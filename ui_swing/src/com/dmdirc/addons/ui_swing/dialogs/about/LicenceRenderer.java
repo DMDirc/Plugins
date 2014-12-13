@@ -22,7 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.ui.core.about.Licence;
+import com.dmdirc.ui.core.about.LicensedComponent;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -48,9 +49,14 @@ public class LicenceRenderer extends DefaultTreeCellRenderer {
                 value, sel, expanded, leaf, row, hasFocus);
         label.setIcon(null);
         label.setOpaque(false);
-        if (((DefaultMutableTreeNode) value).getUserObject() instanceof PluginInfo) {
-            setText(((PluginInfo) ((DefaultMutableTreeNode) value)
-                    .getUserObject()).getMetaData().getFriendlyName());
+        final DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        final Object nodeValue = node.getUserObject();
+        if (nodeValue instanceof Licence) {
+            setText(((Licence) nodeValue).getComponent());
+        } else if (nodeValue instanceof LicensedComponent) {
+            setText(((LicensedComponent) nodeValue).getName());
+        } else {
+            setText(value.toString());
         }
         return label;
     }

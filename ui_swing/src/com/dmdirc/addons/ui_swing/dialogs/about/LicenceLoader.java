@@ -23,19 +23,12 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.interfaces.ui.AboutDialogModel;
+import com.dmdirc.ui.core.about.LicensedComponent;
 import com.dmdirc.util.resourcemanager.ResourceManager;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -52,117 +45,49 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     /** Tree to add licenses to. */
     private final JTree tree;
+    private final AboutDialogModel model;
     /** Model to load licences into. */
-    private final DefaultTreeModel model;
-    /** List of plugins to get licenses for. */
-    private final Collection<PluginInfo> plugins;
+    private final DefaultTreeModel treeModel;
 
     /**
      * Instantiates a new licence loader.
      *
-     * @param plugins  List of plugins to get licenses from
      * @param tree     Tree to add licenses to
      * @param model    Model to load licences into
      * @param eventBus The event bus to post errors to
      */
-    public LicenceLoader(final Collection<PluginInfo> plugins, final JTree tree,
-            final DefaultTreeModel model, final DMDircMBassador eventBus) {
+    public LicenceLoader(final AboutDialogModel model, final JTree tree,
+            final DefaultTreeModel treeModel, final DMDircMBassador eventBus) {
         super(eventBus);
-        this.plugins = plugins;
         this.tree = tree;
         this.model = model;
+        this.treeModel = treeModel;
     }
 
     @Override
     protected Void doInBackground() throws IOException {
         final ResourceManager rm = ResourceManager.getResourceManager();
         checkNotNull(rm, "Unable to find resource manager");
-        addCoreLicences(rm);
-        for (PluginInfo pi : plugins) {
-            addPluginLicences(pi);
-        }
+        model.getLicensedComponents().forEach(this::addLicensedComponent);
         return null;
     }
 
-    private Licence createLicence(final Entry<String, InputStream> entry) {
-        final String licenceString = entry.getKey().substring(entry.getKey().
-                lastIndexOf('/') + 1);
-        if (licenceString.length() > 1) {
-            final String[] licenceStringParts = licenceString.split(" - ");
-            return new Licence(licenceStringParts[1], licenceStringParts[0],
-                    "<html><h1>" + licenceStringParts[1] + "</h1><p>" +
-                            readInputStream(entry.getValue()).replace("\n", "<br>") +
-                            "</p></html>");
-        } else {
-            return null;
-        }
-    }
-
-    private void addCoreLicences(final ResourceManager rm) {
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode("DMDirc");
-        final Map<String, InputStream> licences = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        licences.putAll(rm.getResourcesStartingWithAsInputStreams("com/dmdirc/licences/"));
-        addLicensesToNode(licences, root);
-    }
-
-    private void addPluginLicences(final PluginInfo pi) throws IOException {
-        final Map<String, InputStream> licences = pi.getLicenceStreams();
-
-        if (licences.isEmpty()) {
-            return;
-        }
-
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(pi);
-        addLicensesToNode(licences, root);
-    }
-
-    private void addLicensesToNode(final Map<String, InputStream> licences,
-            final DefaultMutableTreeNode root) {
-        UIUtilities.invokeAndWait(() -> model.insertNodeInto(root,
-                (MutableTreeNode) model.getRoot(), model.getChildCount(model.getRoot())));
-        for (Entry<String, InputStream> entry : licences.entrySet()) {
-            final Licence licence = createLicence(entry);
-            if (licence == null) {
-                continue;
-            }
-            UIUtilities.invokeAndWait(
-                    () -> model.insertNodeInto(new DefaultMutableTreeNode(licence), root,
-                            model.getChildCount(root)));
-        }
+    private void addLicensedComponent(final LicensedComponent component) {
+        final MutableTreeNode componentNode = new DefaultMutableTreeNode(component);
+        treeModel.insertNodeInto(componentNode, (MutableTreeNode) treeModel.getRoot(),
+                treeModel.getChildCount(treeModel.getRoot()));
+        component.getLicences().forEach(l -> treeModel.insertNodeInto(
+                new DefaultMutableTreeNode(l), componentNode,
+                treeModel.getChildCount(componentNode)));
     }
 
     @Override
     protected void done() {
-        model.nodeStructureChanged((TreeNode) model.getRoot());
+        treeModel.nodeStructureChanged((TreeNode) treeModel.getRoot());
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
         }
         tree.setSelectionRow(0);
         super.done();
     }
-
-    /**
-     * Converts an input stream into a string.
-     *
-     * @param stream Stream to convert
-     *
-     * @return Contents of the input stream
-     */
-    private String readInputStream(final InputStream stream) {
-        String line;
-        final StringBuilder text = new StringBuilder();
-
-        try (BufferedReader input = new BufferedReader(new InputStreamReader(stream))) {
-            line = input.readLine();
-            while (line != null) {
-                text.append(line).append('\n');
-                line = input.readLine();
-            }
-        } catch (IOException ex) {
-            //Ignore
-        }
-
-        return text.toString();
-    }
-
 }
