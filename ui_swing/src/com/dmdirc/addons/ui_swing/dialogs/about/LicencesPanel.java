@@ -30,9 +30,6 @@ import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.about.Licence;
 import com.dmdirc.ui.core.about.LicensedComponent;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-
 import java.awt.Font;
 import java.awt.Rectangle;
 
@@ -145,8 +142,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
             licence.setText(
                     "<h3 style='margin: 3px; padding: 0px 0px 5px 0px;'>"
                             + ((Licence) userObject).getName() + "</h3>"
-                            + Joiner.on("<br>").join(
-                            Splitter.on('\n').split(((Licence) userObject).getBody())));
+                            + ((Licence) userObject).getBody().replaceAll("\\n", "<br>"));
         } else if (userObject instanceof LicensedComponent) {
             final LicensedComponent lc = (LicensedComponent) userObject;
             licence.setText("<b>Name:</b> "
