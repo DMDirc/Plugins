@@ -117,7 +117,7 @@ public class StandardInputDialog extends StandardDialog {
             final String title, final String message,
             final Function<String, Boolean> save,
             final Runnable cancel) {
-        this(owner, modal, iconManager, title, message, o -> new ValidationResponse(), save,
+        this(owner, modal, iconManager, title, message, ValidationResponse::new, save,
                 cancel);
     }
 
@@ -137,7 +137,7 @@ public class StandardInputDialog extends StandardDialog {
             final Validator<String> validator,
             final Consumer<String> save) {
         this(owner, modal, iconManager, title, message, validator,
-                (String s) -> { save.accept(s); return true; }, Runnables.doNothing());
+                (final String s) -> { save.accept(s); return true; }, Runnables.doNothing());
     }
 
     /**
@@ -174,7 +174,7 @@ public class StandardInputDialog extends StandardDialog {
             final Consumer<String> save,
             final Runnable cancel) {
         this(owner, modal, iconManager, title, message, validator,
-                (String s) -> { save.accept(s); return true; }, cancel);
+                (final String s) -> { save.accept(s); return true; }, cancel);
     }
 
     /**

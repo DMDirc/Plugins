@@ -168,15 +168,6 @@ public class NodeLabel extends JPanel {
     }
 
     @Override
-    public int hashCode() {
-        if (window == null) {
-            return super.hashCode();
-        }
-
-        return window.hashCode();
-    }
-
-    @Override
     public Font getFont() {
         return UIManager.getFont("TextPane.font");
     }
