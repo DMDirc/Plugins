@@ -131,7 +131,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             model = new TreeViewModel(config, new TreeViewNode(null, null));
             tree = new Tree(this, model, swingEventBus, globalConfig, domain);
             tree.setCellRenderer(
-                    new TreeViewTreeCellRenderer(config, colourManager, this));
+                    new TreeViewTreeCellRenderer(config, colourManager, this, eventBus));
             tree.setVisible(true);
 
             config.addChangeListener("treeview", this);
