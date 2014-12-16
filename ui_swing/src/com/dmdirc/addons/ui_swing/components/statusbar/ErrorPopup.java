@@ -48,26 +48,31 @@ public class ErrorPopup extends StatusbarPopupWindow {
     private static final long serialVersionUID = 1;
     /** Icon manager. */
     private final IconManager iconManager;
+    /** Error manager to retrieve errors from. */
+    private ErrorManager errorManager;
 
     /**
      * Creates a new error popup.
      *
+     * @param errorManager The error manager to retrieve errors from
      * @param iconManager  The manager to use to retrieve icons.
      * @param parent       Parent panel
      * @param parentWindow Parent window
      */
     public ErrorPopup(
+            final ErrorManager errorManager,
             final IconManager iconManager,
             final JPanel parent,
             final Window parentWindow) {
         super(parent, parentWindow);
 
+        this.errorManager = errorManager;
         this.iconManager = iconManager;
     }
 
     @Override
     protected void initContent(final JPanel panel) {
-        final List<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
+        final List<ProgramError> errors = errorManager.getErrors();
         final MapList<ErrorLevel, ProgramError> buckets = new MapList<>();
         final MapList<ErrorReportStatus, ProgramError> statuses = new MapList<>();
 

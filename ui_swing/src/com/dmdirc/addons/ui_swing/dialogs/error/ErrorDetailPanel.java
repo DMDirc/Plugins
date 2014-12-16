@@ -44,6 +44,8 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 3;
+    /** The error manager to retrieve errors from. */
+    private final ErrorManager errorManager;
     /** Error to show. */
     private ProgramError error;
     /** ID field. */
@@ -60,17 +62,18 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     private JScrollPane scrollPane;
 
     /** Creates a new instance of ErrorDetailPanel. */
-    public ErrorDetailPanel() {
-        this(null);
+    public ErrorDetailPanel(final ErrorManager errorManager) {
+        this(errorManager, null);
     }
 
     /**
      * Creates a new instance of ErrorDetailPanel.
      *
-     * @param error Error to be displayed
+     * @param errorManager The error manager to retrieve errors from
+     * @param error        Error to be displayed
      */
-    public ErrorDetailPanel(final ProgramError error) {
-
+    public ErrorDetailPanel(final ErrorManager errorManager, final ProgramError error) {
+        this.errorManager = errorManager;
         this.error = error;
 
         initComponents();
@@ -107,7 +110,7 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         details.setRows(5);
         details.setWrapStyleWord(true);
 
-        ErrorManager.getErrorManager().addErrorListener(this);
+        errorManager.addErrorListener(this);
     }
 
     /** Updates the panels details. */

@@ -36,7 +36,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,7 +67,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** The manager to use to retrieve icons. */
     private final IconManager iconManager;
     /** Error manager. */
-    private final transient ErrorManager errorManager = ErrorManager.getErrorManager();
+    private final transient ErrorManager errorManager;
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Show menu item. */
@@ -91,13 +90,15 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
             @GlobalConfig final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final Provider<SwingStatusBar> statusBar,
-            final DialogProvider<ErrorListDialog> errorListDialogProvider) {
+            final DialogProvider<ErrorListDialog> errorListDialogProvider,
+            final ErrorManager errorManager) {
         super(new JLabel());
 
         this.parentWindow = parentWindow;
         this.statusBar = statusBar;
         this.iconManager = iconManager;
         this.errorListDialogProvider = errorListDialogProvider;
+        this.errorManager = errorManager;
         defaultIcon = iconManager.getIcon("normal");
 
         menu = new JPopupMenu();
@@ -115,7 +116,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(iconManager, this, parentWindow);
+        return new ErrorPopup(errorManager, iconManager, this, parentWindow);
     }
 
     /** Clears the error. */
@@ -212,10 +213,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
         if (e.getSource() == show) {
             errorListDialogProvider.displayOrRequestFocus();
         } else {
-            final Collection<ProgramError> errors = ErrorManager.getErrorManager().getErrors();
-            for (final ProgramError error : errors) {
-                ErrorManager.getErrorManager().deleteError(error);
-            }
+            errorManager.getErrors().forEach(errorManager::deleteError);
         }
     }
 

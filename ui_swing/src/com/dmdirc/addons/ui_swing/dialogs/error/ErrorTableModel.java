@@ -30,6 +30,7 @@ import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,17 +45,20 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
     private static final long serialVersionUID = 2;
     /** Data list. */
     private final List<ProgramError> errors;
+    /** Error manager to add listeners to. */
+    private final ErrorManager errorManager;
     /** Are we ready? */
     private boolean ready;
 
     /**
      * Creates a new instance of ErrorTableModel.
      */
-    public ErrorTableModel() {
+    public ErrorTableModel(final ErrorManager errorManager) {
         this.errors = Collections.synchronizedList(new ArrayList<>());
+        this.errorManager = errorManager;
     }
 
-    public void load(final ErrorManager errorManager) {
+    public void load() {
         errorManager.addErrorListener(this);
         setErrors(errorManager.getErrors());
         ready = true;
@@ -65,7 +69,7 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
      *
      * @param errors List of errors
      */
-    public void setErrors(final List<ProgramError> errors) {
+    public void setErrors(final Collection<ProgramError> errors) {
         synchronized (this.errors) {
             this.errors.clear();
             this.errors.addAll(errors);
@@ -76,7 +80,7 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
 
     @Override
     public int getRowCount() {
-        synchronized (this.errors) {
+        synchronized (errors) {
             return errors.size();
         }
     }
@@ -265,7 +269,7 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
      * Disposes of this model, removing any added listeners.
      */
     public void dispose() {
-        ErrorManager.getErrorManager().removeErrorListener(this);
+        errorManager.removeErrorListener(this);
         ready = false;
     }
 

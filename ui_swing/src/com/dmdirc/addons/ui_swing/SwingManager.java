@@ -83,6 +83,8 @@ public class SwingManager {
     private final Provider<SwingWindowManager> swingWindowManager;
     /** Error list dialog provider. */
     private final DialogProvider<ErrorListDialog> errorListDialogProvider;
+    /** Error manager for error management. */
+    private final ErrorManager errorManager;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
     /** Swing UI initialiser. */
@@ -125,7 +127,8 @@ public class SwingManager {
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
             final DialogProvider<ErrorListDialog> errorListDialogProvider,
-            final SwingUIInitialiser uiInitialiser) {
+            final SwingUIInitialiser uiInitialiser,
+            final ErrorManager errorManager) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.menuBar = menuBar;
@@ -142,6 +145,7 @@ public class SwingManager {
         this.swingWindowManager = swingWindowManager;
         this.errorListDialogProvider = errorListDialogProvider;
         this.uiInitialiser = uiInitialiser;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -150,10 +154,10 @@ public class SwingManager {
     public void load() {
         uiInitialiser.load();
         this.mainFrame = mainFrameProvider.get();
-        this.mainFrame.setMenuBar(menuBar.get());
-        this.mainFrame.setWindowManager(ctrlTabManager);
-        this.mainFrame.setStatusBar(statusBar.get());
-        this.mainFrame.initComponents();
+        mainFrame.setMenuBar(menuBar.get());
+        mainFrame.setWindowManager(ctrlTabManager);
+        mainFrame.setStatusBar(statusBar.get());
+        mainFrame.initComponents();
         swingEventBus.subscribe(mainFrame);
         swingEventBus.subscribe(ctrlTabManager);
 
@@ -162,17 +166,14 @@ public class SwingManager {
         eventBus.subscribe(this);
         eventBus.subscribe(mainFrame);
         eventBus.subscribe(linkHandler);
-        SwingUtilities.invokeLater(
-                () -> errorListDialogProvider.get().load(ErrorManager.getErrorManager()));
+        SwingUtilities.invokeLater(() -> errorListDialogProvider.get().load());
     }
 
     /**
      * Handles unloading of the UI.
      */
     public void unload() {
-        for (final Window window : swingWindowManager.get().getTopLevelWindows()) {
-            window.dispose();
-        }
+        swingWindowManager.get().getTopLevelWindows().forEach(Window::dispose);
         windowManager.removeListener(windowFactory.get());
         windowFactory.get().dispose();
         SwingUtilities.invokeLater(() -> errorListDialogProvider.get().dispose());
