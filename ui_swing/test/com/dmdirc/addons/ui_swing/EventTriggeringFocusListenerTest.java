@@ -34,6 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,12 +52,12 @@ public class EventTriggeringFocusListenerTest {
     @Test
     public void testWindowGainedFocus() throws Exception {
         instance.windowGainedFocus(windowEvent);
-        verify(eventBus).publish(new ClientFocusGainedEvent());
+        verify(eventBus).publish(any(ClientFocusGainedEvent.class));
     }
 
     @Test
     public void testWindowLostFocus() throws Exception {
         instance.windowLostFocus(windowEvent);
-        verify(eventBus).publish(new ClientFocusLostEvent());
+        verify(eventBus).publish(any(ClientFocusLostEvent.class));
     }
 }
