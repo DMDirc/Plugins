@@ -67,7 +67,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** The manager to use to retrieve icons. */
     private final IconManager iconManager;
     /** Error manager. */
-    private final transient ErrorManager errorManager;
+    private final ErrorManager errorManager;
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Show menu item. */
