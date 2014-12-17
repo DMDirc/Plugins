@@ -52,12 +52,12 @@ public class EventTriggeringFocusListenerTest {
     @Test
     public void testWindowGainedFocus() throws Exception {
         instance.windowGainedFocus(windowEvent);
-        verify(eventBus).publish(any(ClientFocusGainedEvent.class));
+        verify(eventBus).publishAsync(any(ClientFocusGainedEvent.class));
     }
 
     @Test
     public void testWindowLostFocus() throws Exception {
         instance.windowLostFocus(windowEvent);
-        verify(eventBus).publish(any(ClientFocusLostEvent.class));
+        verify(eventBus).publishAsync(any(ClientFocusLostEvent.class));
     }
 }
