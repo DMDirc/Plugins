@@ -36,8 +36,6 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.events.ClientFocusGainedEvent;
-import com.dmdirc.events.ClientFocusLostEvent;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientUnminimisedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
@@ -53,7 +51,6 @@ import com.dmdirc.util.collections.QueuedLinkedHashSet;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.util.Optional;
 
@@ -177,18 +174,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             globalConfig.addChangeListener("ui", "framemanagerPosition", this);
             globalConfig.addChangeListener("icon", "icon", this);
 
-            addWindowFocusListener(new WindowFocusListener() {
-
-                @Override
-                public void windowGainedFocus(final WindowEvent e) {
-                    eventBus.publishAsync(new ClientFocusGainedEvent());
-                }
-
-                @Override
-                public void windowLostFocus(final WindowEvent e) {
-                    eventBus.publishAsync(new ClientFocusLostEvent());
-                }
-            });
+            addWindowFocusListener(new EventTriggeringFocusListener(eventBus));
 
             setTitle(getTitlePrefix());
             initDone = true;
