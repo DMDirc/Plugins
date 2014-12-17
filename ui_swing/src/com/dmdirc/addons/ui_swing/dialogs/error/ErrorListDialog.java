@@ -61,6 +61,8 @@ public final class ErrorListDialog extends StandardDialog implements
     private final Object selectionLock = new Object();
     /** Table model. */
     private final ErrorTableModel tableModel;
+    /** Error manager to retrieve errors from. */
+    private final ErrorManager errorManager;
     /** Table scrollpane. */
     private JScrollPane scrollPane;
     /** Error table. */
@@ -86,16 +88,18 @@ public final class ErrorListDialog extends StandardDialog implements
      */
     @Inject
     public ErrorListDialog(
+            final ErrorManager errorManager,
             @MainWindow final Window parentWindow,
             @GlobalConfig final IconManager iconManager) {
         super(parentWindow, ModalityType.MODELESS);
+        this.errorManager = errorManager;
 
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
 
-        tableModel = new ErrorTableModel();
+        tableModel = new ErrorTableModel(errorManager);
 
-        initComponents(iconManager);
+        initComponents(errorManager, iconManager);
         layoutComponents();
         initListeners();
 
@@ -104,15 +108,13 @@ public final class ErrorListDialog extends StandardDialog implements
 
     /**
      * Loads the dialog and sets it as ready.
-     *
-     * @param errorManager Error manager to register with.
      */
-    public void load(final ErrorManager errorManager) {
-        tableModel.load(errorManager);
+    public void load() {
+        tableModel.load();
     }
 
     /** Initialises the components. */
-    private void initComponents(final IconManager iconManager) {
+    private void initComponents(final ErrorManager errorManager, final IconManager iconManager) {
         initButtons();
 
         scrollPane = new JScrollPane();
@@ -124,7 +126,7 @@ public final class ErrorListDialog extends StandardDialog implements
 
         scrollPane.setViewportView(table);
 
-        errorDetails = new ErrorDetailPanel();
+        errorDetails = new ErrorDetailPanel(errorManager);
     }
 
     /** Initialises the buttons. */
@@ -228,18 +230,16 @@ public final class ErrorListDialog extends StandardDialog implements
             setVisible(false);
         } else if (e.getSource() == deleteButton) {
             synchronized (selectionLock) {
-                ErrorManager.getErrorManager().deleteError(tableModel.getError(
-                        table.getRowSorter().convertRowIndexToModel(
-                                table.getSelectedRow())));
+                errorManager.deleteError(tableModel.getError(
+                        table.getRowSorter().convertRowIndexToModel(table.getSelectedRow())));
             }
         } else if (e.getSource() == sendButton) {
             synchronized (selectionLock) {
-                ErrorManager.getErrorManager().sendError(tableModel.getError(
-                        table.getRowSorter().convertRowIndexToModel(
-                                table.getSelectedRow())));
+                errorManager.sendError(tableModel.getError(
+                        table.getRowSorter().convertRowIndexToModel(table.getSelectedRow())));
             }
         } else if (e.getSource() == deleteAllButton) {
-            ErrorManager.getErrorManager().deleteAll();
+            errorManager.deleteAll();
         }
     }
 
