@@ -24,30 +24,21 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
+import com.dmdirc.actions.CoreActionExtractor;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
-import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.CorePluginExtractor;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Window;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,36 +53,30 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     private final ConfigProvider config;
     /** Extractor to use for core plugins. */
     private final CorePluginExtractor corePluginExtractor;
-    /** Actions directory. */
-    private final String actionsDirectory;
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    /** Core Actions Extractor. */
+    private final CoreActionExtractor coreActionExtractor;
 
     /**
      * Instantiate the wizard.
      *
      * @param parentWindow          Parent window
      * @param config                Global config
-     * @param actionsDirectory      Actions directory
      * @param pluginExtractor       Plugin extractor to use.
      * @param iconManager           Manager to use to find icons.
      * @param profileDialogProvider Provider to use to obtain PMDs.
-     * @param eventBus              The event bus to post errors to.
      */
     @Inject
     public SwingFirstRunWizard(@MainWindow final Window parentWindow,
             @UserConfig final ConfigProvider config,
-            @Directory(DirectoryType.ACTIONS) final String actionsDirectory,
             final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final DMDircMBassador eventBus) {
+            final CoreActionExtractor coreActionExtractor) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
-        this.actionsDirectory = actionsDirectory;
         this.profileDialogProvider = profileDialogProvider;
-        this.eventBus = eventBus;
+        this.coreActionExtractor = coreActionExtractor;
 
         wizardDialog = new WizardDialog("Setup wizard", new ArrayList<>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
@@ -102,9 +87,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     @Override
     public void wizardFinished() {
-        if (ResourceManager.getResourceManager() == null) {
-            return;
-        }
         if (((ExtractionStep) wizardDialog.getStep(0)).getPluginsState()) {
             extractPlugins();
         }
@@ -135,37 +117,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     @Override
     public void extractActions() {
-        extractCoreActions();
-    }
-
-    /** Extracts the core actions. */
-    public void extractCoreActions() {
-        //Copy actions
-        final Map<String, byte[]> resources = ResourceManager.getResourceManager().
-                getResourcesStartingWithAsBytes("com/dmdirc/actions/defaults");
-        for (Entry<String, byte[]> resource : resources.entrySet()) {
-            try {
-                final String resourceName = actionsDirectory +
-                        resource.getKey().substring(27, resource.getKey().length());
-                final File newDir =
-                        new File(resourceName.substring(0, resourceName.lastIndexOf('/')) + "/");
-
-                if (!newDir.exists()) {
-                    newDir.mkdirs();
-                }
-
-                final File newFile = new File(newDir, resourceName
-                        .substring(resourceName.lastIndexOf('/') + 1, resourceName.length()));
-
-                if (!newFile.isDirectory()) {
-                    ResourceManager.getResourceManager().
-                            resourceToFile(resource.getValue(), newFile);
-                }
-            } catch (IOException ex) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                        "Failed to extract actions", ""));
-            }
-        }
+        coreActionExtractor.extractCoreActions();
     }
 
     @Override

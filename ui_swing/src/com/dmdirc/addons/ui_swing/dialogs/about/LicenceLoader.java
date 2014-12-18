@@ -26,7 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.about.LicensedComponent;
-import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.io.IOException;
 
@@ -35,8 +34,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Background loader of licences into a list.
@@ -66,8 +63,6 @@ public class LicenceLoader extends LoggingSwingWorker<Void, Void> {
 
     @Override
     protected Void doInBackground() throws IOException {
-        final ResourceManager rm = ResourceManager.getResourceManager();
-        checkNotNull(rm, "Unable to find resource manager");
         model.getLicensedComponents().forEach(this::addLicensedComponent);
         return null;
     }
