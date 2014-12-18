@@ -163,20 +163,12 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
         }
 
         final String text = manager.doSubstitution(
-                UIUtilities.invokeAndWait(new Callable<String>() {
-                    @Override
-                    public String call() {
-                        return textfield.getText();
-                    }
-                }), source);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                preview.setText("Preview:\n" + text);
-                preview.repaint();
-                previewPanel.revalidate();
-                revalidate();
-            }
+                UIUtilities.invokeAndWait((Callable<String>) textfield::getText), source);
+        SwingUtilities.invokeLater(() -> {
+            preview.setText("Preview:\n" + text);
+            preview.repaint();
+            previewPanel.revalidate();
+            revalidate();
         });
     }
 

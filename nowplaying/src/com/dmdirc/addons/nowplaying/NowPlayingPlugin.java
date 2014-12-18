@@ -29,8 +29,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import java.util.concurrent.Callable;
-
 import dagger.ObjectGraph;
 
 /**
@@ -78,14 +76,9 @@ public class NowPlayingPlugin extends BaseCommandPlugin {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final ConfigPanel configPanel = UIUtilities.invokeAndWait(
-                new Callable<ConfigPanel>() {
-                    @Override
-                    public ConfigPanel call() {
-                        return new ConfigPanel(nowplayingmanager, manager.getConfigManager(),
-                                manager.getIdentity(), domain,
-                                nowplayingmanager.getSettings());
-                    }
-                });
+                () -> new ConfigPanel(nowplayingmanager, manager.getConfigManager(),
+                        manager.getIdentity(), domain,
+                        nowplayingmanager.getSettings()));
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "Now Playing",

@@ -313,14 +313,10 @@ public class TransferContainer extends FrameContainer implements
             //that this send is for.
             if (connection.getParser().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
-                final Thread errorThread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        JOptionPane.showMessageDialog(null,
-                                "You can't DCC yourself.", "DCC Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                final Thread errorThread = new Thread(() -> {
+                    JOptionPane.showMessageDialog(null,
+                            "You can't DCC yourself.", "DCC Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }, "DCC-Error-Message");
                 errorThread.start();
             } else {

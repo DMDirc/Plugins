@@ -42,18 +42,17 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Window;
 import java.io.File;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -131,20 +130,16 @@ public class DCCCommand extends Command implements IntelligentCommand {
             if (parser.isValidChannelName(target)
                     || parser.getStringConverter().equalsIgnoreCase(target,
                             myNickname)) {
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (parser.getStringConverter().equalsIgnoreCase(target,
-                                myNickname)) {
-                            JOptionPane.showMessageDialog(null,
-                                    "You can't DCC yourself.", "DCC Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(null,
-                                    "You can't DCC a channel.", "DCC Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
+                new Thread(() -> {
+                    if (parser.getStringConverter().equalsIgnoreCase(target,
+                            myNickname)) {
+                        JOptionPane.showMessageDialog(null,
+                                "You can't DCC yourself.", "DCC Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "You can't DCC a channel.", "DCC Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }, "DCC-Error-Message").start();
                 return;
@@ -220,76 +215,69 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final Connection connection, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);
-        final File selectedFile = UIUtilities.invokeAndWait(new Callable<File>() {
-            @Override
-            public File call() {
-                final JFileChooser jc = givenFile.exists()
-                        ? KFileChooser.getFileChooser(origin.getConfigManager(),
-                                myPlugin, givenFile)
-                        : KFileChooser.getFileChooser(origin.getConfigManager(),
-                                myPlugin);
-                final int result = showFileChooser(givenFile, target, jc);
+        final File selectedFile = UIUtilities.invokeAndWait(() -> {
+            final JFileChooser jc = givenFile.exists()
+                    ? KFileChooser.getFileChooser(origin.getConfigManager(),
+                            myPlugin, givenFile)
+                    : KFileChooser.getFileChooser(origin.getConfigManager(),
+                            myPlugin);
+            final int result = showFileChooser(givenFile, target, jc);
 
-                if (result != JFileChooser.APPROVE_OPTION
-                        || !handleInvalidItems(jc)) {
-                    return null;
-                }
-                return jc.getSelectedFile();
+            if (result != JFileChooser.APPROVE_OPTION
+                    || !handleInvalidItems(jc)) {
+                return null;
             }
+            return jc.getSelectedFile();
         });
         if (selectedFile == null) {
             return;
         }
-        new Thread(new Runnable() {
+        new Thread(() -> {
+            final DCCTransfer send = new DCCTransfer(origin
+                    .getConfigManager().getOptionInt(myPlugin.getDomain(),
+                            "send.blocksize"));
+            send.setTurbo(origin.getConfigManager().getOptionBool(
+                    myPlugin.getDomain(), "send.forceturbo"));
+            send.setType(DCCTransfer.TransferType.SEND);
 
-            @Override
-            public void run() {
-                final DCCTransfer send = new DCCTransfer(origin
-                        .getConfigManager().getOptionInt(myPlugin.getDomain(),
-                                "send.blocksize"));
-                send.setTurbo(origin.getConfigManager().getOptionBool(
-                        myPlugin.getDomain(), "send.forceturbo"));
-                send.setType(DCCTransfer.TransferType.SEND);
+            eventBus.publish(new DccSendRequestEvent(connection, target, selectedFile.
+                    getAbsolutePath()));
 
-                eventBus.publish(new DccSendRequestEvent(connection, target, selectedFile.
-                        getAbsolutePath()));
+            sendLine(origin, isSilent, FORMAT_OUTPUT,
+                    "Starting DCC Send with: " + target);
 
-                sendLine(origin, isSilent, FORMAT_OUTPUT,
-                        "Starting DCC Send with: " + target);
+            send.setFileName(selectedFile.getAbsolutePath());
+            send.setFileSize(selectedFile.length());
 
-                send.setFileName(selectedFile.getAbsolutePath());
-                send.setFileSize(selectedFile.length());
-
-                if (origin.getConfigManager().getOptionBool(
-                        myPlugin.getDomain(), "send.reverse")) {
-                    final Parser parser = connection.getParser();
+            if (origin.getConfigManager().getOptionBool(
+                    myPlugin.getDomain(), "send.reverse")) {
+                final Parser parser = connection.getParser();
+                final TransferContainer container = new TransferContainer(myPlugin, send,
+                        origin.getConfigManager(), colourManagerFactory, "Send: " + target,
+                        target, connection, urlBuilder, eventBus);
+                windowManager.addWindow(myPlugin.getContainer(), container);
+                parser.sendCTCP(target, "DCC", "SEND \""
+                        + selectedFile.getName() + "\" "
+                        + DCC.ipToLong(myPlugin.getListenIP(parser))
+                        + " 0 " + send.getFileSize() + " "
+                        + send.makeToken()
+                        + (send.isTurbo() ? " T" : ""));
+            } else {
+                final Parser parser = connection.getParser();
+                if (myPlugin.listen(send)) {
                     final TransferContainer container = new TransferContainer(myPlugin, send,
-                            origin.getConfigManager(), colourManagerFactory, "Send: " + target,
-                            target, connection, urlBuilder, eventBus);
+                            origin.getConfigManager(), colourManagerFactory, "*Send: "
+                            + target, target, connection, urlBuilder, eventBus);
                     windowManager.addWindow(myPlugin.getContainer(), container);
                     parser.sendCTCP(target, "DCC", "SEND \""
                             + selectedFile.getName() + "\" "
                             + DCC.ipToLong(myPlugin.getListenIP(parser))
-                            + " 0 " + send.getFileSize() + " "
-                            + send.makeToken()
+                            + " " + send.getPort() + " " + send.getFileSize()
                             + (send.isTurbo() ? " T" : ""));
                 } else {
-                    final Parser parser = connection.getParser();
-                    if (myPlugin.listen(send)) {
-                        final TransferContainer container = new TransferContainer(myPlugin, send,
-                                origin.getConfigManager(), colourManagerFactory, "*Send: "
-                                + target, target, connection, urlBuilder, eventBus);
-                        windowManager.addWindow(myPlugin.getContainer(), container);
-                        parser.sendCTCP(target, "DCC", "SEND \""
-                                + selectedFile.getName() + "\" "
-                                + DCC.ipToLong(myPlugin.getListenIP(parser))
-                                + " " + send.getPort() + " " + send.getFileSize()
-                                + (send.isTurbo() ? " T" : ""));
-                    } else {
-                        sendLine(origin, isSilent, "DCCSendError",
-                                "Unable to start dcc send with " + target
-                                + " - unable to create listen socket");
-                    }
+                    sendLine(origin, isSilent, "DCCSendError",
+                            "Unable to start dcc send with " + target
+                            + " - unable to create listen socket");
                 }
             }
         }, "openFileThread").start();
