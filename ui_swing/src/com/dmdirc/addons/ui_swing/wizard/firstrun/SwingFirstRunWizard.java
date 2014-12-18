@@ -34,7 +34,6 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.plugins.CorePluginExtractor;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.resourcemanager.ResourceManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -88,9 +87,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     @Override
     public void wizardFinished() {
-        if (ResourceManager.getResourceManager() == null) {
-            return;
-        }
         if (((ExtractionStep) wizardDialog.getStep(0)).getPluginsState()) {
             extractPlugins();
         }
