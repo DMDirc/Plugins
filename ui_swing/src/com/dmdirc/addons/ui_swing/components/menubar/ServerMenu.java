@@ -103,8 +103,9 @@ public class ServerMenu extends JMenu implements MenuListener {
         disconnect.setText("Disconnect");
         disconnect.setMnemonic('d');
         disconnect.addActionListener(e -> activeFrameManager.getActiveFrame()
-                .ifPresent(f -> f.getContainer().getOptionalConnection()
-                        .ifPresent(c -> c.disconnect())));
+                .map(TextFrame::getContainer)
+                .flatMap(FrameContainer::getOptionalConnection)
+                .ifPresent(Connection::disconnect));
         add(disconnect);
 
         ssd = new JMenuItem();

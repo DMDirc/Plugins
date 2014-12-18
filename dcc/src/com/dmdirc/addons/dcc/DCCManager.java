@@ -205,67 +205,63 @@ public class DCCManager {
     public void saveFile(final String nickname, final DCCTransfer send,
             final Parser parser, final boolean reverse, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                final JFileChooser jc = KFileChooser.getFileChooser(config,
-                        DCCManager.this,
-                        config.getOption(getDomain(), "receive.savelocation"));
-                final int result;
-                if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
-                    result = JFileChooser.APPROVE_OPTION;
-                } else {
-                    result = showFileChooser(send, jc);
-                }
-                if (result != JFileChooser.APPROVE_OPTION) {
-                    return;
-                }
-                send.setFileName(jc.getSelectedFile().getPath());
-                if (!handleExists(send, jc, nickname, parser, reverse, token)) {
-                    return;
-                }
-                final boolean resume = handleResume(jc);
-                if (reverse && !token.isEmpty()) {
-                    final TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, colourManagerFactory, "*Receive: " + nickname, nickname, null,
-                            urlBuilder, eventBus);
-                    windowManager.addWindow(getContainer(), container);
-                    send.setToken(token);
-                    if (resume) {
-                        if (config.getOptionBool(getDomain(),
-                                "receive.reverse.sendtoken")) {
-                            parser.sendCTCP(nickname, "DCC", "RESUME "
-                                    + send.getShortFileName() + " 0 "
-                                    + jc.getSelectedFile().length() + " "
-                                    + token);
-                        } else {
-                            parser.sendCTCP(nickname, "DCC", "RESUME "
-                                    + send.getShortFileName() + " 0 "
-                                    + jc.getSelectedFile().length());
-                        }
-                    } else {
-                        if (listen(send)) {
-                            parser.sendCTCP(nickname, "DCC", "SEND "
-                                    + send.getShortFileName() + " "
-                                    + DCC.ipToLong(getListenIP(parser))
-                                    + " " + send.getPort() + " "
-                                    + send.getFileSize() + " " + token);
-                        }
-                    }
-                } else {
-                    final TransferContainer container = new TransferContainer(DCCManager.this, send,
-                            config, colourManagerFactory, "Receive: " + nickname, nickname, null,
-                            urlBuilder, eventBus);
-                    windowManager.addWindow(getContainer(), container);
-                    if (resume) {
+        new Thread(() -> {
+            final JFileChooser jc = KFileChooser.getFileChooser(config,
+                    DCCManager.this,
+                    config.getOption(getDomain(), "receive.savelocation"));
+            final int result;
+            if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
+                result = JFileChooser.APPROVE_OPTION;
+            } else {
+                result = showFileChooser(send, jc);
+            }
+            if (result != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            send.setFileName(jc.getSelectedFile().getPath());
+            if (!handleExists(send, jc, nickname, parser, reverse, token)) {
+                return;
+            }
+            final boolean resume = handleResume(jc);
+            if (reverse && !token.isEmpty()) {
+                final TransferContainer container1 = new TransferContainer(DCCManager.this, send,
+                        config, colourManagerFactory, "*Receive: " + nickname, nickname, null,
+                        urlBuilder, eventBus);
+                windowManager.addWindow(getContainer(), container1);
+                send.setToken(token);
+                if (resume) {
+                    if (config.getOptionBool(getDomain(),
+                            "receive.reverse.sendtoken")) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
-                                + send.getShortFileName() + " "
-                                + send.getPort() + " "
-                                + jc.getSelectedFile().length());
+                                + send.getShortFileName() + " 0 "
+                                + jc.getSelectedFile().length() + " "
+                                + token);
                     } else {
-                        send.connect();
+                        parser.sendCTCP(nickname, "DCC", "RESUME "
+                                + send.getShortFileName() + " 0 "
+                                + jc.getSelectedFile().length());
                     }
+                } else {
+                    if (listen(send)) {
+                        parser.sendCTCP(nickname, "DCC", "SEND "
+                                + send.getShortFileName() + " "
+                                + DCC.ipToLong(getListenIP(parser))
+                                + " " + send.getPort() + " "
+                                + send.getFileSize() + " " + token);
+                    }
+                }
+            } else {
+                final TransferContainer container1 = new TransferContainer(DCCManager.this, send,
+                        config, colourManagerFactory, "Receive: " + nickname, nickname, null,
+                        urlBuilder, eventBus);
+                windowManager.addWindow(getContainer(), container1);
+                if (resume) {
+                    parser.sendCTCP(nickname, "DCC", "RESUME "
+                            + send.getShortFileName() + " "
+                            + send.getPort() + " "
+                            + jc.getSelectedFile().length());
+                } else {
+                    send.connect();
                 }
             }
         }, "saveFileThread: " + send.getShortFileName()).start();

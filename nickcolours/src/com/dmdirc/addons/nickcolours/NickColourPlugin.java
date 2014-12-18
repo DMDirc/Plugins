@@ -35,7 +35,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Window;
-import java.util.concurrent.Callable;
 
 import dagger.ObjectGraph;
 
@@ -92,15 +91,9 @@ public class NickColourPlugin extends BasePlugin {
         final PreferencesCategory colours = new PluginPreferencesCategory(
                 pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                        new Callable<NickColourPanel>() {
-
-                            @Override
-                            public NickColourPanel call() {
-                                return new NickColourPanel(mainWindow, iconManager, colourManager,
-                                        manager.getIdentity(), manager.getConfigManager(),
-                                        pluginInfo.getDomain());
-                            }
-                        }));
+                () -> new NickColourPanel(mainWindow, iconManager, colourManager,
+                        manager.getIdentity(), manager.getConfigManager(),
+                        pluginInfo.getDomain())));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 "ui", "shownickcoloursintext", "Show colours in text area",

@@ -82,17 +82,14 @@ public class NotifyMyAndroidCommand extends Command {
                 origin.getConfigManager().getOption(configDomain, "apikey"),
                 origin.getConfigManager().getOption(configDomain, "application"));
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    client.notify(parts[0], parts[1]);
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Notification sent");
-                } catch (IOException ex) {
-                    LOG.info("Exception when trying to notify NMA", ex);
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.
-                            getMessage());
-                }
+        new Thread(() -> {
+            try {
+                client.notify(parts[0], parts[1]);
+                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Notification sent");
+            } catch (IOException ex) {
+                LOG.info("Exception when trying to notify NMA", ex);
+                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.
+                        getMessage());
             }
         }, "NMA Thread").start();
     }

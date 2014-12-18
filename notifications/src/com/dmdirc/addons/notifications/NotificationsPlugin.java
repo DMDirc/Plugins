@@ -29,8 +29,6 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import java.util.concurrent.Callable;
-
 import dagger.ObjectGraph;
 
 /**
@@ -76,15 +74,9 @@ public class NotificationsPlugin extends BaseCommandPlugin {
     @Override
     public void showConfig(final PreferencesDialogModel manager) {
         final NotificationConfig configPanel = UIUtilities.invokeAndWait(
-                new Callable<NotificationConfig>() {
-
-                    @Override
-                    public NotificationConfig call() {
-                        return new NotificationConfig(manager.getIdentity(), pluginInfo.getDomain(),
-                                manager.getConfigManager().getOptionList(pluginInfo.getDomain(),
-                                        "methodOrder"));
-                    }
-                });
+                () -> new NotificationConfig(manager.getIdentity(), pluginInfo.getDomain(),
+                        manager.getConfigManager().getOptionList(pluginInfo.getDomain(),
+                                "methodOrder")));
 
         final PreferencesCategory category = new PluginPreferencesCategory(
                 pluginInfo, "Notifications", "", "category-notifications",

@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.components.substitutions.SubstitutionsPanel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.SwingUtilities;
 
@@ -59,21 +60,16 @@ public class NowPlayingSubsitutionPanel extends SubstitutionsPanel<List<String>>
 
     @Override
     public void setType(final List<String> type) {
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(() -> {
+            substitutions = new ArrayList<>();
 
-            @Override
-            public void run() {
-                substitutions = new ArrayList<>();
-
-                if (type != null) {
-                    for (String sub : type) {
-                        substitutions.add(new SubstitutionLabel(new Substitution(sub,
-                                sub)));
-                    }
-                }
-
-                layoutComponents();
+            if (type != null) {
+                substitutions.addAll(type.stream()
+                        .map(sub -> new SubstitutionLabel(new Substitution(sub, sub)))
+                        .collect(Collectors.toList()));
             }
+
+            layoutComponents();
         });
     }
 
