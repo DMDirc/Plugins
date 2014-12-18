@@ -117,7 +117,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
 
     @Override
     public void extractActions() {
-        coreActionExtractor.extractCorePlugins();
+        coreActionExtractor.extractCoreActions();
     }
 
     @Override
