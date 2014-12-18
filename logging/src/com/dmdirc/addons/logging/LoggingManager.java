@@ -110,7 +110,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final WindowManager windowManager;
     /** Map of open files. */
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
-            new HashMap<String, OpenFile>());
+            new HashMap<>());
     private final URLBuilder urlBuilder;
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;

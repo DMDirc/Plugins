@@ -23,7 +23,6 @@
 package com.dmdirc.addons.activewindow;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.ui.messages.sink.MessageSink;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;

@@ -187,8 +187,8 @@ public class SwingUpdaterDialog extends StandardDialog implements
                 @Override
                 protected Void doInBackground() {
                     ((UpdateTableModel) table.getModel()).getUpdates().stream()
-                            .filter(update -> ((UpdateTableModel) table.getModel())
-                                    .isEnabled(update)).forEach(updateManager::install);
+                            .filter(((UpdateTableModel) table.getModel())::isEnabled)
+                            .forEach(updateManager::install);
                     return null;
                 }
             }.execute();

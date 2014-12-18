@@ -266,7 +266,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         Collections.sort(list, new ActionTypeComparator());
         list.stream()
                 .filter(entry -> compatibleTriggers.isEmpty() || compatibleTriggers.contains(entry))
-                .forEach(entry -> ((MutableComboBoxModel<Object>) triggerItem.getModel()).addElement(entry));
+                .forEach(((MutableComboBoxModel<Object>) triggerItem.getModel())::addElement);
         triggerItem.setSelectedIndex(-1);
         triggerGroup.setEnabled(triggerGroup.getModel().getSize() > 0);
         triggerItem.setEnabled(triggerItem.getModel().getSize() > 0);
