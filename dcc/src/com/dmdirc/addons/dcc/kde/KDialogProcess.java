@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.dcc.kde;
 
-import com.dmdirc.util.io.StreamUtils;
+import com.google.common.io.CharStreams;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -57,10 +57,8 @@ public class KDialogProcess {
         System.arraycopy(params, 0, exec, 1, params.length);
         exec[0] = IS_BIN ? "/bin/kdialog" : "/usr/bin/kdialog";
         process = Runtime.getRuntime().exec(exec);
-        stdOutput = new ArrayList<>();
-        stdError = new ArrayList<>();
-        StreamUtils.readStreamIntoList(process.getInputStream(), stdOutput);
-        StreamUtils.readStreamIntoList(process.getErrorStream(), stdError);
+        stdOutput = CharStreams.readLines(new InputStreamReader(process.getInputStream()));
+        stdError = CharStreams.readLines(new InputStreamReader(process.getErrorStream()));
     }
 
     /**
