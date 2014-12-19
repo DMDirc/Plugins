@@ -109,9 +109,8 @@ public class FDManager implements ConfigChangeListener {
 
         try {
             final Process myProcess = Runtime.getRuntime().exec(args);
-            final StringBuffer data = new StringBuffer();
             StreamUtils.readStream(myProcess.getErrorStream());
-            StreamUtils.readStreamIntoStringBuffer(myProcess.getInputStream(), data);
+            StreamUtils.readStream(myProcess.getInputStream());
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {

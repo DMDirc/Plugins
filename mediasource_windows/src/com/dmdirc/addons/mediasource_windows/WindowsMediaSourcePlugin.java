@@ -29,7 +29,10 @@ import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.util.io.StreamUtils;
 
+import com.google.common.io.CharStreams;
+
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,15 +78,15 @@ public class WindowsMediaSourcePlugin extends BasePlugin
                 filesHelper.getFilesDirString() + "GetMediaInfo.exe",
                 player,
                 method});
-            final StringBuffer data = new StringBuffer();
             StreamUtils.readStream(myProcess.getErrorStream());
-            StreamUtils.readStreamIntoStringBuffer(myProcess.getInputStream(), data);
+            final String data = CharStreams.toString(new InputStreamReader(
+                    myProcess.getInputStream()));
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {
             }
 
-            return new MediaInfoOutput(myProcess.exitValue(), data.toString());
+            return new MediaInfoOutput(myProcess.exitValue(), data);
         } catch (SecurityException | IOException e) {
         }
 
