@@ -35,9 +35,11 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.CommandUtils;
 import com.dmdirc.util.io.StreamUtils;
 
+import com.google.common.io.CharStreams;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -88,10 +90,10 @@ public class ExecCommand extends Command {
                     StreamUtils.readStream(p.getInputStream());
                     StreamUtils.readStream(p.getErrorStream());
                 } else {
-                    final List<String> execOutput = new LinkedList<>();
-                    final List<String> errorOutput = new LinkedList<>();
-                    StreamUtils.readStreamIntoList(p.getInputStream(), execOutput);
-                    StreamUtils.readStreamIntoList(p.getErrorStream(), errorOutput);
+                    final List<String> execOutput = CharStreams.readLines(
+                            new InputStreamReader(p.getInputStream()));
+                    final List<String> errorOutput = CharStreams.readLines(
+                            new InputStreamReader(p.getErrorStream()));
                     for (String line : execOutput) {
                         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
                     }
