@@ -24,8 +24,13 @@ package com.dmdirc.addons.mediasource_vlc;
 
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.util.io.FileUtils;
 import com.dmdirc.util.io.TextFile;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -33,12 +38,16 @@ import static org.mockito.Mockito.*;
 public class VlcMediaSourcePluginTest {
 
     @Test
-    public void testProcessInformation1() throws IOException {
+    public void testProcessInformation1() throws IOException, URISyntaxException,
+            UnsupportedEncodingException {
         final PluginInfo pluginInfo = mock(PluginInfo.class);
         final IdentityController identityController = mock(IdentityController.class);
         final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin(pluginInfo, identityController);
-        final TextFile index = new TextFile(getClass().getResourceAsStream("index-1.html"));
-        final TextFile info = new TextFile(getClass().getResourceAsStream("info-1.html"));
+
+        final TextFile index = new TextFile(FileUtils.getPathForResource(
+                getClass().getResource("index-1.html")), Charset.forName("UTF-8"));
+        final TextFile info = new TextFile(FileUtils.getPathForResource(
+                getClass().getResource("info-1.html")), Charset.forName("UTF-8"));
 
         plugin.parseInformation(info.getLines(), index.getLines());
 
