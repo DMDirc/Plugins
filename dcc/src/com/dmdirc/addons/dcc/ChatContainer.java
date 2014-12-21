@@ -29,13 +29,13 @@ import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
-import com.dmdirc.ui.messages.ColourManagerFactory;
-import com.dmdirc.util.EventUtils;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
+import com.dmdirc.util.EventUtils;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
@@ -75,7 +75,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             @Nullable final FrameContainer parent,
             final DCCChat dcc,
             final AggregateConfigProvider configManager,
-            final ColourManagerFactory colourManagerFactory,
+            final BackBufferFactory backBufferFactory,
             final CommandController commandController,
             final String title,
             final String nick,
@@ -84,7 +84,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
-        super(parent, title, "dcc-chat-inactive", configManager, colourManagerFactory,
+        super(parent, title, "dcc-chat-inactive", configManager, backBufferFactory,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,
                 tabCompleterFactory,

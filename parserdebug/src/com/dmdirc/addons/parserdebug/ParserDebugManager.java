@@ -29,7 +29,7 @@ import com.dmdirc.parser.common.CallbackNotFoundException;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Date;
@@ -50,18 +50,18 @@ public class ParserDebugManager implements DebugInfoListener {
     private final URLBuilder urlBuilder;
     /** Window manager. */
     private final WindowManager windowManager;
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
 
     @Inject
     public ParserDebugManager(
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.eventBus = eventBus;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
         registeredParsers = new HashMap<>();
     }
 
@@ -102,7 +102,7 @@ public class ParserDebugManager implements DebugInfoListener {
         try {
             parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
-                    connection, urlBuilder, eventBus, colourManagerFactory);
+                    connection, urlBuilder, eventBus, backBufferFactory);
             windowManager.addWindow(connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
             window.addLine("======================", true);

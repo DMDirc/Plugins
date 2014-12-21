@@ -44,10 +44,10 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
-import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
@@ -82,19 +82,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
 
     /**
      * Creates a new instance of DCCCommand.
-     *
-     * @param controller          The controller to use for command information.
-     * @param mainWindow          The main client window, to use as a parent for dialogs.
-     * @param plugin              The DCC Plugin that this command belongs to
-     * @param messageSinkManager  The sink manager to use to dispatch messages.
-     * @param windowManager       Window management
-     * @param tabCompleterFactory The factory to use for tab completers.
-     * @param urlBuilder          The URL builder to use when finding icons.
-     * @param eventBus            The bus to dispatch events on.
      */
     @Inject
     public DCCCommand(
@@ -106,7 +97,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         super(controller);
         this.mainWindow = mainWindow;
         myPlugin = plugin;
@@ -115,7 +106,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         this.tabCompleterFactory = tabCompleterFactory;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
     }
 
     @Override
@@ -178,7 +169,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     myPlugin.getContainer(),
                     chat,
                     origin.getConfigManager(),
-                    colourManagerFactory,
+                    backBufferFactory,
                     getController(),
                     "*Chat: " + target,
                     myNickname,
@@ -253,7 +244,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     myPlugin.getDomain(), "send.reverse")) {
                 final Parser parser = connection.getParser();
                 final TransferContainer container = new TransferContainer(myPlugin, send,
-                        origin.getConfigManager(), colourManagerFactory, "Send: " + target,
+                        origin.getConfigManager(), backBufferFactory, "Send: " + target,
                         target, connection, urlBuilder, eventBus);
                 windowManager.addWindow(myPlugin.getContainer(), container);
                 parser.sendCTCP(target, "DCC", "SEND \""
@@ -266,7 +257,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 final Parser parser = connection.getParser();
                 if (myPlugin.listen(send)) {
                     final TransferContainer container = new TransferContainer(myPlugin, send,
-                            origin.getConfigManager(), colourManagerFactory, "*Send: "
+                            origin.getConfigManager(), backBufferFactory, "*Send: "
                             + target, target, connection, urlBuilder, eventBus);
                     windowManager.addWindow(myPlugin.getContainer(), container);
                     parser.sendCTCP(target, "DCC", "SEND \""

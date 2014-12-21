@@ -27,9 +27,9 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.input.TabCompleterFactory;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Collection;
@@ -64,14 +64,14 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final String title,
             final String icon,
             final AggregateConfigProvider configManager,
-            final ColourManagerFactory colourManagerFactory,
+            final BackBufferFactory backBufferFactory,
             final CommandParser parser,
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
-        super(parent, icon, title, title, configManager, colourManagerFactory, urlBuilder, parser,
+        super(parent, icon, title, title, configManager, backBufferFactory, urlBuilder, parser,
                 tabCompleterFactory.getTabCompleter(configManager),
                 messageSinkManager,
                 eventBus,

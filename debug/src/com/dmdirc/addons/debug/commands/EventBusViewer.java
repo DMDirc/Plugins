@@ -35,7 +35,7 @@ import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 
@@ -57,16 +57,10 @@ public class EventBusViewer extends DebugCommand {
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
     private final DMDircMBassador globalEventBus;
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
 
     /**
      * Creates a new instance of the command.
-     *
-     * @param commandProvider The provider to use to access the main debug command.
-     * @param globalConfig    The global configuration to use for new windows.
-     * @param urlBuilder      The URL builder to use in new windows.
-     * @param windowManager   The manager to register new windows with.
-     * @param globalEventBus  The bus to use when the user specifies the --global flag.
      */
     @Inject
     public EventBusViewer(
@@ -75,13 +69,13 @@ public class EventBusViewer extends DebugCommand {
             final URLBuilder urlBuilder,
             final WindowManager windowManager,
             final DMDircMBassador globalEventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         super(commandProvider);
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.globalEventBus = globalEventBus;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
     }
 
     @Override
@@ -103,11 +97,11 @@ public class EventBusViewer extends DebugCommand {
         final CustomWindow window;
         if (isGlobal) {
             window = new CustomWindow("Event bus", "Event bus", globalConfig, urlBuilder,
-                    globalEventBus, colourManagerFactory);
+                    globalEventBus, backBufferFactory);
             windowManager.addWindow(window);
         } else {
             window = new CustomWindow("Event bus", "Event bus", origin, urlBuilder,
-                    colourManagerFactory);
+                    backBufferFactory);
             windowManager.addWindow(origin, window);
         }
 

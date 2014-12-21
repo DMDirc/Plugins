@@ -25,9 +25,9 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.messages.Formatter;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Collections;
@@ -44,20 +44,15 @@ public class FakeWriteableFrameContainer extends FrameContainer {
 
     /**
      * Creates a new instance of FakeInputWindow.
-     *
-     * @param target             The message target that output gets sent to
-     * @param messageSinkManager The sink manager to use to dispatch messages.
-     * @param eventBus           The bus to dispatch events on.
-     * @param urlBuilder         The URL builder to use when finding icons.
      */
     public FakeWriteableFrameContainer(
             final FrameContainer target,
             final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus,
             final URLBuilder urlBuilder,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         super(target, target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), colourManagerFactory, urlBuilder,
+                target.getConfigManager(), backBufferFactory, urlBuilder,
                 target.getCommandParser(), target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;

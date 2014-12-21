@@ -32,10 +32,10 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterUtils;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
 import javax.annotation.Nonnull;
@@ -58,17 +58,12 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
     /** Tab-completer utilities. */
     private final TabCompleterUtils tabCompleterUtils;
 
     /**
      * Creates a new instance of this command.
-     *
-     * @param controller         The controller to use for command information.
-     * @param messageSinkManager The sink manager to use to dispatch messages.
-     * @param urlBuilder         The URL builder to use when finding icons.
-     * @param eventBus           The bus to dispatch events on.
      */
     @Inject
     public RedirectCommand(
@@ -76,13 +71,13 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final MessageSinkManager messageSinkManager,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory,
+            final BackBufferFactory backBufferFactory,
             final TabCompleterUtils tabCompleterUtils) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
         this.tabCompleterUtils = tabCompleterUtils;
     }
 
@@ -91,7 +86,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target, messageSinkManager, eventBus, urlBuilder, colourManagerFactory),
+                target, messageSinkManager, eventBus, urlBuilder, backBufferFactory),
                 args.getArgumentsAsString());
     }
 
