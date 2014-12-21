@@ -60,7 +60,7 @@ public class NickColourManager implements ConfigChangeListener {
     /** Event bus to subscribe to events on . */
     private final DMDircMBassador eventBus;
     /** "Random" colours to use to colour nicknames. */
-    private String[] randColours = new String[]{
+    private String[] randColours = {
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
     private boolean useowncolour;
     private String owncolour;
@@ -81,7 +81,7 @@ public class NickColourManager implements ConfigChangeListener {
     @Handler
     public void handleChannelNames(final ChannelGotnamesEvent event) {
         final ChannelInfo chanInfo = event.getChannel().getChannelInfo();
-        final String network = event.getChannel().getConnection().getNetwork();
+        final String network = event.getChannel().getOptionalConnection().get().getNetwork();
 
         for (ChannelClientInfo client : chanInfo.getChannelClients()) {
             colourClient(network, client);
@@ -90,7 +90,7 @@ public class NickColourManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
-        final String network = event.getChannel().getConnection().getNetwork();
+        final String network = event.getChannel().getOptionalConnection().get().getNetwork();
         colourClient(network, event.getClient());
     }
 
