@@ -22,13 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.ClientModule;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.commandline.CommandLineOptionsModule;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.Downloader;
+
+import java.nio.file.Path;
 
 import javax.inject.Inject;
 import javax.swing.JScrollPane;
@@ -43,17 +46,18 @@ public class DataLoaderWorkerFactory {
     private final URLBuilder urlBuilder;
     private final InstallWorkerFactory workerFactory;
     private final UpdateManager updateManager;
-    private final String tempDirectory;
+    private final Path tempDirectory;
     private final DMDircMBassador eventBus;
 
     @Inject
     public DataLoaderWorkerFactory(final Downloader downloader,
-            @ClientModule.GlobalConfig final AggregateConfigProvider globalConfig,
+            @GlobalConfig final AggregateConfigProvider globalConfig,
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             final DMDircMBassador eventBus,
-            @CommandLineOptionsModule.Directory(CommandLineOptionsModule.DirectoryType.TEMPORARY) final String tempDirectory) {
+            @Directory(DirectoryType.TEMPORARY)
+            final Path tempDirectory) {
         this.downloader = downloader;
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
