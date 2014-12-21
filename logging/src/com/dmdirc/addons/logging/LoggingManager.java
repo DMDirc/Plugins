@@ -66,12 +66,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,7 +81,6 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -115,20 +111,17 @@ public class LoggingManager implements ConfigChangeListener {
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
     private final ColourManagerFactory colourManagerFactory;
+    private final LogFileLocator locator;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
     /** Cached boolean settings. */
-    private boolean networkfolders;
-    private boolean filenamehash;
     private boolean addtime;
     private boolean stripcodes;
     private boolean channelmodeprefix;
     private boolean autobackbuffer;
     private boolean backbufferTimestamp;
-    private boolean usedate;
     /** Cached string settings. */
     private String timestamp;
-    private String usedateformat;
     private String colour;
     /** Cached int settings. */
     private int historyLines;
@@ -139,7 +132,8 @@ public class LoggingManager implements ConfigChangeListener {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager, final URLBuilder urlBuilder, final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final LogFileLocator locator) {
         this.domain = domain;
         this.config = globalConfig;
         this.windowManager = windowManager;
@@ -147,6 +141,7 @@ public class LoggingManager implements ConfigChangeListener {
         this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
         this.colourManagerFactory = colourManagerFactory;
+        this.locator = locator;
     }
 
     public void load() {
@@ -220,7 +215,7 @@ public class LoggingManager implements ConfigChangeListener {
     public void handleQueryOpened(final QueryOpenedEvent event) {
         final Parser parser = event.getQuery().getOptionalConnection().get().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
-        final String filename = getLogFile(client);
+        final String filename = locator.getLogFile(client);
         if (autobackbuffer) {
             showBackBuffer(event.getQuery(), filename);
         }
@@ -236,7 +231,7 @@ public class LoggingManager implements ConfigChangeListener {
     public void handleQueryClosed(final QueryClosedEvent event) {
         final Parser parser = event.getQuery().getOptionalConnection().get().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
-        final String filename = getLogFile(client);
+        final String filename = locator.getLogFile(client);
 
         synchronized (FORMAT_LOCK) {
             appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
@@ -251,32 +246,32 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleQueryActions(final BaseQueryActionEvent event) {
         final ClientInfo client = event.getClient();
-        final String filename = getLogFile(client);
+        final String filename = locator.getLogFile(client);
         appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
     }
 
     @Handler
     public void handleQueryMessages(final BaseQueryMessageEvent event) {
         final ClientInfo client = event.getClient();
-        final String filename = getLogFile(client);
+        final String filename = locator.getLogFile(client);
         appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
     }
 
     @Handler
     public void handleChannelMessage(final BaseChannelMessageEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "<%s> %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
     @Handler
     public void handleChannelAction(final BaseChannelActionEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "* %s %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
     @Handler
     public void handleChannelGotTopic(final ChannelGottopicEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final ChannelInfo channel = event.getChannel().getChannelInfo();
         final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -289,7 +284,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final ChannelClientInfo channelClient = event.getClient();
         appendLine(filename, "*** %s Changed the topic to: %s",
                 getDisplayName(channelClient), event.getTopic());
@@ -297,7 +292,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final ChannelClientInfo channelClient = event.getClient();
         final ClientInfo client = channelClient.getClient();
         appendLine(filename, "*** %s (%s) joined the channel",
@@ -306,7 +301,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelPart(final ChannelPartEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final String message = event.getMessage();
         final ChannelClientInfo channelClient = event.getClient();
         final ClientInfo client = channelClient.getClient();
@@ -321,7 +316,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelQuit(final ChannelQuitEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final String reason = event.getMessage();
         final ChannelClientInfo channelClient = event.getClient();
         final ClientInfo client = channelClient.getClient();
@@ -339,7 +334,7 @@ public class LoggingManager implements ConfigChangeListener {
         final ChannelClientInfo victim = event.getVictim();
         final ChannelClientInfo perpetrator = event.getClient();
         final String reason = event.getReason();
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
 
         if (reason.isEmpty()) {
             appendLine(filename, "*** %s was kicked by %s",
@@ -352,14 +347,14 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleNickChange(final ChannelNickchangeEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "*** %s is now %s", getDisplayName(event.getClient(),
                 event.getOldNick()), getDisplayName(event.getClient()));
     }
 
     @Handler
     public void handleModeChange(final ChannelModechangeEvent event) {
-        final String filename = getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         if (event.getClient().getClient().getNickname().isEmpty()) {
             appendLine(filename, "*** Channel modes are: %s", event.getModes());
         } else {
@@ -375,7 +370,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelOpened(final ChannelOpenedEvent event) {
-        final String filename = getLogFile(event.getChannel().getName());
+        final String filename = locator.getLogFile(event.getChannel().getName());
 
         if (autobackbuffer) {
             showBackBuffer(event.getChannel(), filename);
@@ -389,7 +384,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelClosed(final ChannelClosedEvent event) {
-        final String filename = getLogFile(event.getChannel().getName());
+        final String filename = locator.getLogFile(event.getChannel().getName());
 
         synchronized (FORMAT_LOCK) {
             appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
@@ -546,181 +541,6 @@ public class LoggingManager implements ConfigChangeListener {
     }
 
     /**
-     * Get the name of the log file for a specific object.
-     *
-     * @param channel Channel to get the name for
-     *
-     * @return the name of the log file to use for this object.
-     */
-    protected String getLogFile(final ChannelInfo channel) {
-        final StringBuffer directory = getLogDirectory();
-        final StringBuffer file = new StringBuffer();
-        if (channel.getParser() != null) {
-            addNetworkDir(directory, file, channel.getParser().getNetworkName());
-        }
-        file.append(sanitise(channel.getName().toLowerCase()));
-        return getPath(directory, file, channel.getName());
-    }
-
-    /**
-     * Get the name of the log file for a specific object.
-     *
-     * @param client Client to get the name for
-     *
-     * @return the name of the log file to use for this object.
-     */
-    protected String getLogFile(final ClientInfo client) {
-        final StringBuffer directory = getLogDirectory();
-        final StringBuffer file = new StringBuffer();
-        if (client.getParser() != null) {
-            addNetworkDir(directory, file, client.getParser().getNetworkName());
-        }
-        file.append(sanitise(client.getNickname().toLowerCase()));
-        return getPath(directory, file, client.getNickname());
-    }
-
-    /**
-     * Get the name of the log file for a specific object.
-     *
-     * @param descriptor Description of the object to get a log file for.
-     *
-     * @return the name of the log file to use for this object.
-     */
-    protected String getLogFile(@Nullable final String descriptor) {
-        final StringBuffer directory = getLogDirectory();
-        final StringBuffer file = new StringBuffer();
-        final String md5String;
-        if (descriptor == null) {
-            file.append("null.log");
-            md5String = "";
-        } else {
-            file.append(sanitise(descriptor.toLowerCase()));
-            md5String = descriptor;
-        }
-        return getPath(directory, file, md5String);
-    }
-
-    /**
-     * Gets the path for the given file and directory. Only intended to be used from getLogFile
-     * methods.
-     *
-     * @param directory Log file directory
-     * @param file      Log file path
-     * @param md5String Log file object MD5 hash
-     *
-     * @return Name of the log file
-     */
-    protected String getPath(final StringBuffer directory, final StringBuffer file,
-            final String md5String) {
-        if (usedate) {
-            final String dateFormat = usedateformat;
-            final String dateDir = new SimpleDateFormat(dateFormat).format(new Date());
-            directory.append(dateDir);
-            if (directory.charAt(directory.length() - 1) != File.separatorChar) {
-                directory.append(File.separatorChar);
-            }
-
-            if (!new File(directory.toString()).exists()
-                    && !new File(directory.toString()).mkdirs()) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create date dirs", ""));
-            }
-        }
-
-        if (filenamehash) {
-            file.append('.');
-            file.append(md5(md5String));
-        }
-        file.append(".log");
-
-        return directory + file.toString();
-    }
-
-    /**
-     * Sanitises the log file directory.
-     *
-     * @return Log directory
-     */
-    private StringBuffer getLogDirectory() {
-        final StringBuffer directory = new StringBuffer();
-        directory.append(directoryProvider.get());
-        if (directory.charAt(directory.length() - 1) != File.separatorChar) {
-            directory.append(File.separatorChar);
-        }
-        return directory;
-    }
-
-    /**
-     * This function adds the networkName to the log file. It first tries to create a directory for
-     * each network, if that fails it will prepend the networkName to the filename instead.
-     *
-     * @param directory   Current directory name
-     * @param file        Current file name
-     * @param networkName Name of network
-     */
-    protected void addNetworkDir(final StringBuffer directory, final StringBuffer file,
-            final String networkName) {
-        if (!networkfolders) {
-            return;
-        }
-
-        final String network = sanitise(networkName.toLowerCase());
-
-        boolean prependNetwork = false;
-
-        // Check dir exists
-        final File dir = new File(directory + network + System.getProperty(
-                "file.separator"));
-        if (dir.exists() && !dir.isDirectory()) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                    "Unable to create networkfolders dir (file exists instead)", ""));
-            // Prepend network name to file instead.
-            prependNetwork = true;
-        } else if (!dir.exists() && !dir.mkdirs()) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                    "Unable to create networkfolders dir", ""));
-            prependNetwork = true;
-        }
-
-        if (prependNetwork) {
-            file.insert(0, " -- ");
-            file.insert(0, network);
-        } else {
-            directory.append(network);
-            directory.append(System.getProperty("file.separator"));
-        }
-    }
-
-    /**
-     * Sanitise a string to be used as a filename.
-     *
-     * @param name String to sanitise
-     *
-     * @return Sanitised version of name that can be used as a filename.
-     */
-    protected static String sanitise(final String name) {
-        // Replace illegal chars with
-        return name.replaceAll("[^\\w\\.\\s\\-#&_]", "_");
-    }
-
-    /**
-     * Get the md5 hash of a string.
-     *
-     * @param string String to hash
-     *
-     * @return md5 hash of given string
-     */
-    protected static String md5(final String string) {
-        try {
-            final MessageDigest m = MessageDigest.getInstance("MD5");
-            m.update(string.getBytes(), 0, string.length());
-            return new BigInteger(1, m.digest()).toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            return "";
-        }
-    }
-
-    /**
      * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
      *
      * @param channelClient The client to get the display name for
@@ -771,7 +591,7 @@ public class LoggingManager implements ConfigChangeListener {
             return false;
         }
 
-        final Path log = Paths.get(getLogFile(descriptor));
+        final Path log = Paths.get(locator.getLogFile(descriptor));
 
         if (!Files.exists(log)) {
             // File doesn't exist
@@ -786,16 +606,12 @@ public class LoggingManager implements ConfigChangeListener {
 
     /** Updates cached settings. */
     public void setCachedSettings() {
-        networkfolders = config.getOptionBool(domain, "general.networkfolders");
-        filenamehash = config.getOptionBool(domain, "advanced.filenamehash");
         addtime = config.getOptionBool(domain, "general.addtime");
         stripcodes = config.getOptionBool(domain, "general.stripcodes");
         channelmodeprefix = config.getOptionBool(domain, "general.channelmodeprefix");
         autobackbuffer = config.getOptionBool(domain, "backbuffer.autobackbuffer");
         backbufferTimestamp = config.getOptionBool(domain, "backbuffer.timestamp");
-        usedate = config.getOptionBool(domain, "advanced.usedate");
         timestamp = config.getOption(domain, "general.timestamp");
-        usedateformat = config.getOption(domain, "advanced.usedateformat");
         historyLines = config.getOptionInt(domain, "history.lines");
         colour = config.getOption(domain, "backbuffer.colour");
         backbufferLines = config.getOptionInt(domain, "backbuffer.lines");
