@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.redirect;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.MessageTarget;
 import com.dmdirc.commandparser.CommandArguments;
@@ -31,14 +32,12 @@ import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterUtils;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
-
-import com.dmdirc.DMDircMBassador;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +67,7 @@ public class RedirectCommandTest {
     @Mock private WindowManager windowManager;
     @Mock private URLBuilder urlBuilder;
     @Mock private DMDircMBassador eventBus;
-    @Mock private ColourManagerFactory colourManagerFactory;
+    @Mock private BackBufferFactory backBufferFactory;
     @Mock private TabCompleterUtils tabCompleterUtils;
 
     @Before
@@ -96,7 +95,7 @@ public class RedirectCommandTest {
     @Test
     public void testExecute() {
         final RedirectCommand command = new RedirectCommand(commandController, messageSinkManager,
-                urlBuilder, eventBus, colourManagerFactory, tabCompleterUtils);
+                urlBuilder, eventBus, backBufferFactory, tabCompleterUtils);
 
         command.execute(target, new CommandArguments(commandController, "/redirect /echo test"),
                 new ChatCommandContext(frameContainer, RedirectCommand.INFO, target));

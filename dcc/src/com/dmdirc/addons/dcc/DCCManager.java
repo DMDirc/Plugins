@@ -49,6 +49,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
@@ -85,7 +86,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class DCCManager {
 
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
     /** Our DCC Container window. */
     private PlaceholderContainer container;
     /** Config manager to read settings from. */
@@ -109,21 +110,6 @@ public class DCCManager {
 
     /**
      * Creates a new instance of this plugin.
-     *
-     * @param mainWindow            The window that will parent any new dialogs.
-     * @param pluginInfo            This plugin's plugin info
-     * @param identityController    The Identity controller that provides the current config
-     * @param globalConfig          The configuration to read settings from.
-     * @param commandController     Command controller to register commands
-     * @param messageSinkManager    The sink manager to use to dispatch messages.
-     * @param windowManager         Window Management
-     * @param tabCompleterFactory   The factory to use for tab completers.
-     * @param windowFactory         The window factory to register the DCC implementations with.
-     * @param componentFrameFactory Factory to use to create new component frames for DCC windows.
-     * @param urlBuilder            The URL builder to use when finding icons.
-     * @param eventBus              The bus to dispatch events on.
-     * @param commandParser         The command parser to use for DCC windows.
-     * @param baseDirectory         The directory to create a downloads directory within.
      */
     @Inject
     public DCCManager(
@@ -141,7 +127,7 @@ public class DCCManager {
             final DMDircMBassador eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         this.mainWindow = mainWindow;
         this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
@@ -151,7 +137,7 @@ public class DCCManager {
         this.config = globalConfig;
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
 
         windowFactory.registerImplementation(
                 new SwingWindowFactory.WindowProvider() {
@@ -225,7 +211,7 @@ public class DCCManager {
             final boolean resume = handleResume(jc);
             if (reverse && !token.isEmpty()) {
                 final TransferContainer container1 = new TransferContainer(DCCManager.this, send,
-                        config, colourManagerFactory, "*Receive: " + nickname, nickname, null,
+                        config, backBufferFactory, "*Receive: " + nickname, nickname, null,
                         urlBuilder, eventBus);
                 windowManager.addWindow(getContainer(), container1);
                 send.setToken(token);
@@ -251,8 +237,8 @@ public class DCCManager {
                     }
                 }
             } else {
-                final TransferContainer container1 = new TransferContainer(DCCManager.this, send,
-                        config, colourManagerFactory, "Receive: " + nickname, nickname, null,
+                final TransferContainer container1 = new TransferContainer(this, send,
+                        config, backBufferFactory, "Receive: " + nickname, nickname, null,
                         urlBuilder, eventBus);
                 windowManager.addWindow(getContainer(), container1);
                 if (resume) {
@@ -317,7 +303,7 @@ public class DCCManager {
                         mainWindow, "This file exists already"
                         + ", do you want to resume an exisiting download?",
                         "Resume Download?", JOptionPane.YES_NO_OPTION);
-                return (result == JOptionPane.YES_OPTION);
+                return result == JOptionPane.YES_OPTION;
             }
         }
         return false;
@@ -437,7 +423,7 @@ public class DCCManager {
                 getContainer(),
                 chat,
                 config,
-                colourManagerFactory,
+                backBufferFactory,
                 commandController,
                 "Chat: " + nickname,
                 myNickname,
@@ -671,7 +657,7 @@ public class DCCManager {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, colourManagerFactory, mainWindow,
+        container = new PlaceholderContainer(this, config, backBufferFactory, mainWindow,
                 urlBuilder, eventBus);
         windowManager.addWindow(container);
     }

@@ -34,7 +34,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.awt.Desktop;
@@ -79,24 +79,15 @@ public class TransferContainer extends FrameContainer implements
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
-     *
-     * @param plugin     the DCC Plugin responsible for this window
-     * @param dcc        The DCCTransfer object this window wraps around
-     * @param config     Config manager
-     * @param title      The title of this window
-     * @param targetNick Nickname of target
-     * @param connection The connection that the send was that initiated on
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to dispatch events on.
      */
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config,
-            final ColourManagerFactory colourManagerFactory, final String title,
+            final BackBufferFactory backBufferFactory, final String title,
             final String targetNick, final Connection connection,
             final URLBuilder urlBuilder, final DMDircMBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, config, colourManagerFactory, urlBuilder, eventBus,
+                title, title, config, backBufferFactory, urlBuilder, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

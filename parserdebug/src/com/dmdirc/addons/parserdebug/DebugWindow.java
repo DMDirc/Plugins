@@ -27,8 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
@@ -48,13 +48,6 @@ public class DebugWindow extends FrameContainer {
 
     /**
      * Creates a new instance of DebugWindow.
-     *
-     * @param listener   The debug listener for this window
-     * @param title      The title of this window
-     * @param parser     The parser this plugin is debugging
-     * @param connection The connection this window is associated with.
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to dispatch events on.
      */
     public DebugWindow(
             final DebugInfoListener listener,
@@ -63,9 +56,9 @@ public class DebugWindow extends FrameContainer {
             final Connection connection,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory) {
+            final BackBufferFactory backBufferFactory) {
         super(connection.getWindowModel(), "raw", "Parser Debug", title,
-                connection.getWindowModel().getConfigManager(), colourManagerFactory,
+                connection.getWindowModel().getConfigManager(), backBufferFactory,
                 urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;

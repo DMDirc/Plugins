@@ -55,7 +55,7 @@ import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.messages.ColourManagerFactory;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
@@ -110,7 +110,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final URLBuilder urlBuilder;
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
-    private final ColourManagerFactory colourManagerFactory;
+    private final BackBufferFactory backBufferFactory;
     private final LogFileLocator locator;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
@@ -132,7 +132,7 @@ public class LoggingManager implements ConfigChangeListener {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager, final URLBuilder urlBuilder, final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
-            final ColourManagerFactory colourManagerFactory,
+            final BackBufferFactory backBufferFactory,
             final LogFileLocator locator) {
         this.domain = domain;
         this.config = globalConfig;
@@ -140,7 +140,7 @@ public class LoggingManager implements ConfigChangeListener {
         this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
-        this.colourManagerFactory = colourManagerFactory;
+        this.backBufferFactory = backBufferFactory;
         this.locator = locator;
     }
 
@@ -599,7 +599,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
 
         windowManager.addWindow(target, new HistoryWindow("History", log, target, urlBuilder,
-                eventBus, colourManagerFactory, historyLines));
+                eventBus, backBufferFactory, historyLines));
 
         return true;
     }

@@ -27,8 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.ui.core.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.messages.ColourManagerFactory;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 
@@ -44,13 +44,6 @@ public class HistoryWindow extends FrameContainer {
 
     /**
      * Creates a new HistoryWindow.
-     *
-     * @param title      The title of the window
-     * @param logFile    The logfile to read and display
-     * @param parent     The window this history window was opened from
-     * @param urlBuilder The URL builder to use when finding icons.
-     * @param eventBus   The bus to dispatch events on.
-     * @param numLines   The number of lines to show
      */
     public HistoryWindow(
             final String title,
@@ -58,9 +51,9 @@ public class HistoryWindow extends FrameContainer {
             final FrameContainer parent,
             final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
-            final ColourManagerFactory colourManagerFactory,
+            final BackBufferFactory backBufferFactory,
             final int numLines) {
-        super(parent, "raw", title, title, parent.getConfigManager(), colourManagerFactory,
+        super(parent, "raw", title, title, parent.getConfigManager(), backBufferFactory,
                 urlBuilder, eventBus,
                 Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
 
