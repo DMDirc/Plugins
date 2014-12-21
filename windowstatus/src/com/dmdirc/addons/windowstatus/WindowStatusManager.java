@@ -41,6 +41,8 @@ import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import net.engio.mbassy.listener.Handler;
@@ -192,9 +194,9 @@ public class WindowStatusManager implements ConfigChangeListener {
     private String updateStatusQuery(final Query frame) {
         final StringBuilder textString = new StringBuilder();
         textString.append(frame.getHost());
-        if (showname && frame.getConnection().getParser() != null) {
-            final ClientInfo client = frame.getConnection().getParser()
-                    .getClient(frame.getHost());
+        final Optional<Connection> connection = frame.getOptionalConnection();
+        if (showname && connection.isPresent()) {
+            final ClientInfo client = connection.get().getParser().getClient(frame.getHost());
             final String realname = client.getRealname();
             if (realname != null && !realname.isEmpty()) {
                 textString.append(" - ");

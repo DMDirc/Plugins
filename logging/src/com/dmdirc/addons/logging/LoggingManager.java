@@ -218,7 +218,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryOpened(final QueryOpenedEvent event) {
-        final Parser parser = event.getQuery().getConnection().getParser();
+        final Parser parser = event.getQuery().getOptionalConnection().get().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
         final String filename = getLogFile(client);
         if (autobackbuffer) {
@@ -234,7 +234,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryClosed(final QueryClosedEvent event) {
-        final Parser parser = event.getQuery().getConnection().getParser();
+        final Parser parser = event.getQuery().getOptionalConnection().get().getParser();
         final ClientInfo client = parser.getClient(event.getQuery().getHost());
         final String filename = getLogFile(client);
 
@@ -764,7 +764,7 @@ public class LoggingManager implements ConfigChangeListener {
         if (target instanceof Channel) {
             descriptor = target.getName();
         } else if (target instanceof Query) {
-            final Parser parser = target.getConnection().getParser();
+            final Parser parser = target.getOptionalConnection().get().getParser();
             descriptor = parser.getClient(((PrivateChat) target).getHost()).getNickname();
         } else {
             // Unknown component
