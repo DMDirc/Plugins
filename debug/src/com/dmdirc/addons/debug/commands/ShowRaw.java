@@ -27,7 +27,11 @@ import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.Connection;
 
+import java.util.Optional;
+
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -57,13 +61,14 @@ public class ShowRaw extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin == null || origin.getConnection() == null) {
+        final Optional<Connection> connection = origin.getOptionalConnection();
+        if (connection.isPresent()) {
+            connection.get().addRaw();
+        } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Cannot show raw window here.");
-        } else {
-            origin.getConnection().addRaw();
         }
     }
 

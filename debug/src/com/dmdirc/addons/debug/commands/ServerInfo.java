@@ -29,6 +29,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Connection;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -60,11 +62,9 @@ public class ServerInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin.getConnection() == null) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "This window isn't connected to a server");
-        } else {
-            final Connection connection = origin.getConnection();
+        final Optional<Connection> optionalConnection = origin.getOptionalConnection();
+        if (optionalConnection.isPresent()) {
+            final Connection connection = optionalConnection.get();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "
                     + connection.getAddress());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Actual name: "
@@ -75,10 +75,13 @@ public class ServerInfo extends DebugCommand {
                     + connection.getParser().getServerSoftware() + " - "
                     + connection.getParser().getServerSoftwareType());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Modes: "
-                    + connection.getParser().getBooleanChannelModes() + " "
-                    + connection.getParser().getListChannelModes() + " "
-                    + connection.getParser().getParameterChannelModes() + " "
+                    + connection.getParser().getBooleanChannelModes() + ' '
+                    + connection.getParser().getListChannelModes() + ' '
+                    + connection.getParser().getParameterChannelModes() + ' '
                     + connection.getParser().getDoubleParameterChannelModes());
+        } else {
+            sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                    "This window isn't connected to a server");
         }
     }
 
