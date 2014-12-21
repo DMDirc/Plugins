@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 
+import javax.annotation.Nonnull;
 import javax.inject.Provider;
 
 /**
@@ -82,7 +83,7 @@ public abstract class DebugCommand {
      * @param args    Arguments passed to this command
      * @param context The context the command was executed in
      */
-    public abstract void execute(final FrameContainer origin,
+    public abstract void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context);
 
     /**

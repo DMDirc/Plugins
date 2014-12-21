@@ -29,6 +29,8 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Connection;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -60,13 +62,13 @@ public class ServerState extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (origin.getConnection() == null) {
+        final Optional<Connection> optionalConnection = origin.getOptionalConnection();
+        if (optionalConnection.isPresent()) {
+            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    optionalConnection.get().getStatus().getTransitionHistory());
+        } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "This window isn't connected to a server");
-        } else {
-            final Connection connection = origin.getConnection();
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                    connection.getStatus().getTransitionHistory());
         }
     }
 
