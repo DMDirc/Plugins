@@ -37,7 +37,7 @@ import com.dmdirc.util.io.Downloader;
 import com.dmdirc.util.io.InvalidConfigFileException;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -69,7 +69,7 @@ public class DataLoaderWorker
     /** Refresh addons feed? */
     private final boolean download;
     /** Directory to store temporary files in. */
-    private final String tempDirectory;
+    private final Path tempDirectory;
     /** URL Builder to use when loading addon resources. */
     private final URLBuilder urlBuilder;
     /** Factory to use to produce install workers. */
@@ -104,7 +104,7 @@ public class DataLoaderWorker
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            final String tempDirectory,
+            final Path tempDirectory,
             final DMDircMBassador eventBus,
             final AddonTable table,
             final boolean download,
@@ -139,7 +139,7 @@ public class DataLoaderWorker
             loadingPanel.add(Box.createVerticalGlue(), "growy, pushy");
             try {
                 downloader.downloadPage("https://addons.dmdirc.com/feed",
-                        Paths.get(tempDirectory, "addons.feed"), this);
+                        tempDirectory.resolve("addons.feed"), this);
             } catch (final IOException ex) {
                 loadingPanel.removeAll();
                 loadingPanel.add(new TextLabel("Unable to download feeds: " + ex.getMessage()));
@@ -149,7 +149,7 @@ public class DataLoaderWorker
 
         loadingPanel.removeAll();
         loadingPanel.add(new TextLabel("Loading addon info, please wait."));
-        final ConfigFile data = new ConfigFile(tempDirectory + "addons.feed");
+        final ConfigFile data = new ConfigFile(tempDirectory.resolve("addons.feed"));
         try {
             data.read();
         } catch (final IOException | InvalidConfigFileException ex) {
