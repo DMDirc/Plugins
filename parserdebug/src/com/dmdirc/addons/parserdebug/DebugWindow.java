@@ -65,17 +65,6 @@ public class DebugWindow extends FrameContainer {
         this.connection = connection;
     }
 
-    /**
-     * Returns the server instance associated with this container.
-     *
-     * @return the associated server connection
-     */
-    @Override
-    @Deprecated
-    public Connection getConnection() {
-        return connection;
-    }
-
     @Override
     public Optional<Connection> getOptionalConnection() {
         return Optional.of(connection);

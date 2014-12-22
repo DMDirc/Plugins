@@ -92,12 +92,6 @@ public class PlaceholderContainer extends FrameContainer {
     }
 
     @Override
-    @Deprecated
-    public Connection getConnection() {
-        return null;
-    }
-
-    @Override
     public Optional<Connection> getOptionalConnection() {
         return Optional.empty();
     }

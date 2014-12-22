@@ -99,12 +99,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     }
 
     @Override
-    @Deprecated
-    public Connection getConnection() {
-        return target.getConnection();
-    }
-
-    @Override
     public Optional<Connection> getOptionalConnection() {
         return target.getOptionalConnection();
     }
