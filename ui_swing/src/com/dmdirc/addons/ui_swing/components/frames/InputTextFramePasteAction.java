@@ -26,7 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
-import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
@@ -74,7 +73,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
             final Clipboard clipboard,
             final DMDircMBassador eventBus,
             final PasteDialogFactory pasteDialogFactory,
-            @MainWindow final Window window) {
+            final Window window) {
         super("Paste");
 
         this.clipboard = clipboard;
