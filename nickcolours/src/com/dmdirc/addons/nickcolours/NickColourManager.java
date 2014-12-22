@@ -81,7 +81,7 @@ public class NickColourManager implements ConfigChangeListener {
     @Handler
     public void handleChannelNames(final ChannelGotnamesEvent event) {
         final ChannelInfo chanInfo = event.getChannel().getChannelInfo();
-        final String network = event.getChannel().getOptionalConnection().get().getNetwork();
+        final String network = event.getChannel().getConnection().get().getNetwork();
 
         for (ChannelClientInfo client : chanInfo.getChannelClients()) {
             colourClient(network, client);
@@ -90,7 +90,7 @@ public class NickColourManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
-        final String network = event.getChannel().getOptionalConnection().get().getNetwork();
+        final String network = event.getChannel().getConnection().get().getNetwork();
         colourClient(network, event.getClient());
     }
 

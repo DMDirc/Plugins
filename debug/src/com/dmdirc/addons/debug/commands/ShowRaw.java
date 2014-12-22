@@ -63,7 +63,7 @@ public class ShowRaw extends DebugCommand {
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final Optional<Connection> connection = origin.getOptionalConnection();
+        final Optional<Connection> connection = origin.getConnection();
         if (connection.isPresent()) {
             connection.get().addRaw();
         } else {

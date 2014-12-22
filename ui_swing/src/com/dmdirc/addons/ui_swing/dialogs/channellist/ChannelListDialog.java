@@ -57,9 +57,9 @@ public class ChannelListDialog extends StandardDialog implements ActionListener 
         total = new JLabel("No results.");
         if (activeFrameManager.getActiveFrame().isPresent()
                 && activeFrameManager.getActiveFrame().get().getContainer()
-                .getOptionalConnection().isPresent()) {
+                .getConnection().isPresent()) {
             list = new ChannelListPanel(activeFrameManager.getActiveFrame().get()
-                    .getContainer().getOptionalConnection().get(), total);
+                    .getContainer().getConnection().get(), total);
         } else {
             list = new JPanel();
         }

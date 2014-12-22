@@ -66,7 +66,7 @@ public class PingHistoryPanel extends JPanel {
         this.manager = manager;
         if (activeFrameManager.getActiveFrame().isPresent()) {
             history = manager.getHistory(activeFrameManager.getActiveFrame().get().getContainer()
-                    .getOptionalConnection().orElse(null));
+                    .getConnection().orElse(null));
         } else {
             history = manager.getHistory(null);
         }

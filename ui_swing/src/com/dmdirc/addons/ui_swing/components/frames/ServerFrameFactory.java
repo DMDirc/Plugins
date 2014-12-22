@@ -67,7 +67,7 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
     @Override
     public TextFrame getWindow(final FrameContainer container) {
         final ServerFrame frame =  new ServerFrame(dependencies.get(), inputFieldProvider,
-                dialogProvider.get(), container.getOptionalConnection().get());
+                dialogProvider.get(), container.getConnection().get());
         eventBus.subscribe(frame);
         return frame;
     }

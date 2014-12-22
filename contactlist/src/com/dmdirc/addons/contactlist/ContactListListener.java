@@ -85,8 +85,8 @@ public class ContactListListener implements NicklistListener {
 
     @Override
     public void clientAdded(final ChannelClientInfo client) {
-        final Query query = groupChat.getConnection().
-                getQuery(client.getClient().getNickname(), false);
+        final Query query = groupChat.getConnection().get()
+                .getQuery(client.getClient().getNickname(), false);
 
         query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
     }

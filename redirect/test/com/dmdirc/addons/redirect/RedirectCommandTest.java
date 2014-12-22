@@ -74,7 +74,7 @@ public class RedirectCommandTest {
 
     @Before
     public void setup() {
-        when(frameContainer.getOptionalConnection()).thenReturn(Optional.empty());
+        when(frameContainer.getConnection()).thenReturn(Optional.empty());
         when(commandController.getCommandChar()).thenReturn('/');
         when(commandController.getSilenceChar()).thenReturn('.');
         when(inputWindow.getContainer()).thenReturn(frameContainer);

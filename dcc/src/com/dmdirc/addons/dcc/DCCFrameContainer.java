@@ -84,13 +84,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
     }
 
     @Override
-    @Deprecated
-    public Connection getConnection() { //NOPMD - server will always be null
-        return null;
-    }
-
-    @Override
-    public Optional<Connection> getOptionalConnection() {
+    public Optional<Connection> getConnection() {
         return Optional.empty();
     }
 

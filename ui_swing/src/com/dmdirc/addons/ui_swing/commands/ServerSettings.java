@@ -70,7 +70,7 @@ public class ServerSettings extends Command implements IntelligentCommand {
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         dialogProvider.displayOrRequestFocus(
-                context.getSource().getOptionalConnection().orElse(null));
+                context.getSource().getConnection().orElse(null));
     }
 
     @Override

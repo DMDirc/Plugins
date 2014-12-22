@@ -353,13 +353,7 @@ public class TransferContainer extends FrameContainer implements
     }
 
     @Override
-    @Deprecated
-    public Connection getConnection() {
-        return null;
-    }
-
-    @Override
-    public Optional<Connection> getOptionalConnection() {
+    public Optional<Connection> getConnection() {
         return Optional.empty();
     }
 
