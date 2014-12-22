@@ -143,7 +143,7 @@ public final class ServerFrame extends InputTextFrame implements
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (getContainer().getConnection().getState() == ServerState.CONNECTED) {
+        if (getContainer().getOptionalConnection().get().getState() == ServerState.CONNECTED) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);

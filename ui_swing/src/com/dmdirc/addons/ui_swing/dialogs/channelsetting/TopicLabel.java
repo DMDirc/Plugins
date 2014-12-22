@@ -121,7 +121,7 @@ public class TopicLabel extends JPanel {
         setLayout(new MigLayout("fill, ins 0, debug", "[]0[]", "[]0[]"));
 
         if (!topic.getTopic().isEmpty()) {
-            channel.getStyliser().addStyledString(
+            channel.getBackBuffer().getStyliser().addStyledString(
                     (StyledDocument) pane.getDocument(),
                     new String[]{topic.getTopic(),}, as);
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");

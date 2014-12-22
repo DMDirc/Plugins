@@ -39,6 +39,8 @@ import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,6 +74,7 @@ public class RedirectCommandTest {
 
     @Before
     public void setup() {
+        when(frameContainer.getOptionalConnection()).thenReturn(Optional.empty());
         when(commandController.getCommandChar()).thenReturn('/');
         when(commandController.getSilenceChar()).thenReturn('.');
         when(inputWindow.getContainer()).thenReturn(frameContainer);

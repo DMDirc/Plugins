@@ -231,7 +231,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             }
             topicText.setText("");
             if (topic != null) {
-            channel.getStyliser().addStyledString(
+            channel.getBackBuffer().getStyliser().addStyledString(
                     (StyledDocument) topicText.getDocument(),
                     new String[]{Styliser.CODE_HEXCOLOUR
                         + UIUtilities.getHex(foregroundColour)

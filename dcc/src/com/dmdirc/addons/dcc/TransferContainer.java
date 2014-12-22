@@ -353,6 +353,7 @@ public class TransferContainer extends FrameContainer implements
     }
 
     @Override
+    @Deprecated
     public Connection getConnection() {
         return null;
     }
