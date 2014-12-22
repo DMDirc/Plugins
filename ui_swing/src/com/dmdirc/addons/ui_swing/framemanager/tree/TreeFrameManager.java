@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;

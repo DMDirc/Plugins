@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;

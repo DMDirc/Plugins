@@ -26,7 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
-import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;

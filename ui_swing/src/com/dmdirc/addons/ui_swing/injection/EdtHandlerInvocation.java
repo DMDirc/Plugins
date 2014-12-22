@@ -20,7 +20,9 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.injection;
+
+import com.dmdirc.addons.ui_swing.UIUtilities;
 
 import java.lang.reflect.Method;
 

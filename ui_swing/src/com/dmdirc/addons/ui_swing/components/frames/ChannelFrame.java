@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerState;
-import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;

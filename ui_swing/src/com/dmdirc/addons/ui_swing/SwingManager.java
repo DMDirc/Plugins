@@ -37,7 +37,6 @@ import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
-import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.Window;
@@ -83,8 +82,6 @@ public class SwingManager {
     private final Provider<SwingWindowManager> swingWindowManager;
     /** Error list dialog provider. */
     private final DialogProvider<ErrorListDialog> errorListDialogProvider;
-    /** Error manager for error management. */
-    private final ErrorManager errorManager;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
     /** Swing UI initialiser. */
@@ -127,8 +124,7 @@ public class SwingManager {
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
             final DialogProvider<ErrorListDialog> errorListDialogProvider,
-            final SwingUIInitialiser uiInitialiser,
-            final ErrorManager errorManager) {
+            final SwingUIInitialiser uiInitialiser) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.menuBar = menuBar;
@@ -145,7 +141,6 @@ public class SwingManager {
         this.swingWindowManager = swingWindowManager;
         this.errorListDialogProvider = errorListDialogProvider;
         this.uiInitialiser = uiInitialiser;
-        this.errorManager = errorManager;
     }
 
     /**
