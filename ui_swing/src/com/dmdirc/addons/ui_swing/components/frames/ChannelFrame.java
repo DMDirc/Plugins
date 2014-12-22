@@ -35,6 +35,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -53,6 +54,8 @@ import javax.swing.JPopupMenu;
 import net.miginfocom.swing.MigLayout;
 
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /**
  * The channel frame is the GUI component that represents a channel to the user.
@@ -112,8 +115,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         initComponents(topicBarFactory, deps.colourManagerFactory);
 
-        globalConfig.addChangeListener("ui", "channelSplitPanePosition", this);
-        globalConfig.addChangeListener(domain, "shownicklist", this);
         eventBus.subscribe(this);
 
         identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
@@ -144,21 +145,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         add(getSearchBar(), "growx");
         add(inputPanel, "growx");
 
+        getContainer().getConfigManager()
+                .getBinder().withDefaultDomain(domain).bind(this, ChannelFrame.class);
         splitPane.setLeftComponent(getTextPane());
-        if (getContainer().getConfigManager().getOptionBool(domain, "shownicklist")) {
-            splitPane.setRightComponent(nicklist);
-        } else {
-            splitPane.setRightComponent(null);
-        }
         splitPane.setResizeWeight(1);
         splitPane.setDividerLocation(-1);
     }
 
-    /**
-     * {@inheritDoc}.
-     *
-     * @param actionEvent Action event
-     */
     @Override
     public void actionPerformed(final ActionEvent actionEvent) {
         if (actionEvent.getSource() == settingsMI) {
@@ -166,41 +159,36 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        super.configChanged(domain, key);
+    @ConfigBinding(domain = "ui", key = "channelSplitPanePosition")
+    public void handleSplitPanePosition(final int value) {
+        UIUtilities.invokeLater(() -> {
+            nicklist.setPreferredSize(new Dimension(value, 0));
+            splitPane.setDividerLocation(splitPane.getWidth() - splitPane.getDividerSize() - value);
+        });
+    }
 
-        if ("channelSplitPanePosition".equals(key)) {
-            final int splitPanePosition = getContainer().getConfigManager()
-                    .getOptionInt("ui", "channelSplitPanePosition");
-            UIUtilities.invokeLater(() -> {
-                nicklist.setPreferredSize(
-                        new Dimension(splitPanePosition, 0));
-                splitPane.setDividerLocation(splitPane.getWidth() - splitPane.
-                        getDividerSize() - splitPanePosition);
-            });
-        }
-        if ("shownicklist".equals(key)) {
-            if (getContainer().getConfigManager().getOptionBool(domain, "shownicklist")) {
+    @ConfigBinding(key = "shownicklist")
+    public void handleShowNickList(final boolean value) {
+        UIUtilities.invokeLater(() -> {
+            if (value) {
                 splitPane.setRightComponent(nicklist);
             } else {
                 splitPane.setRightComponent(null);
             }
-        }
+        });
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void handleClientClosing(final ClientClosingEvent event) {
         saveSplitPanePosition();
     }
 
     private void saveSplitPanePosition() {
-        UIUtilities.invokeAndWait(() -> {
-            if (getContainer().getConfigManager().getOptionInt("ui",
-                    "channelSplitPanePosition") != nicklist.getWidth()) {
-                identity.setOption("ui", "channelSplitPanePosition", nicklist.getWidth());
-            }
-        });
+        checkOnEDT();
+        if (getContainer().getConfigManager().getOptionInt("ui",
+                "channelSplitPanePosition") != nicklist.getWidth()) {
+            identity.setOption("ui", "channelSplitPanePosition", nicklist.getWidth());
+        }
     }
 
     @Override
