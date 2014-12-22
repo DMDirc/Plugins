@@ -101,7 +101,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         this.clipboard = clipboard;
         this.channel = channel;
         this.parent = parent;
-        topicLengthMax = channel.getConnection().getParser().getMaxTopicLength();
+        topicLengthMax = channel.getOptionalConnection().get().getParser().getMaxTopicLength();
         this.channelWindow = channelWindow;
         this.eventBus = eventBus;
 

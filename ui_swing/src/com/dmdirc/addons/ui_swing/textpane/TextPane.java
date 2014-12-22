@@ -106,7 +106,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         this.clipboard = clipboard;
 
         setUI(new TextPaneUI());
-        document = frame.getContainer().getDocument();
+        document = frame.getContainer().getBackBuffer().getDocument();
         newLineIndicator = new JLabel("", SwingConstants.CENTER);
         newLineIndicator.setBackground(Color.RED);
         newLineIndicator.setForeground(Color.WHITE);

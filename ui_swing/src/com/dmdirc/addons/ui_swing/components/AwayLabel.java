@@ -63,10 +63,10 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
         setVisible(false);
         useAwayIndicator = container.getConfigManager().getOptionBool("ui", AWAY_INDICATOR);
 
-        if (container.getConnection() != null) {
-            setVisible(container.getConnection().isAway());
-            container.getConnection().addAwayStateListener(this);
-        }
+        container.getOptionalConnection().ifPresent(c -> {
+            setVisible(c.isAway());
+            c.addAwayStateListener(this);
+        });
     }
 
     @Override
@@ -98,8 +98,8 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
 
     @Handler
     public void windowClosing(final FrameClosingEvent event) {
-        if (event.getContainer().equals(container) && container.getConnection() != null) {
-            container.getConnection().removeAwayStateListener(this);
+        if (event.getContainer().equals(container)) {
+            container.getOptionalConnection().ifPresent(c -> c.removeAwayStateListener(this));
         }
     }
 

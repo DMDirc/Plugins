@@ -71,6 +71,7 @@ public class DebugWindow extends FrameContainer {
      * @return the associated server connection
      */
     @Override
+    @Deprecated
     public Connection getConnection() {
         return connection;
     }

@@ -134,7 +134,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
 
-        identity = identityFactory.createChannelConfig(channel.getConnection().getNetwork(),
+        identity = identityFactory.createChannelConfig(
+                channel.getOptionalConnection().get().getNetwork(),
                 channel.getChannelInfo().getName());
         channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
 

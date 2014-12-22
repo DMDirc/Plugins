@@ -117,7 +117,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         eventBus.subscribe(this);
 
-        identity = identityFactory.createChannelConfig(owner.getConnection().getNetwork(),
+        identity = identityFactory.createChannelConfig(
+                owner.getOptionalConnection().get().getNetwork(),
                 owner.getChannelInfo().getName());
     }
 
@@ -213,7 +214,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (channel.getConnection().getState() == ServerState.CONNECTED) {
+        if (channel.getOptionalConnection().get().getState() == ServerState.CONNECTED) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);
