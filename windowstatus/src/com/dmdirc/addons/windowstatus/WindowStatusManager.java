@@ -194,7 +194,7 @@ public class WindowStatusManager implements ConfigChangeListener {
     private String updateStatusQuery(final Query frame) {
         final StringBuilder textString = new StringBuilder();
         textString.append(frame.getHost());
-        final Optional<Connection> connection = frame.getOptionalConnection();
+        final Optional<Connection> connection = frame.getConnection();
         if (showname && connection.isPresent()) {
             final ClientInfo client = connection.get().getParser().getClient(frame.getHost());
             final String realname = client.getRealname();

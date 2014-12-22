@@ -353,7 +353,7 @@ public class TransferContainer extends FrameContainer implements
     }
 
     @Override
-    public Optional<Connection> getOptionalConnection() {
+    public Optional<Connection> getConnection() {
         return Optional.empty();
     }
 

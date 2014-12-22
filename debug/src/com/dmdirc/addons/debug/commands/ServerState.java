@@ -62,7 +62,7 @@ public class ServerState extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final Optional<Connection> optionalConnection = origin.getOptionalConnection();
+        final Optional<Connection> optionalConnection = origin.getConnection();
         if (optionalConnection.isPresent()) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     optionalConnection.get().getStatus().getTransitionHistory());

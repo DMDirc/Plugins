@@ -62,7 +62,7 @@ public class ServerInfo extends DebugCommand {
     @Override
     public void execute(final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final Optional<Connection> optionalConnection = origin.getOptionalConnection();
+        final Optional<Connection> optionalConnection = origin.getConnection();
         if (optionalConnection.isPresent()) {
             final Connection connection = optionalConnection.get();
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "

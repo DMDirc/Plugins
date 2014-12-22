@@ -84,7 +84,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
     }
 
     @Override
-    public Optional<Connection> getOptionalConnection() {
+    public Optional<Connection> getConnection() {
         return Optional.empty();
     }
 

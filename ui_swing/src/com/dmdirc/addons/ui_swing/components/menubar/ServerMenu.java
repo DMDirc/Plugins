@@ -104,7 +104,7 @@ public class ServerMenu extends JMenu implements MenuListener {
         disconnect.setMnemonic('d');
         disconnect.addActionListener(e -> activeFrameManager.getActiveFrame()
                 .map(TextFrame::getContainer)
-                .flatMap(FrameContainer::getOptionalConnection)
+                .flatMap(FrameContainer::getConnection)
                 .ifPresent(Connection::disconnect));
         add(disconnect);
 
@@ -112,7 +112,7 @@ public class ServerMenu extends JMenu implements MenuListener {
         ssd.setMnemonic('s');
         ssd.setText("Server settings");
         ssd.addActionListener(e -> activeFrameManager.getActiveFrame()
-                .ifPresent(f -> f.getContainer().getOptionalConnection()
+                .ifPresent(f -> f.getContainer().getConnection()
                         .ifPresent(ssdProvider::displayOrRequestFocus)));
         add(ssd);
 
@@ -128,7 +128,7 @@ public class ServerMenu extends JMenu implements MenuListener {
     @Override
     public final void menuSelected(final MenuEvent e) {
         final Optional<ServerState> activeConnectionState = activeFrameManager.getActiveFrame()
-                .map(TextFrame::getContainer).flatMap(FrameContainer::getOptionalConnection)
+                .map(TextFrame::getContainer).flatMap(FrameContainer::getConnection)
                 .map(Connection::getState);
         final boolean connected = activeConnectionState.equals(Optional.of(ServerState.CONNECTED));
 

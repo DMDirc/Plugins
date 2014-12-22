@@ -69,8 +69,8 @@ public class HistoryWindow extends FrameContainer {
     }
 
     @Override
-    public Optional<Connection> getOptionalConnection() {
-        return getParent().flatMap(FrameContainer::getOptionalConnection);
+    public Optional<Connection> getConnection() {
+        return getParent().flatMap(FrameContainer::getConnection);
     }
 
 }

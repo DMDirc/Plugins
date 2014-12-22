@@ -163,7 +163,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         if (event.getWindow().isPresent()) {
             final Optional<Connection> connection = event.getWindow().get().getContainer()
-                    .getOptionalConnection();
+                    .getConnection();
             if (connection.isPresent() && connection.get().getState() != ServerState.CONNECTED) {
                 panel.getComponent().setText("Not connected");
             } else {
@@ -295,7 +295,7 @@ public class LagDisplayManager implements ConfigChangeListener {
 
     private boolean isActiveWindow(final Connection connection) {
         return activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
-                .flatMap(FrameContainer::getOptionalConnection)
+                .flatMap(FrameContainer::getConnection)
                 .filter(connection::equals).isPresent();
     }
 

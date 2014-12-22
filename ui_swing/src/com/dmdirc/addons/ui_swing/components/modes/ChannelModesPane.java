@@ -64,13 +64,13 @@ public final class ChannelModesPane extends ModesPane {
 
     @Override
     public boolean isModeSettable(final String mode) {
-        return channel.getOptionalConnection().get().getParser().isUserSettable(
+        return channel.getConnection().get().getParser().isUserSettable(
                 mode.toCharArray()[0]);
     }
 
     @Override
     public String getAvailableBooleanModes() {
-        return channel.getOptionalConnection().get().getParser().getBooleanChannelModes();
+        return channel.getConnection().get().getParser().getBooleanChannelModes();
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class ChannelModesPane extends ModesPane {
 
     @Override
     public String getAllParamModes() {
-        final Parser parser = channel.getOptionalConnection().get().getParser();
+        final Parser parser = channel.getConnection().get().getParser();
         return parser.getParameterChannelModes()
                 + parser.getDoubleParameterChannelModes();
     }

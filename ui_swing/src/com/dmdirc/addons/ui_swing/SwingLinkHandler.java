@@ -61,7 +61,7 @@ public class SwingLinkHandler {
     @Handler
     public void handleChannelClick(final LinkChannelClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
-        container.getOptionalConnection()
+        container.getConnection()
                 .ifPresent(c -> c.join(new ChannelJoinRequest(event.getTarget())));
     }
 
@@ -73,7 +73,7 @@ public class SwingLinkHandler {
     @Handler
     public void handleNicknameClick(final LinkNicknameClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
-        container.getOptionalConnection().ifPresent(c ->
+        container.getConnection().ifPresent(c ->
                 eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
                         windowFactory.getSwingWindow(c.getQuery(event.getTarget()))))));
     }

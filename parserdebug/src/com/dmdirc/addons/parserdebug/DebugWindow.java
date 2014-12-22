@@ -66,7 +66,7 @@ public class DebugWindow extends FrameContainer {
     }
 
     @Override
-    public Optional<Connection> getOptionalConnection() {
+    public Optional<Connection> getConnection() {
         return Optional.of(connection);
     }
 
