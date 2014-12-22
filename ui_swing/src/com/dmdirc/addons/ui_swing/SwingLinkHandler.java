@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
-import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -62,10 +61,8 @@ public class SwingLinkHandler {
     @Handler
     public void handleChannelClick(final LinkChannelClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
-        final Connection connection = container.getConnection();
-        if (connection != null) {
-            connection.join(new ChannelJoinRequest(event.getTarget()));
-        }
+        container.getOptionalConnection()
+                .ifPresent(c -> c.join(new ChannelJoinRequest(event.getTarget())));
     }
 
     @Handler
@@ -76,12 +73,8 @@ public class SwingLinkHandler {
     @Handler
     public void handleNicknameClick(final LinkNicknameClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
-        final Connection connection = container.getConnection();
-        if (connection != null) {
-            eventBus.publishAsync(
-                    new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
-                            windowFactory.getSwingWindow(connection.getQuery(event.getTarget())))));
-        }
+        container.getOptionalConnection().ifPresent(c ->
+                eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
+                        windowFactory.getSwingWindow(c.getQuery(event.getTarget()))))));
     }
-
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.wizard;
+package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
@@ -52,7 +52,7 @@ public class SwingWindowManager {
 
     @Handler
     public void handleWindowEvent(final SwingWindowEvent event) {
-        if ((event.getEvent().getSource() instanceof Window)) {
+        if (event.getEvent().getSource() instanceof Window) {
             if (event.getEvent().getID() == WindowEvent.WINDOW_OPENED) {
                 addTopLevelWindow((Window) event.getEvent().getSource());
             } else if (event.getEvent().getID() == WindowEvent.WINDOW_CLOSED) {
