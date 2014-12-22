@@ -33,12 +33,9 @@ import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
-import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleterUtils;
@@ -46,15 +43,9 @@ import com.dmdirc.ui.input.TabCompleterUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 
 import javax.inject.Provider;
 import javax.swing.JPanel;
@@ -70,6 +61,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    /** Factory to create an {@link InputTextFramePasteAction}. */
+    private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
     /** Input field panel. */
     protected JPanel inputPanel;
     /** The InputHandler for our input field. */
@@ -84,14 +77,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     private AwayLabel awayLabel;
     /** Typing indicator label. */
     private TypingLabel typingLabel;
-    /** Main frame. */
-    private final Provider<Window> parentWindow;
     /** Plugin Manager. */
     private final PluginManager pluginManager;
-    /** Paste dialog factory. */
-    private final PasteDialogFactory pasteDialogFactory;
-    /** Clipboard to use for copying and pasting. */
-    private final Clipboard clipboard;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
@@ -107,15 +94,14 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     protected InputTextFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final FrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
-        parentWindow = deps.mainWindow;
         pluginManager = deps.pluginManager;
-        pasteDialogFactory = deps.pasteDialog;
-        clipboard = deps.clipboard;
         commandController = deps.commandController;
         eventBus = deps.eventBus;
+        this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
 
         initComponents(inputFieldProvider, deps.tabCompleterUtils);
 
@@ -165,7 +151,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
 
         inputFieldPopup.add(new CutAction(getInputField().getTextField()));
         inputFieldPopup.add(new CopyAction(getInputField().getTextField()));
-        inputFieldPopup.add(new InputTextFramePasteAction(clipboard, this));
+        inputFieldPopup.add(inputTextFramePasteActionFactory.getInputTextFramePasteAction(this,
+                inputField, getContainer()));
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
@@ -181,12 +168,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     private void initInputField() {
         UIUtilities.addUndoManager(eventBus, getInputField().getTextField());
 
-        getInputField().getActionMap().put("paste",
-                new InputTextFramePasteAction(clipboard, this));
+        getInputField().getActionMap().put("paste", inputTextFramePasteActionFactory
+                .getInputTextFramePasteAction(this, inputField, getContainer()));
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
                 "shift INSERT"), "paste");
-        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
-                "ctrl V"), "paste");
+        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ctrl V"), "paste");
     }
 
     /**
@@ -248,82 +234,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
                         getUnitValueX("related").getValue());
             }
         }
-    }
-
-    /** Checks and pastes text. */
-    public void doPaste() {
-        try {
-            if (!clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
-                return;
-            }
-        } catch (final IllegalStateException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to past from clipboard.", ""));
-            return;
-        }
-
-        try {
-            //get the contents of the input field and combine it with the
-            //clipboard
-            doPaste((String) Toolkit.getDefaultToolkit()
-                    .getSystemClipboard().getData(DataFlavor.stringFlavor));
-        } catch (final IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
-        } catch (final UnsupportedFlavorException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unsupported clipboard type", ""));
-        }
-    }
-
-    /**
-     * Pastes the specified content into the input area.
-     *
-     * @param clipboard The contents of the clipboard to be pasted
-     *
-     * @since 0.6.3m1
-     */
-    protected void doPaste(final String clipboard) {
-        final String inputFieldText = getInputField().getText();
-        //Get the text that would result from the paste (inputfield
-        //- selection + clipboard)
-        final String text = inputFieldText.substring(0, getInputField().
-                getSelectionStart()) + clipboard + inputFieldText.substring(
-                        getInputField().getSelectionEnd());
-        final String[] clipboardLines = getSplitLine(text);
-        //check theres something to paste
-        if (clipboardLines.length > 1) {
-            //Clear the input field
-            inputField.setText("");
-            final Integer pasteTrigger = getContainer().getConfigManager().
-                    getOptionInt("ui", "pasteProtectionLimit", false);
-            //check whether the number of lines is over the limit
-            if (pasteTrigger != null && getContainer().getNumLines(text)
-                    > pasteTrigger) {
-                //show the multi line paste dialog
-                pasteDialogFactory.getPasteDialog(this, text, parentWindow.get()).
-                        displayOrRequestFocus();
-            } else {
-                //send the lines
-                for (final String clipboardLine : clipboardLines) {
-                    getContainer().sendLine(clipboardLine);
-                }
-            }
-        } else {
-            //put clipboard text in input field
-            inputField.replaceSelection(clipboard);
-        }
-    }
-
-    /**
-     * Splits the line on all line endings.
-     *
-     * @param line Line that will be split
-     *
-     * @return Split line array
-     */
-    private String[] getSplitLine(final String line) {
-        return line.replace("\r\n", "\n").replace('\r', '\n').split("\n");
     }
 
     @ConfigBinding(domain="ui", key="inputbackgroundcolour",
