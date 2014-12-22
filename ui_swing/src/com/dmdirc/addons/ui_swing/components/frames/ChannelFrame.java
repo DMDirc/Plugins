@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerState;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.NickList;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.TopicBar;
@@ -159,23 +159,23 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         }
     }
 
-    @ConfigBinding(domain = "ui", key = "channelSplitPanePosition")
+    @ConfigBinding(domain = "ui", key = "channelSplitPanePosition",
+            invocation = EDTInvocation.class)
     public void handleSplitPanePosition(final int value) {
-        UIUtilities.invokeLater(() -> {
-            nicklist.setPreferredSize(new Dimension(value, 0));
-            splitPane.setDividerLocation(splitPane.getWidth() - splitPane.getDividerSize() - value);
-        });
+        checkOnEDT();
+        nicklist.setPreferredSize(new Dimension(value, 0));
+        splitPane.setDividerLocation(splitPane.getWidth() - splitPane.getDividerSize() - value);
     }
 
-    @ConfigBinding(key = "shownicklist")
+    @ConfigBinding(key = "shownicklist",
+            invocation = EDTInvocation.class)
     public void handleShowNickList(final boolean value) {
-        UIUtilities.invokeLater(() -> {
-            if (value) {
-                splitPane.setRightComponent(nicklist);
-            } else {
-                splitPane.setRightComponent(null);
-            }
-        });
+        checkOnEDT();
+        if (value) {
+            splitPane.setRightComponent(nicklist);
+        } else {
+            splitPane.setRightComponent(null);
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
