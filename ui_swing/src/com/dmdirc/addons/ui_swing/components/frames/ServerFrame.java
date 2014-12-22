@@ -37,8 +37,6 @@ import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -55,8 +53,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
-public final class ServerFrame extends InputTextFrame implements
-        ActionListener, CertificateProblemListener {
+public final class ServerFrame extends InputTextFrame implements CertificateProblemListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
@@ -101,24 +98,12 @@ public final class ServerFrame extends InputTextFrame implements
      */
     private void initComponents() {
         settingsMI = new JMenuItem("Settings");
-        settingsMI.addActionListener(this);
+        settingsMI.addActionListener(l -> dialogProvider.displayOrRequestFocus(connection));
 
         setLayout(new MigLayout("ins 0, fill, hidemode 3, wrap 1"));
         add(getTextPane(), "grow, push");
         add(getSearchBar(), "growx, pushx");
         add(inputPanel, "growx, pushx");
-    }
-
-    /**
-     * {@inheritDoc}.
-     *
-     * @param actionEvent Action event
-     */
-    @Override
-    public void actionPerformed(final ActionEvent actionEvent) {
-        if (actionEvent.getSource() == settingsMI) {
-            dialogProvider.displayOrRequestFocus(connection);
-        }
     }
 
     @Override
