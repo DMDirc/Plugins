@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
-import com.dmdirc.addons.ui_swing.wizard.SwingWindowManager;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
