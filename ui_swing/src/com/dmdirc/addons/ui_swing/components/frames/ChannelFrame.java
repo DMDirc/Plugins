@@ -35,6 +35,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
+import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.events.FrameClosingEvent;
@@ -84,6 +85,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
     /** Channel instance. */
     private final Channel channel;
+    /** Config binder. */
+    private final ConfigBinder binder;
 
     /**
      * Creates a new instance of ChannelFrame. Sets up callbacks and handlers, and default options
@@ -114,6 +117,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         this.channel = owner;
 
         initComponents(topicBarFactory, deps.colourManagerFactory);
+        binder = getContainer().getConfigManager().getBinder().withDefaultDomain(domain);
+        binder.bind(this, ChannelFrame.class);
 
         eventBus.subscribe(this);
 
@@ -146,8 +151,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         add(getSearchBar(), "growx");
         add(inputPanel, "growx");
 
-        getContainer().getConfigManager()
-                .getBinder().withDefaultDomain(domain).bind(this, ChannelFrame.class);
         splitPane.setLeftComponent(getTextPane());
         splitPane.setResizeWeight(1);
         splitPane.setDividerLocation(-1);
@@ -237,7 +240,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     @Override
     public void dispose() {
         eventBus.unsubscribe(this);
-        globalConfig.removeListener(this);
+        binder.unbind(this);
         super.dispose();
     }
 
