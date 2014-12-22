@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.events.FrameComponentAddedEvent;
 import com.dmdirc.events.FrameComponentRemovedEvent;

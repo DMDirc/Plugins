@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
 

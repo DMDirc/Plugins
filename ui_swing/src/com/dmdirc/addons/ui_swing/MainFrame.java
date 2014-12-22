@@ -36,7 +36,6 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.addons.ui_swing.injection.EdtHandlerInvocation;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientUnminimisedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
