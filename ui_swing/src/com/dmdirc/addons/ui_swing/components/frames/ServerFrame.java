@@ -81,9 +81,10 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
     public ServerFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
             final Connection owner) {
-        super(deps, inputFieldProvider, owner.getWindowModel());
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner.getWindowModel());
         this.mainWindow = deps.mainWindow;
         this.iconManager = deps.iconManager;
         this.dialogProvider = dialogProvider;

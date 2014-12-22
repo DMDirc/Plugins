@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
-import com.dmdirc.ClientModule;
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.interfaces.CommandController;
@@ -53,8 +53,8 @@ public class PasteDialogFactory {
 
     @Inject
     public PasteDialogFactory(
-            @ClientModule.GlobalConfig final IconManager iconManager,
-            @ClientModule.GlobalConfig final AggregateConfigProvider config,
+            @GlobalConfig final IconManager iconManager,
+            @GlobalConfig final AggregateConfigProvider config,
             final PluginManager pluginManager,
             final CommandController commandController,
             final DMDircMBassador eventBus,

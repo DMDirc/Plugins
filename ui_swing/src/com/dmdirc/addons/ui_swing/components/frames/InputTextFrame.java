@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
@@ -32,27 +33,19 @@ import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
-import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
-import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 
 import javax.inject.Provider;
 import javax.swing.JPanel;
@@ -64,13 +57,12 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Frame with an input field.
  */
-public abstract class InputTextFrame extends TextFrame implements InputWindow,
-        MouseListener {
+public abstract class InputTextFrame extends TextFrame implements InputWindow, MouseListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
-    /** Config provider for this frame. */
-    private final AggregateConfigProvider config;
+    /** Factory to create an {@link InputTextFramePasteAction}. */
+    private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
     /** Input field panel. */
     protected JPanel inputPanel;
     /** The InputHandler for our input field. */
@@ -85,14 +77,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private AwayLabel awayLabel;
     /** Typing indicator label. */
     private TypingLabel typingLabel;
-    /** Main frame. */
-    private final Provider<Window> parentWindow;
     /** Plugin Manager. */
     private final PluginManager pluginManager;
-    /** Paste dialog factory. */
-    private final PasteDialogFactory pasteDialogFactory;
-    /** Clipboard to use for copying and pasting. */
-    private final Clipboard clipboard;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
@@ -108,49 +94,26 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     protected InputTextFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final FrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
-        config = owner.getConfigManager();
-        parentWindow = deps.mainWindow;
         pluginManager = deps.pluginManager;
-        pasteDialogFactory = deps.pasteDialog;
-        clipboard = deps.clipboard;
         commandController = deps.commandController;
         eventBus = deps.eventBus;
+        this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
 
         initComponents(inputFieldProvider, deps.tabCompleterUtils);
 
-        if (!UIUtilities.isGTKUI()) {
-            //GTK users appear to dislike choice, ignore them if they want some.
-            getInputField().setBackground(UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputbackgroundcolour",
-                                    "ui", "backgroundcolour"), null)));
-            getInputField().setForeground(UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputforegroundcolour",
-                                    "ui", "foregroundcolour"), null)));
-            getInputField().setCaretColor(UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "inputforegroundcolour",
-                                    "ui", "foregroundcolour"), null)));
-        }
+        getContainer().getConfigManager().getBinder().bind(this, InputTextFrame.class);
 
-        config.addChangeListener("ui", "inputforegroundcolour", this);
-        config.addChangeListener("ui", "inputbackgroundcolour", this);
-
-        getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
+        getInputField().getTextField().getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
         getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_C, UIUtilities.getCtrlMask()
                 | KeyEvent.SHIFT_DOWN_MASK), "textpaneCopy");
         getInputField().getTextField().getActionMap().put("textpaneCopy",
-                new InputFieldCopyAction(getTextPane(),
-                        getInputField().getTextField()));
+                new InputFieldCopyAction(getTextPane(), getInputField().getTextField()));
     }
 
     /**
@@ -188,7 +151,8 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
         inputFieldPopup.add(new CutAction(getInputField().getTextField()));
         inputFieldPopup.add(new CopyAction(getInputField().getTextField()));
-        inputFieldPopup.add(new InputTextFramePasteAction(clipboard, this));
+        inputFieldPopup.add(inputTextFramePasteActionFactory.getInputTextFramePasteAction(this,
+                inputField, getContainer()));
         inputFieldPopup.setOpaque(true);
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
@@ -204,12 +168,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
     private void initInputField() {
         UIUtilities.addUndoManager(eventBus, getInputField().getTextField());
 
-        getInputField().getActionMap().put("paste",
-                new InputTextFramePasteAction(clipboard, this));
+        getInputField().getActionMap().put("paste", inputTextFramePasteActionFactory
+                .getInputTextFramePasteAction(this, inputField, getContainer()));
         getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
                 "shift INSERT"), "paste");
-        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(
-                "ctrl V"), "paste");
+        getInputField().getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ctrl V"), "paste");
     }
 
     /**
@@ -273,122 +236,25 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
         }
     }
 
-    /** Checks and pastes text. */
-    public void doPaste() {
-        try {
-            if (!clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
-                return;
-            }
-        } catch (final IllegalStateException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to past from clipboard.", ""));
+    @ConfigBinding(domain="ui", key="inputbackgroundcolour",
+            fallbacks = {"ui", "backgroundcolour"}, invocation = EDTInvocation.class)
+    public void handleInputBackgroundColour(final String value) {
+        if (getInputField() == null || UIUtilities.isGTKUI()) {
             return;
         }
-
-        try {
-            //get the contents of the input field and combine it with the
-            //clipboard
-            doPaste((String) Toolkit.getDefaultToolkit()
-                    .getSystemClipboard().getData(DataFlavor.stringFlavor));
-        } catch (final IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
-        } catch (final UnsupportedFlavorException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unsupported clipboard type", ""));
-        }
+        getInputField().setBackground(UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null)));
     }
 
-    /**
-     * Pastes the specified content into the input area.
-     *
-     * @param clipboard The contents of the clipboard to be pasted
-     *
-     * @since 0.6.3m1
-     */
-    protected void doPaste(final String clipboard) {
-        final String inputFieldText = getInputField().getText();
-        //Get the text that would result from the paste (inputfield
-        //- selection + clipboard)
-        final String text = inputFieldText.substring(0, getInputField().
-                getSelectionStart()) + clipboard + inputFieldText.substring(
-                        getInputField().getSelectionEnd());
-        final String[] clipboardLines = getSplitLine(text);
-        //check theres something to paste
-        if (clipboardLines.length > 1) {
-            //Clear the input field
-            inputField.setText("");
-            final Integer pasteTrigger = getContainer().getConfigManager().
-                    getOptionInt("ui", "pasteProtectionLimit", false);
-            //check whether the number of lines is over the limit
-            if (pasteTrigger != null && getContainer().getNumLines(text)
-                    > pasteTrigger) {
-                //show the multi line paste dialog
-                pasteDialogFactory.getPasteDialog(this, text, parentWindow.get()).
-                        displayOrRequestFocus();
-            } else {
-                //send the lines
-                for (final String clipboardLine : clipboardLines) {
-                    getContainer().sendLine(clipboardLine);
-                }
-            }
-        } else {
-            //put clipboard text in input field
-            inputField.replaceSelection(clipboard);
+    @ConfigBinding(domain = "ui", key="inputforegroundcolour", fallbacks = {"ui",
+            "foregroundcolour"}, invocation = EDTInvocation.class)
+    public void handleInputForegroundColour(final String value) {
+        if (getInputField() == null || UIUtilities.isGTKUI()) {
+            return;
         }
-    }
-
-    /**
-     * Splits the line on all line endings.
-     *
-     * @param line Line that will be split
-     *
-     * @return Split line array
-     */
-    private String[] getSplitLine(final String line) {
-        return line.replace("\r\n", "\n").replace('\r', '\n').split("\n");
-    }
-
-    @Override
-    public void configChanged(final String domain, final String key) {
-        super.configChanged(domain, key);
-
-        if ("ui".equals(domain) && getContainer().getConfigManager() != null
-                && getInputField() != null && !UIUtilities.isGTKUI()) {
-            switch (key) {
-                case "inputbackgroundcolour":
-                case "backgroundcolour":
-                    getInputField().setBackground(UIUtilities.convertColour(
-                            colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputbackgroundcolour",
-                                            "ui", "backgroundcolour"), null)));
-                    break;
-                case "inputforegroundcolour":
-                case "foregroundcolour":
-                    getInputField().setForeground(UIUtilities.convertColour(
-                            colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour"), null)));
-                    getInputField().setCaretColor(UIUtilities.convertColour(
-                            colourManager.getColourFromString(
-                                    config.getOptionString(
-                                            "ui", "inputforegroundcolour",
-                                            "ui", "foregroundcolour"), null)));
-                    break;
-                default:
-                    //Do nothing
-                    break;
-            }
-        }
-    }
-
-    /** Request input field focus. */
-    public void requestInputFieldFocus() {
-        if (inputField != null) {
-            inputField.requestFocusInWindow();
-        }
+        final Color colour = UIUtilities.convertColour(colourManager.getColourFromString(value, null));
+        getInputField().setForeground(colour);
+        getInputField().setCaretColor(colour);
     }
 
     @Override
@@ -399,7 +265,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow,
 
     @Override
     public void dispose() {
-        frameParent.getConfigManager().removeListener(this);
+        getContainer().getConfigManager().getBinder().unbind(this);
         super.dispose();
     }
 

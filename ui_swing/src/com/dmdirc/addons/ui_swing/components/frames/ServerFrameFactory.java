@@ -51,23 +51,27 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
     private final Provider<SwingInputField> inputFieldProvider;
     private final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider;
     private final DMDircMBassador eventBus;
+    private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
 
     @Inject
     public ServerFrameFactory(
             final DMDircMBassador eventBus,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider) {
         this.eventBus = eventBus;
         this.dependencies = dependencies;
         this.inputFieldProvider = inputFieldProvider;
         this.dialogProvider = dialogProvider;
+        this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
     }
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
         final ServerFrame frame =  new ServerFrame(dependencies.get(), inputFieldProvider,
-                dialogProvider.get(), container.getConnection().get());
+                inputTextFramePasteActionFactory, dialogProvider.get(), container.getConnection()
+                .get());
         eventBus.subscribe(frame);
         return frame;
     }

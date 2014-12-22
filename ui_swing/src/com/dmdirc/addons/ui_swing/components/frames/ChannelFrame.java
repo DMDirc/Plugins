@@ -106,9 +106,10 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
             final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final TopicBarFactory topicBarFactory,
             final Channel owner) {
-        super(deps, inputFieldProvider, owner);
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner);
 
         this.eventBus = deps.eventBus;
         this.globalConfig = deps.globalConfig;
