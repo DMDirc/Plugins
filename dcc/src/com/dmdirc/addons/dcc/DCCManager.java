@@ -191,8 +191,7 @@ public class DCCManager {
             final Parser parser, final boolean reverse, final String token) {
         // New thread to ask the user where to save in to stop us locking the UI
         new Thread(() -> {
-            final JFileChooser jc = KFileChooser.getFileChooser(config,
-                    DCCManager.this,
+            final JFileChooser jc = KFileChooser.getFileChooser(config, this,
                     config.getOption(getDomain(), "receive.savelocation"));
             final int result;
             if (config.getOptionBool(getDomain(), "receive.autoaccept")) {
@@ -209,7 +208,7 @@ public class DCCManager {
             }
             final boolean resume = handleResume(jc);
             if (reverse && !token.isEmpty()) {
-                final TransferContainer container1 = new TransferContainer(DCCManager.this, send,
+                final TransferContainer container1 = new TransferContainer(this, send,
                         config, backBufferFactory, "*Receive: " + nickname, nickname, null,
                         urlBuilder, eventBus);
                 windowManager.addWindow(getContainer(), container1);
@@ -219,7 +218,7 @@ public class DCCManager {
                             "receive.reverse.sendtoken")) {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
                                 + send.getShortFileName() + " 0 "
-                                + jc.getSelectedFile().length() + " "
+                                + jc.getSelectedFile().length() + ' '
                                 + token);
                     } else {
                         parser.sendCTCP(nickname, "DCC", "RESUME "
@@ -229,10 +228,10 @@ public class DCCManager {
                 } else {
                     if (listen(send)) {
                         parser.sendCTCP(nickname, "DCC", "SEND "
-                                + send.getShortFileName() + " "
+                                + send.getShortFileName() + ' '
                                 + DCC.ipToLong(getListenIP(parser))
-                                + " " + send.getPort() + " "
-                                + send.getFileSize() + " " + token);
+                                + ' ' + send.getPort() + ' '
+                                + send.getFileSize() + ' ' + token);
                     }
                 }
             } else {
@@ -242,8 +241,8 @@ public class DCCManager {
                 windowManager.addWindow(getContainer(), container1);
                 if (resume) {
                     parser.sendCTCP(nickname, "DCC", "RESUME "
-                            + send.getShortFileName() + " "
-                            + send.getPort() + " "
+                            + send.getShortFileName() + ' '
+                            + send.getPort() + ' '
                             + jc.getSelectedFile().length());
                 } else {
                     send.connect();
@@ -447,7 +446,6 @@ public class DCCManager {
     private void handleSend(final boolean dontAsk, final String[] ctcpData, final ClientInfo client,
             final Connection connection) {
         final String nickname = client.getNickname();
-        final String filename;
         String tmpFilename;
         // Clients tend to put files with spaces in the name in ""
         final StringBuilder filenameBits = new StringBuilder();
@@ -480,7 +478,7 @@ public class DCCManager {
             tmpFilename = tmpFilename.replace('/', File.separatorChar);
         }
         // Then get just the name of the file.
-        filename = new File(tmpFilename).getName();
+        final String filename = new File(tmpFilename).getName();
 
         final String ip = ctcpData[++i];
         final String port = ctcpData[++i];
@@ -494,8 +492,8 @@ public class DCCManager {
         } else {
             size = -1;
         }
-        final String token = (ctcpData.length - 1 > i
-                && !ctcpData[i + 1].equals("T")) ? ctcpData[++i] : "";
+        final String token = ctcpData.length - 1 > i
+                && !"T".equals(ctcpData[i + 1]) ? ctcpData[++i] : "";
 
         // Ignore incorrect ports, or non-numeric IP/Port
         final long ipLong;
@@ -511,7 +509,7 @@ public class DCCManager {
         }
 
         if (DCCTransfer.findByToken(token) == null && !dontAsk &&
-                (token.isEmpty() || port.equals("0"))) {
+                (token.isEmpty() || "0".equals(port))) {
             // Make sure this is not a reverse DCC Send that we no longer care about.
             eventBus.publish(new DccSendRequestEvent(connection, nickname, filename));
             final long passedSize = size;
@@ -582,22 +580,22 @@ public class DCCManager {
         } catch (NumberFormatException nfe) {
             return;
         }
-        final String token = (ctcpData.length - 1 > i) ? " "
+        final String token = ctcpData.length - 1 > i ? ' '
                 + ctcpData[++i] : "";
 
         // Now look for a dcc that matches.
         for (DCCTransfer send : DCCTransfer.getTransfers()) {
-            if (send.getPort() == port && (new File(send.getFileName()))
+            if (send.getPort() == port && new File(send.getFileName())
                     .getName().equalsIgnoreCase(filename)) {
-                if ((!token.isEmpty() && !send.getToken().isEmpty())
-                        && (!token.equals(send.getToken()))) {
+                if (!token.isEmpty() && !send.getToken().isEmpty() &&
+                        !token.equals(send.getToken())) {
                     continue;
                 }
                 final Parser parser = connection.getParser();
                 final String nick = client.getNickname();
-                if (ctcpData[0].equalsIgnoreCase("resume")) {
-                    parser.sendCTCP(nick, "DCC", "ACCEPT " + ((quoted) ? "\""
-                            + filename + "\"" : filename) + " " + port + " "
+                if ("resume".equalsIgnoreCase(ctcpData[0])) {
+                    parser.sendCTCP(nick, "DCC", "ACCEPT " + (quoted ? '"'
+                            + filename + '"' : filename) + ' ' + port + ' '
                             + send.setFileStart(position) + token);
                 } else {
                     send.setFileStart(position);
@@ -606,18 +604,18 @@ public class DCCManager {
                         if (listen(send)) {
                             if (send.getToken().isEmpty()) {
                                 parser.sendCTCP(nick, "DCC", "SEND "
-                                        + ((quoted) ? "\"" + filename
-                                        + "\"" : filename) + " "
+                                        + (quoted ? '"' + filename
+                                        + '"' : filename) + ' '
                                         + DCC.ipToLong(send.getHost())
-                                        + " " + send.getPort()
-                                        + " " + send.getFileSize());
+                                        + ' ' + send.getPort()
+                                        + ' ' + send.getFileSize());
                             } else {
                                 parser.sendCTCP(nick, "DCC", "SEND "
-                                        + ((quoted) ? "\"" + filename
-                                        + "\"" : filename)
-                                        + " " + DCC.ipToLong(send.getHost())
-                                        + " " + send.getPort()
-                                        + " " + send.getFileSize() + " "
+                                        + (quoted ? '"' + filename
+                                        + '"' : filename)
+                                        + ' ' + DCC.ipToLong(send.getHost())
+                                        + ' ' + send.getPort()
+                                        + ' ' + send.getFileSize() + ' '
                                         + send.getToken());
                             }
                         }
