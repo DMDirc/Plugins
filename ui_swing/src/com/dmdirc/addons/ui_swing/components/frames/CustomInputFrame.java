@@ -49,8 +49,9 @@ public class CustomInputFrame extends InputTextFrame {
     public CustomInputFrame(
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final FrameContainer owner) {
-        super(deps, inputFieldProvider, owner);
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner);
 
         initComponents();
     }

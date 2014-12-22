@@ -55,6 +55,7 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     private final Provider<TextFrameDependencies> dependencies;
     private final Provider<SwingInputField> inputFieldProvider;
     private final IdentityFactory identityFactory;
+    private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
     private final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider;
     private final TopicBarFactory topicBarFactory;
     private final DMDircMBassador eventBus;
@@ -65,6 +66,7 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
             @PluginDomain(SwingController.class) final String domain,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final IdentityFactory identityFactory,
             final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider,
             final TopicBarFactory topicBarFactory) {
@@ -75,12 +77,14 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
         this.identityFactory = identityFactory;
         this.dialogProvider = dialogProvider;
         this.topicBarFactory = topicBarFactory;
+        this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
     }
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
         final ChannelFrame frame = new ChannelFrame(domain, dependencies.get(), inputFieldProvider,
-                identityFactory, dialogProvider.get(), topicBarFactory, (Channel) container);
+                identityFactory, dialogProvider.get(), inputTextFramePasteActionFactory,
+                topicBarFactory, (Channel) container);
         eventBus.subscribe(frame);
         return frame;
     }

@@ -47,21 +47,24 @@ public class CustomInputFrameFactory implements SwingWindowFactory.WindowProvide
     private final Provider<TextFrameDependencies> dependencies;
     private final Provider<SwingInputField> inputFieldProvider;
     private final DMDircMBassador eventBus;
+    private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
 
     @Inject
     public CustomInputFrameFactory(
             final DMDircMBassador eventBus,
+            final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider) {
         this.eventBus = eventBus;
         this.dependencies = dependencies;
         this.inputFieldProvider = inputFieldProvider;
+        this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
     }
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
         final CustomInputFrame frame = new CustomInputFrame(dependencies.get(), inputFieldProvider,
-                container);
+                inputTextFramePasteActionFactory, container);
         eventBus.subscribe(frame);
         return frame;
     }
