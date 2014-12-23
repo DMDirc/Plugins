@@ -68,17 +68,17 @@ public class ServerInfo extends DebugCommand {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "
                     + connection.getAddress());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Actual name: "
-                    + connection.getParser().getServerName());
+                    + connection.getParser().get().getServerName());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Network: "
                     + connection.getNetwork());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "IRCd: "
-                    + connection.getParser().getServerSoftware() + " - "
-                    + connection.getParser().getServerSoftwareType());
+                    + connection.getParser().get().getServerSoftware() + " - "
+                    + connection.getParser().get().getServerSoftwareType());
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Modes: "
-                    + connection.getParser().getBooleanChannelModes() + ' '
-                    + connection.getParser().getListChannelModes() + ' '
-                    + connection.getParser().getParameterChannelModes() + ' '
-                    + connection.getParser().getDoubleParameterChannelModes());
+                    + connection.getParser().get().getBooleanChannelModes() + ' '
+                    + connection.getParser().get().getListChannelModes() + ' '
+                    + connection.getParser().get().getParameterChannelModes() + ' '
+                    + connection.getParser().get().getDoubleParameterChannelModes());
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "This window isn't connected to a server");

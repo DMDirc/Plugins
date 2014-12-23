@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
 /**
@@ -68,9 +69,11 @@ public class TransferContainer extends FrameContainer implements
     /** Plugin that this send belongs to. */
     private final DCCManager myPlugin;
     /** IRC Parser that caused this send */
-    private Parser parser = null;
+    @Nullable
+    private Parser parser;
     /** Connection the send was initiated on. */
-    private Connection connection = null;
+    @Nullable
+    private Connection connection;
     /** Show open button. */
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
@@ -83,7 +86,7 @@ public class TransferContainer extends FrameContainer implements
     public TransferContainer(final DCCManager plugin, final DCCTransfer dcc,
             final AggregateConfigProvider config,
             final BackBufferFactory backBufferFactory, final String title,
-            final String targetNick, final Connection connection,
+            final String targetNick, @Nullable final Connection connection,
             final URLBuilder urlBuilder, final DMDircMBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
@@ -93,7 +96,7 @@ public class TransferContainer extends FrameContainer implements
         this.dcc = dcc;
         this.connection = connection;
         this.config = config;
-        parser = connection == null ? null : connection.getParser();
+        parser = Optional.ofNullable(connection).flatMap(Connection::getParser).orElse(null);
         myPlugin = plugin;
 
         if (parser != null) {
@@ -298,11 +301,11 @@ public class TransferContainer extends FrameContainer implements
         dcc.reset();
 
         if (connection != null && connection.getState() == ServerState.CONNECTED) {
-            final String myNickname = connection.getParser().getLocalClient()
+            final String myNickname = connection.getParser().get().getLocalClient()
                     .getNickname();
             // Check again in case we have changed nickname to the same nickname
             //that this send is for.
-            if (connection.getParser().getStringConverter().equalsIgnoreCase(
+            if (connection.getParser().get().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
                 final Thread errorThread = new Thread(() -> {
                     JOptionPane.showMessageDialog(null,
@@ -345,10 +348,9 @@ public class TransferContainer extends FrameContainer implements
     }
 
     public void addSocketCloseCallback(final SocketCloseListener listener) {
-        if (connection != null && connection.getParser() != null) {
-            connection.getParser().getCallbackManager()
-                    .addNonCriticalCallback(SocketCloseListener.class,
-                            listener);
+        if (connection != null) {
+            connection.getParser().map(Parser::getCallbackManager).ifPresent(
+                    cbm -> cbm.addNonCriticalCallback(SocketCloseListener.class, listener));
         }
     }
 

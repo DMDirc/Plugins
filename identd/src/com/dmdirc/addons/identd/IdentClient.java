@@ -184,9 +184,9 @@ public class IdentClient implements Runnable {
                 != null && !customName.isEmpty() && customName.length() < 513) {
             username = customName;
         } else if (connection != null && config.getOptionBool(domain, "general.useNickname")) {
-            username = connection.getParser().getLocalClient().getNickname();
+            username = connection.getParser().get().getLocalClient().getNickname();
         } else if (connection != null && config.getOptionBool(domain, "general.useUsername")) {
-            username = connection.getParser().getLocalClient().getUsername();
+            username = connection.getParser().get().getLocalClient().getUsername();
         } else {
             username = System.getProperty("user.name");
         }
@@ -240,7 +240,7 @@ public class IdentClient implements Runnable {
      */
     protected Connection getConnectionByPort(final int port) {
         for (Connection connection : connectionManager.getConnections()) {
-            if (connection.getParser().getLocalPort() == port) {
+            if (connection.getParser().get().getLocalPort() == port) {
                 return connection;
             }
         }

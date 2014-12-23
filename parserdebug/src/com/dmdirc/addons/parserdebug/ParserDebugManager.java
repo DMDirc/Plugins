@@ -152,7 +152,7 @@ public class ParserDebugManager implements DebugInfoListener {
 
     @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
-            final Parser parser = event.getConnection().getParser();
+            final Parser parser = event.getConnection().getParser().get();
             if (registeredParsers.containsKey(parser)) {
                 removeParser(parser, false);
             }

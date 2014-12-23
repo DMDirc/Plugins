@@ -395,13 +395,13 @@ public class DCCManager {
             final ClientInfo client, final Connection connection) {
         final String nickname = client.getNickname();
         if (dontAsk) {
-            handleDCCChat(connection.getParser(), nickname, ctcpData);
+            handleDCCChat(connection.getParser().get(), nickname, ctcpData);
         } else {
             eventBus.publish(new DccChatRequestEvent(connection, nickname));
             new StandardQuestionDialog(mainWindow, Dialog.ModalityType.APPLICATION_MODAL,
                     "DCC Chat Request", "User " + nickname + " on " + connection.getAddress()
                     + " would like to start a DCC Chat with you.\n\nDo you want to continue?",
-                    () -> handleDCCChat(connection.getParser(), nickname, ctcpData)).display();
+                    () -> handleDCCChat(connection.getParser().get(), nickname, ctcpData)).display();
         }
     }
 
@@ -518,7 +518,7 @@ public class DCCManager {
                             + " would like to send you a file over DCC.\n\nFile: "
                             + filename + "\n\nDo you want to continue?",
                     () -> handleDCCSend(token, ipLong, portInt, filename, passedSize, nickname,
-                            connection.getParser())).display();
+                            connection.getParser().get())).display();
         }
     }
 
@@ -591,7 +591,7 @@ public class DCCManager {
                         !token.equals(send.getToken())) {
                     continue;
                 }
-                final Parser parser = connection.getParser();
+                final Parser parser = connection.getParser().get();
                 final String nick = client.getNickname();
                 if ("resume".equalsIgnoreCase(ctcpData[0])) {
                     parser.sendCTCP(nick, "DCC", "ACCEPT " + (quoted ? '"'
