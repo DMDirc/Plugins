@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JLabel;
@@ -30,7 +31,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Renders a map entry as its value.
  */
-public final class MapEntryRenderer extends DMDircListCellRenderer<Object> {
+public final class MapEntryRenderer extends DMDircListCellRenderer<Map.Entry<String, String>> {
 
     /**
      * A version number for this class.
@@ -42,21 +43,17 @@ public final class MapEntryRenderer extends DMDircListCellRenderer<Object> {
      *
      * @param renderer RendereParent renderer
      */
-    public MapEntryRenderer(final ListCellRenderer<? super Object> renderer) {
+    public MapEntryRenderer(final ListCellRenderer<? super Map.Entry<String, String>> renderer) {
         super(renderer);
     }
 
     @Override
-    protected void renderValue(final JLabel label, final Object value,
-            final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
+    protected void renderValue(final JLabel label, final Entry<String, String> value,
+            final int index, final boolean isSelected, final boolean hasFocus) {
         if (value == null) {
             label.setText("Any");
-        } else if (value instanceof Entry) {
-            label.setText((String) ((Entry<?, ?>) value).getValue());
         } else {
-            label.setText(value.toString());
+            label.setText((String) ((Entry<?, ?>) value).getValue());
         }
     }
-
 }

@@ -47,15 +47,17 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.text.JTextComponent;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -171,7 +173,7 @@ public final class PrefsComponentFactory {
         option.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(final KeyEvent e) {
-                setting.setValue(((JTextField) e.getSource()).getText());
+                setting.setValue(((JTextComponent) e.getSource()).getText());
             }
         });
 
@@ -190,8 +192,8 @@ public final class PrefsComponentFactory {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.setOpaque(false);
-        option.addChangeListener(e -> setting.setValue(String.valueOf(((JCheckBox) e.getSource())
-                .isSelected())));
+        option.addChangeListener(e -> setting.setValue(
+                String.valueOf(((AbstractButton) e.getSource()).isSelected())));
 
         return option;
     }
@@ -204,8 +206,9 @@ public final class PrefsComponentFactory {
      * @return A JComponent descendant for the specified setting
      */
     private JComponent getComboOption(final PreferencesSetting setting) {
-        final JComboBox<Object> option = new JComboBox<>(setting.getComboOptions().entrySet().
-                toArray());
+        final DefaultComboBoxModel<Map.Entry<String, String>> model = new DefaultComboBoxModel<>();
+        setting.getComboOptions().entrySet().forEach(model::addElement);
+        final JComboBox<Map.Entry<String, String>> option = new JComboBox<>(model);
         option.setRenderer(new MapEntryRenderer(option.getRenderer()));
         option.setEditable(false);
 
@@ -218,14 +221,20 @@ public final class PrefsComponentFactory {
         }
 
         option.addActionListener(e -> {
-            final Object selected = ((JComboBox<?>) e.getSource())
-                    .getSelectedItem();
+            final Object selected = option.getSelectedItem();
             if (selected != null) {
-                setting.setValue(((Map.Entry<String, String>) selected).getKey());
+                if (selected instanceof Map.Entry) {
+                    setting.setValue(castToMapEntry(selected).getKey());
+                }
             }
         });
 
         return option;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map.Entry<String, String> castToMapEntry(final Object value) {
+        return (Map.Entry<String, String>) value;
     }
 
     /**
@@ -282,7 +291,6 @@ public final class PrefsComponentFactory {
         final String integer = setting.getValue() == null ? "0" : setting
                 .getValue().substring(1 + setting.getValue().indexOf(':'));
 
-        OptionalJSpinner option;
         final Validator<?> optionalValidator = setting.getValidator();
         Validator<?> numericalValidator = null;
         if (optionalValidator instanceof OptionalValidator) {
@@ -293,6 +301,7 @@ public final class PrefsComponentFactory {
             }
         }
 
+        OptionalJSpinner option;
         try {
             if (numericalValidator == null) {
                 option = new OptionalJSpinner(new SpinnerNumberModel());
@@ -310,8 +319,7 @@ public final class PrefsComponentFactory {
         }
 
         option.addChangeListener(e -> setting.setValue(((OptionalJSpinner) e.getSource()).isSelected()
-                + ":" + ((OptionalJSpinner) e.getSource()).getValue().
-                toString()));
+                + ":" + ((OptionalJSpinner) e.getSource()).getValue()));
 
         return option;
     }
@@ -395,8 +403,7 @@ public final class PrefsComponentFactory {
         final FontPicker option = new FontPicker(eventBus, value);
 
         option.addActionListener(e -> {
-            final Object value1 = ((FontPicker) e.getSource())
-                    .getSelectedItem();
+            final Object value1 = option.getSelectedItem();
             if (value1 instanceof Font) {
                 setting.setValue(((Font) value1).getFamily());
             } else {
@@ -425,7 +432,7 @@ public final class PrefsComponentFactory {
 
             @Override
             public void keyReleased(final KeyEvent e) {
-                setting.setValue(((JTextField) e.getSource()).getText());
+                setting.setValue(((JTextComponent) e.getSource()).getText());
             }
         });
 
