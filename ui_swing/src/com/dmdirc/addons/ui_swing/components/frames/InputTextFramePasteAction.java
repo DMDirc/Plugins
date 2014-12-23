@@ -87,13 +87,15 @@ public final class InputTextFramePasteAction extends AbstractAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
+        //wrap in try and catch for when clipboard doesn't exist
+        //only seems to happen on linux and I couldnt see an obvious JVM bug
         try {
             if (!clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 return;
             }
         } catch (final IllegalStateException ex) {
             eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to past from clipboard.", ""));
+                    "Unable to paste from clipboard.", ""));
             return;
         }
 
