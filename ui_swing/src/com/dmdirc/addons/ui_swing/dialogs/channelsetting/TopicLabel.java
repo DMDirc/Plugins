@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.ui.messages.StyledDocumentMaker;
 
 import java.awt.Color;
 import java.util.Date;
@@ -122,8 +123,8 @@ public class TopicLabel extends JPanel {
 
         if (!topic.getTopic().isEmpty()) {
             channel.getBackBuffer().getStyliser().addStyledString(
-                    (StyledDocument) pane.getDocument(),
-                    new String[]{topic.getTopic(),}, as);
+                    new StyledDocumentMaker((StyledDocument) pane.getDocument(), as),
+                    topic.getTopic());
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
         }
 

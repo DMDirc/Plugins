@@ -39,6 +39,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.StyledDocumentMaker;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -232,10 +233,10 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             topicText.setText("");
             if (topic != null) {
             channel.getBackBuffer().getStyliser().addStyledString(
-                    (StyledDocument) topicText.getDocument(),
-                    new String[]{Styliser.CODE_HEXCOLOUR
-                        + UIUtilities.getHex(foregroundColour)
-                            + topic.getTopic(),}, as);
+                    new StyledDocumentMaker((StyledDocument) topicText.getDocument(), as),
+                    Styliser.CODE_HEXCOLOUR
+                            + UIUtilities.getHex(foregroundColour)
+                            + topic.getTopic());
             }
             topicText.setCaretPosition(0);
             validateTopic();
