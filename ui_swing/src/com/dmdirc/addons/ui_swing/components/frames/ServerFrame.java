@@ -95,6 +95,14 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
     }
 
     /**
+     * Initialises the instance, adding any required listeners.
+     */
+    @Override
+    public void init() {
+        // TODO: Move adding listeners and things to here
+    }
+
+    /**
      * Initialises components in this frame.
      */
     private void initComponents() {

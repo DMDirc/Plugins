@@ -129,6 +129,14 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     }
 
     /**
+     * Initialises the instance, adding any required listeners.
+     */
+    @Override
+    public void init() {
+        // TODO: Move adding listeners and things to here
+    }
+
+    /**
      * Initialises the components in this frame.
      *
      * @param topicBarFactory The factory to use to produce topic bars.
