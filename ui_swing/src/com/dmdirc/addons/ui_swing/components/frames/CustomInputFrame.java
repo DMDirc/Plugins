@@ -62,6 +62,7 @@ public class CustomInputFrame extends InputTextFrame {
     @Override
     public void init() {
         // TODO: Move adding listeners and things to here
+        super.init();
     }
 
     /**

@@ -60,6 +60,7 @@ public class CustomFrame extends TextFrame {
     @Override
     public void init() {
         // TODO: Move adding listeners and things to here
+        super.init();
     }
 
     /**

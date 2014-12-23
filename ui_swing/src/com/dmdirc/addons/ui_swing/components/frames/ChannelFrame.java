@@ -45,8 +45,6 @@ import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Provider;
 import javax.swing.JMenuItem;
@@ -61,7 +59,7 @@ import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 /**
  * The channel frame is the GUI component that represents a channel to the user.
  */
-public final class ChannelFrame extends InputTextFrame implements ActionListener {
+public final class ChannelFrame extends InputTextFrame {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 10;
@@ -79,8 +77,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
     private final DMDircMBassador eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
-    /** The domain to read settings from. */
-    private final String domain;
     /** Channel settings dialog provider. */
     private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
     /** Channel instance. */
@@ -113,18 +109,13 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         this.eventBus = deps.eventBus;
         this.globalConfig = deps.globalConfig;
-        this.domain = domain;
         this.dialogProvider = dialogProvider;
         this.channel = owner;
 
         initComponents(topicBarFactory, deps.colourManagerFactory);
         binder = getContainer().getConfigManager().getBinder().withDefaultDomain(domain);
-        binder.bind(this, ChannelFrame.class);
 
-        eventBus.subscribe(this);
-
-        identity = identityFactory.createChannelConfig(
-                owner.getConnection().get().getNetwork(),
+        identity = identityFactory.createChannelConfig(owner.getConnection().get().getNetwork(),
                 owner.getChannelInfo().getName());
     }
 
@@ -133,7 +124,9 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
      */
     @Override
     public void init() {
-        // TODO: Move adding listeners and things to here
+        binder.bind(this, ChannelFrame.class);
+        eventBus.subscribe(this);
+        super.init();
     }
 
     /**
@@ -149,7 +142,8 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
 
         nicklist = new NickList(this, getContainer().getConfigManager(), colourManagerFactory);
         settingsMI = new JMenuItem("Settings");
-        settingsMI.addActionListener(this);
+        settingsMI.addActionListener(l ->
+                dialogProvider.displayOrRequestFocus((Channel) getContainer()));
 
         splitPane = new SplitPane(globalConfig, SplitPane.Orientation.HORIZONTAL);
 
@@ -165,13 +159,6 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         splitPane.setDividerLocation(-1);
     }
 
-    @Override
-    public void actionPerformed(final ActionEvent actionEvent) {
-        if (actionEvent.getSource() == settingsMI) {
-            dialogProvider.displayOrRequestFocus((Channel) getContainer());
-        }
-    }
-
     @ConfigBinding(domain = "ui", key = "channelSplitPanePosition",
             invocation = EDTInvocation.class)
     public void handleSplitPanePosition(final int value) {
@@ -180,8 +167,7 @@ public final class ChannelFrame extends InputTextFrame implements ActionListener
         splitPane.setDividerLocation(splitPane.getWidth() - splitPane.getDividerSize() - value);
     }
 
-    @ConfigBinding(key = "shownicklist",
-            invocation = EDTInvocation.class)
+    @ConfigBinding(key = "shownicklist", invocation = EDTInvocation.class)
     public void handleShowNickList(final boolean value) {
         checkOnEDT();
         if (value) {
