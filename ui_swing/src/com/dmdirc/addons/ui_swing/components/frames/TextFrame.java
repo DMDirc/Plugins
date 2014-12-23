@@ -285,16 +285,6 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         return textPane;
     }
 
-    @Override
-    public final String getName() {
-        // TODO: Investigate why GTK needs this
-        //This is required for GTK for some reason.
-        if (frameParent == null) {
-            return "";
-        }
-        return frameParent.getName();
-    }
-
     /**
      * Sets the frames text pane.
      *
