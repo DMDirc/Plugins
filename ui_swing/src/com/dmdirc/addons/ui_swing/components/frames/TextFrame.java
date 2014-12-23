@@ -160,6 +160,13 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
     }
 
     /**
+     * Initialises the instance, adding any required listeners.
+     */
+    public void init() {
+        // TODO: Move adding listeners and things to here
+    }
+
+    /**
      * Determines if this frame should be popped out of the client or not. Once this is set to true
      * it will pop out of the client as a free floating Desktop window.
      *

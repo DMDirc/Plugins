@@ -55,6 +55,14 @@ public class CustomFrame extends TextFrame {
     }
 
     /**
+     * Initialises the instance, adding any required listeners.
+     */
+    @Override
+    public void init() {
+        // TODO: Move adding listeners and things to here
+    }
+
+    /**
      * Initialises components in this frame.
      */
     private void initComponents() {

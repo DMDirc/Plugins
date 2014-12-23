@@ -117,6 +117,14 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     }
 
     /**
+     * Initialises the instance, adding any required listeners.
+     */
+    @Override
+    public void init() {
+        // TODO: Move adding listeners and things to here
+    }
+
+    /**
      * Initialises the components for this frame.
      *
      * @param inputFieldProvider The provider to use to create a new input field.
