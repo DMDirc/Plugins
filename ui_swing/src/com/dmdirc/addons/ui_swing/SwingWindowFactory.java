@@ -145,6 +145,7 @@ public class SwingWindowFactory implements FrameListener {
         final WindowProvider provider = implementations.get(window.getComponents());
         final TextFrame frame = provider.getWindow(window);
         if (frame != null) {
+            frame.init();
             windows.put(window, frame);
         }
         return frame;
