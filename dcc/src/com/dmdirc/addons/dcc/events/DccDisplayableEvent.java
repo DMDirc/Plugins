@@ -59,4 +59,9 @@ public abstract class DccDisplayableEvent extends DccEvent implements Displayabl
         return properties.get(property);
     }
 
+    @Override
+    public DisplayPropertyMap getDisplayProperties() {
+        return properties;
+    }
+
 }
