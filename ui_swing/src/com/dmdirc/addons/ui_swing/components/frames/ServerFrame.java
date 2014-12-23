@@ -66,7 +66,7 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
     /** popup menu item. */
     private JMenuItem settingsMI;
     /** The SSL certificate dialog we're displaying for this server, if any. */
-    private SSLCertificateDialog sslDialog = null;
+    private SSLCertificateDialog sslDialog;
     /** Server instance. */
     private final Connection connection;
 
@@ -90,8 +90,6 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
         this.dialogProvider = dialogProvider;
         this.connection = owner;
         initComponents();
-
-        owner.addCertificateProblemListener(this);
     }
 
     /**
@@ -99,7 +97,8 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
      */
     @Override
     public void init() {
-        // TODO: Move adding listeners and things to here
+        connection.addCertificateProblemListener(this);
+        super.init();
     }
 
     /**
@@ -154,9 +153,11 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
     public void certificateProblemEncountered(final X509Certificate[] chain,
             final Collection<CertificateException> problems,
             final CertificateManager certificateManager) {
-        sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
-                new SSLCertificateDialogModel(chain, problems, certificateManager));
-        sslDialog.display();
+        SwingUtilities.invokeLater(() -> {
+            sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
+                    new SSLCertificateDialogModel(chain, problems, certificateManager));
+            sslDialog.display();
+        });
     }
 
     @Override
@@ -171,6 +172,7 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
     @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
+        connection.removeCertificateProblemListener(this);
         dialogProvider.dispose(connection);
         super.windowClosing(event);
     }

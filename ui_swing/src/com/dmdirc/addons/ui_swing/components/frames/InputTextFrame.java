@@ -105,8 +105,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
 
         initComponents(inputFieldProvider, deps.tabCompleterUtils);
 
-        getContainer().getConfigManager().getBinder().bind(this, InputTextFrame.class);
-
         getInputField().getTextField().getInputMap().put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_C, UIUtilities.getCtrlMask()), "textpaneCopy");
         getInputField().getTextField().getInputMap().put(KeyStroke.getKeyStroke(
@@ -121,7 +119,11 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
      */
     @Override
     public void init() {
-        // TODO: Move adding listeners and things to here
+        getContainer().getConfigManager().getBinder().bind(this, InputTextFrame.class);
+        getInputField().addMouseListener(this);
+        eventBus.subscribe(awayLabel);
+        eventBus.subscribe(typingLabel);
+        super.init();
     }
 
     /**
@@ -136,8 +138,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
                 getContainer().getCommandParser(), getContainer(), tabCompleterUtils, eventBus);
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(frameParent.getTabCompleter());
-
-        getInputField().addMouseListener(this);
 
         initPopupMenu();
         nickPopup = new JPopupMenu();
@@ -165,9 +165,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
         inputFieldPopup.setLightWeightPopupEnabled(true);
 
         awayLabel = new AwayLabel(getContainer());
-        eventBus.subscribe(awayLabel);
         typingLabel = new TypingLabel(getContainer());
-        eventBus.subscribe(typingLabel);
     }
 
     /**
@@ -273,6 +271,9 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
 
     @Override
     public void dispose() {
+        getInputField().removeMouseListener(this);
+        eventBus.unsubscribe(awayLabel);
+        eventBus.unsubscribe(typingLabel);
         getContainer().getConfigManager().getBinder().unbind(this);
         super.dispose();
     }

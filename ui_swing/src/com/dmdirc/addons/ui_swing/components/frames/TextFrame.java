@@ -52,13 +52,14 @@ import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
@@ -66,7 +67,6 @@ import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Point;
-import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -92,8 +92,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * Implements a generic (internal) frame.
  */
-public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.ui.Window,
-        ConfigChangeListener, TextPaneListener {
+public abstract class TextFrame extends JPanel implements Window, TextPaneListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -144,18 +143,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         this.clipboard = deps.clipboard;
         this.colourManager = deps.colourManagerFactory.getColourManager(owner.getConfigManager());
 
-        final AggregateConfigProvider config = owner.getConfigManager();
-
         initComponents(deps.textPaneFactory, colourManager);
         setFocusable(true);
-
-        getTextPane().addTextPaneListener(this);
-
-        config.addChangeListener("ui", "foregroundcolour", this);
-        config.addChangeListener("ui", "backgroundcolour", this);
-        config.addChangeListener("ui", "frameBufferSize", this);
-        updateColours();
-
         setLayout(new MigLayout("fill"));
     }
 
@@ -163,7 +152,8 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      * Initialises the instance, adding any required listeners.
      */
     public void init() {
-        // TODO: Move adding listeners and things to here
+        getContainer().getConfigManager().getBinder().bind(this, TextFrame.class);
+        getTextPane().addTextPaneListener(this);
     }
 
     /**
@@ -297,10 +287,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
 
     @Override
     public final String getName() {
-        if (frameParent == null) {
-            return "";
-        }
-
         return frameParent.getName();
     }
 
@@ -380,7 +366,6 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      */
     private void showPopupMenuInternal(final ClickTypeValue type,
             final Point point) {
-        final JPopupMenu popupMenu;
 
         final String[] parts = type.getValue().split("\n");
         final Object[][] arguments = new Object[parts.length][1];
@@ -390,6 +375,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
             arguments[i++][0] = part;
         }
 
+        final JPopupMenu popupMenu;
         switch (type.getType()) {
             case CHANNEL:
                 popupMenu = getPopupMenu(getChannelPopupType(), arguments);
@@ -434,8 +420,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      * @param type  ClickType Click type
      * @param point Point Point of the click (Must be screen coords)
      */
-    public void showPopupMenu(final ClickTypeValue type,
-            final Point point) {
+    public void showPopupMenu(final ClickTypeValue type, final Point point) {
         SwingUtilities.convertPointFromScreen(point, this);
         showPopupMenuInternal(type, point);
     }
@@ -448,8 +433,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      *
      * @return PopupMenu
      */
-    public JPopupMenu getPopupMenu(final PopupType type,
-            final Object[][] arguments) {
+    public JPopupMenu getPopupMenu(final PopupType type, final Object[][] arguments) {
         JPopupMenu popupMenu = new JPopupMenu();
 
         if (type != null) {
@@ -469,8 +453,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
      *
      * @return Populated popup
      */
-    private JComponent populatePopupMenu(final JComponent menu,
-            final PopupMenu popup,
+    private JComponent populatePopupMenu(final JComponent menu, final PopupMenu popup,
             final Object[][] arguments) {
         for (final PopupMenuItem menuItem : popup.getItems()) {
             if (menuItem.isDivider()) {
@@ -496,26 +479,26 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         return searchBar;
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        if (getContainer().getConfigManager() == null || getTextPane() == null) {
-            return;
-        }
+    @ConfigBinding(domain = "ui", key = "foregroundcolour")
+    private void updateForegroundColour(final String value) {
+        getTextPane().setForeground(UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null)));
+    }
 
-        if ("ui".equals(domain) && ("foregroundcolour".equals(key)
-                || "backgroundcolour".equals(key))) {
-            updateColours();
-        }
+    @ConfigBinding(domain = "ui", key = "backgroundcolour")
+    private void updateBackgroundColour(final String value) {
+        getTextPane().setBackground(UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null)));
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
         if (event.getContainer().equals(getContainer())) {
-                    if (popout) {
-                        setPopout(false);
-                    }
-                    setVisible(false);
-                    getTextPane().close();
+            if (popout) {
+                setPopout(false);
+            }
+            setVisible(false);
+            getTextPane().close();
         }
     }
 
@@ -528,23 +511,9 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         return getContainer().getIconManager();
     }
 
-    /**
-     * Updates colour settings from their config values.
-     */
-    private void updateColours() {
-        getTextPane().setForeground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        getContainer().getConfigManager().getOptionString(
-                                "ui", "foregroundcolour"), null)));
-        getTextPane().setBackground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        getContainer().getConfigManager().getOptionString(
-                                "ui", "backgroundcolour"), null)));
-    }
-
     /** Disposes of this window, removing any listeners. */
     public void dispose() {
-        frameParent.getConfigManager().removeListener(this);
+        getContainer().getConfigManager().getBinder().unbind(this);
     }
 
     /**
@@ -558,7 +527,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
 
         final TextPaneFactory textPaneFactory;
         final SwingController controller;
-        final Provider<Window> mainWindow;
+        final Provider<java.awt.Window> mainWindow;
         final PopupManager popupManager;
         final DMDircMBassador eventBus;
         final AggregateConfigProvider globalConfig;
@@ -576,7 +545,7 @@ public abstract class TextFrame extends JPanel implements com.dmdirc.interfaces.
         public TextFrameDependencies(
                 final TextPaneFactory textPaneFactory,
                 final SwingController controller,
-                @MainWindow final Provider<Window> mainWindow,
+                @MainWindow final Provider<java.awt.Window> mainWindow,
                 final PopupManager popupManager,
                 final DMDircMBassador eventBus,
                 final PasteDialogFactory pasteDialog,
