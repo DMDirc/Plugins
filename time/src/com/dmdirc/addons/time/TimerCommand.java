@@ -136,7 +136,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
     private void doList(final FrameContainer origin, final boolean isSilent) {
         final Set<Entry<Integer, TimedCommand>> timerList = manager.listTimers();
         if (timerList.isEmpty()) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "There are " + "currently no active timers");
+            sendLine(origin, isSilent, FORMAT_ERROR, "There are currently no active timers");
         } else {
             for (Entry<Integer, TimedCommand> entry : timerList) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT,
@@ -152,8 +152,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
      * @param isSilent Whether this command is being silenced or not
      */
     private void doUsage(final FrameContainer origin, final boolean isSilent) {
-        showUsage(origin, isSilent, "timer", "[--list|--cancel <timer id> | "
-                + "<repetitions> <interval> <command>]");
+        showUsage(origin, isSilent, INFO.getName(), INFO.getHelp());
     }
 
     @Override
