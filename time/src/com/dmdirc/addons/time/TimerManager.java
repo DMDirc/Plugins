@@ -22,10 +22,8 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.ActionController;
-import com.dmdirc.interfaces.CommandController;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,24 +42,19 @@ public class TimerManager {
 
     /** Map of all the timers that are running. */
     private final Map<Integer, TimedCommand> timerList = new HashMap<>();
-    /** The command controller to use when executing global commands. */
-    private final CommandController commandController;
     /** Action controller. */
     private final ActionController actionController;
-    /** Event bus to post events on . */
-    private final DMDircMBassador eventBus;
     /** Have we registered our types already? */
     private static boolean registered;
+    /** The timer factory to create timers with. */
+    private final TimerFactory timerFactory;
     /** The timer to use for scheduling. */
     private Timer timer;
 
     @Inject
-    public TimerManager(final CommandController commandController,
-            final ActionController actionController,
-            final DMDircMBassador eventBus) {
-        this.commandController = commandController;
+    public TimerManager(final ActionController actionController, final TimerFactory timerFactory) {
         this.actionController = actionController;
-        this.eventBus = eventBus;
+        this.timerFactory = timerFactory;
     }
 
     public void load() {
@@ -103,8 +96,10 @@ public class TimerManager {
 
         synchronized (this) {
             final int timerKey = findFreeKey();
-            timerList.put(timerKey, new TimedCommand(this, commandController, timerKey,
-                    repetitions, interval, command, origin, eventBus));
+            final TimedCommand timedCommand = new TimedCommand(this, timerKey,
+                    repetitions, interval, command, origin);
+            timerList.put(timerKey, timedCommand);
+            timedCommand.schedule(timerFactory);
         }
     }
 
