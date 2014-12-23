@@ -27,7 +27,6 @@ import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionGroup;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
@@ -42,6 +41,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.events.ActionCreatedEvent;
 import com.dmdirc.events.ActionDeletedEvent;
 import com.dmdirc.events.ActionUpdatedEvent;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
@@ -87,6 +87,8 @@ public class ActionsManagerDialog extends StandardDialog implements
     private final ValidatorChain<String> validator;
     /** Event bus to post events to and subscribe to events on. */
     private final DMDircMBassador eventbus;
+    /** Action manager to manage actions with. */
+    private final ActionController actionManager;
     /** Info label. */
     private TextLabel infoLabel;
     /** Group list. */
@@ -114,17 +116,10 @@ public class ActionsManagerDialog extends StandardDialog implements
 
     /**
      * Creates a new instance of ActionsManagerDialog.
-     *
-     * @param eventBus          Event bus to post events to and subscribe to events on.
-     * @param apple             Apple instance
-     * @param parentWindow      Parent window
-     * @param config            Config to save dialog state to
-     * @param compFactory       Prefs setting component factory
-     * @param iconManager       The icon manager to use for validating text fields.
-     * @param groupPanelFactory Factory to use to create group panels.
      */
     @Inject
     public ActionsManagerDialog(
+            final ActionController actionManager,
             final DMDircMBassador eventBus,
             final Apple apple,
             final MainFrame parentWindow,
@@ -134,6 +129,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             final ActionsGroupPanelFactory groupPanelFactory) {
         super(Apple.isAppleUI() ? new AppleJFrame(apple, parentWindow)
                 : parentWindow, ModalityType.MODELESS);
+        this.actionManager = actionManager;
         this.eventbus = eventBus;
         this.config = config;
         this.compFactory = compFactory;
@@ -257,9 +253,8 @@ public class ActionsManagerDialog extends StandardDialog implements
      */
     private void reloadGroups(final ActionGroup selectedGroup) {
         ((DefaultListModel<ActionGroup>) groups.getModel()).clear();
-        for (ActionGroup group : ActionManager.getActionManager().getGroupsMap().values()) {
-            ((DefaultListModel<ActionGroup>) groups.getModel()).addElement(group);
-        }
+        actionManager.getGroupsMap().values()
+                .forEach(((DefaultListModel<ActionGroup>) groups.getModel())::addElement);
         groups.setSelectedValue(selectedGroup, true);
     }
 
@@ -301,9 +296,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             delGroup();
         } else if ((e.getSource() == getOkButton() || e.getSource()
                 == getCancelButton()) && !saving.getAndSet(true)) {
-            for (ActionGroupSettingsPanel loopSettings : settings.values()) {
-                loopSettings.save();
-            }
+            settings.values().forEach(ActionGroupSettingsPanel::save);
             config.setOption("dialogstate", "actionsmanagerdialog", groups.getSelectedIndex());
             dispose();
         }
@@ -325,10 +318,10 @@ public class ActionsManagerDialog extends StandardDialog implements
         if (!saving.getAndSet(true)) {
             groups.setSelectedIndex(index);
             if (text == null || text.isEmpty()
-                    && !ActionManager.getActionManager().getGroupsMap().containsKey(text)) {
+                    && !actionManager.getGroupsMap().containsKey(text)) {
                 return false;
             } else {
-                final ActionGroup group = ActionManager.getActionManager().createGroup(text);
+                final ActionGroup group = actionManager.createGroup(text);
                 reloadGroups(group);
                 return true;
             }
@@ -358,7 +351,7 @@ public class ActionsManagerDialog extends StandardDialog implements
             if (text == null || text.isEmpty()) {
                 return false;
             } else {
-                ActionManager.getActionManager().changeGroupName(oldText, text);
+                actionManager.changeGroupName(oldText, text);
                 reloadGroups();
                 return true;
             }
@@ -375,8 +368,8 @@ public class ActionsManagerDialog extends StandardDialog implements
                 "Are you sure you wish to delete the '" + group +
                         "' group and all actions within it?", () -> {
             int location = ((DefaultListModel<ActionGroup>) groups.getModel())
-                    .indexOf(ActionManager.getActionManager().getOrCreateGroup(group));
-            ActionManager.getActionManager().deleteGroup(group);
+                    .indexOf(actionManager.getOrCreateGroup(group));
+            actionManager.deleteGroup(group);
             reloadGroups();
             if (groups.getModel().getSize() == 0) {
                 location = -1;

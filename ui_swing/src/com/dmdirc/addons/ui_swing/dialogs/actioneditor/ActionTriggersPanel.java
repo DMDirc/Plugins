@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionTypeComparator;
 import com.dmdirc.addons.ui_swing.ComboBoxWidthModifier;
 import com.dmdirc.addons.ui_swing.components.renderers.ActionTypeRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.MapList;
@@ -57,6 +57,8 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+    /** Action controller. */
+    private final ActionController actionController;
     /** Trigger combo box. */
     private JComboBox<Object> triggerGroup;
     /** Trigger combo box. */
@@ -70,11 +72,11 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
 
     /**
      * Instantiates the panel.
-     *
-     * @param iconManager Icon manager
-     * */
-    public ActionTriggersPanel(final IconManager iconManager) {
+     */
+    public ActionTriggersPanel(final ActionController actionController,
+            final IconManager iconManager) {
 
+        this.actionController = actionController;
         compatibleTriggers = new ArrayList<>();
 
         initComponents(iconManager);
@@ -106,7 +108,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         triggerItem.addPopupMenuListener(new ComboBoxWidthModifier());
 
         triggerList = new ActionTriggersListPanel(iconManager);
-        addAll(ActionManager.getActionManager().getGroupedTypes());
+        addAll(actionController.getGroupedTypes());
     }
 
     /** Adds the listeners. */
@@ -176,7 +178,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         }
         if (e.getSource() == triggerGroup) {
             if (triggerList.getTriggerCount() == 0) {
-                addList(ActionManager.getActionManager().getGroupedTypes()
+                addList(actionController.getGroupedTypes()
                         .get((String) triggerGroup.getSelectedItem()));
             } else {
                 addList(compatibleTriggers);
@@ -190,7 +192,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
     @Override
     public void triggerRemoved(final ActionType trigger) {
         if (triggerList.getTriggerCount() == 0) {
-            addAll(ActionManager.getActionManager().getGroupedTypes());
+            addAll(actionController.getGroupedTypes());
         } else {
             addCompatible(triggerList.getTrigger(0));
         }
@@ -230,7 +232,7 @@ public class ActionTriggersPanel extends JPanel implements ActionListener,
         itemModel.removeAllElements();
         final List<ActionType> types = triggerList.getTriggers();
 
-        ActionManager.getActionManager().findCompatibleTypes(primaryType).stream()
+        actionController.findCompatibleTypes(primaryType).stream()
                 .filter(thisType -> !types.contains(thisType))
                 .forEach(thisType -> {
                     compatibleTriggers.add(thisType);
