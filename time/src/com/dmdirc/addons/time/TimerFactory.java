@@ -22,36 +22,21 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.interfaces.actions.ActionMetaType;
+import java.util.Timer;
 
-import java.util.Calendar;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * Encapsulates the meta types used by the various time actions.
+ * Factory to create {@link Timer}s.
  */
-public enum TimeActionMetaType implements ActionMetaType {
+@Singleton
+public class TimerFactory {
 
-    /** Time type. */
-    TIME_TIME {
-        @Override
-        public int getArity() {
-            return 1;
-        }
+    @Inject
+    public TimerFactory() {}
 
-        @Override
-        public Class<?>[] getArgTypes() {
-            return new Class<?>[]{Calendar.class};
-        }
-
-        @Override
-        public String[] getArgNames() {
-            return new String[]{"Date"};
-        }
-    };
-
-    @Override
-    public String getGroup() {
-        return "Time Events";
+    public Timer getTimer(final String name) {
+        return new Timer(name);
     }
-
 }

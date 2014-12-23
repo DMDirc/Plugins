@@ -22,11 +22,7 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.commandparser.parsers.GlobalCommandParser;
-import com.dmdirc.interfaces.CommandController;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,47 +38,42 @@ public class TimedCommand extends TimerTask {
     private final String command;
     /** The container to use for executing commands. */
     private final FrameContainer origin;
-    /** The timer we're using for scheduling this command. */
-    private final Timer timer;
+    /** The number of seconds between each execution. */
+    private final int delay;
     /** The key for this timer in the Timer Manager. */
     private final int timerKey;
     /** The manager for this timer. */
     private final TimerManager manager;
-    /** The command controller to use when executing global commands. */
-    private final CommandController commandController;
-    /** Event bus to post events on. */
-    private final DMDircMBassador eventBus;
+    /** The timer we're using for scheduling this command. */
+    private Timer timer;
 
     /**
      * Creates a new instance of TimedCommand.
      *
      * @param manager           The manager that is controlling this command.
-     * @param commandController The command controller to use when executing global commands.
      * @param timerKey          The key for this timer in the Timer Manager.
      * @param repetitions       The number of times this command will be executed
      * @param delay             The number of seconds between each execution
      * @param command           The command to be executed
      * @param origin            The frame container to use for the execution
-     * @param eventBus          The Event bus to post events on
      */
     public TimedCommand(
             final TimerManager manager,
-            final CommandController commandController,
             final int timerKey,
             final int repetitions,
             final int delay,
             final String command,
-            final FrameContainer origin,
-            final DMDircMBassador eventBus) {
-        this.commandController = commandController;
+            final FrameContainer origin) {
         this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;
         this.origin = origin;
         this.manager = manager;
-        this.eventBus = eventBus;
+        this.delay = delay;
+    }
 
-        timer = new Timer("Timed Command Timer");
+    public void schedule(final TimerFactory timerFactory) {
+        timer = timerFactory.getTimer("Timed Command Timer");
         timer.schedule(this, delay * 1000L, delay * 1000L);
     }
 
@@ -100,19 +91,17 @@ public class TimedCommand extends TimerTask {
      */
     public void cancelTimer() {
         manager.removeTimer(timerKey);
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override
     public void run() {
-        final CommandParser parser;
-        if (origin == null) {
-            parser = new GlobalCommandParser(origin.getConfigManager(), commandController, eventBus);
-        } else {
-            parser = origin.getCommandParser();
+        if (timer == null) {
+            return;
         }
-
-        parser.parseCommand(origin, command);
+        origin.getCommandParser().parseCommand(origin, command);
 
         if (--repetitions <= 0) {
             manager.removeTimer(timerKey);
