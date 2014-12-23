@@ -30,21 +30,17 @@ import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.events.ServerCertificateProblemEncounteredEvent;
+import com.dmdirc.events.ServerCertificateProblemResolvedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.tls.CertificateManager;
-import com.dmdirc.tls.CertificateProblemListener;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 
 import java.awt.Window;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
 
 import javax.inject.Provider;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -53,7 +49,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * The ServerFrame is the MDI window that shows server messages to the user.
  */
-public final class ServerFrame extends InputTextFrame implements CertificateProblemListener {
+public final class ServerFrame extends InputTextFrame {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
@@ -97,7 +93,7 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
      */
     @Override
     public void init() {
-        connection.addCertificateProblemListener(this);
+        connection.getWindowModel().getEventBus().subscribe(this);
         super.init();
     }
 
@@ -149,37 +145,36 @@ public final class ServerFrame extends InputTextFrame implements CertificateProb
         popupMenu.add(settingsMI);
     }
 
-    @Override
-    public void certificateProblemEncountered(final X509Certificate[] chain,
-            final Collection<CertificateException> problems,
-            final CertificateManager certificateManager) {
-        SwingUtilities.invokeLater(() -> {
-            sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
-                    new SSLCertificateDialogModel(chain, problems, certificateManager));
-            sslDialog.display();
-        });
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleCertProblem(final ServerCertificateProblemEncounteredEvent event) {
+        if (sslDialog != null) {
+            sslDialog.dispose();
+        }
+
+        sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
+                new SSLCertificateDialogModel(event.getCertificateChain(), event.getProblems(),
+                        event.getCertificateManager()));
+        sslDialog.display();
     }
 
-    @Override
-    public void certificateProblemResolved(final CertificateManager manager) {
-        SwingUtilities.invokeLater(() -> {
-            if (sslDialog != null) {
-                sslDialog.dispose();
-            }
-        });
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleCertProblemResolved(final ServerCertificateProblemResolvedEvent event) {
+        if (sslDialog != null) {
+            sslDialog.dispose();
+        }
     }
 
     @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
-        connection.removeCertificateProblemListener(this);
+        connection.getWindowModel().getEventBus().unsubscribe(this);
         dialogProvider.dispose(connection);
         super.windowClosing(event);
     }
 
     @Override
     public void dispose() {
-        ((Connection) frameParent).removeCertificateProblemListener(this);
+        connection.getWindowModel().getEventBus().unsubscribe(this);
         super.dispose();
     }
 
