@@ -80,7 +80,7 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
         this.config = config;
         this.colourManager = colourManager;
 
-        styliser = new Styliser(null, config, colourManager, eventBus);
+        styliser = new Styliser(null, config, colourManager);
 
         setColours();
 
