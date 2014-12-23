@@ -53,7 +53,7 @@ public final class MapEntryRenderer extends DMDircListCellRenderer<Map.Entry<Str
         if (value == null) {
             label.setText("Any");
         } else {
-            label.setText((String) ((Entry<?, ?>) value).getValue());
+            label.setText(value.getValue());
         }
     }
 }
