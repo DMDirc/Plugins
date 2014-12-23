@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.ImageToggleButton;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -48,6 +49,7 @@ public class ActionConditionDisplayPanel extends JPanel implements
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    private final ActionManager actionManager;
     /** Info label. */
     private TextLabel label;
     /** Edit button. */
@@ -70,9 +72,11 @@ public class ActionConditionDisplayPanel extends JPanel implements
      * @param condition   Action condition
      * @param trigger     Action trigger
      */
-    public ActionConditionDisplayPanel(final IconManager iconManager,
-            final ActionCondition condition, final ActionType trigger) {
+    public ActionConditionDisplayPanel(final ActionManager actionManager,
+            final IconManager  iconManager,final ActionCondition condition,
+            final ActionType trigger) {
 
+        this.actionManager = actionManager;
         this.trigger = trigger;
         this.condition = new ActionCondition(condition.getArg(),
                 condition.getComponent(), condition.getComparison(),
@@ -132,7 +136,7 @@ public class ActionConditionDisplayPanel extends JPanel implements
                 getIcon("close-inactive"), iconManager.
                 getIcon("close-inactive"), iconManager.getIcon("close-active"));
 
-        editPanel = new ActionConditionEditorPanel(condition, trigger);
+        editPanel = new ActionConditionEditorPanel(actionManager, condition, trigger);
         listeners = new ListenerList();
 
         editPanel.setVisible(trigger == null);

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ConditionTree;
 import com.dmdirc.actions.ConditionTreeFactory.ConditionTreeFactoryType;
 import com.dmdirc.interfaces.actions.ActionType;
@@ -51,6 +52,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    private final ActionManager actionManager;
     /** Tree panel. */
     private ActionConditionsTreePanel tree;
     /** List Panel. */
@@ -69,8 +71,8 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      *
      * @param iconManager Icon manager
      */
-    public ActionConditionsPanel(final IconManager iconManager) {
-        this(iconManager, null);
+    public ActionConditionsPanel(final ActionManager actionManager, final IconManager iconManager) {
+        this(actionManager, iconManager, null);
     }
 
     /**
@@ -79,9 +81,10 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
      * @param iconManager Icon manager
      * @param trigger     Action trigger
      */
-    public ActionConditionsPanel(final IconManager iconManager,
+    public ActionConditionsPanel(final ActionManager actionManager, final IconManager iconManager,
             final ActionType trigger) {
 
+        this.actionManager = actionManager;
         this.iconManager = iconManager;
         initComponents();
         addListeners();
@@ -101,7 +104,7 @@ public class ActionConditionsPanel extends JPanel implements ActionListener,
     /** Initialises the components. */
     private void initComponents() {
         tree = new ActionConditionsTreePanel(iconManager);
-        list = new ActionConditionsListPanel(iconManager, tree);
+        list = new ActionConditionsListPanel(actionManager, iconManager, tree);
         add = new JButton("Add");
     }
 

@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 import com.dmdirc.ClientModule;
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionFactory;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -45,14 +46,17 @@ public class ActionEditorDialogFactory {
     private final ActionSubstitutorFactory subsFactory;
     private final ActionFactory actionFactory;
     private final ColourManagerFactory colourManagerFactory;
+    private final ActionManager actionManager;
 
     @Inject
     public ActionEditorDialogFactory(
+            final ActionManager actionManager,
             @ClientModule.GlobalConfig final IconManager iconManager,
             @ClientModule.GlobalConfig final AggregateConfigProvider config,
             final ActionSubstitutorFactory subsFactory,
             final ActionFactory actionFactory,
             final ColourManagerFactory colourManagerFactory) {
+        this.actionManager = actionManager;
         this.iconManager = iconManager;
         this.config = config;
         this.subsFactory = subsFactory;
@@ -63,15 +67,15 @@ public class ActionEditorDialogFactory {
     public ActionEditorDialog getActionEditorDialog(
             final ActionsManagerDialog parentWindow,
             final String group) {
-        return new ActionEditorDialog(iconManager, colourManagerFactory, config, subsFactory,
-                actionFactory, parentWindow, group);
+        return new ActionEditorDialog(actionManager, iconManager, colourManagerFactory, config,
+                subsFactory, actionFactory, parentWindow, group);
     }
 
     public ActionEditorDialog getActionEditorDialog(
             final ActionsManagerDialog parentWindow,
             final Action action) {
-        return new ActionEditorDialog(iconManager, colourManagerFactory, config, subsFactory,
-                actionFactory, parentWindow, action);
+        return new ActionEditorDialog(actionManager, iconManager, colourManagerFactory, config,
+                subsFactory, actionFactory, parentWindow, action);
     }
 
 }
