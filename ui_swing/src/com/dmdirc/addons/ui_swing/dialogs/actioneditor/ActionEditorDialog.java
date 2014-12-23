@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.Action;
 import com.dmdirc.actions.ActionFactory;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.ActionStatus;
 import com.dmdirc.actions.ActionSubstitutorFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -43,6 +44,7 @@ import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -51,9 +53,10 @@ import org.slf4j.LoggerFactory;
 public class ActionEditorDialog extends StandardDialog implements ActionListener,
         PropertyChangeListener {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ActionEditorDialog.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActionEditorDialog.class);
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
+    private final ActionManager actionManager;
     /** Name panel. */
     private ActionNamePanel name;
     /** Triggers panel. */
@@ -94,6 +97,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param group         Action's group
      */
     public ActionEditorDialog(
+            final ActionManager actionManager,
             final IconManager iconManager,
             final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
@@ -106,6 +110,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
+        this.actionManager = actionManager;
         this.group = group;
         this.action = null;
         this.actionFactory = actionFactory;
@@ -129,6 +134,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
      * @param action        Action to be edited
      */
     public ActionEditorDialog(
+            final ActionManager actionManager,
             final IconManager iconManager,
             final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
@@ -141,6 +147,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Action Editor");
 
+        this.actionManager = actionManager;
         this.group = action.getGroup();
         this.action = action;
         this.actionFactory = actionFactory;
@@ -185,10 +192,10 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
             final AggregateConfigProvider config, final ActionSubstitutorFactory subsFactory,
             final ColourManagerFactory colourManagerFactory) {
         orderButtons(new JButton(), new JButton());
-        name = new ActionNamePanel(iconManager, "", group);
-        triggers = new ActionTriggersPanel(iconManager);
+        name = new ActionNamePanel(actionManager, iconManager, "", group);
+        triggers = new ActionTriggersPanel(actionManager, iconManager);
         response = new ActionResponsePanel(iconManager, colourManagerFactory, config);
-        conditions = new ActionConditionsPanel(iconManager);
+        conditions = new ActionConditionsPanel(actionManager, iconManager);
         substitutions = new ActionSubstitutionsPanel(subsFactory);
         advanced = new ActionAdvancedPanel();
         showSubstitutions = new JButton("Show Substitutions");
@@ -248,7 +255,7 @@ public class ActionEditorDialog extends StandardDialog implements ActionListener
     public void validate() {
         super.validate();
 
-        SwingUtilities.invokeLater(ActionEditorDialog.this::centreOnOwner);
+        SwingUtilities.invokeLater(this::centreOnOwner);
     }
 
     /** Saves the action being edited. */

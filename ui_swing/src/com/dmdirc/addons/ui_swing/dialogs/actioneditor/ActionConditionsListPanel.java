@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionCondition;
+import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.interfaces.actions.ActionType;
 import com.dmdirc.ui.IconManager;
@@ -57,6 +58,7 @@ public class ActionConditionsListPanel extends JPanel implements
     private final Map<ActionConditionDisplayPanel, Boolean> validations;
     /** Icon manager. */
     private final IconManager iconManager;
+    private final ActionManager actionManager;
     /** Action trigger. */
     private ActionType trigger;
     /** validates. */
@@ -68,9 +70,10 @@ public class ActionConditionsListPanel extends JPanel implements
      * @param iconManager Icon manager
      * @param treePanel   Condition tree panel.
      */
-    public ActionConditionsListPanel(final IconManager iconManager,
+    public ActionConditionsListPanel(final ActionManager actionManager,
+            final IconManager iconManager,
             final ActionConditionsTreePanel treePanel) {
-        this(iconManager, null, new ArrayList<>(),
+        this(actionManager, iconManager, null, new ArrayList<>(),
                 treePanel);
     }
 
@@ -82,13 +85,15 @@ public class ActionConditionsListPanel extends JPanel implements
      * @param conditions  List of existing conditions;
      * @param treePanel   Condition tree panel.
      */
-    public ActionConditionsListPanel(final IconManager iconManager,
+    public ActionConditionsListPanel(final ActionManager actionManager,
+            final IconManager iconManager,
             final ActionType trigger,
             final List<ActionConditionDisplayPanel> conditions,
             final ActionConditionsTreePanel treePanel) {
 
         validations = new HashMap<>();
 
+        this.actionManager = actionManager;
         this.iconManager = iconManager;
         this.trigger = trigger;
         this.conditions = new ArrayList<>(conditions);
@@ -150,8 +155,8 @@ public class ActionConditionsListPanel extends JPanel implements
      * @param condition Action condition
      */
     public void addCondition(final ActionCondition condition) {
-        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(iconManager,
-                condition, trigger);
+        final ActionConditionDisplayPanel panel = new ActionConditionDisplayPanel(actionManager,
+                iconManager, condition, trigger);
         panel.addConditionListener(this);
         panel.addPropertyChangeListener("validationResult", this);
         validations.put(panel, panel.checkError());

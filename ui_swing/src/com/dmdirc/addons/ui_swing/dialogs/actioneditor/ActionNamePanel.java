@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.dialogs.actioneditor;
 
 import com.dmdirc.actions.ActionGroup;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.actions.validators.ActionNameValidator;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.interfaces.ActionController;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.validators.FileNameValidator;
 import com.dmdirc.util.validators.ValidatorChain;
@@ -62,8 +62,9 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      * @param iconManager Icon manager
      * @param group       Associated group for this action
      */
-    public ActionNamePanel(final IconManager iconManager, final String group) {
-        this(iconManager, "", group);
+    public ActionNamePanel(final ActionController actionManager, final IconManager iconManager,
+            final String group) {
+        this(actionManager, iconManager, "", group);
     }
 
     /**
@@ -73,8 +74,8 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
      * @param name        Initial name of the action
      * @param group       Associated group for this action
      */
-    public ActionNamePanel(final IconManager iconManager, final String name,
-            final String group) {
+    public ActionNamePanel(final ActionController actionManager, final IconManager iconManager,
+            final String name, final String group) {
 
         if (name == null) {
             this.existingName = "";
@@ -82,7 +83,7 @@ public class ActionNamePanel extends JPanel implements PropertyChangeListener {
             this.existingName = name;
         }
         this.iconManager = iconManager;
-        this.group = ActionManager.getActionManager().getOrCreateGroup(group);
+        this.group = actionManager.getOrCreateGroup(group);
 
         initComponents();
         addListeners();
