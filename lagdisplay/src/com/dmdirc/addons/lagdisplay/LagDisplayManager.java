@@ -257,7 +257,7 @@ public class LagDisplayManager implements ConfigChangeListener {
                 getOptionBool(domain, "usealternate")) {
             return;
         }
-        event.getConnection().getParser().sendRawMessage("LAGCHECK_" + new Date().getTime());
+        event.getConnection().getParser().get().sendRawMessage("LAGCHECK_" + new Date().getTime());
     }
 
     /**

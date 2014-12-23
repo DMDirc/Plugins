@@ -31,6 +31,7 @@ import com.dmdirc.parser.irc.IRCParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +58,7 @@ public class IdentClientTest {
         servers.add(connection);
 
         when(sm.getConnections()).thenReturn(servers);
-        when(connection.getParser()).thenReturn(parser);
+        when(connection.getParser()).thenReturn(Optional.of(parser));
         when(parser.getLocalPort()).thenReturn(60);
         when(parser.getLocalClient()).thenReturn(client);
         when(client.getNickname()).thenReturn("nickname");

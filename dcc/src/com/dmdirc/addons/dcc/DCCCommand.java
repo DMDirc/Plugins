@@ -115,7 +115,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
         if (args.getArguments().length > 1) {
             final String target = args.getArguments()[1];
             final Connection connection = ((ServerCommandContext) context).getConnection();
-            final Parser parser = connection.getParser();
+            final Parser parser = connection.getParser().get();
             final String myNickname = parser.getLocalClient().getNickname();
 
             if (parser.isValidChannelName(target)
@@ -242,7 +242,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
 
             if (origin.getConfigManager().getOptionBool(
                     myPlugin.getDomain(), "send.reverse")) {
-                final Parser parser = connection.getParser();
+                final Parser parser = connection.getParser().get();
                 final TransferContainer container = new TransferContainer(myPlugin, send,
                         origin.getConfigManager(), backBufferFactory, "Send: " + target,
                         target, connection, urlBuilder, eventBus);
@@ -254,7 +254,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                         + send.makeToken()
                         + (send.isTurbo() ? " T" : ""));
             } else {
-                final Parser parser = connection.getParser();
+                final Parser parser = connection.getParser().get();
                 if (myPlugin.listen(send)) {
                     final TransferContainer container = new TransferContainer(myPlugin, send,
                             origin.getConfigManager(), backBufferFactory, "*Send: "

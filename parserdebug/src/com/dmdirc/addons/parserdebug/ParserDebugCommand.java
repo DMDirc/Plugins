@@ -34,6 +34,8 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 
+import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
@@ -78,20 +80,20 @@ public final class ParserDebugCommand extends Command {
         final boolean isSilent = commandArgs.isSilent();
 
         final Connection connection = ((ServerCommandContext) context).getConnection();
-        final Parser parser = connection.getParser();
+        final Optional<Parser> parser = connection.getParser();
 
-        if (parser == null) {
+        if (!parser.isPresent()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
             return;
         }
-        if (parserDebugManager.containsParser(parser)) {
-            if (parserDebugManager.removeParser(parser, false)) {
+        if (parserDebugManager.containsParser(parser.get())) {
+            if (parserDebugManager.removeParser(parser.get(), false)) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Removing callback ok");
             } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Removing callback failed");
             }
         } else {
-            if (parserDebugManager.addParser(parser, connection)) {
+            if (parserDebugManager.addParser(parser.get(), connection)) {
                 sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
             } else {
                 sendLine(origin, isSilent, FORMAT_ERROR, "Adding callback failed");

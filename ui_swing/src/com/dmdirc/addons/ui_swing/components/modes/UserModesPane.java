@@ -68,12 +68,12 @@ public final class UserModesPane extends ModesPane {
 
     @Override
     public String getAvailableBooleanModes() {
-        return connection.getParser().getUserModes();
+        return connection.getParser().get().getUserModes();
     }
 
     @Override
     public String getOurBooleanModes() {
-        return connection.getParser().getLocalClient().getModes();
+        return connection.getParser().get().getLocalClient().getModes();
     }
 
     @Override
@@ -89,12 +89,12 @@ public final class UserModesPane extends ModesPane {
     @Override
     public void alterMode(final boolean add, final String mode,
             final String parameter) {
-        connection.getParser().getLocalClient().alterMode(add, mode.toCharArray()[0]);
+        connection.getParser().get().getLocalClient().alterMode(add, mode.toCharArray()[0]);
     }
 
     @Override
     public void flushModes() {
-        connection.getParser().getLocalClient().flushModes();
+        connection.getParser().get().getLocalClient().flushModes();
     }
 
 }
