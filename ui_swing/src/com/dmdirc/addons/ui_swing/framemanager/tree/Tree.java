@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
+import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CloseWindowAction;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -55,8 +56,7 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Specialised JTree for the frame manager.
  */
-public class Tree extends JTree implements MouseMotionListener,
-        ConfigChangeListener, MouseListener, ActionListener {
+public class Tree extends JTree implements MouseMotionListener, MouseListener, ActionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -110,13 +110,8 @@ public class Tree extends JTree implements MouseMotionListener,
                 (int) PlatformDefaults.getUnitValueX("related").getValue()));
         setFocusable(false);
 
-        dragSelect = config.getOptionBool("treeview", "dragSelection");
-        showHandles = config.getOptionBool(domain, "showtreeexpands");
-        config.addChangeListener(domain, "showtreeexpands", this);
-        config.addChangeListener("treeview", this);
-
-        setShowsRootHandles(showHandles);
-        putClientProperty("showHandles", showHandles);
+        config.getBinder().withDefaultDomain(domain).bind(this, Tree.class);
+        // TODO: Create a nicer lifecycle and unbind
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -156,18 +151,16 @@ public class Tree extends JTree implements MouseMotionListener,
         return node;
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        switch (key) {
-            case "dragSelection":
-                dragSelect = config.getOptionBool("treeview", "dragSelection");
-                break;
-            case "showtreeexpands":
-                showHandles = config.getOptionBool(domain, "showtreeexpands");
-                setShowsRootHandles(showHandles);
-                putClientProperty("showHandles", showHandles);
-                break;
-        }
+    @ConfigBinding(key = "dragSelection", invocation = EDTInvocation.class)
+    public void handleDragSelection(final String value) {
+        dragSelect = config.getOptionBool("treeview", "dragSelection");
+    }
+
+    @ConfigBinding(key="showtreeexpands")
+    public void handleTreeExpands(final String value) {
+        showHandles = Boolean.valueOf(value);
+        setShowsRootHandles(showHandles);
+        putClientProperty("showHandles", showHandles);
     }
 
     @Override
