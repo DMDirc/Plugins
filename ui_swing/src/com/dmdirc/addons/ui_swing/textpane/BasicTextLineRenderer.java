@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.ui.messages.IRCDocument;
+import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.LinePosition;
 
 import java.awt.Color;
@@ -56,7 +56,7 @@ public class BasicTextLineRenderer implements LineRenderer {
 
     private final TextPane textPane;
     private final TextPaneCanvas textPaneCanvas;
-    private final IRCDocument document;
+    private final CachingDocument<AttributedString> document;
 
     private final Color highlightForeground;
     private final Color highlightBackground;
@@ -65,7 +65,7 @@ public class BasicTextLineRenderer implements LineRenderer {
     private final List<TextLayout> wrappedLines = new ArrayList<>();
 
     public BasicTextLineRenderer(final TextPane textPane, final TextPaneCanvas textPaneCanvas,
-            final IRCDocument document) {
+            final CachingDocument<AttributedString> document) {
         this.textPane = textPane;
         this.textPaneCanvas = textPaneCanvas;
         this.document = document;
@@ -81,7 +81,7 @@ public class BasicTextLineRenderer implements LineRenderer {
         result.textLayouts.clear();
         result.totalHeight = 0;
 
-        final AttributedCharacterIterator iterator = document.getStyledLine(line);
+        final AttributedCharacterIterator iterator = document.getStyledLine(line).getIterator();
         final int paragraphStart = iterator.getBeginIndex();
         final int paragraphEnd = iterator.getEndIndex();
         final LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(iterator,
@@ -195,7 +195,7 @@ public class BasicTextLineRenderer implements LineRenderer {
     private void doHighlight(final int line, final Shape logicalHighlightShape, final Graphics2D g,
             final float canvasWidth, final float drawPosY, final float drawPosX,
             final int firstChar, final int lastChar, final boolean isEndOfLine) {
-        final AttributedCharacterIterator iterator = document.getStyledLine(line);
+        final AttributedCharacterIterator iterator = document.getStyledLine(line).getIterator();
         final AttributedString as = new AttributedString(iterator, firstChar, lastChar);
 
         as.addAttribute(TextAttribute.FOREGROUND, highlightForeground);

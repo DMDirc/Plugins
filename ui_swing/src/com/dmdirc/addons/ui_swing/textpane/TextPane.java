@@ -26,6 +26,8 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.ui.messages.AttributedStringMessageMaker;
+import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
@@ -117,7 +119,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
                 urlBuilder, eventBus, configDomain, "textpanebackground",
                 "textpanebackgroundoption");
-        canvas = new TextPaneCanvas(this, document);
+        canvas = new TextPaneCanvas(this,
+                new CachingDocument<>(document, new AttributedStringMessageMaker()));
         final JXLayer<JComponent> layer = new JXLayer<>(canvas);
         layer.setUI(backgroundPainter);
         add(layer, "dock center");

@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.textpane.LineRenderer.RenderResult;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.ui.messages.IRCDocument;
+import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.StringUtils;
@@ -48,6 +48,7 @@ import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     /** Both Side padding for textpane. */
     private static final int DOUBLE_SIDE_PADDING = SINGLE_SIDE_PADDING * 2;
     /** IRCDocument. */
-    private final IRCDocument document;
+    private final CachingDocument<AttributedString> document;
     /** parent textpane. */
     private final TextPane textPane;
     /** Position -> LineInfo. */
@@ -99,7 +100,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
      * @param parent   parent text pane for the canvas
      * @param document IRCDocument to be displayed
      */
-    public TextPaneCanvas(final TextPane parent, final IRCDocument document) {
+    public TextPaneCanvas(final TextPane parent, final CachingDocument<AttributedString> document) {
         this.document = document;
         textPane = parent;
         this.manager = parent.getWindow().getContainer().getConfigManager();
@@ -260,7 +261,7 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
     public ClickTypeValue getClickType(final LineInfo lineInfo) {
         if (lineInfo.getLine() != -1) {
             final AttributedCharacterIterator iterator = document.getStyledLine(
-                    lineInfo.getLine());
+                    lineInfo.getLine()).getIterator();
             final int index = lineInfo.getIndex();
             if (index >= iterator.getBeginIndex() && index <= iterator.getEndIndex()) {
                 iterator.setIndex(lineInfo.getIndex());
@@ -361,7 +362,8 @@ class TextPaneCanvas extends JPanel implements MouseInputListener,
 
         if (lineInfo.getLine() != -1
                 && document.getLine(lineInfo.getLine()) != null) {
-            final AttributedCharacterIterator iterator = document.getStyledLine(lineInfo.getLine());
+            final AttributedCharacterIterator iterator =
+                    document.getStyledLine(lineInfo.getLine()).getIterator();
 
             if (lineInfo.getIndex() < iterator.getBeginIndex()
                     || lineInfo.getIndex() > iterator.getEndIndex()) {
