@@ -26,6 +26,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.FrameComponentAddedEvent;
 import com.dmdirc.events.FrameComponentRemovedEvent;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -55,6 +56,7 @@ public class TypingLabel extends JLabel {
         super("[Typing...]");
         this.container = container;
         setVisible(false);
+        container.getEventBus().subscribe(this);
         container.getConfigManager().getBinder().bind(this, TypingLabel.class);
         if (container.getComponents().contains(WindowComponent.TYPING_INDICATOR.getIdentifier())) {
             setVisible(true);
@@ -84,6 +86,14 @@ public class TypingLabel extends JLabel {
                 WindowComponent.TYPING_INDICATOR.getIdentifier().equals(event.getComponent()) &&
                 useTypingIndicator) {
             setVisible(false);
+        }
+    }
+
+    @Handler
+    public void windowClosing(final FrameClosingEvent event) {
+        if (event.getContainer().equals(container)) {
+            container.getConfigManager().getBinder().unbind(this);
+            container.getEventBus().unsubscribe(this);
         }
     }
 
