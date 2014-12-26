@@ -23,27 +23,28 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.FrameClosingEvent;
-import com.dmdirc.interfaces.AwayStateListener;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.events.ServerAwayEvent;
+import com.dmdirc.events.ServerBackEvent;
+import com.dmdirc.interfaces.Connection;
 
 import javax.swing.JLabel;
 
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Simple panel to show when a user is away or not.
  */
-public class AwayLabel extends JLabel implements ConfigChangeListener,
-        AwayStateListener {
+public class AwayLabel extends JLabel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** awayindicator string for compiler optimisation. */
-    private static final String AWAY_INDICATOR = "awayindicator";
     /** Away indicator. */
     private boolean useAwayIndicator;
     /** Parent frame container. */
@@ -59,47 +60,45 @@ public class AwayLabel extends JLabel implements ConfigChangeListener,
 
         this.container = checkNotNull(container);
 
-        container.getConfigManager().addChangeListener("ui", AWAY_INDICATOR, this);
-        setVisible(false);
-        useAwayIndicator = container.getConfigManager().getOptionBool("ui", AWAY_INDICATOR);
+        container.getConfigManager().getBinder().bind(this, AwayLabel.class);
+        container.getEventBus().subscribe(this);
 
         container.getConnection().ifPresent(c -> {
             setVisible(c.isAway());
-            c.addAwayStateListener(this);
         });
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        useAwayIndicator = container.getConfigManager()
-                .getOptionBool("ui", AWAY_INDICATOR);
+    @ConfigBinding(domain = "ui", key = "awayindicator", invocation = EDTInvocation.class)
+    public void handleAwayIndicator(final String value) {
+        useAwayIndicator = Boolean.valueOf(value);
         if (!useAwayIndicator) {
-            UIUtilities.invokeLater(() -> setVisible(false));
+            setVisible(false);
         }
     }
 
-    @Override
-    public void onAway(final String reason) {
-        UIUtilities.invokeLater(() -> {
-            if (useAwayIndicator) {
-                setVisible(true);
+    @Handler(delivery = Invoke.Asynchronously, invocation = EdtHandlerInvocation.class)
+    public void handleAway(final ServerAwayEvent event) {
+        container.getConnection().ifPresent(c -> updateVisibility(event.getConnection(), true));
+    }
+
+    @Handler(delivery = Invoke.Asynchronously, invocation = EdtHandlerInvocation.class)
+    public void handleBack(final ServerBackEvent event) {
+        container.getConnection().ifPresent(c -> updateVisibility(event.getConnection(), false));
+    }
+
+    private void updateVisibility(final Connection connection, final boolean away) {
+        container.getConnection().ifPresent(c -> {
+            if (connection.equals(c) && useAwayIndicator) {
+                setVisible(away);
             }
         });
     }
 
-    @Override
-    public void onBack() {
-        UIUtilities.invokeLater(() -> {
-            if (useAwayIndicator) {
-                setVisible(false);
-            }
-        });
-    }
-
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
         if (event.getContainer().equals(container)) {
-            container.getConnection().ifPresent(c -> c.removeAwayStateListener(this));
+            container.getConfigManager().getBinder().unbind(this);
+            container.getEventBus().unsubscribe(this);
         }
     }
 
