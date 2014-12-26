@@ -25,9 +25,10 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.FrameComponentAddedEvent;
 import com.dmdirc.events.FrameComponentRemovedEvent;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import javax.swing.JLabel;
@@ -37,12 +38,10 @@ import net.engio.mbassy.listener.Handler;
 /**
  * Simple panel to show when a user is typing.
  */
-public class TypingLabel extends JLabel implements ConfigChangeListener {
+public class TypingLabel extends JLabel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** typingindicator string for compiler optimisation. */
-    private static final String CONFIG_KEY = "typingindicator";
     /** Parent frame container. */
     private final FrameContainer container;
     /** Whether or not to show the typing indicator. */
@@ -56,17 +55,17 @@ public class TypingLabel extends JLabel implements ConfigChangeListener {
     public TypingLabel(final FrameContainer container) {
         super("[Typing...]");
         this.container = container;
-        container.getConfigManager().addChangeListener("ui", CONFIG_KEY, this);
         setVisible(false);
-        useTypingIndicator = container.getConfigManager().getOptionBool("ui", CONFIG_KEY);
+        container.getEventBus().subscribe(this);
+        container.getConfigManager().getBinder().bind(this, TypingLabel.class);
         if (container.getComponents().contains(WindowComponent.TYPING_INDICATOR.getIdentifier())) {
             setVisible(true);
         }
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        useTypingIndicator = container.getConfigManager().getOptionBool("ui", CONFIG_KEY);
+    @ConfigBinding(domain = "ui", key = "typingindicator")
+    public void handleTypingIndicator(final String value) {
+        useTypingIndicator = Boolean.valueOf(value);
         if (!useTypingIndicator) {
             UIUtilities.invokeLater(() -> setVisible(false));
         }
@@ -87,6 +86,14 @@ public class TypingLabel extends JLabel implements ConfigChangeListener {
                 WindowComponent.TYPING_INDICATOR.getIdentifier().equals(event.getComponent()) &&
                 useTypingIndicator) {
             setVisible(false);
+        }
+    }
+
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void windowClosing(final FrameClosingEvent event) {
+        if (event.getContainer().equals(container)) {
+            container.getConfigManager().getBinder().unbind(this);
+            container.getEventBus().unsubscribe(this);
         }
     }
 
