@@ -35,6 +35,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -70,11 +71,11 @@ public class NotificationCommand extends Command implements
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        if (args.getArguments().length > 0 && args.getArguments()[0]
-                .equalsIgnoreCase("--methods")) {
+        if (args.getArguments().length > 0 &&
+                "--methods".equalsIgnoreCase(args.getArguments()[0])) {
             doMethodList(origin, args.isSilent());
-        } else if (args.getArguments().length > 0 && args.getArguments()[0]
-                .equalsIgnoreCase("--method")) {
+        } else if (args.getArguments().length > 0 &&
+                "--method".equalsIgnoreCase(args.getArguments()[0])) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
                 final ExportedService source = manager.getMethod(sourceName)
@@ -134,11 +135,10 @@ public class NotificationCommand extends Command implements
             res.add("--methods");
             res.add("--method");
             return res;
-        } else if (arg == 1 && context.getPreviousArgs().get(0)
-                .equalsIgnoreCase("--method")) {
-            for (PluginInfo source : manager.getMethods()) {
-                res.add(source.getMetaData().getName());
-            }
+        } else if (arg == 1 && "--method".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
+            res.addAll(manager.getMethods().stream()
+                    .map(source -> source.getMetaData().getName())
+                    .collect(Collectors.toList()));
             return res;
         }
         return res;

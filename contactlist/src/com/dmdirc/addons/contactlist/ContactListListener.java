@@ -73,9 +73,7 @@ public class ContactListListener implements NicklistListener {
 
     @Override
     public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
-        for (ChannelClientInfo client : clients) {
-            clientAdded(client);
-        }
+        clients.forEach(this::clientAdded);
     }
 
     @Override

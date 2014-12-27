@@ -126,7 +126,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         this.iconManager = checkNotNull(iconManager);
         this.channel = checkNotNull(channel);
         this.parentWindow = checkNotNull(parentWindow);
-        this.setOpaque(UIUtilities.getTabbedPaneOpaque());
+        setOpaque(UIUtilities.getTabbedPaneOpaque());
 
         list = new JList<>();
         nativeRenderer = list.getCellRenderer();
@@ -304,9 +304,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private void removeListMode() {
         final int selectedIndex = listModesMenu.getSelectedIndex();
         final JList<ChannelListModeItem> removeList = listModesPanels.get(selectedIndex);
-        for (ChannelListModeItem mode : removeList.getSelectedValuesList()) {
-            ((DefaultListModel<ChannelListModeItem>) removeList.getModel()).removeElement(mode);
-        }
+        removeList.getSelectedValuesList().forEach(
+                ((DefaultListModel<ChannelListModeItem>) removeList.getModel())::removeElement);
         updateModeCount();
     }
 

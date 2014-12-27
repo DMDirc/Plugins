@@ -163,9 +163,7 @@ public final class ActionGroupSettingsPanel extends JPanel implements ActionList
      * Saves the changes to the settings.
      */
     public void save() {
-        for (PreferencesSetting setting : settings) {
-            setting.save();
-        }
+        settings.forEach(PreferencesSetting::save);
     }
 
     @Override

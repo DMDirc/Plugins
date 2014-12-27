@@ -460,14 +460,9 @@ public class XmppParser extends BaseSocketAwareParser {
                         onChannelSelfJoin(null, null, fakeChannel);
                 fakeChannel.updateContacts(contacts.values());
 
-                for (XmppClientInfo client : contacts.values()) {
-                    if (client.isAway()) {
-                        getCallback(OtherAwayStateListener.class)
-                                .onAwayStateOther(null, null, client,
-                                        AwayState.UNKNOWN,
-                                        AwayState.AWAY);
-                    }
-                }
+                contacts.values().stream().filter(XmppClientInfo::isAway).forEach(client ->
+                        getCallback(OtherAwayStateListener.class).onAwayStateOther(null, null,
+                                client, AwayState.UNKNOWN, AwayState.AWAY));
             }
         } catch (XMPPException ex) {
             LOG.debug("Go an XMPP exception", ex);
