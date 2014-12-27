@@ -136,13 +136,12 @@ public class TopicLabel extends JPanel {
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
-        label = new TextLabel("on "
-                + new Date(topic.getTime() * MILLIS_IN_SECOND).toString());
+        label = new TextLabel("on " + new Date(topic.getTime() * MILLIS_IN_SECOND));
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
 
-        super.validate();
+        validate();
     }
 
     /**

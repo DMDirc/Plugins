@@ -29,6 +29,6 @@ import dagger.Module;
 /**
  * DI for the conditional execute plugin.
  */
-@Module(injects = {ConditionalExecuteCommand.class}, addsTo = ClientModule.class)
+@Module(injects = ConditionalExecuteCommand.class, addsTo = ClientModule.class)
 public class ConditionalExecuteModule {
 }

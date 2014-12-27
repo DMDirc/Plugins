@@ -31,7 +31,7 @@ import dagger.Provides;
 /**
  * DI module for the nick colour plugin.
  */
-@Module(injects = {NickColourManager.class}, addsTo = SwingModule.class)
+@Module(injects = NickColourManager.class, addsTo = SwingModule.class)
 public class NickColourModule {
 
     /** The domain for plugin settings. */
