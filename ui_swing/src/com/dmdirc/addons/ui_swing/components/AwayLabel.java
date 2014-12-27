@@ -63,6 +63,7 @@ public class AwayLabel extends JLabel {
         container.getConfigManager().getBinder().bind(this, AwayLabel.class);
         container.getEventBus().subscribe(this);
 
+        setVisible(false);
         container.getConnection().ifPresent(c -> {
             setVisible(c.isAway());
         });

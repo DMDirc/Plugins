@@ -27,6 +27,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.ChannelInfo;
@@ -128,6 +129,21 @@ public class LogFileLocator {
         }
         file.append(sanitise(client.getNickname().toLowerCase()));
         return getPath(directory, file, client.getNickname());
+    }
+
+    /**
+     * Get the name of the log file for a specific object.
+     *
+     * @param user Client to get the name for
+     *
+     * @return the name of the log file to use for this object.
+     */
+    public String getLogFile(final User user) {
+        final StringBuffer directory = getLogDirectory();
+        final StringBuffer file = new StringBuffer();
+        addNetworkDir(directory, file, user.getConnection().getNetwork());
+        file.append(sanitise(user.getNickname().toLowerCase()));
+        return getPath(directory, file, user.getNickname());
     }
 
     /**
