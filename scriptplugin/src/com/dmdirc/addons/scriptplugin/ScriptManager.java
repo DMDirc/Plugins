@@ -70,9 +70,7 @@ public class ScriptManager {
 
     /** Reload all scripts */
     public void rehash() {
-        for (final ScriptEngineWrapper engine : scripts.values()) {
-            engine.reload();
-        }
+        scripts.values().forEach(ScriptEngineWrapper::reload);
         // Advise the Garbage collector that now would be a good time to run
         System.gc();
     }
@@ -120,7 +118,7 @@ public class ScriptManager {
     public void unloadScript(final String scriptFilename) {
         if (scripts.containsKey(scriptFilename)) {
             // Tell it that its about to be unloaded.
-            (scripts.get(scriptFilename)).callFunction("onUnload");
+            scripts.get(scriptFilename).callFunction("onUnload");
             // Remove the script
             scripts.remove(scriptFilename);
             // Advise the Garbage collector that now would be a good time to run

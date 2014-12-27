@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -82,7 +83,7 @@ public class FakeUpdates extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         updateManager.addCheckStrategy(new FakeUpdateCheckStrategy());
         updateManager.addRetrievalStrategy(new FakeUpdateRetriever());
@@ -100,11 +101,8 @@ public class FakeUpdates extends DebugCommand {
                 final Collection<UpdateComponent> components) {
             final Map<UpdateComponent, UpdateCheckResult> res = new HashMap<>();
 
-            for (UpdateComponent component : components) {
-                if (Math.random() * components.size() < 10) {
-                    res.put(component, new FakeUpdateCheckResult(component));
-                }
-            }
+            components.stream().filter(component -> Math.random() * components.size() < 10)
+                    .forEach(component -> res.put(component, new FakeUpdateCheckResult(component)));
 
             return res;
         }

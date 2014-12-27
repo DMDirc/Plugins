@@ -33,6 +33,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class NowPlayingManager {
     /** The sources that we know of. */
     private final List<MediaSource> sources = new ArrayList<>();
     /** The managers that we know of. */
-    private final List<MediaSourceManager> managers = new ArrayList<>();
+    private final Collection<MediaSourceManager> managers = new ArrayList<>();
     /** The user's preferred order for source usage. */
     private List<String> order;
 
@@ -75,11 +76,9 @@ public class NowPlayingManager {
         managers.clear();
         order = getSettings();
         eventBus.subscribe(this);
-        for (PluginInfo target : pluginManager.getPluginInfos()) {
-            if (target.isLoaded()) {
-                addPlugin(target);
-            }
-        }
+        pluginManager.getPluginInfos().stream()
+                .filter(PluginInfo::isLoaded)
+                .forEach(this::addPlugin);
     }
 
     /**
@@ -131,9 +130,7 @@ public class NowPlayingManager {
             managers.add((MediaSourceManager) targetPlugin);
 
             if (((MediaSourceManager) targetPlugin).getSources() != null) {
-                for (MediaSource source : ((MediaSourceManager) targetPlugin).getSources()) {
-                    addSourceToOrder(source);
-                }
+                ((MediaSourceManager) targetPlugin).getSources().forEach(this::addSourceToOrder);
             }
         }
     }
@@ -191,11 +188,11 @@ public class NowPlayingManager {
      * @return The best source to use for media info
      */
     public MediaSource getBestSource() {
-        MediaSource paused = null;
         final List<MediaSource> possibleSources = getSources();
 
         Collections.sort(possibleSources, new MediaSourceComparator(order));
 
+        MediaSource paused = null;
         for (final MediaSource source : possibleSources) {
             if (source.getState() != MediaSourceState.CLOSED) {
                 if (source.getState() == MediaSourceState.PLAYING) {

@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -94,7 +95,7 @@ public class Debug extends Command implements IntelligentCommand {
                 final CommandArguments newArgs = new CommandArguments(
                         controller,
                         Arrays.asList((controller.getCommandChar()
-                                + command.getName() + " "
+                                + command.getName() + ' '
                                 + args.getArgumentsAsString(1)).split(" ")));
                 command.execute(origin, newArgs, context);
             }
@@ -124,7 +125,7 @@ public class Debug extends Command implements IntelligentCommand {
      */
     public void proxyShowUsage(final FrameContainer target,
             final boolean isSilent, final String name, final String args) {
-        showUsage(target, isSilent, INFO.getName(), name + " " + args);
+        showUsage(target, isSilent, INFO.getName(), name + ' ' + args);
     }
 
     /**
@@ -148,9 +149,9 @@ public class Debug extends Command implements IntelligentCommand {
     public List<String> getCommandNames() {
         final List<String> names = new ArrayList<>(commands.size());
 
-        for (DebugCommand command : commands.values()) {
-            names.add(command.getName());
-        }
+        names.addAll(commands.values().stream()
+                .map(DebugCommand::getName)
+                .collect(Collectors.toList()));
 
         return names;
     }

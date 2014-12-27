@@ -32,6 +32,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -41,7 +42,7 @@ import net.engio.mbassy.listener.Handler;
 public class NotificationsManager {
 
     /** The notification methods that we know of. */
-    private final List<String> methods = new ArrayList<>();
+    private final Collection<String> methods = new ArrayList<>();
     /** The user's preferred order for method usage. */
     private List<String> order;
     /** This plugin's settings domain. */
@@ -67,11 +68,9 @@ public class NotificationsManager {
         methods.clear();
         loadSettings();
         eventBus.subscribe(this);
-        for (PluginInfo target : pluginManager.getPluginInfos()) {
-            if (target.isLoaded()) {
-                addPlugin(target);
-            }
-        }
+        pluginManager.getPluginInfos().stream()
+                .filter(PluginInfo::isLoaded)
+                .forEach(this::addPlugin);
     }
 
     public void onUnload() {

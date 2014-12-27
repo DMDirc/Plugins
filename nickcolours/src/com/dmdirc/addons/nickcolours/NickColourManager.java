@@ -29,6 +29,7 @@ import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
@@ -37,6 +38,7 @@ import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +108,7 @@ public class NickColourManager implements ConfigChangeListener {
         final ClientInfo myself = client.getClient().getParser().getLocalClient();
         final String nickOption1 = "color:"
                 + client.getClient().getParser().getStringConverter().
-                toLowerCase(network + ":" + client.getClient().getNickname());
+                toLowerCase(network + ':' + client.getClient().getNickname());
         final String nickOption2 = "color:"
                 + client.getClient().getParser().getStringConverter().
                 toLowerCase("*:" + client.getClient().getNickname());
@@ -129,11 +131,11 @@ public class NickColourManager implements ConfigChangeListener {
 
         if (parts != null) {
             Colour textColor = null;
-            Colour nickColor = null;
 
             if (parts[0] != null) {
                 textColor = colourManager.getColourFromString(parts[0], null);
             }
+            Colour nickColor = null;
             if (parts[1] != null) {
                 nickColor = colourManager.getColourFromString(parts[1], null);
             }
@@ -167,7 +169,7 @@ public class NickColourManager implements ConfigChangeListener {
      *
      * @return Colour of the specified nickname
      */
-    private Colour getColour(final String nick) {
+    private Colour getColour(final CharSequence nick) {
         int count = 0;
 
         for (int i = 0; i < nick.length(); i++) {
@@ -187,18 +189,17 @@ public class NickColourManager implements ConfigChangeListener {
      *
      * @return A multi-dimensional array of nick colour info.
      */
-    public static Object[][] getData(final AggregateConfigProvider config, final String domain) {
-        final List<Object[]> data = new ArrayList<>();
+    public static Object[][] getData(final ReadOnlyConfigProvider config, final String domain) {
+        final Collection<Object[]> data = new ArrayList<>();
 
-        for (String key : config.getOptions(domain).keySet()) {
-            if (key.startsWith("color:")) {
-                final String network = key.substring(6, key.indexOf(':', 6));
-                final String user = key.substring(1 + key.indexOf(':', 6));
-                final String[] parts = getParts(config, domain, key);
+        config.getOptions(domain).keySet().stream().filter(key -> key.startsWith("color:"))
+                .forEach(key -> {
+                    final String network = key.substring(6, key.indexOf(':', 6));
+                    final String user = key.substring(1 + key.indexOf(':', 6));
+                    final String[] parts = getParts(config, domain, key);
 
-                data.add(new Object[]{network, user, parts[0], parts[1]});
-            }
-        }
+                    data.add(new Object[]{network, user, parts[0], parts[1]});
+                });
 
         final Object[][] res = new Object[data.size()][4];
 
@@ -222,7 +223,7 @@ public class NickColourManager implements ConfigChangeListener {
      *
      * @return The colours specified by the given key
      */
-    private static String[] getParts(final AggregateConfigProvider config, final String domain,
+    private static String[] getParts(final ReadOnlyConfigProvider config, final String domain,
             final String key) {
         String[] parts = config.getOption(domain, key).split(":");
 
@@ -268,15 +269,6 @@ public class NickColourManager implements ConfigChangeListener {
     @Override
     public void configChanged(final String domain, final String key) {
         setCachedSettings();
-    }
-
-    /**
-     * Returns this plugin's settings domain.
-     *
-     * @return Settings domain
-     */
-    public String getDomain() {
-        return domain;
     }
 
 }

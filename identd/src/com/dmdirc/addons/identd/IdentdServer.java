@@ -46,7 +46,7 @@ public final class IdentdServer implements Runnable {
     /** The event bus to post errors on. */
     private final DMDircMBassador eventBus;
     /** The Thread in use for this server */
-    private volatile Thread myThread = null;
+    private volatile Thread myThread;
     /** The current socket in use for this server */
     private ServerSocket serverSocket;
     /** Arraylist of all the clients we have */
@@ -173,9 +173,7 @@ public final class IdentdServer implements Runnable {
             }
 
             synchronized (clientList) {
-                for (IdentClient aClientList : clientList) {
-                    aClientList.close();
-                }
+                clientList.forEach(IdentClient::close);
                 clientList.clear();
             }
         }

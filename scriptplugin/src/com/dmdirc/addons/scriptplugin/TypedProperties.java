@@ -62,15 +62,13 @@ public class TypedProperties extends Properties {
     public void setCaseSensitivity(final boolean value) {
         // Set all existing values to lowercase.
         if (!value) {
-            for (final Object property : keySet()) {
-                if (property instanceof String) {
-                    final String propertyName = (String) property;
-                    if (!propertyName.equals(propertyName.toLowerCase())) {
-                        super.setProperty(propertyName.toLowerCase(), getProperty(propertyName));
-                        super.remove(propertyName);
-                    }
+            keySet().stream().filter(property -> property instanceof String).forEach(property -> {
+                final String propertyName = (String) property;
+                if (!propertyName.equals(propertyName.toLowerCase())) {
+                    super.setProperty(propertyName.toLowerCase(), getProperty(propertyName));
+                    remove(propertyName);
                 }
-            }
+            });
         }
         caseSensitive = value;
     }
