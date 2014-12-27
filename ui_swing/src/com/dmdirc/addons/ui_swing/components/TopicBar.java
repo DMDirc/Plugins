@@ -39,7 +39,7 @@ import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.ui.messages.StyledDocumentMaker;
+import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;

@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.ui.messages.StyledDocumentMaker;
+import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 
 import java.awt.Color;
 import java.util.Date;
