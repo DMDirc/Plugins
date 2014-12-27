@@ -33,6 +33,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
+import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.InviteListener;
@@ -156,6 +157,11 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
     @Override
     public void inviteExpired(final Connection connection, final Invite invite) {
         update();
+    }
+
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleInviteReceived(final ServerInviteReceivedEvent event) {
+
     }
 
     @Handler

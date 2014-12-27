@@ -46,6 +46,7 @@ import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.PrivateChat;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -245,16 +246,16 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryActions(final BaseQueryActionEvent event) {
-        final ClientInfo client = event.getClient();
-        final String filename = locator.getLogFile(client);
-        appendLine(filename, "* %s %s", client.getNickname(), event.getMessage());
+        final User user = event.getUser();
+        final String filename = locator.getLogFile(user);
+        appendLine(filename, "* %s %s", user.getNickname(), event.getMessage());
     }
 
     @Handler
     public void handleQueryMessages(final BaseQueryMessageEvent event) {
-        final ClientInfo client = event.getClient();
-        final String filename = locator.getLogFile(client);
-        appendLine(filename, "<%s> %s", client.getNickname(), event.getMessage());
+        final User user = event.getUser();
+        final String filename = locator.getLogFile(user);
+        appendLine(filename, "<%s> %s", user.getNickname(), event.getMessage());
     }
 
     @Handler
