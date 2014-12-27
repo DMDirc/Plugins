@@ -73,7 +73,7 @@ public class TransferContainer extends FrameContainer implements
     private Parser parser;
     /** Connection the send was initiated on. */
     @Nullable
-    private Connection connection;
+    private final Connection connection;
     /** Show open button. */
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);

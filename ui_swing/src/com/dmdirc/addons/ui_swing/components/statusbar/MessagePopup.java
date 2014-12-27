@@ -120,7 +120,7 @@ class MessagePopup extends StatusbarTogglePanel<JLabel> {
     /* {@inheritDoc} */
     @Override
     protected Color getPopupForeground() {
-        return super.getForeground();
+        return getForeground();
     }
 
     /** Message history status bar popup window. */

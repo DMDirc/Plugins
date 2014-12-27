@@ -30,7 +30,7 @@ public class NoWrapParagraphView extends ParagraphView {
 
     @Override
     public float getMinimumSpan(final int axis) {
-        return super.getPreferredSpan(axis);
+        return getPreferredSpan(axis);
     }
 
 }

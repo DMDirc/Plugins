@@ -100,9 +100,9 @@ public class PackingTable extends JTable {
         this.lastColumnFit = lastColumnFit;
 
         super.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        super.getTableHeader().setResizingAllowed(false);
-        super.getTableHeader().setReorderingAllowed(false);
-        super.setDragEnabled(false);
+        getTableHeader().setResizingAllowed(false);
+        getTableHeader().setReorderingAllowed(false);
+        setDragEnabled(false);
     }
 
     @Override
