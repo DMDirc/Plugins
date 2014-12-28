@@ -65,7 +65,7 @@ public class ShowRaw extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         final Optional<Connection> connection = origin.getConnection();
         if (connection.isPresent()) {
-            connection.get().addRaw();
+            //connection.get().addRaw();
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Cannot show raw window here.");
