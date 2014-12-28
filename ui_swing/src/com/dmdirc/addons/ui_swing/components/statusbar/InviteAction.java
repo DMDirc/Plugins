@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.Invite;
 
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 
@@ -45,7 +44,7 @@ class InviteAction extends AbstractAction {
      * @param invite Invite for the action
      */
     public InviteAction(final Invite invite) {
-        super(invite.getChannel() + " (" + invite.getSource()[0] + ')');
+        super(invite.getChannel() + " (" + invite.getSource().getNickname() + ')');
 
         this.invite = invite;
     }
@@ -57,8 +56,7 @@ class InviteAction extends AbstractAction {
 
     @Override
     public String toString() {
-        return invite.getChannel() + '(' + Arrays.toString(invite.getSource())
-                + ')';
+        return invite.getChannel() + '(' + invite.getSource().getNickname() + ')';
     }
 
 }
