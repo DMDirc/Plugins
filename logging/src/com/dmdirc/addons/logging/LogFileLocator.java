@@ -31,7 +31,6 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.io.File;
@@ -112,23 +111,6 @@ public class LogFileLocator {
         }
         file.append(sanitise(channel.getName().toLowerCase()));
         return getPath(directory, file, channel.getName());
-    }
-
-    /**
-     * Get the name of the log file for a specific object.
-     *
-     * @param client Client to get the name for
-     *
-     * @return the name of the log file to use for this object.
-     */
-    public String getLogFile(final ClientInfo client) {
-        final StringBuffer directory = getLogDirectory();
-        final StringBuffer file = new StringBuffer();
-        if (client.getParser() != null) {
-            addNetworkDir(directory, file, client.getParser().getNetworkName());
-        }
-        file.append(sanitise(client.getNickname().toLowerCase()));
-        return getPath(directory, file, client.getNickname());
     }
 
     /**

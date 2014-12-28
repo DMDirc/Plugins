@@ -214,9 +214,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryOpened(final QueryOpenedEvent event) {
-        final Parser parser = event.getQuery().getConnection().get().getParser().get();
-        final ClientInfo client = parser.getClient(event.getQuery().getHost());
-        final String filename = locator.getLogFile(client);
+        final String filename = locator.getLogFile(event.getQuery().getUser());
         if (autobackbuffer) {
             showBackBuffer(event.getQuery(), filename);
         }
@@ -230,9 +228,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryClosed(final QueryClosedEvent event) {
-        final Parser parser = event.getQuery().getConnection().get().getParser().get();
-        final ClientInfo client = parser.getClient(event.getQuery().getHost());
-        final String filename = locator.getLogFile(client);
+        final String filename = locator.getLogFile(event.getQuery().getUser());
 
         synchronized (FORMAT_LOCK) {
             appendLine(filename, "*** Query closed at: %s", OPENED_AT_FORMAT.format(new Date()));
