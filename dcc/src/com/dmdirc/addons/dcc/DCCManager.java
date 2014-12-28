@@ -45,6 +45,7 @@ import com.dmdirc.events.ServerCtcpEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -363,19 +364,19 @@ public class DCCManager {
         switch (event.getType().toLowerCase()) {
             case "chat":
                 if (ctcpData.length > 3) {
-                    handleChat(autoAccept, ctcpData, event.getClient(), event.getConnection());
+                    handleChat(autoAccept, ctcpData, event.getUser(), event.getConnection());
                 }
                 break;
             case "send":
                 if (ctcpData.length > 3) {
-                    handleSend(autoAccept, ctcpData, event.getClient(), event.getConnection());
+                    handleSend(autoAccept, ctcpData, event.getUser(), event.getConnection());
                 }
                 break;
             case "resume":
             //Fallthrough
             case "accept":
                 if (ctcpData.length > 2) {
-                    handleReceive(ctcpData, event.getClient(), event.getConnection());
+                    handleReceive(ctcpData, event.getUser(), event.getConnection());
                 }
                 break;
             default:
@@ -392,7 +393,7 @@ public class DCCManager {
      * @param connection Connection DCC received on
      */
     private void handleChat(final boolean dontAsk, final String[] ctcpData,
-            final ClientInfo client, final Connection connection) {
+            final User client, final Connection connection) {
         final String nickname = client.getNickname();
         if (dontAsk) {
             handleDCCChat(connection.getParser().get(), nickname, ctcpData);
@@ -443,7 +444,7 @@ public class DCCManager {
      * @param client     Client that received the DCC
      * @param connection Connection the DCC was received on
      */
-    private void handleSend(final boolean dontAsk, final String[] ctcpData, final ClientInfo client,
+    private void handleSend(final boolean dontAsk, final String[] ctcpData, final User client,
             final Connection connection) {
         final String nickname = client.getNickname();
         String tmpFilename;
@@ -545,7 +546,7 @@ public class DCCManager {
      * @param client     Client receiving the DCC
      * @param connection Connection the DCC was received on
      */
-    private void handleReceive(final String[] ctcpData, final ClientInfo client,
+    private void handleReceive(final String[] ctcpData, final User client,
             final Connection connection) {
         final String filename;
         // Clients tend to put files with spaces in the name in ""
