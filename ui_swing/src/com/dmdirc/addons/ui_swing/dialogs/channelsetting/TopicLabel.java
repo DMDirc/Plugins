@@ -130,9 +130,9 @@ public class TopicLabel extends JPanel {
 
         TextLabel label;
         if (topic.getTopic().isEmpty()) {
-            label = new TextLabel("Topic unset by " + topic.getClient());
+            label = new TextLabel("Topic unset by " + topic.getClient().getNickname());
         } else {
-            label = new TextLabel("Topic set by " + topic.getClient());
+            label = new TextLabel("Topic set by " + topic.getClient().getNickname());
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 

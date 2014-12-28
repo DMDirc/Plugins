@@ -166,7 +166,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      */
     public void setTopic(final Optional<Topic> topic) {
         if (topic.isPresent()) {
-            topicWho.setText("Topic set by " + topic.get().getClient()
+            topicWho.setText("Topic set by " + topic.get().getClient().getNickname()
                     + "<br> on " + new Date(1000 * topic.get().getTime()));
             topicText.setText(topic.get().getTopic());
         } else {
