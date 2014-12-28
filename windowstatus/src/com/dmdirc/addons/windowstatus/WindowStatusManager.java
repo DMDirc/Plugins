@@ -38,7 +38,6 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.util.Optional;
@@ -196,12 +195,9 @@ public class WindowStatusManager implements ConfigChangeListener {
         textString.append(frame.getHost());
         final Optional<Connection> connection = frame.getConnection();
         if (showname && connection.isPresent()) {
-            final ClientInfo client = connection.get().getParser().get().getClient(frame.getHost());
-            final String realname = client.getRealname();
-            if (realname != null && !realname.isEmpty()) {
-                textString.append(" - ");
-                textString.append(client.getRealname());
-            }
+            frame.getUser().getRealname().ifPresent(s -> {
+                textString.append(" - ").append(s);
+            });
         }
         return textString.toString();
     }
