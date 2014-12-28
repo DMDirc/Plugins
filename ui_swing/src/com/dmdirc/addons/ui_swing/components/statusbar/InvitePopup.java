@@ -63,7 +63,7 @@ public class InvitePopup extends StatusbarPopupWindow {
         if (connection.isPresent()) {
             for (final Invite invite : connection.get().getInvites()) {
                 panel.add(new JLabel(invite.getChannel()), "growx, pushx");
-                panel.add(new JLabel(invite.getSource()[0], SwingConstants.CENTER),
+                panel.add(new JLabel(invite.getSource().getNickname(), SwingConstants.CENTER),
                         "growx, pushx, al center");
                 panel.add(new JLabel(DateUtils.formatDuration(
                                 (int) (System.currentTimeMillis() - invite.getTimestamp()) / 1000)
