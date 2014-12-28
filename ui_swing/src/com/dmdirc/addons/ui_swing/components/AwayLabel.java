@@ -64,35 +64,28 @@ public class AwayLabel extends JLabel {
         container.getEventBus().subscribe(this);
 
         setVisible(false);
-        container.getConnection().ifPresent(c -> {
-            setVisible(c.isAway());
-        });
+        container.getConnection().map(Connection::isAway).ifPresent(this::updateVisibility);
     }
 
     @ConfigBinding(domain = "ui", key = "awayindicator", invocation = EDTInvocation.class)
     public void handleAwayIndicator(final String value) {
         useAwayIndicator = Boolean.valueOf(value);
-        if (!useAwayIndicator) {
-            setVisible(false);
-        }
+        container.getConnection().map(Connection::isAway).ifPresent(this::updateVisibility);
     }
 
     @Handler(delivery = Invoke.Asynchronously, invocation = EdtHandlerInvocation.class)
     public void handleAway(final ServerAwayEvent event) {
-        container.getConnection().ifPresent(c -> updateVisibility(event.getConnection(), true));
+        container.getConnection().map(Connection::isAway).ifPresent(this::updateVisibility);
     }
 
     @Handler(delivery = Invoke.Asynchronously, invocation = EdtHandlerInvocation.class)
     public void handleBack(final ServerBackEvent event) {
-        container.getConnection().ifPresent(c -> updateVisibility(event.getConnection(), false));
+        container.getConnection().filter(c -> c.equals(event.getConnection()))
+                .map(Connection::isAway).ifPresent(this::updateVisibility);
     }
 
-    private void updateVisibility(final Connection connection, final boolean away) {
-        container.getConnection().ifPresent(c -> {
-            if (connection.equals(c) && useAwayIndicator) {
-                setVisible(away);
-            }
-        });
+    private void updateVisibility(final boolean away) {
+        setVisible(useAwayIndicator && away);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
