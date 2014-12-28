@@ -44,11 +44,11 @@ subprojects {
         compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
         compile group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.1'
 
-        testCompile group: 'junit', name: 'junit', version: '4.11'
-        testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.17'
 
-        pmd group: 'net.sourceforge.pmd', name: 'pmd-core', version: '5.2.2'
-        pmd group: 'net.sourceforge.pmd', name: 'pmd-java', version: '5.2.2'
+        pmd group: 'net.sourceforge.pmd', name: 'pmd-core', version: '5.2.3'
+        pmd group: 'net.sourceforge.pmd', name: 'pmd-java', version: '5.2.3'
     }
 
     task copyPluginConfig(type: Copy) {
@@ -73,7 +73,7 @@ subprojects {
     pmd {
         ruleSets = []
         ruleSetFiles = files("$rootDir/etc/pmd/full.xml")
-        toolVersion = '5.2.2'
+        toolVersion = '5.2.3'
         ignoreFailures = true
     }
 
