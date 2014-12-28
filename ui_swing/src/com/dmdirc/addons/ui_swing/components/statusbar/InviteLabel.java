@@ -27,16 +27,11 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
-import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
-import com.dmdirc.events.ServerConnectErrorEvent;
-import com.dmdirc.events.ServerConnectedEvent;
-import com.dmdirc.events.ServerDisconnectedEvent;
+import com.dmdirc.events.ServerInviteExpiredEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.ConnectionManager;
-import com.dmdirc.interfaces.InviteListener;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
@@ -56,7 +51,7 @@ import net.engio.mbassy.listener.Handler;
 /**
  * A status bar component to show invites to the user and enable them to accept or dismiss them.
  */
-public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteListener {
+public class InviteLabel extends StatusbarPopupPanel<JLabel> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -74,20 +69,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
     private final SwingEventBus swingEventBus;
     /** Active connection. */
     private Optional<Connection> activeConnection;
-    /** Connection manager. */
-    private final ConnectionManager connectionManager;
 
     @Inject
-    public InviteLabel(
-            final DMDircMBassador eventBus,
-            @GlobalConfig final IconManager iconManager,
-            final ConnectionManager connectionManager,
-            final MainFrame mainFrame,
-            final SwingEventBus swingEventBus) {
+    public InviteLabel(final DMDircMBassador eventBus, @GlobalConfig final IconManager iconManager,
+            final MainFrame mainFrame, final SwingEventBus swingEventBus) {
         super(new JLabel());
 
         this.parentWindow = mainFrame;
-        this.connectionManager = connectionManager;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
         this.activeConnection = Optional.empty();
@@ -106,7 +94,6 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
      * Initialises the invite label, adding appropriate listeners.
      */
     public void init() {
-        connectionManager.getConnections().forEach(c-> c.addInviteListener(this));
         swingEventBus.subscribe(this);
         eventBus.subscribe(this);
         update();
@@ -138,49 +125,23 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> implements InviteLi
      * Updates the invite label for the currently active server.
      */
     private void update() {
-        UIUtilities.invokeLater(() -> {
-            if (!activeConnection.isPresent() || activeConnection.get().getInvites().isEmpty()) {
-                setVisible(false);
-                closeDialog();
-            } else {
-                refreshDialog();
-                setVisible(true);
-            }
-        });
-    }
-
-    @Override
-    public void inviteReceived(final Connection connection, final Invite invite) {
-        update();
-    }
-
-    @Override
-    public void inviteExpired(final Connection connection, final Invite invite) {
-        update();
+        if (!activeConnection.isPresent() || activeConnection.get().getInvites().isEmpty()) {
+            setVisible(false);
+            closeDialog();
+        } else {
+            refreshDialog();
+            setVisible(true);
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleInviteReceived(final ServerInviteReceivedEvent event) {
-
+        update();
     }
 
-    @Handler
-    public void handleServerConnected(final ServerConnectedEvent event) {
-        event.getConnection().addInviteListener(this);
-    }
-
-    @Handler
-    public void handleServerDisconnected(final ServerDisconnectedEvent event) {
-        handleServerRemoved(event.getConnection());
-    }
-
-    @Handler
-    public void handleServerConnectError(final ServerConnectErrorEvent event) {
-        handleServerRemoved(event.getConnection());
-    }
-
-    private void handleServerRemoved(final Connection connection) {
-        connection.removeInviteListener(this);
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleInviteExpired(final ServerInviteExpiredEvent event) {
+        update();
     }
 
     @Override
