@@ -309,18 +309,16 @@ public class WizardPanel extends JPanel implements ActionListener {
      * Fires wizard finished events.
      */
     private void fireWizardFinished() {
-        for (WizardListener listener : stepListeners.get(WizardListener.class)) {
-            listener.wizardFinished();
-        }
+        stepListeners.get(WizardListener.class)
+                .forEach(WizardListener::wizardFinished);
     }
 
     /**
      * Fires wizard cancelled events.
      */
     protected void fireWizardCancelled() {
-        for (WizardListener listener : stepListeners.get(WizardListener.class)) {
-            listener.wizardCancelled();
-        }
+        stepListeners.get(WizardListener.class)
+                .forEach(WizardListener::wizardCancelled);
     }
 
 }

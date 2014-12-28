@@ -87,12 +87,11 @@ public class FixedXmppConnection extends XMPPConnection
         new ServiceDiscoveryManager(xmppc);
 
         // Now execute our real listeners
-        for (ConnectionCreationListener listener : oldListeners) {
-            // We've already created a discovery manager, don't make another...
-            if (!ServiceDiscoveryManager.class.equals(listener.getClass().getEnclosingClass())) {
-                listener.connectionCreated(xmppc);
-            }
-        }
+        // We've already created a discovery manager, don't make another...
+        oldListeners.stream()
+                .filter(listener -> !ServiceDiscoveryManager.class
+                        .equals(listener.getClass().getEnclosingClass()))
+                .forEach(listener -> listener.connectionCreated(xmppc));
     }
 
     /**

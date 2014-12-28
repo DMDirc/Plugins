@@ -43,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -103,28 +104,28 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             final CommandContext context) {
         final String[] sargs = args.getArguments();
 
-        if (sargs.length > 0 && (sargs[0].equalsIgnoreCase("rehash") || sargs[0].equalsIgnoreCase(
-                "reload"))) {
+        if (sargs.length > 0 && ("rehash".equalsIgnoreCase(sargs[0]) ||
+                "reload".equalsIgnoreCase(sargs[0]))) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
             scriptManager.rehash();
-        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("load")) {
+        } else if (sargs.length > 0 && "load".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: " + filename + " ["
-                        + scriptManager.loadScript(scriptDirectory + filename) + "]");
+                        + scriptManager.loadScript(scriptDirectory + filename) + ']');
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
             }
-        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("unload")) {
+        } else if (sargs.length > 0 && "unload".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: " + filename + " ["
-                        + scriptManager.loadScript(scriptDirectory + filename) + "]");
+                        + scriptManager.loadScript(scriptDirectory + filename) + ']');
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a script to unload");
             }
-        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("eval")) {
+        } else if (sargs.length > 0 && "eval".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String script = args.getArgumentsAsString(1);
                 sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
@@ -163,7 +164,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify some script to eval.");
             }
-        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("savetobasefile")) {
+        } else if (sargs.length > 0 && "savetobasefile".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 2) {
                 final String[] bits = sargs[1].split("/");
                 final String functionName = bits[0];
@@ -203,7 +204,7 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a function name and some script to save.");
             }
-        } else if (sargs.length > 0 && sargs[0].equalsIgnoreCase("help")) {
+        } else if (sargs.length > 0 && "help".equalsIgnoreCase(sargs[0])) {
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
                     "This command allows you to interact with the script plugin");
             sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
@@ -244,14 +245,11 @@ public class ScriptCommand extends Command implements IntelligentCommand {
             res.add("savetobasefile");
         } else if (arg == 1) {
             final Map<String, ScriptEngineWrapper> scripts = scriptManager.getScripts();
-            if (context.getPreviousArgs().get(0).equalsIgnoreCase("load")) {
-                for (String filename : scriptManager.getPossibleScripts()) {
-                    res.add(filename);
-                }
-            } else if (context.getPreviousArgs().get(0).equalsIgnoreCase("unload")) {
-                for (String filename : scripts.keySet()) {
-                    res.add(filename);
-                }
+            if ("load".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
+                res.addAll(scriptManager.getPossibleScripts().stream()
+                        .collect(Collectors.toList()));
+            } else if ("unload".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
+                res.addAll(scripts.keySet().stream().collect(Collectors.toList()));
             }
         }
 

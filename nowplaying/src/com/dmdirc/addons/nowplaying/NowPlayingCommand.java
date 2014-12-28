@@ -39,6 +39,7 @@ import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -89,10 +90,10 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final FrameContainer target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0
-                && args.getArguments()[0].equalsIgnoreCase("--sources")) {
+                && "--sources".equalsIgnoreCase(args.getArguments()[0])) {
             doSourceList(origin, args.isSilent(), args.getArgumentsAsString(1));
         } else if (args.getArguments().length > 0
-                && args.getArguments()[0].equalsIgnoreCase("--source")) {
+                && "--source".equalsIgnoreCase(args.getArguments()[0])) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
                 final MediaSource source = manager.getSource(sourceName);
@@ -189,16 +190,14 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             res.add("--source");
             res.addAll(subsList);
             return res;
-        } else if (arg == 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
+        } else if (arg == 1 && "--source".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
             final AdditionalTabTargets res = new AdditionalTabTargets();
             res.excludeAll();
-            for (MediaSource source : manager.getSources()) {
-                if (source.getState() != MediaSourceState.CLOSED) {
-                    res.add(source.getAppName());
-                }
-            }
+            res.addAll(manager.getSources().stream()
+                    .filter(source -> source.getState() != MediaSourceState.CLOSED)
+                    .map(MediaSource::getAppName).collect(Collectors.toList()));
             return res;
-        } else if (arg > 1 && context.getPreviousArgs().get(0).equalsIgnoreCase("--source")) {
+        } else if (arg > 1 && "--source".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
             final AdditionalTabTargets res = tabCompleterUtils
                     .getIntelligentResults(arg, context, 2);
             res.addAll(subsList);
@@ -206,7 +205,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
         } else {
             final AdditionalTabTargets res = tabCompleterUtils
                     .getIntelligentResults(arg, context,
-                            context.getPreviousArgs().get(0).equalsIgnoreCase("--sources") ? 1 : 0);
+                            "--sources".equalsIgnoreCase(context.getPreviousArgs().get(0)) ? 1 : 0);
             res.addAll(subsList);
             return res;
         }

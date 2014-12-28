@@ -26,7 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.ui.messages.AttributedStringMessageMaker;
 import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;

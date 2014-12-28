@@ -121,14 +121,14 @@ public class TextPaneInputField extends JEditorPane implements InputField,
 
     @Override
     protected void setUI(final ComponentUI newUI) {
-        super.setUI(new BasicEditorPaneUI());
-        super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        setUI(new BasicEditorPaneUI());
+        setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 
     @Override
     public void updateUI() {
-        super.setUI(new BasicEditorPaneUI());
-        super.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        setUI(new BasicEditorPaneUI());
+        setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 
     @Override

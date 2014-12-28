@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The parser takes the output from a {@link Lexer} and applies precedence rules to build the tokens
@@ -62,11 +63,8 @@ public class Parser {
      *                        involving a mis-matched bracket).
      */
     public TreeToken parse() throws ParseException {
-        final List<TreeToken> tokens = new ArrayList<>();
-
-        for (Token token : lexer.tokenise()) {
-            tokens.add(new TreeToken(token));
-        }
+        final List<TreeToken> tokens = lexer.tokenise().stream()
+                .map(TreeToken::new).collect(Collectors.toList());
 
         return parse(tokens);
     }

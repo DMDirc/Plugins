@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.ui.messages.StyledDocumentMaker;
+import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 
 import java.awt.Color;
 import java.util.Date;
@@ -136,13 +136,12 @@ public class TopicLabel extends JPanel {
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
-        label = new TextLabel("on "
-                + new Date(topic.getTime() * MILLIS_IN_SECOND).toString());
+        label = new TextLabel("on " + new Date(topic.getTime() * MILLIS_IN_SECOND));
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
 
-        super.validate();
+        validate();
     }
 
     /**
