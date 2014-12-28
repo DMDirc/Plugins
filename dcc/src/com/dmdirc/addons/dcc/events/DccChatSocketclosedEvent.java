@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.dcc.events;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.ChatContainer;
 
 /**
@@ -39,4 +40,8 @@ public class DccChatSocketclosedEvent extends DccDisplayableEvent {
         return chatWindow;
     }
 
+    @Override
+    public FrameContainer getSource() {
+        return chatWindow;
+    }
 }
