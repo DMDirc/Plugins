@@ -31,6 +31,7 @@ import com.dmdirc.parser.common.DefaultStringConverter;
 import com.dmdirc.parser.common.ParserError;
 import com.dmdirc.parser.common.QueuePriority;
 import com.dmdirc.parser.interfaces.ChannelInfo;
+import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.LocalClientInfo;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.parser.interfaces.callbacks.AwayStateListener;
@@ -241,7 +242,7 @@ public class XmppParser extends BaseSocketAwareParser {
         newArgs[2] = getLocalClient().getNickname();
         System.arraycopy(args, 0, newArgs, 3, args.length);
 
-        getCallback(NumericListener.class).onNumeric(null, null, numeric, newArgs);
+        getCallback(NumericListener.class).onNumeric(this, new Date(), numeric, newArgs);
     }
 
     @Override
@@ -448,7 +449,7 @@ public class XmppParser extends BaseSocketAwareParser {
 
             setServerName(connection.getServiceName());
 
-            getCallback(ServerReadyListener.class).onServerReady(null, null);
+            getCallback(ServerReadyListener.class).onServerReady(this, new Date());
 
             for (RosterEntry contact : connection.getRoster().getEntries()) {
                 getClient(contact.getUser()).setRosterEntry(contact);
@@ -461,7 +462,7 @@ public class XmppParser extends BaseSocketAwareParser {
                 fakeChannel.updateContacts(contacts.values());
 
                 contacts.values().stream().filter(XmppClientInfo::isAway).forEach(client ->
-                        getCallback(OtherAwayStateListener.class).onAwayStateOther(null, null,
+                        getCallback(OtherAwayStateListener.class).onAwayStateOther(this, new Date(),
                                 client, AwayState.UNKNOWN, AwayState.AWAY));
             }
         } catch (XMPPException ex) {
@@ -480,7 +481,7 @@ public class XmppParser extends BaseSocketAwareParser {
                 error.setException(ex);
             }
 
-            getCallback(ConnectErrorListener.class).onConnectError(null, null, error);
+            getCallback(ConnectErrorListener.class).onConnectError(this, new Date(), error);
         }
     }
 
@@ -490,7 +491,7 @@ public class XmppParser extends BaseSocketAwareParser {
      * @param client The client whose state is changing
      * @param isBack True if the client is coming back, false if they're going away
      */
-    public void handleAwayStateChange(final XmppClientInfo client, final boolean isBack) {
+    public void handleAwayStateChange(final ClientInfo client, final boolean isBack) {
         LOG.debug("Handling away state change for {} to {}", client.getNickname(), isBack);
 
         if (useFakeChannel) {
@@ -510,7 +511,7 @@ public class XmppParser extends BaseSocketAwareParser {
         connection.sendPacket(new Presence(Presence.Type.available, reason,
                 priority, Presence.Mode.away));
 
-        getCallback(AwayStateListener.class).onAwayState(null, null,
+        getCallback(AwayStateListener.class).onAwayState(this, new Date(),
                 AwayState.HERE, AwayState.AWAY, reason);
     }
 
@@ -521,7 +522,7 @@ public class XmppParser extends BaseSocketAwareParser {
         connection.sendPacket(new Presence(Presence.Type.available, null,
                 priority, Presence.Mode.available));
 
-        getCallback(AwayStateListener.class).onAwayState(null, null,
+        getCallback(AwayStateListener.class).onAwayState(this, new Date(),
                 AwayState.AWAY, AwayState.HERE, null);
     }
 
@@ -565,13 +566,13 @@ public class XmppParser extends BaseSocketAwareParser {
 
         @Override
         public void connectionClosed() {
-            getCallback(SocketCloseListener.class).onSocketClosed(null, null);
+            getCallback(SocketCloseListener.class).onSocketClosed(XmppParser.this, new Date());
         }
 
         @Override
         public void connectionClosedOnError(final Exception excptn) {
             // TODO: Handle exception
-            getCallback(SocketCloseListener.class).onSocketClosed(null, null);
+            getCallback(SocketCloseListener.class).onSocketClosed(XmppParser.this, new Date());
         }
 
         @Override
@@ -633,7 +634,7 @@ public class XmppParser extends BaseSocketAwareParser {
         @Override
         public void processMessage(final Chat chat, final Message msg) {
             if (msg.getType() == Message.Type.error) {
-                getCallback(NumericListener.class).onNumeric(null, null,
+                getCallback(NumericListener.class).onNumeric(XmppParser.this, new Date(),
                         404, new String[]{
                             ":xmpp", "404", getLocalClient().getNickname(),
                             msg.getFrom(),
@@ -644,11 +645,11 @@ public class XmppParser extends BaseSocketAwareParser {
 
             if (msg.getBody() != null) {
                 if (msg.getBody().startsWith("/me ")) {
-                    getCallback(PrivateActionListener.class).onPrivateAction(null,
-                            null, msg.getBody().substring(4), msg.getFrom());
+                    getCallback(PrivateActionListener.class).onPrivateAction(XmppParser.this,
+                            new Date(), msg.getBody().substring(4), msg.getFrom());
                 } else {
-                    getCallback(PrivateMessageListener.class).onPrivateMessage(null,
-                            null, msg.getBody(), msg.getFrom());
+                    getCallback(PrivateMessageListener.class).onPrivateMessage(XmppParser.this,
+                            new Date(), msg.getBody(), msg.getFrom());
                 }
             }
         }
@@ -673,7 +674,8 @@ public class XmppParser extends BaseSocketAwareParser {
             }
 
             getCallback(CompositionStateChangeListener.class)
-                    .onCompositionStateChanged(null, null, state, chat.getParticipant());
+                    .onCompositionStateChanged(XmppParser.this, new Date(), state,
+                            chat.getParticipant());
         }
 
     }
@@ -689,9 +691,11 @@ public class XmppParser extends BaseSocketAwareParser {
         @Override
         public void processPacket(final Packet packet) {
             if (callback.equals(DataOutListener.class)) {
-                getCallback(DataOutListener.class).onDataOut(null, null, packet.toXML(), true);
+                getCallback(DataOutListener.class).onDataOut(XmppParser.this, new Date(),
+                        packet.toXML(), true);
             } else {
-                getCallback(DataInListener.class).onDataIn(null, null, packet.toXML());
+                getCallback(DataInListener.class).onDataIn(XmppParser.this, new Date(),
+                        packet.toXML());
             }
         }
 
