@@ -100,8 +100,7 @@ public class TransferContainer extends FrameContainer implements
         myPlugin = plugin;
 
         if (parser != null) {
-            parser.getCallbackManager().addNonCriticalCallback(
-                    SocketCloseListener.class, this);
+            parser.getCallbackManager().addCallback(SocketCloseListener.class, this);
         }
         dcc.addHandler(this);
 
@@ -178,7 +177,7 @@ public class TransferContainer extends FrameContainer implements
      * @return The percentage of this transfer that has been completed
      */
     public double getPercent() {
-        return (100.00 / dcc.getFileSize()) * (transferCount
+        return 100.00 / dcc.getFileSize() * (transferCount
                 + dcc.getFileStart());
     }
 
@@ -192,7 +191,7 @@ public class TransferContainer extends FrameContainer implements
         final long time = getElapsedTime();
 
         synchronized (this) {
-            return time > 0 ? ((double) transferCount / time) : transferCount;
+            return time > 0 ? (double) transferCount / time : transferCount;
         }
     }
 
@@ -211,7 +210,7 @@ public class TransferContainer extends FrameContainer implements
                     - transferCount;
         }
 
-        return bytesPerSecond > 0 ? (remainingBytes / bytesPerSecond) : 1;
+        return bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : 1;
     }
 
     /**
@@ -350,7 +349,7 @@ public class TransferContainer extends FrameContainer implements
     public void addSocketCloseCallback(final SocketCloseListener listener) {
         if (connection != null) {
             connection.getParser().map(Parser::getCallbackManager).ifPresent(
-                    cbm -> cbm.addNonCriticalCallback(SocketCloseListener.class, listener));
+                    cbm -> cbm.addCallback(SocketCloseListener.class, listener));
         }
     }
 
