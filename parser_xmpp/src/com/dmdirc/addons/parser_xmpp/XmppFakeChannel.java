@@ -133,7 +133,8 @@ public class XmppFakeChannel extends BaseChannelInfo {
         }
 
         // TODO: Delete old contacts, don't needlessly create new objects
-        getParser().getCallbackManager().getCallbackType(ChannelNamesListener.class).call(this);
+        getParser().getCallbackManager().getCallback(ChannelNamesListener.class)
+                .onChannelGotNames(null, null, this);
     }
 
 }
