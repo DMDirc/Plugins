@@ -25,21 +25,23 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextPaneInputField;
 import com.dmdirc.addons.ui_swing.components.text.WrapEditorKit;
+import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
+import com.dmdirc.events.ChannelTopicChangeEvent;
+import com.dmdirc.events.ChannelTopicUnsetEvent;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.TopicChangeListener;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -68,11 +70,13 @@ import javax.swing.text.StyledDocument;
 
 import net.miginfocom.swing.MigLayout;
 
+import net.engio.mbassy.listener.Handler;
+
 /**
  * Component to show and edit topics for a channel.
  */
 public class TopicBar extends JComponent implements ActionListener, ConfigChangeListener,
-        MouseListener, DocumentListener, TopicChangeListener {
+        MouseListener, DocumentListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -176,7 +180,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         validate();
         invalidate();
 
-        channel.addTopicChangeListener(this);
+        channel.getEventBus().subscribe(this);
         topicText.addActionListener(this);
         topicEdit.addActionListener(this);
         topicCancel.addActionListener(this);
@@ -224,25 +228,32 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         }
     }
 
-    @Override
-    public final void topicChanged(final Channel channel, final Topic topic) {
-        UIUtilities.invokeLater(() -> {
-            if (topicText.isEditable()) {
-                return;
-            }
-            topicText.setText("");
-            if (topic != null) {
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleTopicChanged(final ChannelTopicChangeEvent event) {
+        topicChanged(event.getChannel(), event.getTopic());
+    }
+
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleTopicUnset(final ChannelTopicUnsetEvent event) {
+        topicChanged(event.getChannel(), null);
+    }
+
+    private void topicChanged(final Channel channel, final Topic topic) {
+        if (topicText.isEditable()) {
+            return;
+        }
+        topicText.setText("");
+        if (topic != null) {
             channel.getBackBuffer().getStyliser().addStyledString(
                     new StyledDocumentMaker((StyledDocument) topicText.getDocument(), as),
                     Styliser.CODE_HEXCOLOUR
                             + UIUtilities.getHex(foregroundColour)
                             + topic.getTopic());
-            }
-            topicText.setCaretPosition(0);
-            validateTopic();
-            setVisible(false);
-            setVisible(true);
-        });
+        }
+        topicText.setCaretPosition(0);
+        validateTopic();
+        setVisible(false);
+        setVisible(true);
     }
 
     @Override
@@ -431,7 +442,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * Closes this topic bar.
      */
     public void close() {
-        channel.removeTopicChangeListener(this);
+        channel.getEventBus().unsubscribe(this);
     }
 
     /**
