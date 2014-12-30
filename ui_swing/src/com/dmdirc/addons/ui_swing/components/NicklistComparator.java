@@ -22,7 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
+import com.dmdirc.interfaces.GroupChatUser;
+
+import com.google.common.collect.ComparisonChain;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -30,8 +32,7 @@ import java.util.Comparator;
 /**
  * Compares nicklist entries to each other, for sorting purposes.
  */
-public final class NicklistComparator implements Comparator<ChannelClientInfo>,
-        Serializable {
+public final class NicklistComparator implements Comparator<GroupChatUser>, Serializable {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -52,34 +53,21 @@ public final class NicklistComparator implements Comparator<ChannelClientInfo>,
         this.sortByCase = newSortByCase;
     }
 
-    /**
-     * Compares two ChannelClient objects based on the settings the comparator was initialised with.
-     *
-     * @param client1 the first client to be compared
-     * @param client2 the second client to be compared
-     *
-     * @return a negative integer, zero, or a positive integer as the first argument is less than,
-     *         equal to, or greater than the second.
-     */
     @Override
-    public int compare(final ChannelClientInfo client1,
-            final ChannelClientInfo client2) {
+    public int compare(final GroupChatUser client1, final GroupChatUser client2) {
+        ComparisonChain comparisonChain = ComparisonChain.start();
         if (sortByMode) {
-            final int modeCom = client2.compareTo(client1);
-
-            if (modeCom != 0) {
-                return modeCom;
-            }
+            comparisonChain = comparisonChain
+                    .compare(client1.getImportantMode(), client2.getImportantMode());
         }
-
-        final String nickname1 = client1.getClient().getNickname();
-        final String nickname2 = client2.getClient().getNickname();
-
         if (sortByCase) {
-            return nickname1.compareTo(nickname2);
+            comparisonChain = comparisonChain.compare(client1.getNickname(), client2.getNickname());
         } else {
-            return nickname1.compareToIgnoreCase(nickname2);
+            comparisonChain = comparisonChain
+                    .compare(client1.getNickname().toLowerCase(),
+                            client2.getNickname().toLowerCase());
         }
+        return comparisonChain.result();
     }
 
 }

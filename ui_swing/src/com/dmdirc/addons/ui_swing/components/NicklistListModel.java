@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,13 +34,13 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 
 /** Stores and provides means to modify nicklist data for a channel. */
-public final class NicklistListModel extends AbstractListModel<ChannelClientInfo> implements
+public final class NicklistListModel extends AbstractListModel<GroupChatUser> implements
         ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** stores the nicknames to be shown in this list. */
-    private final List<ChannelClientInfo> nicknames;
+    private final List<GroupChatUser> nicknames;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Sort by mode? */
@@ -54,8 +54,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      * @param config Config manager
      */
     public NicklistListModel(final AggregateConfigProvider config) {
-        this(config, Collections.synchronizedList(
-                new ArrayList<>()));
+        this(config, Collections.synchronizedList(new ArrayList<>()));
     }
 
     /**
@@ -65,7 +64,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      * @param newNicknames list of nicknames used for initialisation
      */
     public NicklistListModel(final AggregateConfigProvider config,
-            final List<ChannelClientInfo> newNicknames) {
+            final List<GroupChatUser> newNicknames) {
 
         this.config = config;
 
@@ -96,7 +95,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      * @return nicklist entry requested
      */
     @Override
-    public ChannelClientInfo getElementAt(final int index) {
+    public GroupChatUser getElementAt(final int index) {
         return nicknames.get(index);
     }
 
@@ -105,8 +104,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      */
     public void sort() {
         synchronized (nicknames) {
-            Collections.sort(nicknames,
-                    new NicklistComparator(sortByMode, sortByCase));
+            Collections.sort(nicknames, new NicklistComparator(sortByMode, sortByCase));
         }
         rerender();
     }
@@ -118,7 +116,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      *
      * @return boolean success
      */
-    public boolean replace(final Collection<ChannelClientInfo> clients) {
+    public boolean replace(final Collection<GroupChatUser> clients) {
         nicknames.clear();
         nicknames.addAll(clients);
         sort();
@@ -133,7 +131,7 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      *
      * @return boolean success
      */
-    public boolean add(final ChannelClientInfo client) {
+    public boolean add(final GroupChatUser client) {
         nicknames.add(client);
         sort();
 
@@ -147,10 +145,9 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      *
      * @return boolean success
      */
-    public boolean remove(final ChannelClientInfo client) {
-        final boolean returnValue;
+    public boolean remove(final GroupChatUser client) {
 
-        returnValue = nicknames.remove(client);
+        final boolean returnValue = nicknames.remove(client);
         rerender();
 
         return returnValue;
@@ -163,10 +160,9 @@ public final class NicklistListModel extends AbstractListModel<ChannelClientInfo
      *
      * @return ChannelClientInfo client removed
      */
-    public ChannelClientInfo remove(final int index) {
-        final ChannelClientInfo returnValue;
+    public GroupChatUser remove(final int index) {
 
-        returnValue = nicknames.remove(index);
+        final GroupChatUser returnValue = nicknames.remove(index);
         rerender();
 
         return returnValue;
