@@ -136,9 +136,9 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 return;
             }
             final String type = args.getArguments()[0];
-            if (type.equalsIgnoreCase("chat")) {
+            if ("chat".equalsIgnoreCase(type)) {
                 startChat(parser, connection, origin, myNickname, target, true);
-            } else if (type.equalsIgnoreCase("send")) {
+            } else if ("send".equalsIgnoreCase(type)) {
                 sendFile(target, origin, connection, true,
                         args.getArgumentsAsString(2));
             } else {

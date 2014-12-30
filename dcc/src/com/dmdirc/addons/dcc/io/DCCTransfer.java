@@ -24,6 +24,7 @@ package com.dmdirc.addons.dcc.io;
 
 import com.dmdirc.addons.dcc.DCCTransferHandler;
 import com.dmdirc.util.collections.ListenerList;
+import com.dmdirc.util.io.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -298,7 +299,7 @@ public class DCCTransfer extends DCC {
      * @return starting position of file.
      */
     public int getFileStart() {
-        return this.startpos;
+        return startpos;
     }
 
     /**
@@ -317,7 +318,7 @@ public class DCCTransfer extends DCC {
             transferFile = new File(filename);
             if (transferType == TransferType.RECEIVE) {
                 fileOut = new DataOutputStream(new FileOutputStream(
-                        transferFile.getAbsolutePath(), (startpos > 0)));
+                        transferFile.getAbsolutePath(), startpos > 0));
             }
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
@@ -333,18 +334,8 @@ public class DCCTransfer extends DCC {
     @Override
     protected void socketClosed() {
         // Try to close both, even if one fails.
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-            }
-        }
-        if (in != null) {
-            try {
-                in.close();
-            } catch (IOException e) {
-            }
-        }
+        StreamUtils.close(out);
+        StreamUtils.close(in);
         out = null;
         in = null;
 
@@ -384,7 +375,7 @@ public class DCCTransfer extends DCC {
         try {
             final byte[] data = new byte[blockSize];
             final int bytesRead = in.read(data);
-            readSize = readSize + bytesRead;
+            readSize += bytesRead;
 
             if (bytesRead > 0) {
                 for (DCCTransferHandler handler : handlers.get(DCCTransferHandler.class)) {
@@ -443,7 +434,7 @@ public class DCCTransfer extends DCC {
                     int bytesReceived;
                     do {
                         bytesReceived = in.readInt();
-                    } while ((readSize - bytesReceived) > 0);
+                    } while (readSize - bytesReceived > 0);
                 }
 
                 if (readSize == size) {
@@ -462,7 +453,7 @@ public class DCCTransfer extends DCC {
                             } catch (IOException e) {
                                 break;
                             }
-                        } while (ack > 0 && (readSize - ack) > 0);
+                        } while (ack > 0 && readSize - ack > 0);
                     }
 
                     return false;
