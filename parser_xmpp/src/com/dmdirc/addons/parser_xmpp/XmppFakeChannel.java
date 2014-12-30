@@ -30,6 +30,7 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.ChannelNamesListener;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * A 'fake' local channel used to display buddy lists.
@@ -134,7 +135,7 @@ public class XmppFakeChannel extends BaseChannelInfo {
 
         // TODO: Delete old contacts, don't needlessly create new objects
         getParser().getCallbackManager().getCallback(ChannelNamesListener.class)
-                .onChannelGotNames(null, null, this);
+                .onChannelGotNames(getParser(), new Date(), this);
     }
 
 }
