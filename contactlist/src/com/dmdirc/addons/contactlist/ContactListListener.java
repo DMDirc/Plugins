@@ -80,12 +80,12 @@ public class ContactListListener {
 
     @Handler
     public void handleUserAway(final ChannelUserAwayEvent event) {
-        clientAdded(event.getUser());
+        //clientAdded(event.getUser());
     }
 
     @Handler
     public void handleUserBack(final ChannelUserBackEvent event) {
-        clientAdded(event.getUser());
+        //clientAdded(event.getUser());
     }
 
     @Handler

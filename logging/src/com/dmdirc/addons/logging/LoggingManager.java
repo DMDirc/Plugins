@@ -45,6 +45,7 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -552,6 +553,17 @@ public class LoggingManager implements ConfigChangeListener {
      * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
      *
      * @param channelClient The client to get the display name for
+     *
+     * @return name to display
+     */
+    protected String getDisplayName(final GroupChatUser channelClient) {
+        return getDisplayName(channelClient, "");
+    }
+
+    /**
+     * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
+     *
+     * @param channelClient The client to get the display name for
      * @param overrideNick  Nickname to display instead of real nickname
      *
      * @return name to display
@@ -565,6 +577,25 @@ public class LoggingManager implements ConfigChangeListener {
         } else {
             return channelmodeprefix ? channelClient.getImportantModePrefix() + overrideNick
                     : overrideNick;
+        }
+    }
+
+    /**
+     * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
+     *
+     * @param channelClient The client to get the display name for
+     * @param overrideNick  Nickname to display instead of real nickname
+     *
+     * @return name to display
+     */
+    protected String getDisplayName(final GroupChatUser channelClient, final String overrideNick) {
+        if (channelClient == null) {
+            return overrideNick.isEmpty() ? "Unknown Client" : overrideNick;
+        } else if (overrideNick.isEmpty()) {
+            return channelmodeprefix ? channelClient.toString() : channelClient.getNickname();
+        } else {
+            return channelmodeprefix ? channelClient.getImportantMode() + overrideNick :
+                    overrideNick;
         }
     }
 
