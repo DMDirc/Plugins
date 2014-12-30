@@ -33,6 +33,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.plugins.ServiceProvider;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -69,7 +70,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
         for (Service service : serviceManager.getAllServices()) {

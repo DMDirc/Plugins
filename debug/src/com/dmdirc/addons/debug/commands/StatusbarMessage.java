@@ -33,6 +33,7 @@ import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.StatusMessage;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -75,7 +76,7 @@ public class StatusbarMessage extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         eventBus.publishAsync(new StatusBarMessageEvent(new StatusMessage(null,
                 "Test: " + args.getArgumentsAsString(), null, 5, globalConfig)));

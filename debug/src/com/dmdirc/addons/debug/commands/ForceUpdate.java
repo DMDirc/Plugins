@@ -35,6 +35,7 @@ import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -87,7 +88,7 @@ public class ForceUpdate extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         if (globalConfig.getOptionBool("updater", "enable")) {
             UpdateChecker.checkNow(updateManager, identityController, eventBus,
