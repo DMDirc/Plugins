@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.awaycolours;
 
+import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
-import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.ColourManager;
@@ -87,7 +87,12 @@ public class AwayColoursManager {
 
     @Handler
     public void handleAwayEvent(final ChannelUserAwayEvent event) {
-        event.getUser().setDisplayProperty(DisplayProperty.FOREGROUND_COLOUR, colour);
+        if (nicklist) {
+            event.getUser().getMap().put(ChannelClientProperty.NICKLIST_FOREGROUND, colour);
+        }
+        if (text) {
+            event.getUser().getMap().put(ChannelClientProperty.TEXT_FOREGROUND, colour);
+        }
         if (nicklist || text) {
             event.getChannel().refreshClients();
         }
@@ -95,7 +100,12 @@ public class AwayColoursManager {
 
     @Handler
     public void handleBackEvent(final ChannelUserBackEvent event) {
-        event.getUser().setDisplayProperty(DisplayProperty.FOREGROUND_COLOUR, colour);
+        if (nicklist) {
+            event.getUser().getMap().remove(ChannelClientProperty.NICKLIST_FOREGROUND);
+        }
+        if (text) {
+            event.getUser().getMap().remove(ChannelClientProperty.TEXT_FOREGROUND);
+        }
         if (nicklist || text) {
             event.getChannel().refreshClients();
         }
