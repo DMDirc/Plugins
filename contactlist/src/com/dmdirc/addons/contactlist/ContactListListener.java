@@ -27,18 +27,17 @@ import com.dmdirc.Query;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.events.NickListClientAddedEvent;
+import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.interfaces.NicklistListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
-
-import java.util.Collection;
 
 import net.engio.mbassy.listener.Handler;
 
 /**
  * Listens for contact list related events.
  */
-public class ContactListListener implements NicklistListener {
+public class ContactListListener {
 
     /** The group chat this listener is for. */
     private final GroupChat groupChat;
@@ -59,7 +58,6 @@ public class ContactListListener implements NicklistListener {
      * Adds all necessary listeners for this contact list listener to function.
      */
     public void addListeners() {
-        groupChat.addNicklistListener(this);
         eventBus.subscribe(this);
     }
 
@@ -67,31 +65,17 @@ public class ContactListListener implements NicklistListener {
      * Removes the listeners added by {@link #addListeners()}.
      */
     public void removeListeners() {
-        groupChat.removeNicklistListener(this);
         eventBus.unsubscribe(this);
     }
 
-    @Override
-    public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
-        clients.forEach(this::clientAdded);
+    @Handler
+    public void handleClientsUpdated(final NickListClientsChangedEvent event) {
+        event.getUsers().forEach(this::clientAdded);
     }
 
-    @Override
-    public void clientListUpdated() {
-        // Do nothing
-    }
-
-    @Override
-    public void clientAdded(final ChannelClientInfo client) {
-        final Query query = groupChat.getConnection().get()
-                .getQuery(client.getClient().getNickname(), false);
-
-        query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
-    }
-
-    @Override
-    public void clientRemoved(final ChannelClientInfo client) {
-        // Do nothing
+    @Handler
+    public void handleClientAdded(final NickListClientAddedEvent event) {
+        clientAdded(event.getUser());
     }
 
     @Handler
@@ -107,6 +91,13 @@ public class ContactListListener implements NicklistListener {
     @Handler
     public void windowClosing(final FrameClosingEvent event) {
         removeListeners();
+    }
+
+    private void clientAdded(final ChannelClientInfo client) {
+        final Query query = groupChat.getConnection().get()
+                .getQuery(client.getClient().getNickname(), false);
+
+        query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
     }
 
 }
