@@ -51,10 +51,6 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.ClientInfo;
-import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -270,45 +266,43 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleChannelGotTopic(final ChannelGottopicEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
-        final ChannelInfo channel = event.getChannel().getChannelInfo();
         final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-        appendLine(filename, "*** Topic is: %s", channel.getTopic());
-        appendLine(filename, "*** Set at: %s on %s by %s", timeFormat.format(1000 * channel.
-                getTopicTime()), dateFormat.format(1000 * channel.getTopicTime()), channel.
-                getTopicSetter());
+        appendLine(filename, "*** Topic is: %s", event.getTopic().getTopic());
+        appendLine(filename, "*** Set at: %s on %s by %s",
+                timeFormat.format(1000 * event.getTopic().getTime()),
+                dateFormat.format(1000 * event.getTopic().getTime()),
+                        event.getTopic().getClient()
+                                .map(GroupChatUser::getNickname).orElse("Unknown"));
     }
 
     @Handler
     public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
-        final GroupChatUser channelClient = event.getTopic().getClient();
         appendLine(filename, "*** %s Changed the topic to: %s",
-                getDisplayName(channelClient), event.getTopic());
+                event.getTopic().getClient().map(this::getDisplayName).orElse(""), event.getTopic());
     }
 
     @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
-        final ChannelClientInfo channelClient = event.getClient();
-        final ClientInfo client = channelClient.getClient();
-        appendLine(filename, "*** %s (%s) joined the channel",
-                getDisplayName(channelClient), client.toString());
+        final GroupChatUser channelClient = event.getClient();
+        appendLine(filename, "*** %s (%s) joined the channel", getDisplayName(channelClient),
+                channelClient.getNickname());
     }
 
     @Handler
     public void handleChannelPart(final ChannelPartEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final String message = event.getMessage();
-        final ChannelClientInfo channelClient = event.getClient();
-        final ClientInfo client = channelClient.getClient();
+        final GroupChatUser channelClient = event.getClient();
         if (message.isEmpty()) {
-            appendLine(filename, "*** %s (%s) left the channel",
-                    getDisplayName(channelClient), client.toString());
+            appendLine(filename, "*** %s (%s) left the channel", getDisplayName(channelClient),
+                    channelClient.getNickname());
         } else {
             appendLine(filename, "*** %s (%s) left the channel (%s)",
-                    getDisplayName(channelClient), client.toString(), message);
+                    getDisplayName(channelClient), channelClient.getNickname(), message);
         }
     }
 
@@ -316,21 +310,20 @@ public class LoggingManager implements ConfigChangeListener {
     public void handleChannelQuit(final ChannelQuitEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final String reason = event.getMessage();
-        final ChannelClientInfo channelClient = event.getClient();
-        final ClientInfo client = channelClient.getClient();
+        final GroupChatUser channelClient = event.getClient();
         if (reason.isEmpty()) {
             appendLine(filename, "*** %s (%s) Quit IRC",
-                    getDisplayName(channelClient), client.toString());
+                    getDisplayName(channelClient), channelClient.getNickname());
         } else {
             appendLine(filename, "*** %s (%s) Quit IRC (%s)",
-                    getDisplayName(channelClient), client.toString(), reason);
+                    getDisplayName(channelClient), channelClient.getNickname(), reason);
         }
     }
 
     @Handler
     public void handleChannelKick(final ChannelKickEvent event) {
-        final ChannelClientInfo victim = event.getVictim();
-        final ChannelClientInfo perpetrator = event.getClient();
+        final GroupChatUser victim = event.getVictim();
+        final GroupChatUser perpetrator = event.getClient();
         final String reason = event.getReason();
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
 
@@ -353,7 +346,7 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleModeChange(final ChannelModechangeEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
-        if (event.getClient().getClient().getNickname().isEmpty()) {
+        if (event.getClient().getNickname().isEmpty()) {
             appendLine(filename, "*** Channel modes are: %s", event.getModes());
         } else {
             appendLine(filename, "*** %s set modes: %s",
@@ -545,39 +538,8 @@ public class LoggingManager implements ConfigChangeListener {
      *
      * @return name to display
      */
-    protected String getDisplayName(final ChannelClientInfo channelClient) {
-        return getDisplayName(channelClient, "");
-    }
-
-    /**
-     * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
-     *
-     * @param channelClient The client to get the display name for
-     *
-     * @return name to display
-     */
     protected String getDisplayName(final GroupChatUser channelClient) {
         return getDisplayName(channelClient, "");
-    }
-
-    /**
-     * Get name to display for channelClient (Taking into account the channelmodeprefix setting).
-     *
-     * @param channelClient The client to get the display name for
-     * @param overrideNick  Nickname to display instead of real nickname
-     *
-     * @return name to display
-     */
-    protected String getDisplayName(final ChannelClientInfo channelClient, final String overrideNick) {
-        if (channelClient == null) {
-            return overrideNick.isEmpty() ? "Unknown Client" : overrideNick;
-        } else if (overrideNick.isEmpty()) {
-            return channelmodeprefix ? channelClient.toString() : channelClient.getClient().
-                    getNickname();
-        } else {
-            return channelmodeprefix ? channelClient.getImportantModePrefix() + overrideNick
-                    : overrideNick;
-        }
     }
 
     /**
@@ -612,8 +574,7 @@ public class LoggingManager implements ConfigChangeListener {
         if (target instanceof Channel) {
             descriptor = target.getName();
         } else if (target instanceof Query) {
-            final Parser parser = target.getConnection().get().getParser().get();
-            descriptor = parser.getClient(((PrivateChat) target).getHost()).getNickname();
+            descriptor = ((PrivateChat) target).getNickname();
         } else {
             // Unknown component
             return false;

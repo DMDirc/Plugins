@@ -27,15 +27,17 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
+import com.dmdirc.interfaces.GroupChatUser;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.parser.interfaces.ChannelInfo;
-import com.dmdirc.parser.interfaces.ClientInfo;
+import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.colours.Colour;
+
+import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,12 +84,8 @@ public class NickColourManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelNames(final ChannelGotnamesEvent event) {
-        final ChannelInfo chanInfo = event.getChannel().getChannelInfo();
         final String network = event.getChannel().getConnection().get().getNetwork();
-
-        for (ChannelClientInfo client : chanInfo.getChannelClients()) {
-            colourClient(network, client);
-        }
+        event.getChannel().getUsers().forEach(client -> colourClient(network, client));
     }
 
     @Handler
@@ -102,23 +100,20 @@ public class NickColourManager implements ConfigChangeListener {
      * @param network The network to use for the colouring
      * @param client  The client to be coloured
      */
-    private void colourClient(final String network,
-            final ChannelClientInfo client) {
-        final Map<Object, Object> map = client.getMap();
-        final ClientInfo myself = client.getClient().getParser().getLocalClient();
-        final String nickOption1 = "color:"
-                + client.getClient().getParser().getStringConverter().
-                toLowerCase(network + ':' + client.getClient().getNickname());
-        final String nickOption2 = "color:"
-                + client.getClient().getParser().getStringConverter().
-                toLowerCase("*:" + client.getClient().getNickname());
+    private void colourClient(final String network, final GroupChatUser client) {
+        final StringConverter sc = client.getUser().getConnection().getParser().get()
+                .getStringConverter();
+        // TODO: This needs to use the new setDisplayableProperty on GroupChatUser
+        final Map<Object, Object> map = Maps.newHashMap();
+        final User myself = client.getUser();
+        final String nickOption1 = "color:" + sc.toLowerCase(network + ':' + client.getNickname());
+        final String nickOption2 = "color:" + sc.toLowerCase("*:" + client.getNickname());
 
-        if (useowncolour && client.getClient().equals(myself)) {
+        if (useowncolour && client.getUser().equals(myself)) {
             final Colour color = colourManager.getColourFromString(owncolour, null);
             putColour(map, color, color);
         } else if (userandomcolour) {
-            putColour(map, getColour(client.getClient().getNickname()), getColour(client.
-                    getClient().getNickname()));
+            putColour(map, getColour(client.getNickname()), getColour(client.getNickname()));
         }
 
         String[] parts = null;

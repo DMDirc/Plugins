@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
@@ -166,7 +167,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      */
     public void setTopic(final Optional<Topic> topic) {
         if (topic.isPresent()) {
-            topicWho.setText("Topic set by " + topic.get().getClient().getNickname()
+            topicWho.setText("Topic set by " + topic.get().getClient()
+                    .map(GroupChatUser::getNickname).orElse("Unknown")
                     + "<br> on " + new Date(1000 * topic.get().getTime()));
             topicText.setText(topic.get().getTopic());
         } else {
