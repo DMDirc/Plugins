@@ -23,12 +23,13 @@
 package com.dmdirc.addons.ui_swing.components.renderers;
 
 import com.dmdirc.ChannelClientProperty;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
-import com.dmdirc.util.colours.Colour;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -38,8 +39,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
 /** Renders the nicklist. */
-public final class NicklistRenderer extends DefaultListCellRenderer implements
-        ConfigChangeListener {
+public final class NicklistRenderer extends DefaultListCellRenderer {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -68,18 +68,7 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         this.config = config;
         this.nicklist = nicklist;
         this.colourManager = colourManager;
-
-        config.addChangeListener("ui", "shownickcoloursinnicklist", this);
-        config.addChangeListener("ui", "nicklistbackgroundcolour", this);
-        config.addChangeListener("ui", "backgroundcolour", this);
-        config.addChangeListener("ui", "nickListAltBackgroundColour", this);
-        altBackgroundColour = UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "nickListAltBackgroundColour",
-                                "ui", "nicklistbackgroundcolour",
-                                "ui", "backgroundcolour"), null));
-        showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
+        config.getBinder().bind(this, NicklistRenderer.class);
     }
 
     @Override
@@ -111,19 +100,19 @@ public final class NicklistRenderer extends DefaultListCellRenderer implements
         return this;
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        if ("shownickcoloursinnicklist".equals(key)) {
-            showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
+    @ConfigBinding(domain = "ui", key = "shownickcoloursinnicklist",
+            invocation = EDTInvocation.class)
+    public void handleShowColoursInNickList(final String value) {
+        showColours = config.getOptionBool("ui", "shownickcoloursinnicklist");
+        nicklist.repaint();
+    }
 
-        } else {
-            altBackgroundColour = UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "nickListAltBackgroundColour",
-                                    "ui", "nicklistbackgroundcolour",
-                                    "ui", "backgroundcolour"), null));
-        }
+    @ConfigBinding(domain = "ui", key = "nickListAltBackgroundColour",
+            fallbacks = {"ui", "nicklistbackgroundcolour", "ui", "backgroundcolour"},
+            invocation = EDTInvocation.class)
+    public void handleColours(final String value) {
+        altBackgroundColour = UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null));
         nicklist.repaint();
     }
 
