@@ -26,6 +26,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
+import com.dmdirc.interfaces.GroupChatUser;
 
 import java.awt.Color;
 import java.util.Date;
@@ -130,9 +131,11 @@ public class TopicLabel extends JPanel {
 
         TextLabel label;
         if (topic.getTopic().isEmpty()) {
-            label = new TextLabel("Topic unset by " + topic.getClient().getNickname());
+            label = new TextLabel("Topic unset by " + topic.getClient()
+                    .map(GroupChatUser::getNickname).orElse("Unknown"));
         } else {
-            label = new TextLabel("Topic set by " + topic.getClient().getNickname());
+            label = new TextLabel("Topic set by " + topic.getClient()
+                    .map(GroupChatUser::getNickname).orElse("Unknown"));
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
