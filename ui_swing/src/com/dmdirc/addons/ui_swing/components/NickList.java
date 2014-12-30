@@ -23,14 +23,19 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.Channel;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
-import com.dmdirc.interfaces.NicklistListener;
+import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.events.NickListClientAddedEvent;
+import com.dmdirc.events.NickListClientRemovedEvent;
+import com.dmdirc.events.NickListClientsChangedEvent;
+import com.dmdirc.events.NickListUpdatedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -40,19 +45,18 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Nicklist class.
  */
-public class NickList extends JScrollPane implements ConfigChangeListener,
-        MouseListener, NicklistListener {
+public class NickList extends JScrollPane implements MouseListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 10;
@@ -60,8 +64,6 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     private final JList<ChannelClientInfo> nickList;
     /** Parent frame. */
     private final ChannelFrame frame;
-    /** Config. */
-    private final AggregateConfigProvider config;
     /** The colour manager to use for this nicklist. */
     private final ColourManager colourManager;
     /** Nick list model. */
@@ -76,33 +78,11 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
     public NickList(final ChannelFrame frame, final AggregateConfigProvider config,
             final ColourManagerFactory colourManagerFactory) {
         this.frame = frame;
-        this.config = config;
         this.colourManager = colourManagerFactory.getColourManager(config);
 
         nickList = new JList<>();
-
-        nickList.setBackground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "nicklistbackgroundcolour",
-                                "ui", "backgroundcolour"), null)));
-        nickList.setForeground(UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        config.getOptionString(
-                                "ui", "nicklistforegroundcolour",
-                                "ui", "foregroundcolour"), null)));
-        nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
-                Font.PLAIN, getFont().getSize()));
-        config.addChangeListener("ui", "nicklistforegroundcolour", this);
-        config.addChangeListener("ui", "foregroundcolour", this);
-        config.addChangeListener("ui", "nicklistbackgroundcolour", this);
-        config.addChangeListener("ui", "backgroundcolour", this);
-        config.addChangeListener("ui", "nickListAltBackgroundColour", this);
-        config.addChangeListener("ui", "textPaneFontName", this);
-
         nickList.setCellRenderer(new NicklistRenderer(config, nickList, colourManager));
-        nickList.setSelectionMode(
-                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        nickList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         nickList.addMouseListener(this);
 
@@ -111,14 +91,13 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         nickList.setModel(nicklistModel);
         setViewportView(nickList);
 
-        final int splitPanePosition = config.getOptionInt("ui",
-                "channelSplitPanePosition");
+        final int splitPanePosition = config.getOptionInt("ui", "channelSplitPanePosition");
         setPreferredSize(new Dimension(splitPanePosition, 0));
         setMinimumSize(new Dimension(75, 0));
 
-        ((Channel) frame.getContainer()).addNicklistListener(this);
-        clientListUpdated(((Channel) frame.getContainer()).getChannelInfo()
-                .getChannelClients());
+        nicklistModel.replace(((Channel) frame.getContainer()).getChannelInfo().getChannelClients());
+        frame.getContainer().getEventBus().subscribe(this);
+        config.getBinder().bind(this, NickList.class);
     }
 
     @Override
@@ -146,11 +125,6 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         //Ignore
     }
 
-    /**
-     * Processes every mouse button event to check for a popup trigger.
-     *
-     * @param e mouse event
-     */
     @Override
     public void processMouseEvent(final MouseEvent e) {
         if (!e.isPopupTrigger()
@@ -225,53 +199,47 @@ public class NickList extends JScrollPane implements ConfigChangeListener,
         return suceeded;
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        if ("nickListAltBackgroundColour".equals(key)
-                || "nicklistbackgroundcolour".equals(key)
-                || "backgroundcolour".equals(key)
-                || "nicklistforegroundcolour".equals(key)
-                || "foregroundcolour".equals(key)
-                || "textPaneFontName".equals(key)) {
-            nickList.setBackground(UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "nicklistbackgroundcolour",
-                                    "ui", "backgroundcolour"), null)));
-            nickList.setForeground(UIUtilities.convertColour(
-                    colourManager.getColourFromString(
-                            config.getOptionString(
-                                    "ui", "nicklistforegroundcolour",
-                                    "ui", "foregroundcolour"), null)));
-            nickList.setFont(new Font(config.getOption("ui", "textPaneFontName"),
-                    Font.PLAIN, getFont().getSize()));
-            nickList.repaint();
-        }
-        nickList.setSelectionMode(
-                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    @ConfigBinding(domain = "ui", key = "textPaneFontName", invocation = EDTInvocation.class)
+    public void handleFontName(final String value) {
+        nickList.setFont(new Font(value, Font.PLAIN, getFont().getSize()));
+        nickList.repaint();
     }
 
-    @Override
-    public void clientListUpdated(final Collection<ChannelClientInfo> clients) {
-        SwingUtilities.invokeLater(() -> nicklistModel.replace(clients));
+    @ConfigBinding(domain = "ui", key = "nicklistbackgroundcolour",
+            fallbacks = {"ui", "backgroundcolour"}, invocation = EDTInvocation.class)
+    public void handleBackgroundColour(final String value) {
+        nickList.setBackground(UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null)));
+        nickList.repaint();
     }
 
-    @Override
-    public void clientListUpdated() {
-        SwingUtilities.invokeLater(() -> {
-            nicklistModel.sort();
-            repaint();
-        });
+    @ConfigBinding(domain = "ui", key = "nicklistforegroundcolour",
+            fallbacks = {"ui", "foregroundcolour"}, invocation = EDTInvocation.class)
+    public void handleForegroundColour(final String value) {
+        nickList.setForeground(UIUtilities.convertColour(
+                colourManager.getColourFromString(value, null)));
+        nickList.repaint();
     }
 
-    @Override
-    public void clientAdded(final ChannelClientInfo client) {
-        SwingUtilities.invokeLater(() -> nicklistModel.add(client));
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleClientsChanged(final NickListClientsChangedEvent event) {
+        nicklistModel.replace(event.getUsers());
     }
 
-    @Override
-    public void clientRemoved(final ChannelClientInfo client) {
-        SwingUtilities.invokeLater(() -> nicklistModel.remove(client));
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleNickListUpdated(final NickListUpdatedEvent event) {
+        nicklistModel.sort();
+        repaint();
+    }
+
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleClientAdded(final NickListClientAddedEvent event) {
+        nicklistModel.add(event.getUser());
+    }
+
+    @Handler(invocation = EdtHandlerInvocation.class)
+    public void handleClientRemoved(final NickListClientRemovedEvent event) {
+        nicklistModel.remove(event.getUser());
     }
 
 }
