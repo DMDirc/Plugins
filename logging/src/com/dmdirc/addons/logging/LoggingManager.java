@@ -283,7 +283,7 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
-        final ChannelClientInfo channelClient = event.getClient();
+        final GroupChatUser channelClient = event.getTopic().getClient();
         appendLine(filename, "*** %s Changed the topic to: %s",
                 getDisplayName(channelClient), event.getTopic());
     }
