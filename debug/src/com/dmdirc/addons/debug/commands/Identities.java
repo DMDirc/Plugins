@@ -32,6 +32,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -67,7 +68,7 @@ public class Identities extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final String type;
 

@@ -31,6 +31,7 @@ import com.dmdirc.util.colours.Colour;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -60,7 +61,7 @@ public class Notify extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final Optional<Colour> colour = origin.getNotification();
         if (colour.isPresent()) {

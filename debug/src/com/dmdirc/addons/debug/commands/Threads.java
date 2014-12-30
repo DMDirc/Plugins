@@ -31,6 +31,7 @@ import com.dmdirc.ui.messages.Styliser;
 
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -60,7 +61,7 @@ public class Threads extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         for (Entry<Thread, StackTraceElement[]> thread
                 : Thread.getAllStackTraces().entrySet()) {

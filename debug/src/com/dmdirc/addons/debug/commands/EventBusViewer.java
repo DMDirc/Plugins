@@ -41,6 +41,7 @@ import com.dmdirc.util.URLBuilder;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -89,7 +90,7 @@ public class EventBusViewer extends DebugCommand {
     }
 
     @Override
-    public void execute(final FrameContainer origin,
+    public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
         final boolean isGlobal = args.getArguments().length > 0
                 && "--global".equals(args.getArguments()[0]);
