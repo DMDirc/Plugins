@@ -35,8 +35,8 @@ import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientRemovedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.events.NickListUpdatedEvent;
+import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -61,7 +61,7 @@ public class NickList extends JScrollPane implements MouseListener {
     /** A version number for this class. */
     private static final long serialVersionUID = 10;
     /** Nick list. */
-    private final JList<ChannelClientInfo> nickList;
+    private final JList<GroupChatUser> nickList;
     /** Parent frame. */
     private final ChannelFrame frame;
     /** The colour manager to use for this nicklist. */
@@ -81,7 +81,8 @@ public class NickList extends JScrollPane implements MouseListener {
         this.colourManager = colourManagerFactory.getColourManager(config);
 
         nickList = new JList<>();
-        nickList.setCellRenderer(new NicklistRenderer(config, nickList, colourManager));
+        nickList.setCellRenderer(new NicklistRenderer(nickList.getCellRenderer(), config,
+                nickList, colourManager));
         nickList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         nickList.addMouseListener(this);
@@ -95,7 +96,7 @@ public class NickList extends JScrollPane implements MouseListener {
         setPreferredSize(new Dimension(splitPanePosition, 0));
         setMinimumSize(new Dimension(75, 0));
 
-        nicklistModel.replace(((Channel) frame.getContainer()).getChannelInfo().getChannelClients());
+        nicklistModel.replace(((Channel) frame.getContainer()).getUsers());
         frame.getContainer().getEventBus().subscribe(this);
         config.getBinder().bind(this, NickList.class);
     }
@@ -133,15 +134,15 @@ public class NickList extends JScrollPane implements MouseListener {
             return;
         }
         if (checkCursorInSelectedCell() || selectNickUnderCursor()) {
-            final List<ChannelClientInfo> values = nickList.getSelectedValuesList();
+            final List<GroupChatUser> values = nickList.getSelectedValuesList();
             final StringBuilder builder = new StringBuilder();
 
-            for (ChannelClientInfo value : values) {
+            for (GroupChatUser value : values) {
                 if (builder.length() > 0) {
                     builder.append('\n');
                 }
 
-                builder.append(value.getClient().getNickname());
+                builder.append(value.getNickname());
             }
 
             frame.showPopupMenu(new ClickTypeValue(ClickType.NICKNAME,

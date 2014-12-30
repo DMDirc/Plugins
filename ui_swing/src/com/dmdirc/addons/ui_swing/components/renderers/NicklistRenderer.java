@@ -22,27 +22,23 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.events.DisplayProperty;
+import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.util.Map;
 
-import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /** Renders the nicklist. */
-public final class NicklistRenderer extends DefaultListCellRenderer {
+public final class NicklistRenderer extends DMDircListCellRenderer<GroupChatUser> {
 
-    /** A version number for this class. */
-    private static final long serialVersionUID = 5;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Nicklist alternate background colour. */
@@ -50,7 +46,7 @@ public final class NicklistRenderer extends DefaultListCellRenderer {
     /** Show nick colours. */
     private boolean showColours;
     /** The list that we're using for the nicklist. */
-    private final JList<ChannelClientInfo> nicklist;
+    private final JList<GroupChatUser> nicklist;
     /** Colour manager to use to resolve colours. */
     private final ColourManager colourManager;
 
@@ -61,10 +57,11 @@ public final class NicklistRenderer extends DefaultListCellRenderer {
      * @param nicklist      The nicklist that we're rendering for.
      * @param colourManager Colour manager to use to resolve colours.
      */
-    public NicklistRenderer(
+    public NicklistRenderer(final ListCellRenderer<? super GroupChatUser> renderer,
             final AggregateConfigProvider config,
-            final JList<ChannelClientInfo> nicklist,
+            final JList<GroupChatUser> nicklist,
             final ColourManager colourManager) {
+        super(renderer);
         this.config = config;
         this.nicklist = nicklist;
         this.colourManager = colourManager;
@@ -72,32 +69,18 @@ public final class NicklistRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public Component getListCellRendererComponent(final JList<?> list,
-            final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus) {
-
-        super.getListCellRendererComponent(list, value, index, isSelected,
-                cellHasFocus);
-
+    protected void renderValue(final JLabel label, final GroupChatUser value, final int index,
+            final boolean isSelected, final boolean hasFocus) {
         if (!isSelected && (index & 1) == 1) {
-            setBackground(altBackgroundColour);
+            label.setBackground(altBackgroundColour);
         }
-
-        final Map<?, ?> map = ((ChannelClientInfo) value).getMap();
-
-        if (showColours && map != null) {
-            if (map.containsKey(ChannelClientProperty.NICKLIST_FOREGROUND)) {
-                setForeground(UIUtilities.convertColour((Colour) map.get(
-                        ChannelClientProperty.NICKLIST_FOREGROUND)));
-            }
-
-            if (map.containsKey(ChannelClientProperty.NICKLIST_BACKGROUND)) {
-                setBackground(UIUtilities.convertColour((Colour) map.get(
-                        ChannelClientProperty.NICKLIST_BACKGROUND)));
-            }
+        if (showColours) {
+            value.getDisplayProperty(DisplayProperty.FOREGROUND_COLOUR).ifPresent(
+                    c -> label.setForeground(UIUtilities.convertColour(c)));
+            value.getDisplayProperty(DisplayProperty.BACKGROUND_COLOUR).ifPresent(
+                    c -> label.setForeground(UIUtilities.convertColour(c)));
         }
-
-        return this;
+        label.setText(value.getImportantMode() + value.getNickname());
     }
 
     @ConfigBinding(domain = "ui", key = "shownickcoloursinnicklist",
@@ -115,5 +98,4 @@ public final class NicklistRenderer extends DefaultListCellRenderer {
                 colourManager.getColourFromString(value, null));
         nicklist.repaint();
     }
-
 }

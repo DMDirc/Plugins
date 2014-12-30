@@ -70,12 +70,12 @@ public class ContactListListener {
 
     @Handler
     public void handleClientsUpdated(final NickListClientsChangedEvent event) {
-        event.getUsers().forEach(this::clientAdded);
+        //event.getUsers().forEach(this::clientAdded);
     }
 
     @Handler
     public void handleClientAdded(final NickListClientAddedEvent event) {
-        clientAdded(event.getUser());
+        //clientAdded(event.getUser());
     }
 
     @Handler
