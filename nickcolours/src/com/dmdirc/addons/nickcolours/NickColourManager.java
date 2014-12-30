@@ -37,6 +37,8 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +47,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import autovalue.shaded.com.google.common.common.collect.Maps;
 import net.engio.mbassy.listener.Handler;
 
 /**
