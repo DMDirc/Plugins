@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
@@ -64,7 +65,8 @@ public class ContactListCommand extends Command implements IntelligentCommand {
 
         final ContactListListener listener = new ContactListListener(chanContext.getChannel());
         listener.addListeners();
-        //listener.clientListUpdated(chanContext.getChannel().getChannelInfo().getChannelClients());
+        listener.handleClientsUpdated(new NickListClientsChangedEvent(chanContext.getChannel(),
+                chanContext.getChannel().getUsers()));
     }
 
     @Override
