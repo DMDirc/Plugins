@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.sessionlock;
 
-import com.dmdirc.actions.ActionManager;
-
 import javax.inject.Inject;
 
 import com.greboid.lock.LockAdapter;
@@ -31,16 +29,13 @@ import com.greboid.lock.LockListener;
 
 public class SessionLockManager implements LockListener {
 
-    /** Action manager. */
-    private final ActionManager actionManager;
     /** Have we registered our actions? */
     private static boolean registered;
     /** Lock Adapter to detect session events. */
     private LockAdapter lockAdapter;
 
     @Inject
-    public SessionLockManager(final ActionManager actionManager) {
-        this.actionManager = actionManager;
+    public SessionLockManager() {
     }
 
     /**
@@ -48,7 +43,6 @@ public class SessionLockManager implements LockListener {
      */
     public void load() {
         if (!registered) {
-            actionManager.registerTypes(SessionLockActionType.values());
             registered = true;
         }
 
@@ -66,12 +60,12 @@ public class SessionLockManager implements LockListener {
 
     @Override
     public void locked() {
-        actionManager.triggerEvent(SessionLockActionType.SESSION_LOCK, null);
+        // TODO: Raise an event
     }
 
     @Override
     public void unlocked() {
-        actionManager.triggerEvent(SessionLockActionType.SESSION_UNLOCK, null);
+        // TODO: Raise an event
     }
 
 }

@@ -38,7 +38,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
     private final ButtonModel notinstalledBox;
     private final ButtonModel pluginsBox;
     private final ButtonModel themesBox;
-    private final ButtonModel actionsBox;
     private final JTextField searchBox;
 
     /**
@@ -50,14 +49,12 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
      * @param notinstalledBox Not installed checkbox
      * @param pluginsBox      Plugins checkbox
      * @param themesBox       Themes checkbox
-     * @param actionsBox      Actions checkbox
      * @param searchBox       Search field
      */
     public AddonFilter(final ButtonModel verifiedBox,
             final ButtonModel unverifiedBox, final ButtonModel installedBox,
             final ButtonModel notinstalledBox, final ButtonModel pluginsBox,
-            final ButtonModel themesBox, final ButtonModel actionsBox,
-            final JTextField searchBox) {
+            final ButtonModel themesBox, final JTextField searchBox) {
 
         this.verifiedBox = verifiedBox;
         this.unverifiedBox = unverifiedBox;
@@ -65,7 +62,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
         this.notinstalledBox = notinstalledBox;
         this.pluginsBox = pluginsBox;
         this.themesBox = themesBox;
-        this.actionsBox = actionsBox;
         this.searchBox = searchBox;
     }
 
@@ -80,7 +76,6 @@ public class AddonFilter extends RowFilter<DefaultTableModel, Integer> {
                 || (!notinstalledBox.isSelected() && !info.isInstalled())
                 || (!pluginsBox.isSelected() && info.getType() == AddonType.TYPE_PLUGIN)
                 || (!themesBox.isSelected() && info.getType() == AddonType.TYPE_THEME)
-                || (!actionsBox.isSelected() && info.getType() == AddonType.TYPE_ACTION_PACK)
                 || (!searchBox.getText().isEmpty()
                 && !info.matches(searchBox.getText())));
     }

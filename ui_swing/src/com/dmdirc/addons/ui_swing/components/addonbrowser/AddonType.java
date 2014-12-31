@@ -30,9 +30,7 @@ public enum AddonType {
     /** Plugins. */
     TYPE_PLUGIN,
     /** Themes. */
-    TYPE_THEME,
-    /** Action packs. */
-    TYPE_ACTION_PACK;
+    TYPE_THEME;
 
     @Override
     public String toString() {

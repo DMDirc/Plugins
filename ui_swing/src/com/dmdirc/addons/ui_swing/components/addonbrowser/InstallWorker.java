@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
@@ -53,8 +52,6 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
     private final PluginManager pluginManager;
     /** Downloader to download files. */
     private final Downloader downloader;
-    /** Action controller to install actions with. */
-    private final ActionManager actionController;
 
     public InstallWorker(
             final Downloader downloader,
@@ -63,11 +60,9 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             final String themeDirectory,
             final PluginManager pluginManager,
             final DMDircMBassador eventBus,
-            final ActionManager actionController,
             final AddonInfo info,
             final InstallerWindow window) {
         super(eventBus);
-        this.actionController = actionController;
         this.downloader = downloader;
         this.info = info;
         this.installer = window;
@@ -84,9 +79,6 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             downloader.downloadPage(info.getDownload(), file);
 
             switch (info.getType()) {
-                case TYPE_ACTION_PACK:
-                    actionController.installActionPack(file);
-                    break;
                 case TYPE_PLUGIN:
                     final Path newFile = Paths.get(pluginDirectory, info.getTitle() + ".jar");
                     try {

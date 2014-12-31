@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.plugins.PluginManager;
@@ -42,16 +41,13 @@ public class InstallWorkerFactory {
     private final String themeDirectory;
     private final PluginManager pluginManager;
     private final DMDircMBassador eventBus;
-    private final ActionManager actionManager;
 
     @Inject
     public InstallWorkerFactory(final Downloader downloader,
-            final ActionManager actionManager,
             @Directory(DirectoryType.TEMPORARY) final String tempDirectory,
             @Directory(DirectoryType.PLUGINS) final String pluginDirectory,
             @Directory(DirectoryType.THEMES) final String themeDirectory,
             final PluginManager pluginManager, final DMDircMBassador eventBus) {
-        this.actionManager = actionManager;
         this.downloader = downloader;
         this.tempDirectory = tempDirectory;
         this.pluginDirectory = pluginDirectory;
@@ -61,6 +57,6 @@ public class InstallWorkerFactory {
     }
     public InstallWorker getInstallWorker(final AddonInfo info, final InstallerWindow installer) {
         return new InstallWorker(downloader, tempDirectory, pluginDirectory,
-                themeDirectory, pluginManager, eventBus, actionManager, info, installer);
+                themeDirectory, pluginManager, eventBus, info, installer);
     }
 }
