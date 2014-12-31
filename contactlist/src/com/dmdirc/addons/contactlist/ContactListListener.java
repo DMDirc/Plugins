@@ -93,10 +93,8 @@ public class ContactListListener {
         removeListeners();
     }
 
-    private void clientAdded(final GroupChatUser client) {
-        final Query query = groupChat.getConnection().get()
-                .getQuery(client.getNickname(), false);
-
+    void clientAdded(final GroupChatUser client) {
+        final Query query = groupChat.getConnection().get().getQuery(client.getNickname(), false);
         query.setIcon("query-" + client.getUser().getAwayState().name().toLowerCase());
     }
 
