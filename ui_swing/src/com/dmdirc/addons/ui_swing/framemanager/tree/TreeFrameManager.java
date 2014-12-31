@@ -38,8 +38,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
-import com.dmdirc.events.NotificationClearedEvent;
-import com.dmdirc.events.NotificationSetEvent;
+import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -49,7 +48,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.util.colours.Colour;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -237,9 +235,10 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(), 0, 0));
             }
 
-            // TODO: Should this colour be configurable?
-            node.getLabel().notificationSet(new NotificationSetEvent(window.getContainer(),
-                    window.getContainer().getNotification().orElse(Colour.BLACK)));
+            node.getLabel().unreadStatusChanged(new UnreadStatusChangedEvent(
+                    window.getContainer(), window.getContainer().getUnreadStatusManager(),
+                    window.getContainer().getUnreadStatusManager().getNotificationColour(),
+                    window.getContainer().getUnreadStatusManager().getUnreadLines()));
             node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
                     window.getContainer().getIcon()));
         });
@@ -333,33 +332,20 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                     final TreePath path = new TreePath(treePath);
                     tree.setTreePath(path);
                     tree.scrollPathToVisible(path);
+                    tree.repaint();
                 }
             });
         }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
-    public void notificationSet(final NotificationSetEvent event) {
+    public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
         synchronized (nodes) {
-            final TreeViewNode node = nodes.get(windowFactory.getSwingWindow(event.getWindow()));
-            if (event.getWindow() != null && node != null) {
+            final TreeViewNode node = nodes.get(windowFactory.getSwingWindow(event.getSource()));
+            if (node != null) {
                 final NodeLabel label = node.getLabel();
                 if (label != null) {
-                    label.notificationSet(event);
-                    tree.repaint();
-                }
-            }
-        }
-    }
-
-    @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
-    public void notificationCleared(final NotificationClearedEvent event) {
-        synchronized (nodes) {
-            final TreeViewNode node = nodes.get(windowFactory.getSwingWindow(event.getWindow()));
-            if (event.getWindow() != null && node != null) {
-                final NodeLabel label = node.getLabel();
-                if (label != null) {
-                    label.notificationCleared();
+                    label.unreadStatusChanged(event);
                     tree.repaint();
                 }
             }
