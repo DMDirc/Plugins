@@ -38,9 +38,7 @@ public final class FirstRunExtractionStep extends ExtractionStep {
     protected void initComponents() {
         setLayout(new MigLayout("fillx, wrap 1"));
 
-        TextLabel infoLabel;
-
-        infoLabel = new TextLabel("It appears that this is the first time "
+        final TextLabel infoLabel = new TextLabel("It appears that this is the first time "
                 + "that you have run DMDirc. "
                 + "This short wizard will help you setup DMDirc.\n\n"
                 + "DMDirc comes with a set of core plugins that add "
@@ -50,13 +48,6 @@ public final class FirstRunExtractionStep extends ExtractionStep {
                 + "plugins for you, tick the box below.");
         add(infoLabel, "growx, pushx");
         add(plugins, "");
-        infoLabel = new TextLabel("DMDirc also comes with a set of core"
-                + " 'actions' that serve as examples and add some basic"
-                + " functionality such as highlighting. If you would like"
-                + " the wizard to copy the core actions for you, tick the"
-                + " box below.");
-        add(infoLabel, "growx, pushx");
-        add(actions, "");
     }
 
 }
