@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.substitutions;
 
-import com.dmdirc.addons.ui_swing.dialogs.actioneditor.StringTransferable;
+import com.dmdirc.addons.ui_swing.components.StringTransferable;
 
 import java.awt.Color;
 import java.awt.Component;
