@@ -64,7 +64,7 @@ public class ContactListCommand extends Command implements IntelligentCommand {
 
         final ContactListListener listener = new ContactListListener(chanContext.getChannel());
         listener.addListeners();
-        //listener.clientListUpdated(chanContext.getChannel().getChannelInfo().getChannelClients());
+        chanContext.getChannel().getUsers().forEach(listener::clientAdded);
     }
 
     @Override

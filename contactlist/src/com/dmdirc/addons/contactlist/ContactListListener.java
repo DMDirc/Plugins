@@ -30,7 +30,7 @@ import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.parser.interfaces.ChannelClientInfo;
+import com.dmdirc.interfaces.GroupChatUser;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -70,22 +70,22 @@ public class ContactListListener {
 
     @Handler
     public void handleClientsUpdated(final NickListClientsChangedEvent event) {
-        //event.getUsers().forEach(this::clientAdded);
+        event.getUsers().forEach(this::clientAdded);
     }
 
     @Handler
     public void handleClientAdded(final NickListClientAddedEvent event) {
-        //clientAdded(event.getUser());
+        clientAdded(event.getUser());
     }
 
     @Handler
     public void handleUserAway(final ChannelUserAwayEvent event) {
-        //clientAdded(event.getUser());
+        clientAdded(event.getUser());
     }
 
     @Handler
     public void handleUserBack(final ChannelUserBackEvent event) {
-        //clientAdded(event.getUser());
+        clientAdded(event.getUser());
     }
 
     @Handler
@@ -93,11 +93,11 @@ public class ContactListListener {
         removeListeners();
     }
 
-    private void clientAdded(final ChannelClientInfo client) {
+    void clientAdded(final GroupChatUser client) {
         final Query query = groupChat.getConnection().get()
-                .getQuery(client.getClient().getNickname(), false);
+                .getQuery(client.getNickname(), false);
 
-        query.setIcon("query-" + client.getClient().getAwayState().name().toLowerCase());
+        query.setIcon("query-" + client.getUser().getAwayState().name().toLowerCase());
     }
 
 }
