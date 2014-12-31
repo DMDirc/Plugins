@@ -35,17 +35,13 @@ public abstract class ExtractionStep extends Step {
     private static final long serialVersionUID = 7431623190030730680L;
     /** Plugins checkbox. */
     protected final JCheckBox plugins;
-    /** Actions checkbox. */
-    protected final JCheckBox actions;
 
     /** Creates a new instance of StepOne. */
     public ExtractionStep() {
 
         plugins = new JCheckBox("Install core plugins?");
-        actions = new JCheckBox("Install core actions?");
 
         plugins.setSelected(true);
-        actions.setSelected(true);
 
         initComponents();
     }
@@ -62,15 +58,6 @@ public abstract class ExtractionStep extends Step {
      */
     public final boolean getPluginsState() {
         return plugins.isSelected();
-    }
-
-    /**
-     * Returns the state of the actions checkbox.
-     *
-     * @return Actions checkbox state
-     */
-    public final boolean getActionsState() {
-        return actions.isSelected();
     }
 
     @Override

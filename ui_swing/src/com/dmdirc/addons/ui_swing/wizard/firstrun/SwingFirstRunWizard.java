@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.actions.CoreActionExtractor;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -55,8 +54,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     private final CorePluginExtractor corePluginExtractor;
     /** Provider to use to obtain PMDs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
-    /** Core Actions Extractor. */
-    private final CoreActionExtractor coreActionExtractor;
 
     /**
      * Instantiate the wizard.
@@ -71,12 +68,10 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     public SwingFirstRunWizard(@MainWindow final Window parentWindow,
             @UserConfig final ConfigProvider config,
             final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
-            final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final CoreActionExtractor coreActionExtractor) {
+            final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;
         this.profileDialogProvider = profileDialogProvider;
-        this.coreActionExtractor = coreActionExtractor;
 
         wizardDialog = new WizardDialog("Setup wizard", new ArrayList<>(), parentWindow,
                 ModalityType.APPLICATION_MODAL);
@@ -89,9 +84,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     public void wizardFinished() {
         if (((ExtractionStep) wizardDialog.getStep(0)).getPluginsState()) {
             extractPlugins();
-        }
-        if (((ExtractionStep) wizardDialog.getStep(0)).getActionsState()) {
-            extractActions();
         }
 
         config.setOption("updater", "enable",
@@ -113,11 +105,6 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     @Override
     public void extractPlugins() {
         corePluginExtractor.extractCorePlugins(null);
-    }
-
-    @Override
-    public void extractActions() {
-        coreActionExtractor.extractCoreActions();
     }
 
     @Override
