@@ -27,6 +27,8 @@ import com.dmdirc.parser.interfaces.ChannelClientInfo;
 import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.parser.interfaces.ClientInfo;
 
+import java.util.Comparator;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -67,6 +69,11 @@ public class XmppChannelClientInfo extends BaseChannelClientInfo {
     @Override
     public void kick(final String message) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Comparator<String> getImportantModeComparator() {
+        return Comparator.naturalOrder();
     }
 
     @Override
