@@ -23,15 +23,11 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.interfaces.ActionController;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -42,45 +38,12 @@ public class TimerManager {
 
     /** Map of all the timers that are running. */
     private final Map<Integer, TimedCommand> timerList = new HashMap<>();
-    /** Action controller. */
-    private final ActionController actionController;
-    /** Have we registered our types already? */
-    private static boolean registered;
     /** The timer factory to create timers with. */
     private final TimerFactory timerFactory;
-    /** The timer to use for scheduling. */
-    private Timer timer;
 
     @Inject
-    public TimerManager(final ActionController actionController, final TimerFactory timerFactory) {
-        this.actionController = actionController;
+    public TimerManager(final TimerFactory timerFactory) {
         this.timerFactory = timerFactory;
-    }
-
-    public void load() {
-        if (!registered) {
-            actionController.registerTypes(TimeActionType.values());
-            registered = true;
-        }
-
-        final int offset = 60 - Calendar.getInstance().get(Calendar.SECOND);
-
-        timer = new Timer("Time plugin timer");
-
-        timer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                runTimer();
-            }
-        }, 1000 * offset, 1000 * 60);
-    }
-
-    public void unload() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
     }
 
     /**
@@ -165,21 +128,6 @@ public class TimerManager {
      */
     public boolean hasTimerWithID(final int id) {
         return timerList.containsKey(id);
-    }
-
-    /** Handles a timer event that occurs every minute. */
-    public void runTimer() {
-        final Calendar cal = Calendar.getInstance();
-
-        actionController.triggerEvent(TimeActionType.TIME_MINUTE, null, cal);
-
-        if (cal.get(Calendar.MINUTE) == 0) {
-            actionController.triggerEvent(TimeActionType.TIME_HOUR, null, cal);
-
-            if (cal.get(Calendar.HOUR_OF_DAY) == 0) {
-                actionController.triggerEvent(TimeActionType.TIME_DAY, null, cal);
-            }
-        }
     }
 
 }

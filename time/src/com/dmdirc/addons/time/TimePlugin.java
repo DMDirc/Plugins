@@ -44,15 +44,9 @@ public class TimePlugin extends BaseCommandPlugin {
     }
 
     @Override
-    public void onLoad() {
-        manager.load();
-        super.onLoad();
-    }
-
-    @Override
     public void onUnload() {
-        manager.unload();
         super.onUnload();
+        manager = null;
     }
 
 }
