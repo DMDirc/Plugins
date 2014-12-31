@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.performpanel;
 
-import com.dmdirc.actions.wrappers.PerformWrapper;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
+import com.dmdirc.commandparser.auto.AutoCommand;
+import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -54,11 +53,11 @@ public class PerformPanel extends JPanel {
     /** Text area that the perform is displayed in. */
     private final JTextArea performSpace;
     /** Perform wrapper to read/write performs to. */
-    private final PerformWrapper performWrapper;
-    /** Map of performs this panel can display. */
-    private final Map<PerformDescription, String[]> performs = new HashMap<>();
-    /** The perform that is displayed in the text area. */
-    private PerformDescription visiblePerform;
+    private final AutoCommandManager autoCommandManager;
+    /** Map of original auto commands to their modified forms. */
+    private final Map<AutoCommand, AutoCommand> autoCommands = new HashMap<>();
+    /** The auto command that is displayed in the text area. */
+    private AutoCommand visiblePerform;
 
     /**
      * Creates a new instance of PerformPanel that has no knowledge of any performs at the time of
@@ -68,15 +67,15 @@ public class PerformPanel extends JPanel {
      *
      * @param iconManager    Icon manager
      * @param config         Config to read settings from
-     * @param performWrapper Perform wrapper to read/write performs to.
+     * @param autoCommandManager Perform wrapper to read/write performs to.
      */
     public PerformPanel(
             final IconManager iconManager,
             final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
-            final PerformWrapper performWrapper) {
-        this(iconManager, colourManagerFactory, config, performWrapper,
-                Collections.<PerformDescription>emptyList());
+            final AutoCommandManager autoCommandManager) {
+        this(iconManager, colourManagerFactory, config, autoCommandManager,
+                Collections.<AutoCommand>emptyList());
     }
 
     /**
@@ -87,42 +86,31 @@ public class PerformPanel extends JPanel {
      *
      * @param iconManager    Icon manager
      * @param config         Config to read settings from
-     * @param performWrapper Perform wrapper to read/write performs to.
+     * @param autoCommandManager Perform wrapper to read/write performs to.
      * @param performs       Collection of PerformDescriptions to initialise
      */
     public PerformPanel(
             final IconManager iconManager,
             final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
-            final PerformWrapper performWrapper,
-            final Collection<PerformDescription> performs) {
+            final AutoCommandManager autoCommandManager,
+            final Collection<AutoCommand> performs) {
 
-        this.performWrapper = performWrapper;
+        this.autoCommandManager = autoCommandManager;
 
-        performs.forEach(this::addPerform);
+        performs.forEach(this::addCommand);
         setLayout(new MigLayout("ins 0, fill"));
         performSpace = new TextAreaInputField(iconManager, colourManagerFactory, config, "");
         add(new JScrollPane(performSpace), "grow, push");
     }
 
     /**
-     * This will add a perform to the internal cache so that switching performs is more efficient.
-     * Switching performs can be achieved using
-     * {@link #switchPerform(com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription) }
+     * This will add a command to the internal cache to track changes.
      *
-     * @param perform PerformDescription to add
+     * @param command Auto command to add
      */
-    public void addPerform(final PerformDescription perform) {
-        performs.put(perform, performWrapper.getPerform(perform));
-    }
-
-    /**
-     * Deletes a perform from the map of performs this PerformPanel can modify.
-     *
-     * @param perform PerformDescription to remove
-     */
-    public void delPerform(final PerformDescription perform) {
-        performs.remove(perform);
+    public void addCommand(final AutoCommand command) {
+        autoCommands.putIfAbsent(command, command);
     }
 
     /**
@@ -130,12 +118,13 @@ public class PerformPanel extends JPanel {
      */
     public void savePerform() {
         if (visiblePerform != null) {
-            performs.put(visiblePerform, performSpace.getText().split("\n"));
+            autoCommands.put(visiblePerform,
+                    createAutoCommand(visiblePerform, performSpace.getText()));
         }
-        for (final Entry<PerformDescription, String[]> perform
-                : performs.entrySet()) {
-            performWrapper.setPerform(perform.getKey(), perform.getValue());
-        }
+
+        autoCommands.entrySet().parallelStream()
+                .filter(e -> !e.getKey().equals(e.getValue()))
+                .forEach(e -> autoCommandManager.replaceAutoCommand(e.getKey(), e.getValue()));
     }
 
     /**
@@ -145,38 +134,33 @@ public class PerformPanel extends JPanel {
      *
      * @param perform Perform to display in the text area
      */
-    public void switchPerform(final PerformDescription perform) {
-        if (perform != null && !performs.containsKey(perform)) {
-            addPerform(perform);
+    public void switchPerform(final AutoCommand perform) {
+        if (perform != null && !autoCommands.containsKey(perform)) {
+            addCommand(perform);
         }
         if (visiblePerform != null) {
-            performs.put(visiblePerform, performSpace.getText().split("\n"));
+            autoCommands.put(visiblePerform,
+                    createAutoCommand(visiblePerform, performSpace.getText()));
         }
         if (perform == null) {
             performSpace.setText("");
         } else {
-            performSpace.setText(implode(performs.get(perform)));
+            performSpace.setText(perform.getResponse());
         }
         performSpace.setEnabled(perform != null);
         visiblePerform = perform;
     }
 
     /**
-     * Implodes the specified string array, joining each line with a LF.
+     * Creates a new auto command based on the existing one, but with a different response.
      *
-     * @param lines The lines to be joined together
-     *
-     * @return A string containing each element of lines, separated by a LF.
+     * @param existing The existing auto command to model on.
+     * @param text The new text to use for the response.
+     * @return A new AutoCommand with the same target as the existing one, and the given text.
      */
-    private String implode(final String... lines) {
-        final StringBuilder res = new StringBuilder();
-
-        for (final String line : lines) {
-            res.append('\n');
-            res.append(line);
-        }
-
-        return res.length() == 0 ? "" : res.substring(1);
+    private static AutoCommand createAutoCommand(final AutoCommand existing, final String text) {
+        return AutoCommand.create(existing.getServer(), existing.getNetwork(),
+                existing.getProfile(), text);
     }
 
 }

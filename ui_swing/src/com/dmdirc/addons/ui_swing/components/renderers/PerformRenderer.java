@@ -22,7 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
+import com.dmdirc.commandparser.auto.AutoCommand;
+
+import java.util.Optional;
 
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
@@ -32,7 +34,7 @@ import javax.swing.ListCellRenderer;
  *
  * @since 0.6.4
  */
-public class PerformRenderer extends DMDircListCellRenderer<PerformDescription> {
+public class PerformRenderer extends DMDircListCellRenderer<AutoCommand> {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -42,24 +44,19 @@ public class PerformRenderer extends DMDircListCellRenderer<PerformDescription> 
      *
      * @param renderer Parent renderer
      */
-    public PerformRenderer(final ListCellRenderer<? super PerformDescription> renderer) {
+    public PerformRenderer(final ListCellRenderer<? super AutoCommand> renderer) {
         super(renderer);
     }
 
     @Override
-    protected void renderValue(final JLabel label, final PerformDescription value,
+    protected void renderValue(final JLabel label, final AutoCommand value,
             final int index, final boolean isSelected,
             final boolean cellHasFocus) {
-        final String target = value.getTarget();
-        final String profile = value.getProfile();
+        final String target = value.getServer().orElse(value.getNetwork().orElse(""));
+        final Optional<String> profile = value.getProfile();
         final String type = value.getType().toString();
-        String friendlyText = type + " perform (" + target + ") ";
-
-        if (profile == null) {
-            friendlyText += "Any profile";
-        } else {
-            friendlyText += "This profile (" + profile + ")";
-        }
+        final String friendlyText = type + " perform (" + target + ") "
+                + profile.map(p -> "This profile (" + p + ')').orElse("Any profile");
         label.setText(friendlyText);
     }
 

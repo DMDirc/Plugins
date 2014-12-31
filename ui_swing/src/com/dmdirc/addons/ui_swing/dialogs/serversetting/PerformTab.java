@@ -22,12 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
-import com.dmdirc.actions.wrappers.PerformType;
-import com.dmdirc.actions.wrappers.PerformWrapper;
-import com.dmdirc.actions.wrappers.PerformWrapper.PerformDescription;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.performpanel.PerformPanel;
 import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
+import com.dmdirc.commandparser.auto.AutoCommand;
+import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.IconManager;
@@ -37,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -53,29 +53,20 @@ public class PerformTab extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1;
     /** Parent connection. */
     private final Connection connection;
-    /** Perform wrapper to read/write performs to. */
-    private final PerformWrapper wrapper;
+    /** Command manager wrapper to read/write performs to. */
+    private final AutoCommandManager autoCommandManager;
     /** Network/server combo box. */
-    private JComboBox<PerformDescription> target;
+    private JComboBox<AutoCommand> target;
     /** Perform panel. */
     private PerformPanel performPanel;
 
-    /**
-     * Creates a new instance of IgnoreList.
-     *
-     * @param iconManager Icon manager
-     * @param config      Config to read settings from
-     * @param wrapper     Perform wrapper to read/write performs to.
-     * @param connection  Connection whose perform should be displayed.
-     */
     public PerformTab(
             final IconManager iconManager,
             final ColourManagerFactory colourManagerFactory,
             final AggregateConfigProvider config,
-            final PerformWrapper wrapper,
+            final AutoCommandManager autoCommandManager,
             final Connection connection) {
-
-        this.wrapper = wrapper;
+        this.autoCommandManager = autoCommandManager;
         this.connection = connection;
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
@@ -94,21 +85,23 @@ public class PerformTab extends JPanel implements ActionListener {
             final AggregateConfigProvider config) {
         setLayout(new MigLayout("fill"));
 
-        final DefaultComboBoxModel<PerformDescription> model = new DefaultComboBoxModel<>();
+        final DefaultComboBoxModel<AutoCommand> model = new DefaultComboBoxModel<>();
         target = new JComboBox<>(model);
 
         add(target, "growx, pushx, wrap");
 
-        final Collection<PerformDescription> performList = new ArrayList<>();
+        final Collection<AutoCommand> performList = new ArrayList<>();
 
-        final PerformDescription networkPerform = new PerformDescription(
-                PerformType.NETWORK, connection.getNetwork());
-        final PerformDescription networkProfilePerform = new PerformDescription(
-                PerformType.NETWORK, connection.getNetwork(), connection.getProfile().getName());
-        final PerformDescription serverPerform = new PerformDescription(
-                PerformType.SERVER, connection.getAddress());
-        final PerformDescription serverProfilePerform = new PerformDescription(
-                PerformType.SERVER, connection.getAddress(), connection.getProfile().getName());
+        final AutoCommand networkPerform = autoCommandManager.getOrCreateAutoCommand(
+                Optional.of(connection.getNetwork()), Optional.empty(), Optional.empty());
+        final AutoCommand networkProfilePerform = autoCommandManager.getOrCreateAutoCommand(
+                Optional.of(connection.getNetwork()), Optional.empty(),
+                Optional.of(connection.getProfile().getName()));
+        final AutoCommand serverPerform = autoCommandManager.getOrCreateAutoCommand(
+                Optional.empty(), Optional.of(connection.getAddress()), Optional.empty());
+        final AutoCommand serverProfilePerform = autoCommandManager.getOrCreateAutoCommand(
+                Optional.empty(), Optional.of(connection.getAddress()),
+                Optional.of(connection.getProfile().getName()));
 
         model.addElement(networkPerform);
         model.addElement(networkProfilePerform);
@@ -122,8 +115,8 @@ public class PerformTab extends JPanel implements ActionListener {
         performList.add(serverPerform);
         performList.add(serverProfilePerform);
 
-        performPanel = new PerformPanel(iconManager, colourManagerFactory, config, wrapper,
-                performList);
+        performPanel = new PerformPanel(iconManager, colourManagerFactory, config,
+                autoCommandManager, performList);
         performPanel.switchPerform(networkPerform);
         add(performPanel, "grow, push");
 
@@ -141,7 +134,7 @@ public class PerformTab extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final PerformDescription perform = (PerformDescription) ((JComboBox<?>) e.getSource()).
+        final AutoCommand perform = (AutoCommand) ((JComboBox<?>) e.getSource()).
                 getSelectedItem();
         performPanel.switchPerform(perform);
     }

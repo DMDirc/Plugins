@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.injection;
 import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -41,6 +40,7 @@ import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
+import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
@@ -163,13 +163,13 @@ public class DialogModule {
     public KeyedDialogProvider<Connection, ServerSettingsDialog> getServerSettingsDialogProvider(
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final PerformWrapper performWrapper,
+            final AutoCommandManager autoCommandManager,
             @MainWindow final Window parentWindow,
             final ColourManagerFactory colourManagerFactory) {
         return new KeyedDialogProvider<Connection, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Connection key) {
-                return new ServerSettingsDialog(preferencesManager, compFactory, performWrapper,
+                return new ServerSettingsDialog(preferencesManager, compFactory, autoCommandManager,
                         key, parentWindow, colourManagerFactory);
             }
         };
