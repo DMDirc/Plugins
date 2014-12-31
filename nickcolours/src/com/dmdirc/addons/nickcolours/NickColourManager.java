@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.ChannelClientProperty;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
+import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -37,12 +37,9 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
-import com.google.common.collect.Maps;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -69,8 +66,6 @@ public class NickColourManager implements ConfigChangeListener {
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;
-    private boolean settext;
-    private boolean setnicklist;
 
     @Inject
     public NickColourManager(@GlobalConfig final ColourManager colourManager,
@@ -103,17 +98,15 @@ public class NickColourManager implements ConfigChangeListener {
     private void colourClient(final String network, final GroupChatUser client) {
         final StringConverter sc = client.getUser().getConnection().getParser().get()
                 .getStringConverter();
-        // TODO: This needs to use the new setDisplayableProperty on GroupChatUser
-        final Map<Object, Object> map = Maps.newHashMap();
         final User myself = client.getUser();
         final String nickOption1 = "color:" + sc.toLowerCase(network + ':' + client.getNickname());
         final String nickOption2 = "color:" + sc.toLowerCase("*:" + client.getNickname());
 
         if (useowncolour && client.getUser().equals(myself)) {
             final Colour color = colourManager.getColourFromString(owncolour, null);
-            putColour(map, color, color);
+            putColour(client, color);
         } else if (userandomcolour) {
-            putColour(map, getColour(client.getNickname()), getColour(client.getNickname()));
+            putColour(client, getColour(client.getNickname()));
         }
 
         String[] parts = null;
@@ -130,31 +123,19 @@ public class NickColourManager implements ConfigChangeListener {
             if (parts[0] != null) {
                 textColor = colourManager.getColourFromString(parts[0], null);
             }
-            Colour nickColor = null;
-            if (parts[1] != null) {
-                nickColor = colourManager.getColourFromString(parts[1], null);
-            }
 
-            putColour(map, textColor, nickColor);
+            putColour(client, textColor);
         }
     }
 
     /**
      * Puts the specified colour into the given map. The keys are determined by config settings.
      *
-     * @param map        The map to use
-     * @param textColour Text colour to be inserted
-     * @param nickColour Nick colour to be inserted
+     * @param user       The map to colour
+     * @param colour     Text colour to be inserted
      */
-    private void putColour(final Map<Object, Object> map, final Colour textColour,
-            final Colour nickColour) {
-        if (settext && textColour != null) {
-            map.put(ChannelClientProperty.TEXT_FOREGROUND, textColour);
-        }
-
-        if (setnicklist && nickColour != null) {
-            map.put(ChannelClientProperty.NICKLIST_FOREGROUND, nickColour);
-        }
+    private void putColour(final GroupChatUser user, final Colour colour) {
+        user.setDisplayProperty(DisplayProperty.FOREGROUND_COLOUR, colour);
     }
 
     /**
@@ -226,6 +207,8 @@ public class NickColourManager implements ConfigChangeListener {
             parts = new String[]{null, null};
         } else if (parts.length == 1) {
             parts = new String[]{parts[0], null};
+        } else if (parts.length == 2) {
+            parts = new String[]{parts[0], parts[1]};
         }
 
         return parts;
@@ -253,8 +236,6 @@ public class NickColourManager implements ConfigChangeListener {
         useowncolour = globalConfig.getOptionBool(domain, "useowncolour");
         owncolour = globalConfig.getOption(domain, "owncolour");
         userandomcolour = globalConfig.getOptionBool(domain, "userandomcolour");
-        settext = globalConfig.getOptionBool(domain, "settext");
-        setnicklist = globalConfig.getOptionBool(domain, "setnicklist");
         if (globalConfig.hasOptionString(domain, "randomcolours")) {
             final List<String> list = globalConfig.getOptionList(domain, "randomcolours");
             randColours = list.toArray(new String[list.size()]);

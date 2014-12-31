@@ -96,22 +96,6 @@ public class NickColourPlugin extends BasePlugin {
                         pluginInfo.getDomain())));
 
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursintext", "Show colours in text area",
-                "Colour nicknames in main text area?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                "ui", "shownickcoloursinnicklist", "Show colours in"
-                + " nick list", "Colour nicknames in channel nick lists?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
-                "settext", "Set colours in textarea",
-                "Should the plugin set the textarea colour of nicks?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
-                "setnicklist", "Set colours in nick list",
-                "Should the plugin set the nick list colour of nicks?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 pluginInfo.getDomain(), "userandomcolour", "Use random colour",
                 "Use a pseudo-random colour for each person?",
                 manager.getConfigManager(), manager.getIdentity()));
