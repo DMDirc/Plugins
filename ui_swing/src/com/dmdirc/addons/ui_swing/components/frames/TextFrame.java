@@ -217,7 +217,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
      * Called when the frame has been selected in the UI.
      */
     public void activateFrame() {
-        UIUtilities.invokeLater(frameParent::clearNotification);
+        UIUtilities.invokeLater(() -> frameParent.getUnreadStatusManager().clearStatus());
     }
 
     /**

@@ -26,12 +26,13 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
+import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
-import com.dmdirc.events.NotificationSetEvent;
+import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -110,12 +111,10 @@ public class NodeLabel extends JPanel {
                 && window.equals(event.getWindow().get());
     }
 
-    public void notificationSet(final NotificationSetEvent event) {
-            notificationColour = UIUtilities.convertColour(event.getColour());
-    }
-
-    public void notificationCleared() {
-            notificationColour = null;
+    public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
+        // TODO: Should this colour be configurable?
+        notificationColour = UIUtilities.convertColour(
+                event.getNotificationColour().orElse(Colour.BLACK));
     }
 
     @Handler

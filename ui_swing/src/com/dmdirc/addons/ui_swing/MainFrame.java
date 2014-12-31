@@ -39,7 +39,7 @@ import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientUnminimisedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
-import com.dmdirc.events.NotificationSetEvent;
+import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -524,10 +524,10 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     }
 
     @Handler
-    public void notificationSet(final NotificationSetEvent event) {
+    public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
         activeFrame.map(Window::getContainer)
-                .filter(isEqual(event.getWindow()))
-                .ifPresent(c -> event.getWindow().clearNotification());
+                .filter(isEqual(event.getSource()))
+                .ifPresent(c -> event.getManager().clearStatus());
     }
 
     @Override
