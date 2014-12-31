@@ -23,13 +23,13 @@
 package com.dmdirc.addons.ui_swing.dialogs.serversetting;
 
 import com.dmdirc.ServerState;
-import com.dmdirc.actions.wrappers.PerformWrapper;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.UserModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -56,8 +56,8 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     private static final long serialVersionUID = 2;
     /** Parent connection. */
     private final Connection connection;
-    /** Perform wrapper for the perform panel. */
-    private final PerformWrapper performWrapper;
+    /** Mnaager for the perform panel. */
+    private final AutoCommandManager autoCommandManager;
     /** Preferences manager to retrieve settings from. */
     private final PreferencesManager preferencesManager;
     /** User modes panel. */
@@ -71,25 +71,16 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     /** The tabbed pane. */
     private JTabbedPane tabbedPane;
 
-    /**
-     * Creates a new instance of ServerSettingsDialog.
-     *
-     * @param preferencesManager Preferences manager to retrieve settings from
-     * @param compFactory        Preferences setting component factory
-     * @param performWrapper     Wrapper for the perform tab.
-     * @param connection         The server object that we're editing settings for
-     * @param parentWindow       Parent window
-     */
     public ServerSettingsDialog(
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final PerformWrapper performWrapper,
+            final AutoCommandManager autoCommandManager,
             final Connection connection,
             final Window parentWindow,
             final ColourManagerFactory colourManagerFactory) {
         super(parentWindow, ModalityType.MODELESS);
         this.connection = connection;
-        this.performWrapper = performWrapper;
+        this.autoCommandManager = autoCommandManager;
         this.preferencesManager = preferencesManager;
 
         setTitle("Server settings");
@@ -122,7 +113,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
                 connection, parentWindow);
 
         performPanel = new PerformTab(connection.getWindowModel().getIconManager(),
-                colourManagerFactory, config, performWrapper, connection);
+                colourManagerFactory, config, autoCommandManager, connection);
 
         settingsPanel = new SettingsPanel(connection.getWindowModel().getIconManager(), compFactory,
                 "These settings are specific to this network, any settings specified here will "
