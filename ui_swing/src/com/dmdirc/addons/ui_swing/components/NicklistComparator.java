@@ -57,8 +57,8 @@ public final class NicklistComparator implements Comparator<GroupChatUser>, Seri
     public int compare(final GroupChatUser client1, final GroupChatUser client2) {
         ComparisonChain comparisonChain = ComparisonChain.start();
         if (sortByMode) {
-            comparisonChain = comparisonChain.compare(client1.getImportantMode(),
-                    client2.getImportantMode(), Comparator.<String>naturalOrder());
+            comparisonChain = comparisonChain.compare(client1.getAllModes(),
+                    client2.getAllModes(), client1.getModeComparator());
         }
         if (sortByCase) {
             comparisonChain = comparisonChain.compare(client1.getNickname(), client2.getNickname());
