@@ -29,13 +29,13 @@ import com.google.common.collect.Table;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 /**
  * A Swing {@link TableModel} that uses a Guava {@link Table} as a backing store.
  */
-public class TableTableModel implements TableModel {
+public class TableTableModel extends AbstractTableModel {
 
     private final List<String> headers;
     private final Table<Integer, Integer, String> table;
@@ -67,6 +67,11 @@ public class TableTableModel implements TableModel {
     }
 
     @Override
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
+        return table.get(rowIndex, columnIndex);
+    }
+
+    @Override
     public String getColumnName(final int columnIndex) {
         return headers.get(columnIndex);
     }
@@ -82,22 +87,8 @@ public class TableTableModel implements TableModel {
     }
 
     @Override
-    public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return table.get(rowIndex, columnIndex);
-    }
-
-    @Override
     public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
         table.put(rowIndex, columnIndex, (String) aValue);
-    }
-
-    @Override
-    public void addTableModelListener(final TableModelListener l) {
-
-    }
-
-    @Override
-    public void removeTableModelListener(final TableModelListener l) {
-
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
 }

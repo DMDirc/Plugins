@@ -27,6 +27,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.FileBrowser;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.OptionalJSpinner;
+import com.dmdirc.addons.ui_swing.components.TableTableModel;
 import com.dmdirc.addons.ui_swing.components.colours.OptionalColourChooser;
 import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
 import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
@@ -55,7 +56,9 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.JTextComponent;
 
@@ -147,6 +150,9 @@ public final class PrefsComponentFactory {
             case LABEL:
                 option = getLabelOption(setting);
                 break;
+            case TABLE:
+                option = getTableOption(setting);
+                break;
             default:
                 throw new IllegalArgumentException(setting.getType()
                         + " is not a valid option type");
@@ -192,8 +198,8 @@ public final class PrefsComponentFactory {
         final JCheckBox option = new JCheckBox();
         option.setSelected(Boolean.parseBoolean(setting.getValue()));
         option.setOpaque(false);
-        option.addChangeListener(e -> setting.setValue(
-                String.valueOf(((AbstractButton) e.getSource()).isSelected())));
+        option.addChangeListener(e -> setting
+                .setValue(String.valueOf(((AbstractButton) e.getSource()).isSelected())));
 
         return option;
     }
@@ -449,9 +455,24 @@ public final class PrefsComponentFactory {
     private static JComponent getLabelOption(final PreferencesSetting setting) {
         final JPanel panel = new JPanel(new MigLayout("fill"));
         panel.add(new TextLabel(setting.getValue()));
-        panel.setBorder(BorderFactory.createTitledBorder(panel.getBorder(),
-                setting.getTitle()));
+        panel.setBorder(BorderFactory.createTitledBorder(panel.getBorder(), setting.getTitle()));
         return panel;
+    }
+
+    /**
+     * Initialises and returns a Table for the specified setting.
+     *
+     * @param setting The setting to create the component for
+     *
+     * @return A JComponent descendant for the specified setting
+     */
+    private JComponent getTableOption(final PreferencesSetting setting) {
+        final JTable table = new JTable(new TableTableModel(setting.getTableHeaders(),
+                setting.getTableOptions()));
+        final JScrollPane sp = new JScrollPane();
+        sp.setViewportView(table);
+        table.setAutoCreateRowSorter(true);
+        return sp;
     }
 
 }

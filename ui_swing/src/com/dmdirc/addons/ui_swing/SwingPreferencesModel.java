@@ -31,6 +31,10 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NumericalValidator;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Table;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,6 +131,14 @@ public class SwingPreferencesModel {
                 "ui", "sortchildwindows", "Sort child windows",
                 "Sort root windows in the frame managers?",
                 globalConfig, globalIdentity));
+        final Table<Integer, Integer, String> table = HashBasedTable.create(2, 2);
+        table.put(0, 0, "RAR00");
+        table.put(0, 1, "RAR01");
+        table.put(1, 0, "RAR10");
+        table.put(1, 1, "RAR11");
+        general.addSetting(new PreferencesSetting("ui", "test", "This is a test",
+                "This is a test....", Lists.newArrayList("heading 1", "heading 2"),
+                table, globalConfig, globalIdentity));
 
         general.addSubCategory(createNicklistCategory());
         general.addSubCategory(createTreeViewCategory());
