@@ -39,6 +39,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 
 import javax.inject.Inject;
@@ -102,7 +103,7 @@ public class WindowStatusManager {
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
-        event.getWindow().ifPresent(w -> updateStatus(event.getWindow().get().getContainer()));
+        event.getWindow().map(Window::getContainer).ifPresent(this::updateStatus);
     }
 
     /** Update the window status using the current active window. */
