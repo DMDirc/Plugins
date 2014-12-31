@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
-import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
@@ -128,13 +127,6 @@ public class DialogModule {
     @Singleton
     public DialogProvider<ProfileManagerDialog> getNewProfileManagerDialogProvider(
             final Provider<ProfileManagerDialog> provider) {
-        return new DialogProvider<>(provider);
-    }
-
-    @Provides
-    @Singleton
-    public DialogProvider<ActionsManagerDialog> getActionsManagerDialogProvider(
-            final Provider<ActionsManagerDialog> provider) {
         return new DialogProvider<>(provider);
     }
 

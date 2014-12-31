@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.Apple;
-import com.dmdirc.addons.ui_swing.dialogs.actionsmanager.ActionsManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
@@ -44,8 +43,6 @@ public class SettingsMenu extends JMenu {
     private static final long serialVersionUID = 1;
     /** Provider of profile manager dialogs. */
     private final DialogProvider<ProfileManagerDialog> profileDialogProvider;
-    /** Provider of action manager dialogs. */
-    private final DialogProvider<ActionsManagerDialog> actionsDialogProvider;
     /** Provider of preferences dialogs. */
     private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
     /** Provider of alias manager dialogs. */
@@ -54,12 +51,10 @@ public class SettingsMenu extends JMenu {
     @Inject
     public SettingsMenu(
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
-            final DialogProvider<ActionsManagerDialog> actionsDialogProvider,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
             final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
         super("Settings");
         this.profileDialogProvider = profileDialogProvider;
-        this.actionsDialogProvider = actionsDialogProvider;
         this.prefsDialogProvider = prefsDialogProvider;
         this.aliasDialogProvider = aliasDialogProvider;
 
@@ -89,12 +84,6 @@ public class SettingsMenu extends JMenu {
 
         menuItem = new JMenuItem();
         menuItem.setMnemonic('a');
-        menuItem.setText("Actions Manager");
-        menuItem.addActionListener(e -> actionsDialogProvider.displayOrRequestFocus());
-        add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('l');
         menuItem.setText("Alias Manager");
         menuItem.addActionListener(e -> aliasDialogProvider.displayOrRequestFocus());
         add(menuItem);
