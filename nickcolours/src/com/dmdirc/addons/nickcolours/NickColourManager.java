@@ -24,13 +24,15 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.EDTInvocation;
+import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelGotnamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.plugins.PluginDomain;
@@ -50,12 +52,14 @@ import net.engio.mbassy.listener.Handler;
  * Provides various features related to nickname colouring.
  */
 @Singleton
-public class NickColourManager implements ConfigChangeListener {
+public class NickColourManager {
 
     /** Manager to parse colours with. */
     private final ColourManager colourManager;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
+    /** Config binder. */
+    private final ConfigBinder configBinder;
     /** Plugin's setting domain. */
     private final String domain;
     /** Event bus to subscribe to events on . */
@@ -70,11 +74,13 @@ public class NickColourManager implements ConfigChangeListener {
     @Inject
     public NickColourManager(@GlobalConfig final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus) {
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final DMDircMBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
         this.eventBus = eventBus;
+        configBinder = globalConfig.getBinder().withDefaultDomain(domain);
     }
 
     @Handler
@@ -218,8 +224,8 @@ public class NickColourManager implements ConfigChangeListener {
      * Loads this plugin.
      */
     public void onLoad() {
-        setCachedSettings();
         eventBus.subscribe(this);
+        configBinder.bind(this, NickColourManager.class);
     }
 
     /**
@@ -227,24 +233,26 @@ public class NickColourManager implements ConfigChangeListener {
      */
     public void onUnload() {
         eventBus.unsubscribe(this);
+        configBinder.unbind(this);
     }
 
-    /**
-     * Updates cached settings.
-     */
-    private void setCachedSettings() {
-        useowncolour = globalConfig.getOptionBool(domain, "useowncolour");
-        owncolour = globalConfig.getOption(domain, "owncolour");
-        userandomcolour = globalConfig.getOptionBool(domain, "userandomcolour");
-        if (globalConfig.hasOptionString(domain, "randomcolours")) {
-            final List<String> list = globalConfig.getOptionList(domain, "randomcolours");
-            randColours = list.toArray(new String[list.size()]);
-        }
+    @ConfigBinding(key = "useowncolour", invocation = EDTInvocation.class)
+    public void handleUseOwnColour(final boolean value) {
+        useowncolour = value;
     }
 
-    @Override
-    public void configChanged(final String domain, final String key) {
-        setCachedSettings();
+    @ConfigBinding(key = "userandomcolour", invocation = EDTInvocation.class)
+    public void handleUseRandomColour(final boolean value) {
+        userandomcolour = value;
     }
 
+    @ConfigBinding(key = "owncolour", invocation = EDTInvocation.class)
+    public void handleOwnColour(final String value) {
+        owncolour = value;
+    }
+
+    @ConfigBinding(key = "randomcolours", invocation = EDTInvocation.class)
+    public void handleRandomColours(final List<String> value) {
+        randColours = value.toArray(new String[value.size()]);
+    }
 }
