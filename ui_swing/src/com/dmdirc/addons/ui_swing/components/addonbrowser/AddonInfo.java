@@ -84,8 +84,7 @@ public class AddonInfo {
         title = entry.get("title");
         author = entry.get("user");
         rating = Integer.parseInt(entry.get("rating"));
-        type = entry.get("type").equals("plugin") ? AddonType.TYPE_PLUGIN : entry.get("type").
-                equals("theme") ? AddonType.TYPE_THEME : AddonType.TYPE_ACTION_PACK;
+        type = entry.get("type").equals("plugin") ? AddonType.TYPE_PLUGIN : AddonType.TYPE_THEME;
         stableDownload = entry.containsKey("stable") ? entry.get("stable") : "";
         unstableDownload = entry.containsKey("unstable") ? entry
                 .get("unstable") : "";

@@ -26,7 +26,6 @@ import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.actions.ActionManager;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.NoopClipboard;
@@ -192,7 +191,6 @@ public class SwingModule {
             final URLConfigPanel urlPanel,
             @GlobalConfig final AggregateConfigProvider configManager,
             @UserConfig final ConfigProvider identity,
-            final ActionManager actionManager,
             final PluginManager pluginManager,
             final DMDircMBassador eventBus) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,

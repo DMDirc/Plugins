@@ -52,8 +52,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
     private final JCheckBox pluginsBox = new JCheckBox("Plugins", true);
     /** The themes check box. */
     private final JCheckBox themesBox = new JCheckBox("Themes", true);
-    /** The actions check box. */
-    private final JCheckBox actionsBox = new JCheckBox("Action Packs", true);
     /** The verified check box. */
     private final JCheckBox verifiedBox = new JCheckBox("Verified", true);
     /** The unverified check box. */
@@ -115,7 +113,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
                 "TitledBorder.border"), "Types"));
         panel.add(pluginsBox, "grow");
         panel.add(themesBox, "grow");
-        panel.add(actionsBox, "grow");
         add(panel, "wrap, pushy, growy, width 150!");
 
         panel = new JPanel(new MigLayout("fill, wrap"));
@@ -141,7 +138,7 @@ public class BrowserWindow extends JDialog implements ActionListener {
         final AddonFilter filter = new AddonFilter(verifiedBox.getModel(),
                 unverifiedBox.getModel(), installedBox.getModel(),
                 notinstalledBox.getModel(), pluginsBox.getModel(),
-                themesBox.getModel(), actionsBox.getModel(), searchBox);
+                themesBox.getModel(), searchBox);
         sorter = new AddonSorter(list.getModel(), dateButton.getModel(),
                 nameButton.getModel(), ratingButton.getModel(),
                 statusButton.getModel(), filter);
@@ -168,7 +165,6 @@ public class BrowserWindow extends JDialog implements ActionListener {
 
         pluginsBox.addActionListener(this);
         themesBox.addActionListener(this);
-        actionsBox.addActionListener(this);
 
         verifiedBox.addActionListener(this);
         unverifiedBox.addActionListener(this);
