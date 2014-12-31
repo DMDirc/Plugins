@@ -468,7 +468,7 @@ public final class PrefsComponentFactory {
      */
     private JComponent getTableOption(final PreferencesSetting setting) {
         final JTable table = new JTable(new TableTableModel(setting.getTableHeaders(),
-                setting.getTableOptions()));
+                setting.getTableOptions(), (Integer i1, Integer i2) -> true));
         final JScrollPane sp = new JScrollPane();
         sp.setViewportView(table);
         table.setAutoCreateRowSorter(true);
