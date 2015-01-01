@@ -184,9 +184,9 @@ public class IdentClient implements Runnable {
                 != null && !customName.isEmpty() && customName.length() < 513) {
             username = customName;
         } else if (connection != null && config.getOptionBool(domain, "general.useNickname")) {
-            username = connection.getParser().get().getLocalClient().getNickname();
+            username = connection.getLocalUser().getNickname();
         } else if (connection != null && config.getOptionBool(domain, "general.useUsername")) {
-            username = connection.getParser().get().getLocalClient().getUsername();
+            username = connection.getLocalUser().getUsername().orElse(System.getProperty("user.name"));
         } else {
             username = System.getProperty("user.name");
         }

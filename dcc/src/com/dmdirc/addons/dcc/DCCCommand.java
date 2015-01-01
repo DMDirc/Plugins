@@ -116,7 +116,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final String target = args.getArguments()[1];
             final Connection connection = ((ServerCommandContext) context).getConnection();
             final Parser parser = connection.getParser().get();
-            final String myNickname = parser.getLocalClient().getNickname();
+            final String myNickname = connection.getLocalUser().getNickname();
 
             if (parser.isValidChannelName(target)
                     || parser.getStringConverter().equalsIgnoreCase(target,
