@@ -33,11 +33,11 @@ import com.dmdirc.events.BaseChannelMessageEvent;
 import com.dmdirc.events.BaseQueryActionEvent;
 import com.dmdirc.events.BaseQueryMessageEvent;
 import com.dmdirc.events.ChannelClosedEvent;
-import com.dmdirc.events.ChannelGottopicEvent;
+import com.dmdirc.events.ChannelGotTopicEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.ChannelKickEvent;
-import com.dmdirc.events.ChannelModechangeEvent;
-import com.dmdirc.events.ChannelNickchangeEvent;
+import com.dmdirc.events.ChannelModeChangeEvent;
+import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.events.ChannelOpenedEvent;
 import com.dmdirc.events.ChannelPartEvent;
 import com.dmdirc.events.ChannelQuitEvent;
@@ -264,7 +264,7 @@ public class LoggingManager implements ConfigChangeListener {
     }
 
     @Handler
-    public void handleChannelGotTopic(final ChannelGottopicEvent event) {
+    public void handleChannelGotTopic(final ChannelGotTopicEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -337,14 +337,14 @@ public class LoggingManager implements ConfigChangeListener {
     }
 
     @Handler
-    public void handleNickChange(final ChannelNickchangeEvent event) {
+    public void handleNickChange(final ChannelNickChangeEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         appendLine(filename, "*** %s is now %s", getDisplayName(event.getClient(),
                 event.getOldNick()), getDisplayName(event.getClient()));
     }
 
     @Handler
-    public void handleModeChange(final ChannelModechangeEvent event) {
+    public void handleModeChange(final ChannelModeChangeEvent event) {
         final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
         if (event.getClient().getNickname().isEmpty()) {
             appendLine(filename, "*** Channel modes are: %s", event.getModes());
