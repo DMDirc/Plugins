@@ -523,7 +523,9 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
                 .ifPresent(c -> setTitle(event.getTitle()));
     }
 
-    @Handler
+    // Minimum priority so that the treeview etc receive the event first, avoiding a race condition
+    // where we reset it too quickly.
+    @Handler(priority = Integer.MIN_VALUE)
     public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
         activeFrame.map(Window::getContainer)
                 .filter(isEqual(event.getSource()))
