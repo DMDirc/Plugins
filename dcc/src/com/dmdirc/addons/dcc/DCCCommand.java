@@ -42,12 +42,13 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
@@ -116,7 +117,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final String target = args.getArguments()[1];
             final Connection connection = ((ServerCommandContext) context).getConnection();
             final Parser parser = connection.getParser().get();
-            final String myNickname = connection.getLocalUser().getNickname();
+            final String myNickname = connection.getLocalUser().map(User::getNickname).orElse("Unknown");
 
             if (parser.isValidChannelName(target)
                     || parser.getStringConverter().equalsIgnoreCase(target,
