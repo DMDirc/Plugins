@@ -61,7 +61,7 @@ public class IdentClientTest {
 
         when(sm.getConnections()).thenReturn(servers);
         when(connection.getParser()).thenReturn(Optional.of(parser));
-        when(connection.getLocalUser()).thenReturn(user);
+        when(connection.getLocalUser()).thenReturn(Optional.of(user));
         when(parser.getLocalPort()).thenReturn(60);
         when(parser.getLocalClient()).thenReturn(client);
         when(client.getNickname()).thenReturn("nickname");
