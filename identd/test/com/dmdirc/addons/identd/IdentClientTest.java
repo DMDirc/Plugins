@@ -25,6 +25,7 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
@@ -50,6 +51,7 @@ public class IdentClientTest {
     @Mock private Connection connection;
     @Mock private IRCParser parser;
     @Mock private IRCClientInfo client;
+    @Mock private User user;
     @Mock private AggregateConfigProvider config;
     @Mock private DMDircMBassador eventBus;
 
@@ -59,10 +61,13 @@ public class IdentClientTest {
 
         when(sm.getConnections()).thenReturn(servers);
         when(connection.getParser()).thenReturn(Optional.of(parser));
+        when(connection.getLocalUser()).thenReturn(user);
         when(parser.getLocalPort()).thenReturn(60);
         when(parser.getLocalClient()).thenReturn(client);
         when(client.getNickname()).thenReturn("nickname");
         when(client.getUsername()).thenReturn("username");
+        when(user.getNickname()).thenReturn("nickname");
+        when(user.getUsername()).thenReturn(Optional.of("username"));
 
         return new IdentClient(eventBus, null, null, sm, config, "plugin-Identd");
     }
