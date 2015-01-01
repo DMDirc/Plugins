@@ -474,6 +474,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         if (activeFrame.isPresent()) {
             framePanel.add(activeFrame.get().getDisplayFrame(), "grow");
             setTitle(activeFrame.get().getContainer().getTitle());
+            activeFrame.get().getContainer().getUnreadStatusManager().clearStatus();
         } else {
             framePanel.add(new JPanel(), "grow");
             setTitle(null);
