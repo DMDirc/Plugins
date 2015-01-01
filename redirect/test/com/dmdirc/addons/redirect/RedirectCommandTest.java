@@ -29,13 +29,14 @@ import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.global.Echo;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.ui.WindowManager;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterUtils;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
@@ -45,9 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -63,6 +62,7 @@ public class RedirectCommandTest {
     @Mock private CommandController commandController;
     @Mock private FrameContainer frameContainer;
     @Mock private AggregateConfigProvider configProvider;
+    @Mock private ConfigBinder configBinder;
     @Mock private CommandParser commandParser;
     @Mock private TabCompleter tabCompleter;
     @Mock private MessageSinkManager messageSinkManager;
@@ -83,15 +83,13 @@ public class RedirectCommandTest {
         when(target.getTabCompleter()).thenReturn(tabCompleter);
         when(configProvider.hasOptionString("formatter", "commandOutput")).thenReturn(true);
         when(configProvider.getOption("formatter", "commandOutput")).thenReturn("%1$s");
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
-                new Echo(commandController, windowManager).execute(
-                        (FrameContainer) invocation.getArguments()[0],
-                        new CommandArguments(commandController, "/echo test"),
-                        null);
-                return null;
-            }
+        when(configProvider.getBinder()).thenReturn(configBinder);
+        doAnswer(invocation -> {
+            new Echo(commandController, windowManager).execute(
+                    (FrameContainer) invocation.getArguments()[0],
+                    new CommandArguments(commandController, "/echo test"),
+                    null);
+            return null;
         }).when(commandParser).parseCommand(any(FrameContainer.class), eq("/echo test"));
     }
 
