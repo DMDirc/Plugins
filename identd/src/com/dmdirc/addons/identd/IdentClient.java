@@ -30,6 +30,7 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.util.SystemInfo;
 import com.dmdirc.util.io.StreamUtils;
 
 import java.io.BufferedReader;
@@ -57,26 +58,23 @@ public class IdentClient implements Runnable {
     private final AggregateConfigProvider config;
     /** This plugin's settings domain. */
     private final String domain;
+    /** System wrapper to use. */
+    private final SystemInfo systemInfo;
 
     /**
      * Create the IdentClient.
-     *
-     * @param eventBus      The event bus to post errors on
-     * @param server        The server that owns this
-     * @param socket        The socket we are handing
-     * @param connectionManager Server manager to retrieve servers from
-     * @param config        Global config to read settings from
-     * @param domain        This plugin's settings domain
      */
-    public IdentClient(final DMDircMBassador eventBus, final IdentdServer server, final Socket socket,
-            final ConnectionManager connectionManager, final AggregateConfigProvider config,
-            final String domain) {
+    public IdentClient(final DMDircMBassador eventBus, final IdentdServer server,
+            final Socket socket, final ConnectionManager connectionManager,
+            final AggregateConfigProvider config, final String domain,
+            final SystemInfo systemInfo) {
         this.eventBus = eventBus;
         this.server = server;
         this.socket = socket;
         this.connectionManager = connectionManager;
         this.config = config;
         this.domain = domain;
+        this.systemInfo = systemInfo;
     }
 
     /**
@@ -149,7 +147,7 @@ public class IdentClient implements Runnable {
             return String.format("%d , %d : ERROR : HIDDEN-USER", myPort, theirPort);
         }
 
-        final String osName = System.getProperty("os.name").toLowerCase();
+        final String osName = systemInfo.getProperty("os.name").toLowerCase();
         final String os;
 
         final String customSystem = config.getOption(domain, "advanced.customSystem");
@@ -189,7 +187,7 @@ public class IdentClient implements Runnable {
         } else if (connection != null && config.getOptionBool(domain, "general.useUsername")) {
             username = connection.getLocalUser().flatMap(User::getUsername).orElse("Unknown");
         } else {
-            username = System.getProperty("user.name");
+            username = systemInfo.getProperty("user.name");
         }
 
         return String.format("%d , %d : USERID : %s : %s", myPort, theirPort, escapeString(os),
