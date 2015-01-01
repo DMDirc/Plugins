@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
@@ -184,9 +185,9 @@ public class IdentClient implements Runnable {
                 != null && !customName.isEmpty() && customName.length() < 513) {
             username = customName;
         } else if (connection != null && config.getOptionBool(domain, "general.useNickname")) {
-            username = connection.getLocalUser().getNickname();
+            username = connection.getLocalUser().map(User::getNickname).orElse("Unknown");
         } else if (connection != null && config.getOptionBool(domain, "general.useUsername")) {
-            username = connection.getLocalUser().getUsername().orElse(System.getProperty("user.name"));
+            username = connection.getLocalUser().flatMap(User::getUsername).orElse("Unknown");
         } else {
             username = System.getProperty("user.name");
         }
