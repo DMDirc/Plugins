@@ -32,10 +32,10 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.ServerDisconnectedEvent;
-import com.dmdirc.events.ServerGotpingEvent;
-import com.dmdirc.events.ServerNopingEvent;
+import com.dmdirc.events.ServerGotPingEvent;
+import com.dmdirc.events.ServerNoPingEvent;
 import com.dmdirc.events.ServerNumericEvent;
-import com.dmdirc.events.ServerPingsentEvent;
+import com.dmdirc.events.ServerPingSentEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
@@ -215,7 +215,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     }
 
     @Handler
-    public void handleServerGotPing(final ServerGotpingEvent event) {
+    public void handleServerGotPing(final ServerGotPingEvent event) {
         if (event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
             return;
@@ -234,7 +234,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     }
 
     @Handler
-    public void handleServerNoPing(final ServerNopingEvent event) {
+    public void handleServerNoPing(final ServerNoPingEvent event) {
         if (event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
             return;
@@ -252,7 +252,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     }
 
     @Handler
-    public void handleServerPingSent(final ServerPingsentEvent event) {
+    public void handleServerPingSent(final ServerPingSentEvent event) {
         if (!event.getConnection().getWindowModel().getConfigManager().
                 getOptionBool(domain, "usealternate")) {
             return;
