@@ -98,6 +98,7 @@ public final class AudioPlayer implements Runnable {
      */
     public static AudioType getAudioType(final File file) {
         try (AudioInputStream unused = AudioSystem.getAudioInputStream(file)) {
+            unused.reset();
             return AudioType.WAV;
         } catch (UnsupportedAudioFileException | IOException e) {
             return AudioType.INVALID;
