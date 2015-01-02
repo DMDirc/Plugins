@@ -130,8 +130,10 @@ public class ChannelMenu extends JMenu implements MenuListener {
 
     private void doJoinChannel(final String text) {
         activeFrameManager.getActiveFrame()
-                .ifPresent(f -> f.getContainer().getConnection()
-                        .ifPresent(c -> c.join(new ChannelJoinRequest(text))));
+                .map(TextFrame::getContainer)
+                .flatMap(FrameContainer::getConnection)
+                .map(Connection::getGroupChatManager)
+                .ifPresent(c -> c.join(new ChannelJoinRequest(text)));
     }
 
     @Override

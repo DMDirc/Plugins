@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -62,6 +63,7 @@ public class SwingLinkHandler {
     public void handleChannelClick(final LinkChannelClickedEvent event) {
         final FrameContainer container = event.getWindow().getContainer();
         container.getConnection()
+                .map(Connection::getGroupChatManager)
                 .ifPresent(c -> c.join(new ChannelJoinRequest(event.getTarget())));
     }
 
