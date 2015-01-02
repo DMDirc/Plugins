@@ -136,6 +136,7 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 (String oldName) -> new StandardInputDialog(dialog,
                         Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
                         "Profile Manager: Edit Nickname", "Enter new nickname",
+                        model.getSelectedProfileEditNicknameValidator(),
                         (String newName) -> model.editSelectedProfileNickname(oldName, newName))
                         .display()));
     }
@@ -145,6 +146,7 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
         addNickname.addActionListener(
                 e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
                         iconManager, "Profile Manager: Add Nickname", "Enter nickname to add",
+                        model.getSelectedProfileAddNicknameValidator(),
                         model::addSelectedProfileNickname).display());
     }
 

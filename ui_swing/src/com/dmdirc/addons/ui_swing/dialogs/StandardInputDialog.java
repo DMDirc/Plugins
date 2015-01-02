@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.ui.IconManager;
-import com.dmdirc.util.validators.ValidationResponse;
+import com.dmdirc.util.validators.PermissiveValidator;
 import com.dmdirc.util.validators.Validator;
 
 import com.google.common.util.concurrent.Runnables;
@@ -117,8 +117,7 @@ public class StandardInputDialog extends StandardDialog {
             final String title, final String message,
             final Function<String, Boolean> save,
             final Runnable cancel) {
-        this(owner, modal, iconManager, title, message, ValidationResponse::new, save,
-                cancel);
+        this(owner, modal, iconManager, title, message, new PermissiveValidator<>(), save, cancel);
     }
 
     /**
