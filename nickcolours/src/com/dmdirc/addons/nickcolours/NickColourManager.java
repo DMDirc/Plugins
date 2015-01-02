@@ -27,7 +27,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.events.ChannelGotnamesEvent;
+import com.dmdirc.events.ChannelGotNamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
@@ -84,7 +84,7 @@ public class NickColourManager {
     }
 
     @Handler
-    public void handleChannelNames(final ChannelGotnamesEvent event) {
+    public void handleChannelNames(final ChannelGotNamesEvent event) {
         final String network = event.getChannel().getConnection().get().getNetwork();
         event.getChannel().getUsers().forEach(client -> colourClient(network, client));
     }

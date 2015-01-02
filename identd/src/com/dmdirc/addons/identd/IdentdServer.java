@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.util.SystemInfo;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -59,6 +60,8 @@ public final class IdentdServer implements Runnable {
     private final AggregateConfigProvider config;
     /** This plugin's config settings domain. */
     private final String domain;
+    /** System info wrapper to use for the ident client. */
+    private final SystemInfo systemInfo;
 
     /**
      * Create the IdentdServer.
@@ -72,11 +75,13 @@ public final class IdentdServer implements Runnable {
     public IdentdServer(final DMDircMBassador eventBus,
             final ConnectionManager connectionManager,
             @GlobalConfig final AggregateConfigProvider config,
-            @PluginDomain(IdentdPlugin.class) final String domain) {
+            @PluginDomain(IdentdPlugin.class) final String domain,
+            final SystemInfo systemInfo) {
         this.eventBus = eventBus;
         this.connectionManager = connectionManager;
         this.config = config;
         this.domain = domain;
+        this.systemInfo = systemInfo;
     }
 
     /**
@@ -89,7 +94,7 @@ public final class IdentdServer implements Runnable {
             try {
                 final Socket clientSocket = serverSocket.accept();
                 final IdentClient client = new IdentClient(eventBus, this, clientSocket,
-                        connectionManager, config, domain);
+                        connectionManager, config, domain, systemInfo);
                 client.start();
                 addClient(client);
             } catch (IOException e) {

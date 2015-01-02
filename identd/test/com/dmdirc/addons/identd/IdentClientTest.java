@@ -29,6 +29,7 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
+import com.dmdirc.util.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class IdentClientTest {
     @Mock private User user;
     @Mock private AggregateConfigProvider config;
     @Mock private DMDircMBassador eventBus;
+    @Mock private SystemInfo systemInfo;
 
     protected IdentClient getClient() {
         final List<Connection> servers = new ArrayList<>();
@@ -69,7 +71,7 @@ public class IdentClientTest {
         when(user.getNickname()).thenReturn("nickname");
         when(user.getUsername()).thenReturn(Optional.of("username"));
 
-        return new IdentClient(eventBus, null, null, sm, config, "plugin-Identd");
+        return new IdentClient(eventBus, null, null, sm, config, "plugin-Identd", systemInfo);
     }
 
     @Test
@@ -156,6 +158,8 @@ public class IdentClientTest {
         when(acp.getOption("plugin-Identd", "advanced.customSystem")).thenReturn("a:b\\c,d");
         when(acp.getOptionBool("plugin-Identd", "general.useCustomName")).thenReturn(false);
         when(acp.getOption("plugin-Identd", "general.customName")).thenReturn("");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertContains("Special characters must be quoted in system names",
@@ -170,6 +174,8 @@ public class IdentClientTest {
         when(acp.getOption("plugin-Identd", "advanced.customSystem")).thenReturn("");
         when(acp.getOptionBool("plugin-Identd", "general.useCustomName")).thenReturn(true);
         when(acp.getOption("plugin-Identd", "general.customName")).thenReturn("a:b\\c,d");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertContains("Special characters must be quoted in custom names",
@@ -184,6 +190,8 @@ public class IdentClientTest {
         when(acp.getOption("plugin-Identd", "advanced.customSystem")).thenReturn("system");
         when(acp.getOptionBool("plugin-Identd", "general.useCustomName")).thenReturn(true);
         when(acp.getOption("plugin-Identd", "general.customName")).thenReturn("name");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("50, 60", acp);
         final String[] bits = response.split(":");
@@ -200,8 +208,8 @@ public class IdentClientTest {
     public void testOSWindows() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "windows");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("windows");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : WIN32 : test", response);
@@ -211,8 +219,8 @@ public class IdentClientTest {
     public void testOSMac() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "mac");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("mac");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : MACOS : test", response);
@@ -222,8 +230,8 @@ public class IdentClientTest {
     public void testOSLinux() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "linux");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("linux");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : UNIX : test", response);
@@ -233,8 +241,8 @@ public class IdentClientTest {
     public void testOSBSD() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "bsd");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("bsd");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : UNIX-BSD : test", response);
@@ -244,8 +252,8 @@ public class IdentClientTest {
     public void testOSOS2() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "os/2");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("os/2");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : OS/2 : test", response);
@@ -255,8 +263,8 @@ public class IdentClientTest {
     public void testOSUnix() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "unix");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("unix");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : UNIX : test", response);
@@ -266,8 +274,8 @@ public class IdentClientTest {
     public void testOSIrix() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "irix");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("irix");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : IRIX : test", response);
@@ -277,19 +285,8 @@ public class IdentClientTest {
     public void testOSUnknown() {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "test");
-
-        final String response = getClient().getIdentResponse("50, 50", acp);
-        assertEquals("50 , 50 : USERID : UNKNOWN : test", response);
-    }
-
-    @Test
-    public void testNameSystem() {
-        when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
-        when(acp.getOptionBool("plugin-Identd", "advanced.useCustomSystem")).thenReturn(false);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "test");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : UNKNOWN : test", response);
@@ -300,8 +297,8 @@ public class IdentClientTest {
         when(acp.getOptionBool("plugin-Identd", "advanced.alwaysOn")).thenReturn(true);
         when(acp.getOptionBool("plugin-Identd", "general.useCustomName")).thenReturn(true);
         when(acp.getOption("plugin-Identd", "general.customName")).thenReturn("name");
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "test");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("50, 50", acp);
         assertEquals("50 , 50 : USERID : UNKNOWN : name", response);
@@ -310,8 +307,8 @@ public class IdentClientTest {
     @Test
     public void testNameNickname() {
         when(acp.getOptionBool("plugin-Identd", "general.useNickname")).thenReturn(true);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "test");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("60, 50", acp);
         assertEquals("60 , 50 : USERID : UNKNOWN : nickname", response);
@@ -320,16 +317,16 @@ public class IdentClientTest {
     @Test
     public void testNameUsername() {
         when(acp.getOptionBool("plugin-Identd", "general.useUsername")).thenReturn(true);
-        System.setProperty("user.name", "test");
-        System.setProperty("os.name", "test");
+        when(systemInfo.getProperty("user.name")).thenReturn("test");
+        when(systemInfo.getProperty("os.name")).thenReturn("test");
 
         final String response = getClient().getIdentResponse("60, 50", acp);
         assertEquals("60 , 50 : USERID : UNKNOWN : username", response);
     }
 
     private static void assertContains(final String msg, final String haystack,
-            final String needle) {
-        assertTrue(msg, haystack.indexOf(needle) > -1);
+            final CharSequence needle) {
+        assertTrue(msg, haystack.contains(needle));
     }
 
     private static void assertStartsWith(final String msg, final String haystack,

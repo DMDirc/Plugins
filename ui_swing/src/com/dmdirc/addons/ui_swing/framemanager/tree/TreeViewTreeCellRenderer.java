@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -68,13 +67,9 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
      * @param config        Config manager to retrieve settings from
      * @param colourManager The colour manager to use to resolve colours.
      * @param manager       Parent TreeFrameManager
-     * @param eventBus      The event bus to post errors to
      */
-    public TreeViewTreeCellRenderer(
-            final AggregateConfigProvider config,
-            final ColourManager colourManager,
-            final TreeFrameManager manager,
-            final DMDircMBassador eventBus) {
+    public TreeViewTreeCellRenderer(final AggregateConfigProvider config,
+            final ColourManager colourManager, final TreeFrameManager manager) {
         this.manager = manager;
 
         this.config = config;
