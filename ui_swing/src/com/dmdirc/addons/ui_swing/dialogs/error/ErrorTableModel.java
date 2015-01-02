@@ -139,28 +139,6 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
         }
     }
 
-    @Override
-    public void setValueAt(final Object aValue, final int rowIndex,
-            final int columnIndex) {
-        synchronized (errors) {
-            switch (columnIndex) {
-                case 1:
-                    if (aValue instanceof ErrorReportStatus) {
-                        errors.get(rowIndex).setReportStatus(
-                                (ErrorReportStatus) aValue);
-                        break;
-                    } else {
-                        throw new IllegalArgumentException("Received: " + aValue.getClass()
-                                + ", expecting: " + ErrorReportStatus.class);
-                    }
-                default:
-                    throw new UnsupportedOperationException("Only editing the "
-                            + "status is allowed");
-            }
-            fireTableCellUpdated(rowIndex, columnIndex);
-        }
-    }
-
     /**
      * Gets the error at the specified row.
      *
