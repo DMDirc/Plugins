@@ -75,6 +75,10 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
         setupProfileNicknames(dialog.getProfileNicknames());
         setupProfileRealname(dialog.getProfileRealname());
         setupProfileIdent(dialog.getProfileIdent());
+        setupProfileHighlights(dialog.getProfileHighlights());
+        setupAddHighlight(dialog.getProfileAddHighlight());
+        setupEditHighlight(dialog.getProfileEditHighlight());
+        setupDeleteHighlight(dialog.getProfileDeleteHighlight());
         model.addListener(this);
     }
 
@@ -150,6 +154,32 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 .ifPresent(model::removeSelectedProfileNickname));
     }
 
+    private void setupAddHighlight(final JButton addHighlight) {
+        addHighlight.setEnabled(!model.getProfileList().isEmpty());
+        addHighlight.addActionListener(e ->
+                new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
+                        iconManager, "Profile Manager: Add Highlight", "Enter highlight to add",
+                        model.getSelectedProfileAddHighlightValidator(),
+                        model::addSelectedProfileHighlight).display());
+    }
+
+    private void setupEditHighlight(final JButton editHighlight) {
+        editHighlight.setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
+        editHighlight.addActionListener(l -> model.getSelectedProfileSelectedHighlight().ifPresent(
+                (String oldName) -> new StandardInputDialog(dialog,
+                        Dialog.ModalityType.DOCUMENT_MODAL, iconManager,
+                        "Profile Manager: Edit Highlight", "Enter new highlight",
+                        model.getSelectedProfileEditHighlightValidator(),
+                        (String newName) -> model.editSelectedProfileHighlight(oldName, newName))
+                        .display()));
+    }
+
+    private void setupDeleteHighlight(final JButton deleteHighlight) {
+        deleteHighlight.setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
+        deleteHighlight.addActionListener(l -> model.getSelectedProfileSelectedHighlight()
+                .ifPresent(model::removeSelectedProfileHighlight));
+    }
+
     private void setupProfileName(final JTextField name) {
         name.setEnabled(model.getSelectedProfileName().isPresent());
         name.setText(model.getSelectedProfileName().orElse(""));
@@ -158,6 +188,13 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 model.setSelectedProfileName(Optional.of(s));
             }
         }));
+    }
+
+    private void setupProfileHighlights(final ReorderableJList<String> highlights) {
+        highlights.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        highlights.setEnabled(model.getSelectedProfileHighlights().isPresent());
+        highlights.addListSelectionListener(l -> model.setSelectedProfileSelectedHighlight(
+                Optional.ofNullable(highlights.getSelectedValue())));
     }
 
     private void setupProfileNicknames(final ReorderableJList<String> nicknames) {
@@ -242,8 +279,8 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     @Override
     public void selectedProfileNicknameEdited(final String oldNickname, final String newNickname) {
         dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileNicknames().getModel()
-                .setElementAt(newNickname, dialog.getProfileNicknames().getModel().indexOf(oldNickname));
+        dialog.getProfileNicknames().getModel().setElementAt(newNickname,
+                dialog.getProfileNicknames().getModel().indexOf(oldNickname));
     }
 
     @Override
@@ -256,6 +293,34 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     public void selectedProfileNicknameRemoved(final String nickname) {
         dialog.getOkButton().setEnabled(model.isSaveAllowed());
         dialog.getProfileNicknames().getModel().removeElement(nickname);
+    }
+
+    @Override
+    public void selectedHighlightChanged(final Optional<String> highlight) {
+        dialog.getOkButton().setEnabled(model.isSaveAllowed());
+        dialog.getProfileDeleteHighlight()
+                .setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
+        dialog.getProfileEditHighlight()
+                .setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
+    }
+
+    @Override
+    public void selectedProfileHighlightEdited(final String oldHighlight, final String newHighlight) {
+        dialog.getOkButton().setEnabled(model.isSaveAllowed());
+        dialog.getProfileHighlights().getModel().setElementAt(newHighlight,
+                dialog.getProfileHighlights().getModel().indexOf(oldHighlight));
+    }
+
+    @Override
+    public void selectedProfileHighlightAdded(final String highlight) {
+        dialog.getOkButton().setEnabled(model.isSaveAllowed());
+        dialog.getProfileHighlights().getModel().addElement(highlight);
+    }
+
+    @Override
+    public void selectedProfileHighlightRemoved(final String highlight) {
+        dialog.getOkButton().setEnabled(model.isSaveAllowed());
+        dialog.getProfileHighlights().getModel().removeElement(highlight);
     }
 
 }

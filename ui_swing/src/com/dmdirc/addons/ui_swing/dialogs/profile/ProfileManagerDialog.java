@@ -58,12 +58,20 @@ public class ProfileManagerDialog extends StandardDialog {
     private final JList<MutableProfile> profileList = new JList<>(new DefaultListModel<>());
     /** List of nicknames for a profile. */
     private final ReorderableJList<String> nicknames = new ReorderableJList<>();
+    /** List of highlights for a profile. */
+    private final ReorderableJList<String> highlights = new ReorderableJList<>();
     /** Adds a new nickname to the active profile. */
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
     private final JButton editNickname = new JButton("Edit");
     /** Deletes the selected nickname from the active profile. */
     private final JButton deleteNickname = new JButton("Delete");
+    /** Adds a new highlight to the active profile. */
+    private final JButton addHighlight = new JButton("Add");
+    /** Edits the active highlight in the active profile. */
+    private final JButton editHighlight = new JButton("Edit");
+    /** Deletes the selected highlight from the active profile. */
+    private final JButton deleteHighlight = new JButton("Delete");
     /** Edits the name of the active profile. */
     private final JTextField name = new JTextField();
     /** Edits the realname for the active profile. */
@@ -101,9 +109,10 @@ public class ProfileManagerDialog extends StandardDialog {
         add(new TextLabel("Profiles describe the information needed to connect " +
                 "to a server.  You can use a different profile for each " + "connection."),
                 "spanx 3");
-        add(new JScrollPane(profileList), "spany 3, growy, " + "wmin 200, wmax 200");
-        add(addProfile, "grow");
-        add(deleteProfile, "grow, wrap");
+        add(new JScrollPane(profileList), "spany 7, split 3, growy, pushy, "
+                + "wmin 200, wmax 200");
+        add(addProfile, "growx");
+        add(deleteProfile, "growx, wrap");
         add(new JLabel("Name: "), "align label, span 2, split 2, flowx, sgx label");
         add(ValidationFactory
                 .getValidatorPanel(name, model.getSelectedProfileNameValidator(), iconManager),
@@ -123,6 +132,14 @@ public class ProfileManagerDialog extends StandardDialog {
         add(new JLabel("Ident: "), "align label, span 2, split 2, flowx, sgx label");
         add(ValidationFactory.getValidatorPanel(ident, model.getIdentValidator(), iconManager),
                 "growx, pushx, sgx textinput");
+        add(new JLabel("Highlight: "),
+                "align label, span 2, split 2, flowx, sgx label, aligny 50%");
+        add(ValidationFactory.getValidatorPanel(new JScrollPane(highlights), highlights,
+                model.getHighlightsValidator(), iconManager), "grow, push");
+        add(Box.createGlue(), "flowx, span 4, split 4, sgx label");
+        add(addHighlight, "grow");
+        add(editHighlight, "grow");
+        add(deleteHighlight, "grow");
         add(getLeftButton(), "flowx, split 2, right, sg button");
         add(getRightButton(), "right, sg button");
     }
@@ -171,5 +188,21 @@ public class ProfileManagerDialog extends StandardDialog {
 
     public JButton getDeleteProfile() {
         return deleteProfile;
+    }
+
+    public ReorderableJList<String> getProfileHighlights() {
+        return highlights;
+    }
+
+    public JButton getProfileAddHighlight() {
+        return addHighlight;
+    }
+
+    public JButton getProfileEditHighlight() {
+        return editHighlight;
+    }
+
+    public JButton getProfileDeleteHighlight() {
+        return deleteHighlight;
     }
 }
