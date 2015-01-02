@@ -27,6 +27,7 @@ import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -123,7 +124,7 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                 return;
             }
 
-            date.setText(error.occurrencesString());
+            date.setText(new SimpleDateFormat("MMM dd hh:mm aa").format(error.getDate()));
             level.setText(error.getLevel().toString());
             reportStatus.setText(error.getReportStatus().toString());
 
@@ -176,7 +177,7 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     public void errorStatusChanged(final ProgramError error) {
         if (this.error != null && this.error.equals(error)) {
             reportStatus.setText(error.getReportStatus().toString());
-            date.setText(this.error.occurrencesString());
+            date.setText(new SimpleDateFormat("MMM dd hh:mm aa").format(error.getDate()));
         }
     }
 
