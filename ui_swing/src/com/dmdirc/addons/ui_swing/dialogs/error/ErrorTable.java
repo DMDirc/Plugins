@@ -67,7 +67,7 @@ public class ErrorTable extends PackingTable {
     public TableCellRenderer getCellRenderer(final int row,
             final int column) {
         switch (column) {
-            case 2:
+            case 1:
                 return new ErrorLevelIconCellRenderer(iconManager);
             default:
                 return super.getCellRenderer(row, column);

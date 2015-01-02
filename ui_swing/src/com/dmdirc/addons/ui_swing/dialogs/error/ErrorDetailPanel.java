@@ -48,8 +48,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     private final ErrorManager errorManager;
     /** Error to show. */
     private ProgramError error;
-    /** ID field. */
-    private JTextField id;
     /** Date field. */
     private JTextField date;
     /** Severity field. */
@@ -95,14 +93,12 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
 
     /** Initialises the components. */
     private void initComponents() {
-        id = new JTextField();
         date = new JTextField();
         level = new JTextField();
         reportStatus = new JTextField();
         details = new JTextArea();
         scrollPane = new JScrollPane(details);
 
-        id.setEditable(false);
         date.setEditable(false);
         level.setEditable(false);
         reportStatus.setEditable(false);
@@ -118,7 +114,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
         SwingUtilities.invokeLater(() -> {
             details.setText("");
             if (error == null) {
-                id.setText("");
                 date.setText("");
                 level.setText("");
                 reportStatus.setText("");
@@ -126,7 +121,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
                 return;
             }
 
-            id.setText(String.valueOf(error.getID()));
             date.setText(error.occurrencesString());
             level.setText(error.getLevel().toString());
             reportStatus.setText(error.getReportStatus().toString());
@@ -152,9 +146,6 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
     /** Lays out the components. */
     private void layoutComponents() {
         setLayout(new MigLayout("fill, wrap 2", "[right]rel[grow,fill]", ""));
-
-        add(new JLabel("ID: "));
-        add(id);
 
         add(new JLabel("Date: "));
         add(date);

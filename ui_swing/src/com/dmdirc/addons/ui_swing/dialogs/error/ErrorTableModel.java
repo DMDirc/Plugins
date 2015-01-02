@@ -87,21 +87,19 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 4;
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "ID";
-            case 1:
                 return "Count";
-            case 2:
+            case 1:
                 return "Severity";
-            case 3:
+            case 2:
                 return "Report Status";
-            case 4:
+            case 3:
                 return "Message";
             default:
                 throw new IndexOutOfBoundsException(columnIndex + ">= 5");
@@ -114,15 +112,13 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
             case 0:
                 return Integer.class;
             case 1:
-                return Integer.class;
-            case 2:
                 return ErrorLevel.class;
-            case 3:
+            case 2:
                 return ErrorReportStatus.class;
-            case 4:
+            case 3:
                 return String.class;
             default:
-                throw new IndexOutOfBoundsException(columnIndex + ">= 5");
+                throw new IndexOutOfBoundsException(columnIndex + ">= 4");
         }
     }
 
@@ -136,17 +132,15 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
         synchronized (errors) {
             switch (columnIndex) {
                 case 0:
-                    return errors.get(rowIndex).getID();
-                case 1:
                     return errors.get(rowIndex).getCount();
-                case 2:
+                case 1:
                     return errors.get(rowIndex).getLevel();
-                case 3:
+                case 2:
                     return errors.get(rowIndex).getReportStatus();
-                case 4:
+                case 3:
                     return errors.get(rowIndex).getMessage();
                 default:
-                    throw new IndexOutOfBoundsException(columnIndex + ">= 5");
+                    throw new IndexOutOfBoundsException(columnIndex + ">= 4");
             }
         }
     }
