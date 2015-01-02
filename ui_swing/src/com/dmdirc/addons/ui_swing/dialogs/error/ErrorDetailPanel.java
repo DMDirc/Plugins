@@ -27,6 +27,8 @@ import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
 
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -126,8 +128,8 @@ public final class ErrorDetailPanel extends JPanel implements ErrorListener {
             reportStatus.setText(error.getReportStatus().toString());
 
             details.append(error.getMessage() + '\n');
-            final String[] trace = error.getTrace();
-            if (trace.length > 0) {
+            final List<String> trace = error.getTrace();
+            if (!trace.isEmpty()) {
                 details.append("\n");
             }
             for (String traceLine : trace) {
