@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompleterUtils;
+import com.dmdirc.ui.messages.BackBuffer;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
@@ -70,6 +71,7 @@ public class RedirectCommandTest {
     @Mock private URLBuilder urlBuilder;
     @Mock private DMDircMBassador eventBus;
     @Mock private BackBufferFactory backBufferFactory;
+    @Mock private BackBuffer backBuffer;
     @Mock private TabCompleterUtils tabCompleterUtils;
 
     @Before
@@ -81,6 +83,7 @@ public class RedirectCommandTest {
         when(target.getConfigManager()).thenReturn(configProvider);
         when(target.getCommandParser()).thenReturn(commandParser);
         when(target.getTabCompleter()).thenReturn(tabCompleter);
+        when(backBufferFactory.getBackBuffer(any())).thenReturn(backBuffer);
         when(configProvider.hasOptionString("formatter", "commandOutput")).thenReturn(true);
         when(configProvider.getOption("formatter", "commandOutput")).thenReturn("%1$s");
         when(configProvider.getBinder()).thenReturn(configBinder);
