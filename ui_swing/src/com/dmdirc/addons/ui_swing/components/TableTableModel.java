@@ -37,6 +37,7 @@ import javax.swing.table.TableModel;
  */
 public class TableTableModel extends AbstractTableModel {
 
+    private static final long serialVersionUID = 1L;
     private final List<String> headers;
     private final Table<Integer, Integer, String> table;
     private final BiFunction<Integer, Integer, Boolean> editableFunction;

@@ -33,6 +33,7 @@ import java.util.Comparator;
  */
 public class WindowComparator implements Comparator<Window>, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final FrameContainerComparator comparator;
 
     public WindowComparator() {
