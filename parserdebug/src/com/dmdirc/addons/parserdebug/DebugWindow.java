@@ -63,6 +63,7 @@ public class DebugWindow extends FrameContainer {
         this.listener = listener;
         this.parser = parser;
         this.connection = connection;
+        initBackBuffer();
     }
 
     @Override

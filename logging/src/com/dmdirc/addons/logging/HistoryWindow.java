@@ -57,6 +57,7 @@ public class HistoryWindow extends FrameContainer {
                 urlBuilder, eventBus,
                 Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
 
+        initBackBuffer();
         final int frameBufferSize = parent.getConfigManager().getOptionInt(
                 "ui", "frameBufferSize");
         try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {

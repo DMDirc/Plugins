@@ -98,6 +98,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         nickname = nick;
         otherNickname = targetNick;
         this.eventBus = eventBus;
+        initBackBuffer();
     }
 
     /**
