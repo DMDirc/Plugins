@@ -87,22 +87,20 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 3;
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Count";
-            case 1:
                 return "Severity";
-            case 2:
+            case 1:
                 return "Report Status";
-            case 3:
+            case 2:
                 return "Message";
             default:
-                throw new IndexOutOfBoundsException(columnIndex + ">= 5");
+                throw new IndexOutOfBoundsException(columnIndex + ">= 3");
         }
     }
 
@@ -110,15 +108,13 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
     public Class<?> getColumnClass(final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return Integer.class;
-            case 1:
                 return ErrorLevel.class;
-            case 2:
+            case 1:
                 return ErrorReportStatus.class;
-            case 3:
+            case 2:
                 return String.class;
             default:
-                throw new IndexOutOfBoundsException(columnIndex + ">= 4");
+                throw new IndexOutOfBoundsException(columnIndex + ">= 3");
         }
     }
 
@@ -132,15 +128,13 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
         synchronized (errors) {
             switch (columnIndex) {
                 case 0:
-                    return errors.get(rowIndex).getCount();
-                case 1:
                     return errors.get(rowIndex).getLevel();
-                case 2:
+                case 1:
                     return errors.get(rowIndex).getReportStatus();
-                case 3:
+                case 2:
                     return errors.get(rowIndex).getMessage();
                 default:
-                    throw new IndexOutOfBoundsException(columnIndex + ">= 4");
+                    throw new IndexOutOfBoundsException(columnIndex + ">= 3");
             }
         }
     }
@@ -150,7 +144,7 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
             final int columnIndex) {
         synchronized (errors) {
             switch (columnIndex) {
-                case 3:
+                case 1:
                     if (aValue instanceof ErrorReportStatus) {
                         errors.get(rowIndex).setReportStatus(
                                 (ErrorReportStatus) aValue);
@@ -202,18 +196,6 @@ public final class ErrorTableModel extends AbstractTableModel implements ErrorLi
         synchronized (errors) {
             errors.add(error);
             fireTableRowsInserted(errors.indexOf(error), errors.indexOf(error));
-        }
-    }
-
-    /**
-     * Removes a specified row from the list.
-     *
-     * @param row Row to remove
-     */
-    public void removeRow(final int row) {
-        synchronized (errors) {
-            errors.remove(row);
-            fireTableRowsDeleted(row, row);
         }
     }
 
