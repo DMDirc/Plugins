@@ -56,6 +56,7 @@ public class FakeWriteableFrameContainer extends FrameContainer {
                 target.getCommandParser(), target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;
+        initBackBuffer();
     }
 
     @Override

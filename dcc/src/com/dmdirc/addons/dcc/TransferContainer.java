@@ -106,6 +106,7 @@ public class TransferContainer extends FrameContainer implements
 
         otherNickname = targetNick;
         this.eventBus = eventBus;
+        initBackBuffer();
     }
 
     @Override

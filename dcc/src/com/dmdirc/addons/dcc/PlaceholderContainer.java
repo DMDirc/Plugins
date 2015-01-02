@@ -65,6 +65,7 @@ public class PlaceholderContainer extends FrameContainer {
                 Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;
+        initBackBuffer();
     }
 
     @Override

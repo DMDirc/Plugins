@@ -76,6 +76,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
                 messageSinkManager,
                 eventBus,
                 components);
+        initBackBuffer();
     }
 
     @Override
