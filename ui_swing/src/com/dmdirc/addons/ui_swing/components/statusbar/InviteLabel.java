@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.Invite;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
@@ -32,11 +31,12 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.ServerInviteExpiredEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.InviteManager;
 import com.dmdirc.ui.IconManager;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -85,9 +85,11 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
 
         menu = new JPopupMenu();
         dismiss = new JMenuItem("Dismiss all invites");
-        dismiss.addActionListener(e -> activeConnection.ifPresent(Connection::removeInvites));
+        dismiss.addActionListener(e -> activeConnection.map(Connection::getInviteManager)
+                .ifPresent(InviteManager::removeInvites));
         accept = new JMenuItem("Accept all invites");
-        accept.addActionListener(e -> activeConnection.ifPresent(Connection::acceptInvites));
+        accept.addActionListener(e -> activeConnection.map(Connection::getInviteManager)
+                .ifPresent(InviteManager::acceptInvites));
     }
 
     /**
@@ -110,12 +112,13 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
     private void popuplateMenu() {
         menu.removeAll();
 
-        if (activeConnection.isPresent()) {
-            final Collection<Invite> invites = activeConnection.get().getInvites();
-            for (final Invite invite : invites) {
-                menu.add(new JMenuItem(new InviteAction(invite)));
-            }
-        }
+        activeConnection
+                .map(Connection::getInviteManager)
+                .map(InviteManager::getInvites)
+                .ifPresent(invites -> invites.stream()
+                        .map(InviteAction::new)
+                        .map(JMenuItem::new)
+                        .map(menu::add));
         menu.add(new JSeparator());
         menu.add(accept);
         menu.add(dismiss);
@@ -125,7 +128,10 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
      * Updates the invite label for the currently active server.
      */
     private void update() {
-        if (!activeConnection.isPresent() || activeConnection.get().getInvites().isEmpty()) {
+        if (activeConnection
+                .map(Connection::getInviteManager)
+                .map(InviteManager::getInvites)
+                .map(List::isEmpty).orElse(true)) {
             setVisible(false);
             closeDialog();
         } else {
