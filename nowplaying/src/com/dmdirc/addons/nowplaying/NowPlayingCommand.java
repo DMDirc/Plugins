@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
@@ -88,7 +89,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final FrameContainer target = ((ChatCommandContext) context).getChat();
+        final Chat target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0
                 && "--sources".equalsIgnoreCase(args.getArguments()[0])) {
             doSourceList(origin, args.isSilent(), args.getArgumentsAsString(1));
@@ -104,7 +105,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                     if (source.getState() == MediaSourceState.CLOSED) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     } else {
-                        target.getCommandParser().parseCommand(origin,
+                        target.getWindowModel().getCommandParser().parseCommand(origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     }
                 }
@@ -114,7 +115,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
         } else {
             if (manager.hasRunningSource()) {
-                target.getCommandParser().parseCommand(origin,
+                target.getWindowModel().getCommandParser().parseCommand(origin,
                         getInformation(manager.getBestSource(), args.
                                 getArgumentsAsString(0)));
             } else {
