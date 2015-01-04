@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
@@ -45,6 +44,7 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.User;
@@ -571,7 +571,7 @@ public class LoggingManager implements ConfigChangeListener {
     protected boolean showHistory(final FrameContainer target) {
         final String descriptor;
 
-        if (target instanceof Channel) {
+        if (target instanceof GroupChat) {
             descriptor = target.getName();
         } else if (target instanceof Query) {
             descriptor = ((PrivateChat) target).getNickname();

@@ -61,7 +61,7 @@ public class InvitePopup extends StatusbarPopupWindow {
     @Override
     protected void initContent(final JPanel panel) {
         if (connection.isPresent()) {
-            for (final Invite invite : connection.get().getInvites()) {
+            for (final Invite invite : connection.get().getInviteManager().getInvites()) {
                 panel.add(new JLabel(invite.getChannel()), "growx, pushx");
                 panel.add(new JLabel(invite.getSource().getNickname(), SwingConstants.CENTER),
                         "growx, pushx, al center");

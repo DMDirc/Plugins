@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -84,10 +85,10 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        final FrameContainer target = ((ChatCommandContext) context).getChat();
-        target.getCommandParser().parseCommand(new FakeWriteableFrameContainer(
-                target, messageSinkManager, eventBus, urlBuilder, backBufferFactory),
-                args.getArgumentsAsString());
+        final Chat target = ((ChatCommandContext) context).getChat();
+        target.getWindowModel().getCommandParser().parseCommand(
+                new FakeWriteableFrameContainer(target.getWindowModel(), messageSinkManager,
+                        eventBus, urlBuilder, backBufferFactory), args.getArgumentsAsString());
     }
 
     @Override

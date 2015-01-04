@@ -22,15 +22,15 @@
 
 package com.dmdirc.addons.tabcompletion_mirc;
 
-import com.google.common.collect.Lists;
-
-import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
+
+import com.google.common.collect.Lists;
 
 import java.awt.Toolkit;
 import java.util.Collections;
@@ -82,10 +82,10 @@ public class MircStyle implements TabCompletionStyle {
             } else {
                 Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
 
-                if (!word.isEmpty() && window instanceof Channel
-                        && ((Channel) window)
-                        .getChannelInfo().getName().startsWith(word)) {
-                    target = ((Channel) window).getChannelInfo().getName();
+                if (!word.isEmpty()
+                        && window instanceof GroupChat
+                        && window.getName().startsWith(word)) {
+                    target = window.getName();
                 } else {
                     target = results.get(0);
                 }
