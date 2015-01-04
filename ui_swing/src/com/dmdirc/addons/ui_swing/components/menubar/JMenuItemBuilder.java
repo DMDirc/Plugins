@@ -37,7 +37,7 @@ class JMenuItemBuilder {
         return new JMenuItemBuilder();
     }
 
-    public JMenuItemBuilder() {
+    private JMenuItemBuilder() {
         this.menuItem = new JMenuItem();
     }
 
