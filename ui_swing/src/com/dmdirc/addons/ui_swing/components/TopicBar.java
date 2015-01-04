@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
@@ -36,6 +35,7 @@ import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.ChannelTopicUnsetEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginManager;
@@ -91,7 +91,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     /** The window this topic bar is for. */
     private final ChannelFrame window;
     /** Associated channel. */
-    private final Channel channel;
+    private final GroupChat channel;
     /** the maximum length allowed for a topic. */
     private final int topicLengthMax;
     /** The config domain to read settings from. */
@@ -134,7 +134,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final PluginManager pluginManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            final Channel channel,
+            final GroupChat channel,
             final ChannelFrame window,
             final IconManager iconManager,
             final TabCompleterUtils tabCompleterUtils,
@@ -161,10 +161,11 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 iconManager.getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(
-                pluginManager, topicText, commandController, channel.getCommandParser(),
-                channel, tabCompleterUtils, channel.getEventBus());
+                pluginManager, topicText, commandController,
+                channel.getWindowModel().getCommandParser(),
+                channel.getWindowModel(), tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);
-        handler.setTabCompleter(channel.getTabCompleter());
+        handler.setTabCompleter(channel.getWindowModel().getTabCompleter());
 
         final JScrollPane sp = new JScrollPane(topicText);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -238,13 +239,13 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         topicChanged(event.getChannel(), null);
     }
 
-    private void topicChanged(final Channel channel, final Topic topic) {
+    private void topicChanged(final GroupChat channel, final Topic topic) {
         if (topicText.isEditable()) {
             return;
         }
         topicText.setText("");
         if (topic != null) {
-            channel.getBackBuffer().getStyliser().addStyledString(
+            channel.getWindowModel().getBackBuffer().getStyliser().addStyledString(
                     new StyledDocumentMaker((StyledDocument) topicText.getDocument(), as),
                     Styliser.CODE_HEXCOLOUR
                             + UIUtilities.getHex(foregroundColour)
@@ -342,13 +343,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      */
     private void setColours() {
         backgroundColour = UIUtilities.convertColour(
-                colourManager.getColourFromString(
-                        channel.getConfigManager().getOptionString(
-                                "ui", "inputbackgroundcolour",
-                                "ui", "backgroundcolour"), null));
+                colourManager.getColourFromString(channel.getWindowModel().getConfigManager()
+                                .getOptionString("ui", "inputbackgroundcolour", "ui",
+                                        "backgroundcolour"), null));
         foregroundColour = UIUtilities.convertColour(
                 colourManager.getColourFromString(
-                        channel.getConfigManager().getOptionString(
+                        channel.getWindowModel().getConfigManager().getOptionString(
                                 "ui", "inputforegroundcolour",
                                 "ui", "foregroundcolour"), null));
         setBackground(backgroundColour);
@@ -433,9 +433,12 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
     }
 
     private void updateOptions() {
-        showFull = channel.getConfigManager().getOptionBool(domain, "showfulltopic");
-        hideEmpty = channel.getConfigManager().getOptionBool(domain, "hideEmptyTopicBar");
-        showBar = channel.getConfigManager().getOptionBool(domain, "showtopicbar");
+        showFull = channel.getWindowModel().getConfigManager()
+                .getOptionBool(domain, "showfulltopic");
+        hideEmpty = channel.getWindowModel().getConfigManager()
+                .getOptionBool(domain, "hideEmptyTopicBar");
+        showBar = channel.getWindowModel().getConfigManager()
+                .getOptionBool(domain, "showtopicbar");
     }
 
     /**
