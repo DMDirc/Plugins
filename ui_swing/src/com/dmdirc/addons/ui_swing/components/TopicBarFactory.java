@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginManager;
@@ -83,11 +83,11 @@ public class TopicBarFactory {
     }
 
     public TopicBar getTopicBar(
-            final Channel channel,
+            final GroupChat channel,
             final ChannelFrame window,
             final IconManager iconManager) {
         return new TopicBar(parentWindow.get(), globalConfig, domain,
-                colourManagerFactory.getColourManager(channel.getConfigManager()),
+                colourManagerFactory.getColourManager(channel.getWindowModel().getConfigManager()),
                 pluginManager, clipboard, commandController, channel, window, iconManager,
                 tabCompleterUtils, eventBus);
     }

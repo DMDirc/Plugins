@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -35,6 +34,7 @@ import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientRemovedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.events.NickListUpdatedEvent;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.ColourManager;
@@ -96,7 +96,7 @@ public class NickList extends JScrollPane implements MouseListener {
         setPreferredSize(new Dimension(splitPanePosition, 0));
         setMinimumSize(new Dimension(75, 0));
 
-        nicklistModel.replace(((Channel) frame.getContainer()).getUsers());
+        nicklistModel.replace(((GroupChat) frame.getContainer()).getUsers());
         frame.getContainer().getEventBus().subscribe(this);
         config.getBinder().bind(this, NickList.class);
     }
