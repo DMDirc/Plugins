@@ -22,14 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.google.common.base.Preconditions;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.swing.table.AbstractTableModel;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Table model that display fields from a type of object.
@@ -58,6 +60,10 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * Generic type this table contains, used to verify getters exist.
      */
     private final Class<T> clazz;
+    /**
+     * Cached return types for the getters.
+     */
+    private final Class<?>[] columnTypes;
 
     /**
      * Creates a new generic table model.
@@ -66,19 +72,21 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param getterValues Names of the getters to display in the table
      */
     public GenericTableModel(final Class<T> type, final String... getterValues) {
-        Preconditions.checkArgument(getterValues.length > 0, "Getters must be set");
+        checkArgument(getterValues.length > 0, "Getters must be set");
         clazz = type;
         for (String getter : getterValues) {
-            Preconditions.checkNotNull(getter, "Getter must not be null");
-            Preconditions.checkArgument(!getter.isEmpty(), "Getter must not be empty");
-            Preconditions.checkArgument(getGetter(getter).isPresent(), "Getter must exist in type");
+            checkNotNull(getter, "Getter must not be null");
+            checkArgument(!getter.isEmpty(), "Getter must not be empty");
+            checkArgument(getGetter(getter).isPresent(), "Getter must exist in type");
         }
-        this.values = new ArrayList<>();
-        this.headers = new String[getterValues.length];
-        this.getters = new String[getterValues.length];
+        values = new ArrayList<>();
+        headers = new String[getterValues.length];
+        getters = new String[getterValues.length];
+        columnTypes = new Class[getterValues.length];
         for (int i = 0; i < getterValues.length; i++) {
-            this.getters[i] = getterValues[i];
-            this.headers[i] = getterValues[i];
+            getters[i] = getterValues[i];
+            headers[i] = getterValues[i];
+            columnTypes[i] = getGetter(getterValues[i]).get().getReturnType();
         }
     }
 
@@ -94,14 +102,20 @@ public class GenericTableModel<T> extends AbstractTableModel {
 
     @Override
     public String getColumnName(final int column) {
-        Preconditions.checkElementIndex(column, headers.length, "Column must exist");
+        checkElementIndex(column, headers.length, "Column must exist");
         return headers[column];
     }
 
     @Override
+    public Class<?> getColumnClass(final int columnIndex) {
+        checkElementIndex(columnIndex, getters.length, "Column must exist");
+        return columnTypes[columnIndex];
+    }
+
+    @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        Preconditions.checkElementIndex(rowIndex, values.size(), "Row index must exist");
-        Preconditions.checkElementIndex(columnIndex, getters.length, "Column index must exist");
+        checkElementIndex(rowIndex, values.size(), "Row index must exist");
+        checkElementIndex(columnIndex, getters.length, "Column index must exist");
         try {
             final T value = values.get(rowIndex);
             final Method method = getGetter(getters[columnIndex]).get();
@@ -119,7 +133,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @return Value at the specified row
      */
     public T getValue(final int rowIndex) {
-        Preconditions.checkElementIndex(rowIndex, values.size(), "Row index must exist");
+        checkElementIndex(rowIndex, values.size(), "Row index must exist");
         return values.get(rowIndex);
     }
 
@@ -141,9 +155,8 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param header Header name
      */
     public void setHeaderName(final int column, final String header) {
-        Preconditions.checkNotNull(header, "Header must not be null");
-        Preconditions.checkElementIndex(column, getters.length,
-                "There must be a column for the header");
+        checkNotNull(header, "Header must not be null");
+        checkElementIndex(column, getters.length, "There must be a column for the header");
         headers[column] = header;
         fireTableStructureChanged();
     }
@@ -155,7 +168,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param headerValues Names for all headers in the table
      */
     public void setHeaderNames(final String... headerValues) {
-        Preconditions.checkArgument(headerValues.length == getters.length,
+        checkArgument(headerValues.length == getters.length,
                 "There must be as many headers as columns");
         System.arraycopy(headerValues, 0, this.headers, 0, headerValues.length);
         fireTableStructureChanged();
@@ -171,8 +184,8 @@ public class GenericTableModel<T> extends AbstractTableModel {
     @Override
     @SuppressWarnings("unchecked")
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-        Preconditions.checkElementIndex(rowIndex, values.size(), "Row index must exist");
-        Preconditions.checkElementIndex(columnIndex, getters.length, "Column index must exist");
+        checkElementIndex(rowIndex, values.size(), "Row index must exist");
+        checkElementIndex(columnIndex, getters.length, "Column index must exist");
         try {
             values.add(rowIndex, (T) value);
             fireTableRowsInserted(rowIndex, rowIndex);
@@ -188,8 +201,8 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param rowIndex Index to replace
      */
     public void replaceValueAt(final T value, final int rowIndex) {
-        Preconditions.checkNotNull(value, "Value must not be null");
-        Preconditions.checkElementIndex(rowIndex, values.size(), "RowIndex must be valid");
+        checkNotNull(value, "Value must not be null");
+        checkElementIndex(rowIndex, values.size(), "RowIndex must be valid");
         values.remove(rowIndex);
         values.add(rowIndex, value);
         fireTableRowsUpdated(rowIndex, rowIndex);
@@ -201,7 +214,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param value Value to be removed.
      */
     public void removeValue(final T value) {
-        Preconditions.checkArgument(values.contains(value), "Value must exist");
+        checkArgument(values.contains(value), "Value must exist");
         final int index = values.indexOf(value);
         values.remove(value);
         fireTableRowsDeleted(index, index);
