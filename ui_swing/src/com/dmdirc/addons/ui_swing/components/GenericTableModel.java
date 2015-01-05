@@ -82,7 +82,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
         values = new ArrayList<>();
         headers = new String[getterValues.length];
         getters = new String[getterValues.length];
-        columnTypes = new Class[getterValues.length];
+        columnTypes = new Class<?>[getterValues.length];
         for (int i = 0; i < getterValues.length; i++) {
             getters[i] = getterValues[i];
             headers[i] = getterValues[i];
