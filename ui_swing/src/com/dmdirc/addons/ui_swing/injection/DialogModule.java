@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
+import com.dmdirc.addons.ui_swing.dialogs.newerror.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
@@ -49,12 +50,14 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
+import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
+import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
 import com.dmdirc.ui.core.profiles.CoreProfilesDialogModel;
@@ -75,20 +78,21 @@ import dagger.Provides;
  * Facilitates injection of dialogs.
  */
 @Module(library = true, complete = false)
+@SuppressWarnings("TypeMayBeWeakened")
 public class DialogModule {
 
     /**
      * Qualifier that indicates a restart dialog is needed for updates to be applied.
      */
     @Qualifier
-    public static @interface ForUpdates {
+    public @interface ForUpdates {
     }
 
     /**
      * Qualifier that indicates a restart dialog is needed for settings to be applied.
      */
     @Qualifier
-    public static @interface ForSettings {
+    public @interface ForSettings {
     }
 
     @Provides
@@ -113,6 +117,11 @@ public class DialogModule {
 
     @Provides
     public AboutDialogModel getAboutDialogModel(final CoreAboutDialogModel model) {
+        return model;
+    }
+
+    @Provides
+    public ErrorsDialogModel getErrorsDialogModel(final CoreErrorsDialogModel model) {
         return model;
     }
 
@@ -155,6 +164,13 @@ public class DialogModule {
     @Singleton
     public DialogProvider<AboutDialog> getAboutDialogProvider(
             final Provider<AboutDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<ErrorsDialog> getErrorsDialogProvider(final Provider<ErrorsDialog>
+            provider) {
         return new DialogProvider<>(provider);
     }
 

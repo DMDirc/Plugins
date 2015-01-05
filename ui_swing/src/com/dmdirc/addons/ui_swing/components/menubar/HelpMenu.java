@@ -25,22 +25,19 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
+import com.dmdirc.addons.ui_swing.dialogs.newerror.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ConnectionManager;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 /**
  * A menu providing help commands to the menu bar.
  */
 @Singleton
-public class HelpMenu extends JMenu implements ActionListener {
+public class HelpMenu extends JMenu {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -50,6 +47,8 @@ public class HelpMenu extends JMenu implements ActionListener {
     private final DialogProvider<FeedbackDialog> feedbackDialogProvider;
     /** Provider of about dialogs. */
     private final DialogProvider<AboutDialog> aboutDialogProvider;
+    /** Provider of error dialogs. */
+    private final DialogProvider<ErrorsDialog> errorsDialogDialogProvider;
 
     /**
      * Instantiates a new help menu.
@@ -62,11 +61,13 @@ public class HelpMenu extends JMenu implements ActionListener {
     public HelpMenu(
             final ConnectionManager connectionManager,
             final DialogProvider<FeedbackDialog> feedbackDialogProvider,
-            final DialogProvider<AboutDialog> aboutDialogProvider) {
+            final DialogProvider<AboutDialog> aboutDialogProvider,
+            final DialogProvider<ErrorsDialog> errorsDialogDialogProvider) {
         super("Help");
         this.connectionManager = connectionManager;
         this.feedbackDialogProvider = feedbackDialogProvider;
         this.aboutDialogProvider = aboutDialogProvider;
+        this.errorsDialogDialogProvider = errorsDialogDialogProvider;
         setMnemonic('h');
         initHelpMenu();
     }
@@ -75,44 +76,17 @@ public class HelpMenu extends JMenu implements ActionListener {
      * Initialises the help menu.
      */
     private void initHelpMenu() {
-        JMenuItem menuItem;
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('j');
-        menuItem.setText("Join Dev channel");
-        menuItem.setActionCommand("JoinDevChat");
-        menuItem.addActionListener(this);
-        add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('f');
-        menuItem.setText("Send Feedback");
-        menuItem.setActionCommand("feedback");
-        menuItem.addActionListener(this);
-        add(menuItem);
-
+        add(JMenuItemBuilder.create().setMnemonic('j').setText("Join Dev Channel")
+                .addActionListener(e -> connectionManager.joinDevChat()).build());
+        add(JMenuItemBuilder.create().setMnemonic('f').setText("Send Feedback")
+                .addActionListener(e -> feedbackDialogProvider.displayOrRequestFocus())
+                .build());
+        add(JMenuItemBuilder.create().setMnemonic('e').setText("Show Errors")
+                .addActionListener(e -> errorsDialogDialogProvider.displayOrRequestFocus())
+                .build());
         if (!Apple.isAppleUI()) {
-            menuItem = new JMenuItem();
-            menuItem.setMnemonic('a');
-            menuItem.setText("About");
-            menuItem.setActionCommand("About");
-            menuItem.addActionListener(this);
-            add(menuItem);
-        }
-    }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "About":
-                aboutDialogProvider.displayOrRequestFocus();
-                break;
-            case "JoinDevChat":
-                connectionManager.joinDevChat();
-                break;
-            case "feedback":
-                feedbackDialogProvider.displayOrRequestFocus();
-                break;
+        add(JMenuItemBuilder.create().setMnemonic('a').setText("About")
+                .addActionListener(e -> aboutDialogProvider.displayOrRequestFocus()).build());
         }
     }
 
