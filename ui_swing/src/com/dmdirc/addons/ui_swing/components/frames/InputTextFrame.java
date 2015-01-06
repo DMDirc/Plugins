@@ -36,7 +36,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.ui.InputWindow;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleterUtils;
 
@@ -78,7 +78,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     /** Typing indicator label. */
     private TypingLabel typingLabel;
     /** Plugin Manager. */
-    private final PluginManager pluginManager;
+    private final ServiceManager serviceManager;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
@@ -98,7 +98,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
             final FrameContainer owner) {
         super(owner, owner.getCommandParser(), deps);
 
-        pluginManager = deps.pluginManager;
+        serviceManager = deps.serviceManager;
         commandController = deps.commandController;
         eventBus = deps.eventBus;
         this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
@@ -134,7 +134,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
     private void initComponents(final Provider<SwingInputField> inputFieldProvider,
             final TabCompleterUtils tabCompleterUtils) {
         inputField = inputFieldProvider.get();
-        inputHandler = new SwingInputHandler(pluginManager, inputField, commandController,
+        inputHandler = new SwingInputHandler(serviceManager, inputField, commandController,
                 getContainer().getCommandParser(), getContainer(), tabCompleterUtils, eventBus);
         inputHandler.addValidationListener(inputField);
         inputHandler.setTabCompleter(frameParent.getTabCompleter());

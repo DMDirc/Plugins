@@ -27,7 +27,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -45,7 +45,7 @@ public class PasteDialogFactory {
 
     private final IconManager iconManager;
     private final AggregateConfigProvider config;
-    private final PluginManager pluginManager;
+    private final ServiceManager serviceManager;
     private final CommandController commandController;
     private final DMDircMBassador eventBus;
     private final ColourManagerFactory colourManagerFactory;
@@ -55,14 +55,14 @@ public class PasteDialogFactory {
     public PasteDialogFactory(
             @GlobalConfig final IconManager iconManager,
             @GlobalConfig final AggregateConfigProvider config,
-            final PluginManager pluginManager,
+            final ServiceManager serviceManager,
             final CommandController commandController,
             final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         this.iconManager = iconManager;
         this.config = config;
-        this.pluginManager = pluginManager;
+        this.serviceManager = serviceManager;
         this.commandController = commandController;
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
@@ -71,7 +71,7 @@ public class PasteDialogFactory {
 
     public PasteDialog getPasteDialog(final InputTextFrame newParent, final String text,
             final Window parentWindow) {
-        return new PasteDialog(iconManager, config, pluginManager, commandController, eventBus,
+        return new PasteDialog(iconManager, config, serviceManager, commandController, eventBus,
                 newParent, text, parentWindow, colourManagerFactory, tabCompleterUtils);
     }
 

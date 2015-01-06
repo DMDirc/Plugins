@@ -38,7 +38,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
@@ -118,7 +118,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param globalConfig      The config provider to read settings from.
      * @param domain            The domain that settings are stored in.
      * @param colourManager     The colour manager to use for colour input.
-     * @param pluginManager     The plugin manager to use for plugin information.
+     * @param serviceManager    The service manager to use for plugin information.
      * @param clipboard         The clipboard to copy and paste from
      * @param commandController The controller to use for command information.
      * @param channel           The channel that this topic bar is for.
@@ -131,7 +131,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final AggregateConfigProvider globalConfig,
             final String domain,
             final ColourManager colourManager,
-            final PluginManager pluginManager,
+            final ServiceManager serviceManager,
             final Clipboard clipboard,
             final CommandController commandController,
             final GroupChat channel,
@@ -161,7 +161,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 iconManager.getIcon("close-active"));
 
         final SwingInputHandler handler = new SwingInputHandler(
-                pluginManager, topicText, commandController,
+                serviceManager, topicText, commandController,
                 channel.getWindowModel().getCommandParser(),
                 channel.getWindowModel(), tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);

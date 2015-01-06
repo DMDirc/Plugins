@@ -31,7 +31,7 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -74,8 +74,8 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     private final Window parentWindow;
     /** Icon manager to retrieve icons with. */
     private final IconManager iconManager;
-    /** Plugin Manager to retrieve tab completers with. */
-    private final PluginManager pluginManager;
+    /** Service Manager to retrieve tab completers with. */
+    private final ServiceManager serviceManager;
     /** Config to read settings from. */
     private final AggregateConfigProvider config;
     /** The controller to use to retrieve command information. */
@@ -86,7 +86,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
      *
      * @param iconManager       Icon manager to retrieve icons with
      * @param config            Config to read settings from
-     * @param pluginManager     to retrieve tab completers with
+     * @param serviceManager     to retrieve tab completers with
      * @param commandController The controller to use to retrieve command information.
      * @param eventBus          The bus to dispatch events on.
      * @param newParent         The frame that owns this dialog
@@ -96,7 +96,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     public PasteDialog(
             final IconManager iconManager,
             final AggregateConfigProvider config,
-            final PluginManager pluginManager,
+            final ServiceManager serviceManager,
             final CommandController commandController,
             final DMDircMBassador eventBus,
             final InputTextFrame newParent,
@@ -110,7 +110,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;
         this.config = config;
-        this.pluginManager = pluginManager;
+        this.serviceManager = serviceManager;
         this.commandController = commandController;
 
         initComponents(eventBus, text, colourManagerFactory, tabCompleterUtils);
@@ -153,7 +153,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         textField.setColumns(50);
         textField.setRows(10);
 
-        new SwingInputHandler(pluginManager, textField, commandController,
+        new SwingInputHandler(serviceManager, textField, commandController,
                 parent.getContainer().getCommandParser(),
                 parent.getContainer(), tabCompleterUtils, eventBus)
                 .setTypes(false, false, true,false);
