@@ -30,7 +30,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -54,7 +54,7 @@ public class TopicBarFactory {
     private final AggregateConfigProvider globalConfig;
     private final String domain;
     private final ColourManagerFactory colourManagerFactory;
-    private final PluginManager pluginManager;
+    private final ServiceManager serviceManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
     private final DMDircMBassador eventBus;
@@ -66,7 +66,7 @@ public class TopicBarFactory {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SwingController.class) final String domain,
             final ColourManagerFactory colourManagerFactory,
-            final PluginManager pluginManager,
+            final ServiceManager serviceManager,
             final Clipboard clipboard,
             final CommandController commandController,
             final DMDircMBassador eventBus,
@@ -75,7 +75,7 @@ public class TopicBarFactory {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.colourManagerFactory = colourManagerFactory;
-        this.pluginManager = pluginManager;
+        this.serviceManager = serviceManager;
         this.clipboard = clipboard;
         this.commandController = commandController;
         this.eventBus = eventBus;
@@ -88,7 +88,7 @@ public class TopicBarFactory {
             final IconManager iconManager) {
         return new TopicBar(parentWindow.get(), globalConfig, domain,
                 colourManagerFactory.getColourManager(channel.getWindowModel().getConfigManager()),
-                pluginManager, clipboard, commandController, channel, window, iconManager,
+                serviceManager, clipboard, commandController, channel, window, iconManager,
                 tabCompleterUtils, eventBus);
     }
 

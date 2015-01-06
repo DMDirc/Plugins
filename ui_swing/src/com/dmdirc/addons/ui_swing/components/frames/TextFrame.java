@@ -60,7 +60,7 @@ import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
@@ -527,7 +527,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         final DMDircMBassador eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
-        final PluginManager pluginManager;
+        final ServiceManager serviceManager;
         final IconManager iconManager;
         final ActiveFrameManager activeFrameManager;
         final Clipboard clipboard;
@@ -544,7 +544,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
                 final PopupManager popupManager,
                 final DMDircMBassador eventBus,
                 final PasteDialogFactory pasteDialog,
-                final PluginManager pluginManager,
+                final ServiceManager serviceManager,
                 @GlobalConfig final IconManager iconManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,
                 final ActiveFrameManager activeFrameManager,
@@ -560,7 +560,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;
-            this.pluginManager = pluginManager;
+            this.serviceManager = serviceManager;
             this.iconManager = iconManager;
             this.activeFrameManager = activeFrameManager;
             this.clipboard = clipboard;

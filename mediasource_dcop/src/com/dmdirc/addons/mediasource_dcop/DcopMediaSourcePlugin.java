@@ -25,7 +25,7 @@ package com.dmdirc.addons.mediasource_dcop;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.plugins.NoSuchProviderException;
-import com.dmdirc.plugins.PluginManager;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
 import java.util.ArrayList;
@@ -41,15 +41,15 @@ public class DcopMediaSourcePlugin extends BasePlugin
     /** Media sources. */
     private final List<MediaSource> sources;
     /** This plugins plugin manager. */
-    private final PluginManager pluginManager;
+    private final ServiceManager serviceManager;
 
     /**
      * Creates a new instance of DcopMediaSourcePlugin.
      *
-     * @param pluginManager Plugin manager to retrieve services from
+     * @param serviceManager Plugin manager to retrieve services from
      */
-    public DcopMediaSourcePlugin(final PluginManager pluginManager) {
-        this.pluginManager = pluginManager;
+    public DcopMediaSourcePlugin(final ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
         sources = new ArrayList<>();
         sources.add(new AmarokSource(this));
         sources.add(new KaffeineSource(this));
@@ -66,7 +66,7 @@ public class DcopMediaSourcePlugin extends BasePlugin
     @SuppressWarnings("unchecked")
     protected List<String> getDcopResult(final String query) {
         try {
-            return (List<String>) pluginManager.getExportedService("dcop")
+            return (List<String>) serviceManager.getExportedService("dcop")
                     .execute(query);
         } catch (NoSuchProviderException nspe) {
             return new ArrayList<>();

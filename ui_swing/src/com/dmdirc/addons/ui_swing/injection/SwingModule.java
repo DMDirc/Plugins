@@ -59,8 +59,8 @@ import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.ServiceLocator;
+import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
@@ -191,10 +191,10 @@ public class SwingModule {
             final URLConfigPanel urlPanel,
             @GlobalConfig final AggregateConfigProvider configManager,
             @UserConfig final ConfigProvider identity,
-            final PluginManager pluginManager,
+            final ServiceManager serviceManager,
             final DMDircMBassador eventBus) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
-                configManager, identity, pluginManager, eventBus);
+                configManager, identity, serviceManager, eventBus);
     }
 
     @Provides
