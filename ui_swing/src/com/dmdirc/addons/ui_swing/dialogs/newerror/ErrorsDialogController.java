@@ -26,9 +26,12 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.ErrorsDialogModelListener;
+import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -78,21 +81,26 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
         table.setRowSelectionAllowed(true);
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                model.setSelectedError(Optional.ofNullable(tableModel.getValue(e.getFirstIndex())));
+                final int index = table.getSelectedRow();
+                if (index == -1) {
+                    model.setSelectedError(Optional.empty());
+                } else {
+                    model.setSelectedError(Optional.ofNullable(tableModel.getValue(index)));
+                }
             }
         });
         deleteAll.addActionListener(e -> model.deleteAllErrors());
         delete.addActionListener(e -> model.deleteSelectedError());
         send.addActionListener(e -> model.sendSelectedError());
         close.addActionListener(e -> dialog.dispose());
-        // TODO: Set selection to match model (even though this is null)
     }
 
     @Override
     public void errorDeleted(final ProgramError error) {
-        UIUtilities.invokeLater(() -> {
+        UIUtilities.invokeAndWait(() -> {
             tableModel.removeValue(error);
             deleteAll.setEnabled(model.isDeleteAllAllowed());
+            checkEnabledStates();
         });
     }
 
@@ -100,24 +108,25 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
     public void errorAdded(final ProgramError error) {
         UIUtilities.invokeLater(() -> {
             tableModel.addValue(error);
-            deleteAll.setEnabled(model.isDeleteAllAllowed());
+            checkEnabledStates();
         });
     }
 
     @Override
     public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
         UIUtilities.invokeLater(() -> {
-            // TODO: Check if selection doens't match and switch
             date.setText(selectedError.map(ProgramError::getDate)
                     .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
-            severity.setText(selectedError.map(ProgramError::getLevel).map(Enum::name).orElse(""));
-            reportStatus.setText(
-                    selectedError.map(ProgramError::getReportStatus).map(Enum::name).orElse(""));
-            details.setText(Joiner.on("\n").skipNulls()
-                    .join(selectedError.map(ProgramError::getDetails).orElse(null),
-                            selectedError.map(ProgramError::getTrace).orElse(null)));
-            send.setEnabled(model.isSendAllowed());
-            delete.setEnabled(model.isDeletedAllowed());
+            severity.setText(selectedError
+                    .map(ProgramError::getLevel)
+                    .map(ErrorLevel::name).orElse(""));
+            reportStatus.setText(selectedError
+                    .map(ProgramError::getReportStatus)
+                    .map(ErrorReportStatus::name).orElse(""));
+            details.setText(selectedError.map(ProgramError::getDetails).orElse(""));
+            details.append(Joiner.on('\n').skipNulls()
+                    .join(selectedError.map(ProgramError::getTrace).orElse(Lists.newArrayList())));
+            checkEnabledStates();
         });
     }
 
@@ -126,6 +135,13 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
         UIUtilities.invokeLater(() -> {
             final int index = tableModel.getIndex(error);
             tableModel.fireTableRowsUpdated(index, index);
+            checkEnabledStates();
         });
+    }
+
+    private void checkEnabledStates() {
+        deleteAll.setEnabled(model.isDeleteAllAllowed());
+        send.setEnabled(model.isSendAllowed());
+        delete.setEnabled(model.isDeletedAllowed());
     }
 }
