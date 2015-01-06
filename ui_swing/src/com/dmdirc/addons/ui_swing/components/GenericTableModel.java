@@ -223,6 +223,14 @@ public class GenericTableModel<T> extends AbstractTableModel {
     }
 
     /**
+     * Removes all the values from the model.
+     */
+    public void removeAll() {
+        values.clear();
+        fireTableDataChanged();
+    }
+
+    /**
      * Adds the specified value at the end of the model.
      *
      * @param value Value to add
