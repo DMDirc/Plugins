@@ -25,6 +25,7 @@ package com.dmdirc.addons.freedesktop_notifications;
 import com.dmdirc.ClientModule;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 
 import javax.inject.Singleton;
@@ -49,8 +50,8 @@ public class FDModule {
 
     @Provides
     @Singleton
-    public PluginFilesHelper getPluginFilesHelper() {
-        return new PluginFilesHelper(pluginInfo);
+    public PluginFilesHelper getPluginFilesHelper(final PluginManager manager) {
+        return new PluginFilesHelper(manager, pluginInfo);
     }
 
 }
