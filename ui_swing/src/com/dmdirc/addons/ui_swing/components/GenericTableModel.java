@@ -51,7 +51,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
     /**
      * List of getters for each value, used as columns.
      */
-    private final String[] getters;
+    private final Method[] getters;
     /**
      * List of header names for each column.
      */
@@ -74,17 +74,20 @@ public class GenericTableModel<T> extends AbstractTableModel {
     public GenericTableModel(final Class<T> type, final String... getterValues) {
         checkArgument(getterValues.length > 0, "Getters must be set");
         clazz = type;
-        for (String getter : getterValues) {
-            checkNotNull(getter, "Getter must not be null");
-            checkArgument(!getter.isEmpty(), "Getter must not be empty");
-            checkArgument(getGetter(getter).isPresent(), "Getter must exist in type");
-        }
         values = new ArrayList<>();
         headers = new String[getterValues.length];
-        getters = new String[getterValues.length];
+        getters = new Method[getterValues.length];
         columnTypes = new Class<?>[getterValues.length];
+
         for (int i = 0; i < getterValues.length; i++) {
-            getters[i] = getterValues[i];
+            final String getterName = getterValues[i];
+            checkNotNull(getterName, "Getter must not be null");
+            checkArgument(!getterName.isEmpty(), "Getter must not be empty");
+
+            final Optional<Method> method = getGetter(getterName);
+            checkArgument(method.isPresent(), "Getter must exist in type");
+
+            getters[i] = method.get();
             headers[i] = getterValues[i];
             columnTypes[i] = getGetter(getterValues[i]).get().getReturnType();
         }
@@ -118,8 +121,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
         checkElementIndex(columnIndex, getters.length, "Column index must exist");
         try {
             final T value = values.get(rowIndex);
-            final Method method = getGetter(getters[columnIndex]).get();
-            return method.invoke(value);
+            return getters[columnIndex].invoke(value);
         } catch (IndexOutOfBoundsException | ReflectiveOperationException ex) {
             return ex.getMessage();
         }
