@@ -184,12 +184,11 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param columnIndex This is ignored
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
         checkElementIndex(rowIndex, values.size(), "Row index must exist");
         checkElementIndex(columnIndex, getters.length, "Column index must exist");
         try {
-            values.add(rowIndex, (T) value);
+            values.add(rowIndex, castObjectToType(value));
             fireTableRowsInserted(rowIndex, rowIndex);
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Value of incorrect type.", ex);
@@ -239,6 +238,11 @@ public class GenericTableModel<T> extends AbstractTableModel {
         values.add(value);
         final int index = values.indexOf(value);
         fireTableRowsInserted(index, index);
+    }
+
+    @SuppressWarnings("unchecked")
+    private T castObjectToType(final Object value) {
+        return (T) value;
     }
 
     /**
