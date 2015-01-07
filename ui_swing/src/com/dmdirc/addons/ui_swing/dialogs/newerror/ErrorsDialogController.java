@@ -106,7 +106,7 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void errorAdded(final ProgramError error) {
-        UIUtilities.invokeLater(() -> {
+        UIUtilities.invokeAndWait(() -> {
             tableModel.addValue(error);
             checkEnabledStates();
         });
@@ -114,15 +114,14 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
-        UIUtilities.invokeLater(() -> {
+        UIUtilities.invokeAndWait(() -> {
             date.setText(selectedError.map(ProgramError::getDate)
                     .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
-            severity.setText(selectedError
-                    .map(ProgramError::getLevel)
-                    .map(ErrorLevel::name).orElse(""));
-            reportStatus.setText(selectedError
-                    .map(ProgramError::getReportStatus)
-                    .map(ErrorReportStatus::name).orElse(""));
+            severity.setText(
+                    selectedError.map(ProgramError::getLevel).map(ErrorLevel::name).orElse(""));
+            reportStatus.setText(
+                    selectedError.map(ProgramError::getReportStatus).map(ErrorReportStatus::name)
+                            .orElse(""));
             details.setText(selectedError.map(ProgramError::getDetails).orElse(""));
             details.append(Joiner.on('\n').skipNulls()
                     .join(selectedError.map(ProgramError::getTrace).orElse(Lists.newArrayList())));
@@ -132,7 +131,7 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void errorStatusChanged(final ProgramError error) {
-        UIUtilities.invokeLater(() -> {
+        UIUtilities.invokeAndWait(() -> {
             final int index = tableModel.getIndex(error);
             tableModel.fireTableRowsUpdated(index, index);
             checkEnabledStates();
