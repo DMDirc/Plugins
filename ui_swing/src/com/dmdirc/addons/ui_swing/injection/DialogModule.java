@@ -32,7 +32,6 @@ import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
@@ -134,13 +133,6 @@ public class DialogModule {
     @Singleton
     public DialogProvider<AliasManagerDialog> getAliasManagerDialogProvider(
             final Provider<AliasManagerDialog> provider) {
-        return new DialogProvider<>(provider);
-    }
-
-    @Provides
-    @Singleton
-    public DialogProvider<ErrorListDialog> getErrorListDialogProvider(
-            final Provider<ErrorListDialog> provider) {
         return new DialogProvider<>(provider);
     }
 

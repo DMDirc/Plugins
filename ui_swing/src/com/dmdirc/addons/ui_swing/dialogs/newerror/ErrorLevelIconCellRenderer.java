@@ -20,12 +20,12 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.error;
+package com.dmdirc.addons.ui_swing.dialogs.newerror;
 
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;
 
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /** List cell renderer for dates. */
@@ -47,7 +47,7 @@ public final class ErrorLevelIconCellRenderer extends DefaultTableCellRenderer {
 
     @Override
     public void setValue(final Object value) {
-        setHorizontalAlignment(JLabel.CENTER);
+        setHorizontalAlignment(SwingConstants.CENTER);
         setIcon(iconManager.getIcon(((ErrorLevel) value).getIcon()));
     }
 

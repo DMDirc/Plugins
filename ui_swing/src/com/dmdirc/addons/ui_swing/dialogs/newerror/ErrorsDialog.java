@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.dialogs.newerror;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorLevelIconCellRenderer;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.logger.ErrorLevel;
@@ -82,7 +81,6 @@ public class ErrorsDialog extends StandardDialog {
         layoutComponents();
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
-
     }
 
     @Override
@@ -91,6 +89,12 @@ public class ErrorsDialog extends StandardDialog {
                 .init(this, tableModel, table, date, severity, reportStatus, details, deleteAll,
                         delete, send, getCancelButton());
         super.display();
+    }
+
+    @Override
+    public void dispose() {
+        model.unload();
+        super.dispose();
     }
 
     private void initComponents() {
@@ -108,6 +112,7 @@ public class ErrorsDialog extends StandardDialog {
         tableScrollPane = new JScrollPane();
         splitPane = getSplitPane();
         table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         table.getModel().addTableModelListener(table);
         tableScrollPane.setViewportView(table);
         table.setPreferredScrollableViewportSize(new Dimension(600, 150));
