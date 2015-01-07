@@ -31,10 +31,10 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
+import com.dmdirc.addons.ui_swing.components.SwingSearchBarFactory;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
-import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
@@ -75,7 +75,6 @@ import java.awt.event.WindowEvent;
 import java.util.Optional;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -120,8 +119,6 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
     private DesktopWindowFrame popoutFrame;
     /** Desktop place holder object used if this frame is popped out. */
     private DesktopPlaceHolderFrame popoutPlaceholder;
-    /** Icon manager to retrieve icons from. */
-    private final IconManager iconManager;
 
     /**
      * Creates a new instance of Frame.
@@ -137,13 +134,12 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         this.swingEventBus = deps.swingEventBus;
         this.popupManager = deps.popupManager;
         this.frameParent = owner;
-        this.iconManager = deps.iconManager;
         this.eventBus = deps.eventBus;
         this.commandParser = commandParser;
         this.clipboard = deps.clipboard;
         this.colourManager = deps.colourManagerFactory.getColourManager(owner.getConfigManager());
 
-        initComponents(deps.textPaneFactory, colourManager);
+        initComponents(deps.textPaneFactory, deps.searchBarFactory);
         setFocusable(true);
         setLayout(new MigLayout("fill"));
     }
@@ -224,10 +220,10 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
      * Initialises the components for this frame.
      */
     private void initComponents(final TextPaneFactory textPaneFactory,
-            final ColourManager colourManager) {
+            final SwingSearchBarFactory searchBarFactory) {
         setTextPane(textPaneFactory.getTextPane(this));
 
-        searchBar = new SwingSearchBar(this, iconManager, colourManager);
+        searchBar = searchBarFactory.create(this);
         searchBar.setVisible(false);
 
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -522,52 +518,49 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
 
         final TextPaneFactory textPaneFactory;
         final SwingController controller;
-        final Provider<java.awt.Window> mainWindow;
         final PopupManager popupManager;
         final DMDircMBassador eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final ServiceManager serviceManager;
-        final IconManager iconManager;
         final ActiveFrameManager activeFrameManager;
         final Clipboard clipboard;
         final CommandController commandController;
         final ColourManagerFactory colourManagerFactory;
         final SwingEventBus swingEventBus;
         final TabCompleterUtils tabCompleterUtils;
+        final SwingSearchBarFactory searchBarFactory;
 
         @Inject
         public TextFrameDependencies(
                 final TextPaneFactory textPaneFactory,
                 final SwingController controller,
-                @MainWindow final Provider<java.awt.Window> mainWindow,
                 final PopupManager popupManager,
                 final DMDircMBassador eventBus,
                 final PasteDialogFactory pasteDialog,
                 final ServiceManager serviceManager,
-                @GlobalConfig final IconManager iconManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,
                 final ActiveFrameManager activeFrameManager,
                 final Clipboard clipboard,
                 final CommandController commandController,
                 final ColourManagerFactory colourManagerFactory,
                 final SwingEventBus swingEventBus,
-                final TabCompleterUtils tabCompleterUtils) {
+                final TabCompleterUtils tabCompleterUtils,
+                final SwingSearchBarFactory searchBarFactory) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
-            this.mainWindow = mainWindow;
             this.popupManager = popupManager;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;
             this.serviceManager = serviceManager;
-            this.iconManager = iconManager;
             this.activeFrameManager = activeFrameManager;
             this.clipboard = clipboard;
             this.commandController = commandController;
             this.colourManagerFactory = colourManagerFactory;
             this.swingEventBus = swingEventBus;
             this.tabCompleterUtils = tabCompleterUtils;
+            this.searchBarFactory = searchBarFactory;
         }
 
     }
