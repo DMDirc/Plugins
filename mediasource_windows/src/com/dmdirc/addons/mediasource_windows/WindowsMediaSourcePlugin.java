@@ -25,6 +25,7 @@ package com.dmdirc.addons.mediasource_windows;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.util.io.StreamUtils;
@@ -52,8 +53,9 @@ public class WindowsMediaSourcePlugin extends BasePlugin
      *
      * @param pluginInfo This plugin's plugin info
      */
-    public WindowsMediaSourcePlugin(final PluginInfo pluginInfo) {
-        this.filesHelper = new PluginFilesHelper(pluginInfo);
+    public WindowsMediaSourcePlugin(final PluginManager pluginManager,
+            final PluginInfo pluginInfo) {
+        this.filesHelper = new PluginFilesHelper(pluginManager, pluginInfo);
         sources = new ArrayList<>();
         sources.add(new DllSource(this, "Winamp", true));
         sources.add(new DllSource(this, "iTunes", false));
