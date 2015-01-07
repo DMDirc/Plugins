@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.ui.IconManager;
 
 /** User mode panel. */
 public final class UserModesPane extends ModesPane {
@@ -37,9 +38,8 @@ public final class UserModesPane extends ModesPane {
      *
      * @param connection Parent server
      */
-    public UserModesPane(final Connection connection) {
-        super(connection.getWindowModel().getConfigManager(),
-                connection.getWindowModel().getIconManager());
+    public UserModesPane(final Connection connection, final IconManager iconManager) {
+        super(connection.getWindowModel().getConfigManager(), iconManager);
 
         this.connection = connection;
         initModesPanel();
