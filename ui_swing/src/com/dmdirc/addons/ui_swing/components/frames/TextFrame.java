@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.components.SwingSearchBarFactory;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
-import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
 import com.dmdirc.addons.ui_swing.textpane.MouseEventType;
@@ -76,7 +75,6 @@ import java.awt.event.WindowEvent;
 import java.util.Optional;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -520,13 +518,11 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
 
         final TextPaneFactory textPaneFactory;
         final SwingController controller;
-        final Provider<java.awt.Window> mainWindow;
         final PopupManager popupManager;
         final DMDircMBassador eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final ServiceManager serviceManager;
-        final IconManager iconManager;
         final ActiveFrameManager activeFrameManager;
         final Clipboard clipboard;
         final CommandController commandController;
@@ -539,12 +535,10 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         public TextFrameDependencies(
                 final TextPaneFactory textPaneFactory,
                 final SwingController controller,
-                @MainWindow final Provider<java.awt.Window> mainWindow,
                 final PopupManager popupManager,
                 final DMDircMBassador eventBus,
                 final PasteDialogFactory pasteDialog,
                 final ServiceManager serviceManager,
-                @GlobalConfig final IconManager iconManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,
                 final ActiveFrameManager activeFrameManager,
                 final Clipboard clipboard,
@@ -555,13 +549,11 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
                 final SwingSearchBarFactory searchBarFactory) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
-            this.mainWindow = mainWindow;
             this.popupManager = popupManager;
             this.eventBus = eventBus;
             this.globalConfig = globalConfig;
             this.pasteDialog = pasteDialog;
             this.serviceManager = serviceManager;
-            this.iconManager = iconManager;
             this.activeFrameManager = activeFrameManager;
             this.clipboard = clipboard;
             this.commandController = commandController;
