@@ -81,7 +81,6 @@ public class ErrorsDialog extends StandardDialog {
         layoutComponents();
         setTitle("Error list");
         setMinimumSize(new Dimension(600, 550));
-
     }
 
     @Override
@@ -89,6 +88,12 @@ public class ErrorsDialog extends StandardDialog {
         new ErrorsDialogController(model).init(this, tableModel, table, date, severity,
                 reportStatus, details, deleteAll, delete, send, getCancelButton());
         super.display();
+    }
+
+    @Override
+    public void dispose() {
+        model.unload();
+        super.dispose();
     }
 
     private void initComponents() {
