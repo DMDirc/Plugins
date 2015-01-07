@@ -113,6 +113,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
     private final DMDircMBassador eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
+    private final IconManager iconManager;
     /** Boolean to determine if this frame should be popped out of main client. */
     private boolean popout;
     /** DesktopWindowFrame to use for this TextFrame if it is to be popped out of the client. */
@@ -138,6 +139,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         this.commandParser = commandParser;
         this.clipboard = deps.clipboard;
         this.colourManager = deps.colourManagerFactory.getColourManager(owner.getConfigManager());
+        this.iconManager = deps.iconManager;
 
         initComponents(deps.textPaneFactory, deps.searchBarFactory);
         setFocusable(true);
@@ -165,7 +167,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         this.popout = popout;
         if (popout) {
             popoutPlaceholder = new DesktopPlaceHolderFrame();
-            popoutFrame = new DesktopWindowFrame(this);
+            popoutFrame = new DesktopWindowFrame(this, iconManager);
             eventBus.subscribe(popoutFrame);
             popoutFrame.addWindowListener(new WindowAdapter() {
 
@@ -493,15 +495,6 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         }
     }
 
-    /**
-     * Returns the IconManager for this frame.
-     *
-     * @return This frame's IconManager
-     */
-    public IconManager getIconManager() {
-        return getContainer().getIconManager();
-    }
-
     /** Disposes of this window, removing any listeners. */
     public void dispose() {
         getContainer().getConfigManager().getBinder().unbind(this);
@@ -530,6 +523,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         final SwingEventBus swingEventBus;
         final TabCompleterUtils tabCompleterUtils;
         final SwingSearchBarFactory searchBarFactory;
+        final IconManager iconManager;
 
         @Inject
         public TextFrameDependencies(
@@ -546,7 +540,8 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
                 final ColourManagerFactory colourManagerFactory,
                 final SwingEventBus swingEventBus,
                 final TabCompleterUtils tabCompleterUtils,
-                final SwingSearchBarFactory searchBarFactory) {
+                final SwingSearchBarFactory searchBarFactory,
+                final IconManager iconManager) {
             this.textPaneFactory = textPaneFactory;
             this.controller = controller;
             this.popupManager = popupManager;
@@ -561,6 +556,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
             this.swingEventBus = swingEventBus;
             this.tabCompleterUtils = tabCompleterUtils;
             this.searchBarFactory = searchBarFactory;
+            this.iconManager = iconManager;
         }
 
     }

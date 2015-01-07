@@ -113,15 +113,15 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
 
     /** Initialises components. */
     private void initComponents(final IconManager iconManager) {
-        closeButton = new ImageButton<>("close", parent.getIconManager().getIcon("close-inactive"),
-                parent.getIconManager().getIcon("close-active"));
+        closeButton = new ImageButton<>("close",
+                iconManager.getIcon("close-inactive"),
+                iconManager.getIcon("close-active"));
         nextButton = new JButton();
         prevButton = new JButton();
         caseCheck = new JCheckBox();
         validator = new SearchValidator();
         searchBox = new ValidatingJTextField(iconManager, validator);
-        wrapIndicator = new JLabel("Search wrapped", parent.getIconManager().getIcon("linewrap"),
-                JLabel.LEFT);
+        wrapIndicator = new JLabel("Search wrapped", iconManager.getIcon("linewrap"), JLabel.LEFT);
 
         nextButton.setText("Later");
         prevButton.setText("Earlier");
