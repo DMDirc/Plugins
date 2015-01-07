@@ -39,6 +39,7 @@ import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -137,8 +138,7 @@ public final class ChannelFrame extends InputTextFrame {
      */
     private void initComponents(final TopicBarFactory topicBarFactory,
             final ColourManagerFactory colourManagerFactory) {
-        topicBar = topicBarFactory.getTopicBar((Channel) getContainer(), this,
-                getContainer().getIconManager());
+        topicBar = topicBarFactory.getTopicBar((GroupChat) getContainer(), this);
 
         nicklist = new NickList(this, getContainer().getConfigManager(), colourManagerFactory);
         settingsMI = new JMenuItem("Settings");

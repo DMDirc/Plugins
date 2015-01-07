@@ -34,6 +34,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;
@@ -60,6 +61,7 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
     private final AutoCommandManager autoCommandManager;
     /** Preferences manager to retrieve settings from. */
     private final PreferencesManager preferencesManager;
+    private final IconManager iconManager;
     /** User modes panel. */
     private UserModesPane modesPanel;
     /** Ignore list panel. */
@@ -77,11 +79,13 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
             final AutoCommandManager autoCommandManager,
             final Connection connection,
             final Window parentWindow,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final IconManager iconManager) {
         super(parentWindow, ModalityType.MODELESS);
         this.connection = connection;
         this.autoCommandManager = autoCommandManager;
         this.preferencesManager = preferencesManager;
+        this.iconManager = iconManager;
 
         setTitle("Server settings");
         setResizable(false);
@@ -107,15 +111,14 @@ public class ServerSettingsDialog extends StandardDialog implements ActionListen
 
         tabbedPane = new JTabbedPane();
 
-        modesPanel = new UserModesPane(connection);
+        modesPanel = new UserModesPane(connection, iconManager);
 
-        ignoreList = new IgnoreListPanel(connection.getWindowModel().getIconManager(),
-                connection, parentWindow);
+        ignoreList = new IgnoreListPanel(iconManager, connection, parentWindow);
 
-        performPanel = new PerformTab(connection.getWindowModel().getIconManager(),
-                colourManagerFactory, config, autoCommandManager, connection);
+        performPanel = new PerformTab(iconManager, colourManagerFactory, config, autoCommandManager,
+                connection);
 
-        settingsPanel = new SettingsPanel(connection.getWindowModel().getIconManager(), compFactory,
+        settingsPanel = new SettingsPanel(iconManager, compFactory,
                 "These settings are specific to this network, any settings specified here will "
                 + "overwrite global settings");
 

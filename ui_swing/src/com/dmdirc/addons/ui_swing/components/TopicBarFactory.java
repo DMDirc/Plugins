@@ -59,6 +59,7 @@ public class TopicBarFactory {
     private final CommandController commandController;
     private final DMDircMBassador eventBus;
     private final TabCompleterUtils tabCompleterUtils;
+    private final IconManager iconManager;
 
     @Inject
     public TopicBarFactory(
@@ -70,7 +71,8 @@ public class TopicBarFactory {
             final Clipboard clipboard,
             final CommandController commandController,
             final DMDircMBassador eventBus,
-            final TabCompleterUtils tabCompleterUtils) {
+            final TabCompleterUtils tabCompleterUtils,
+            final IconManager iconManager) {
         this.parentWindow = parentWindow;
         this.globalConfig = globalConfig;
         this.domain = domain;
@@ -80,12 +82,12 @@ public class TopicBarFactory {
         this.commandController = commandController;
         this.eventBus = eventBus;
         this.tabCompleterUtils = tabCompleterUtils;
+        this.iconManager = iconManager;
     }
 
     public TopicBar getTopicBar(
             final GroupChat channel,
-            final ChannelFrame window,
-            final IconManager iconManager) {
+            final ChannelFrame window) {
         return new TopicBar(parentWindow.get(), globalConfig, domain,
                 colourManagerFactory.getColourManager(channel.getWindowModel().getConfigManager()),
                 serviceManager, clipboard, commandController, channel, window, iconManager,

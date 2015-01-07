@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.Channel;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.ui.IconManager;
 
 /** Non list mode panel. */
 public final class ChannelModesPane extends ModesPane {
@@ -37,9 +38,10 @@ public final class ChannelModesPane extends ModesPane {
      * Creates a new instance of ChannelModesPane.
      *
      * @param channel Parent channel
+     * @param iconManager The icon manager to use
      */
-    public ChannelModesPane(final Channel channel) {
-        super(channel.getConfigManager(), channel.getIconManager());
+    public ChannelModesPane(final Channel channel, final IconManager iconManager) {
+        super(channel.getConfigManager(), iconManager);
 
         this.channel = channel;
         initModesPanel();

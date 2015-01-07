@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -66,6 +67,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final ConfigProvider identity;
     /** Channel window. */
     private final InputWindow channelWindow;
+    private final IconManager iconManager;
     /** Tabbed pane. */
     private JTabbedPane tabbedPane;
     /** Client settings panel. */
@@ -121,7 +123,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final CommandController commandController,
             final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
-            final TabCompleterUtils tabCompleterUtils) {
+            final TabCompleterUtils tabCompleterUtils,
+            final IconManager iconManager) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.userConfig = checkNotNull(userConfig);
@@ -133,6 +136,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.commandController = checkNotNull(commandController);
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
+        this.iconManager = iconManager;
 
         identity = identityFactory.createChannelConfig(
                 channel.getConnection().get().getNetwork(),
@@ -173,7 +177,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the Topic tab. */
     private void initTopicTab(final TabCompleterUtils tabCompleterUtils) {
-        topicModesPane = new TopicPane(channel, channel.getIconManager(),
+        topicModesPane = new TopicPane(channel, iconManager,
                 commandController, serviceManager,
                 this, channelWindow, clipboard, eventBus, colourManagerFactory, tabCompleterUtils);
         tabbedPane.addTab("Topic", topicModesPane);
@@ -181,7 +185,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the IRC Settings tab. */
     private void initIrcTab() {
-        channelModesPane = new ChannelModesPane(channel);
+        channelModesPane = new ChannelModesPane(channel, iconManager);
 
         final JScrollPane channelModesSP = new JScrollPane(channelModesPane);
         channelModesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -195,7 +199,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
         channelListModesPane = new ChannelListModesPane(channel.getConfigManager(), userConfig,
-                channel.getIconManager(), channel, this);
+                iconManager, channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
@@ -208,7 +212,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the channel settings. */
     private void initSettingsPanel() {
-        channelSettingsPane = new SettingsPanel(channel.getIconManager(), compFactory,
+        channelSettingsPane = new SettingsPanel(iconManager, compFactory,
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
         channelSettingsPane.addOption(preferencesManager.getChannelSettings(
