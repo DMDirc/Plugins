@@ -27,16 +27,13 @@ import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialog;
+import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.ServerCertificateProblemEncounteredEvent;
 import com.dmdirc.events.ServerCertificateProblemResolvedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.ui.IconManager;
-import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
-
-import java.awt.Window;
 
 import javax.inject.Provider;
 import javax.swing.JMenuItem;
@@ -53,10 +50,6 @@ public final class ServerFrame extends InputTextFrame {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 9;
-    /** Main window provider. */
-    private final Provider<Window> mainWindow;
-    /** Icon manager. */
-    private final IconManager iconManager;
     /** Dialog provider to close SSD. */
     private final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider;
     /** popup menu item. */
@@ -65,6 +58,8 @@ public final class ServerFrame extends InputTextFrame {
     private SSLCertificateDialog sslDialog;
     /** Server instance. */
     private final Connection connection;
+    /** Factory to use to create SSL certificate dialogs. */
+    private final SSLCertificateDialogFactory sslDialogFactory;
 
     /**
      * Creates a new ServerFrame.
@@ -79,10 +74,10 @@ public final class ServerFrame extends InputTextFrame {
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
+            final SSLCertificateDialogFactory sslDialogFactory,
             final Connection owner) {
         super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner.getWindowModel());
-        this.mainWindow = deps.mainWindow;
-        this.iconManager = deps.iconManager;
+        this.sslDialogFactory = sslDialogFactory;
         this.dialogProvider = dialogProvider;
         this.connection = owner;
         initComponents();
@@ -151,9 +146,7 @@ public final class ServerFrame extends InputTextFrame {
             sslDialog.dispose();
         }
 
-        sslDialog = new SSLCertificateDialog(iconManager, mainWindow.get(),
-                new SSLCertificateDialogModel(event.getCertificateChain(), event.getProblems(),
-                        event.getCertificateManager()));
+        sslDialog = sslDialogFactory.create(event);
         sslDialog.display();
     }
 

@@ -27,6 +27,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -52,6 +53,7 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
     private final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider;
     private final DMDircMBassador eventBus;
     private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
+    private final SSLCertificateDialogFactory sslCertificateDialogFactory;
 
     @Inject
     public ServerFrameFactory(
@@ -59,19 +61,21 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
-            final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider) {
+            final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider,
+            final SSLCertificateDialogFactory sslCertificateDialogFactory) {
         this.eventBus = eventBus;
         this.dependencies = dependencies;
         this.inputFieldProvider = inputFieldProvider;
         this.dialogProvider = dialogProvider;
         this.inputTextFramePasteActionFactory = inputTextFramePasteActionFactory;
+        this.sslCertificateDialogFactory = sslCertificateDialogFactory;
     }
 
     @Override
     public TextFrame getWindow(final FrameContainer container) {
         final ServerFrame frame =  new ServerFrame(dependencies.get(), inputFieldProvider,
-                inputTextFramePasteActionFactory, dialogProvider.get(), container.getConnection()
-                .get());
+                inputTextFramePasteActionFactory, dialogProvider.get(),
+                sslCertificateDialogFactory, container.getConnection().get());
         eventBus.subscribe(frame);
         return frame;
     }
