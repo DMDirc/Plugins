@@ -86,8 +86,14 @@ public class ErrorsDialog extends StandardDialog {
 
     @Override
     public void display() {
+<<<<<<< HEAD
         new ErrorsDialogController(model).init(this, tableModel, table, date, severity,
                 reportStatus, details, deleteAll, delete, send, getCancelButton());
+=======
+        new ErrorsDialogController(model)
+                .init(this, tableModel, table, date, severity, reportStatus, details, deleteAll,
+                        delete, send, getCancelButton());
+>>>>>>> 7f5f3165b4af77f7e3e453123c131e81aad81944
         super.display();
     }
 
