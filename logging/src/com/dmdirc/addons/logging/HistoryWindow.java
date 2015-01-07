@@ -27,9 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.util.URLBuilder;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.util.io.ReverseFileReader;
 
 import java.io.IOException;
@@ -49,12 +48,11 @@ public class HistoryWindow extends FrameContainer {
             final String title,
             final Path logFile,
             final FrameContainer parent,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory,
             final int numLines) {
         super(parent, "raw", title, title, parent.getConfigManager(), backBufferFactory,
-                urlBuilder, eventBus,
+                eventBus,
                 Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
 
         initBackBuffer();

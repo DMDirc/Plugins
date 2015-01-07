@@ -27,10 +27,9 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.util.URLBuilder;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -55,7 +54,6 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param parser              Command parser to use for this window
      * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
-     * @param urlBuilder          The URL builder to use when finding icons.
      * @param eventBus            The bus to dispatch events on.
      * @param components          The UI components that this frame requires
      */
@@ -68,10 +66,9 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final CommandParser parser,
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
-        super(parent, icon, title, title, configManager, backBufferFactory, urlBuilder, parser,
+        super(parent, icon, title, title, configManager, backBufferFactory, parser,
                 tabCompleterFactory.getTabCompleter(configManager),
                 messageSinkManager,
                 eventBus,

@@ -28,7 +28,6 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.util.URLBuilder;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -59,9 +58,8 @@ public class PlaceholderContainer extends FrameContainer {
             final AggregateConfigProvider config,
             final BackBufferFactory backBufferFactory,
             final Window parentWindow,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
-        super(null, "dcc", "DCCs", "DCCs", config, backBufferFactory, urlBuilder, eventBus,
+        super(null, "dcc", "DCCs", "DCCs", config, backBufferFactory, eventBus,
                 Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;

@@ -55,7 +55,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
 
@@ -105,7 +104,6 @@ public class LoggingManager implements ConfigChangeListener {
     /** Map of open files. */
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
             new HashMap<>());
-    private final URLBuilder urlBuilder;
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
     private final BackBufferFactory backBufferFactory;
@@ -128,14 +126,13 @@ public class LoggingManager implements ConfigChangeListener {
     @Inject
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final WindowManager windowManager, final URLBuilder urlBuilder, final DMDircMBassador eventBus,
+            final WindowManager windowManager, final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
             final BackBufferFactory backBufferFactory,
             final LogFileLocator locator) {
         this.domain = domain;
         this.config = globalConfig;
         this.windowManager = windowManager;
-        this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
         this.backBufferFactory = backBufferFactory;
@@ -587,7 +584,7 @@ public class LoggingManager implements ConfigChangeListener {
             return false;
         }
 
-        windowManager.addWindow(target, new HistoryWindow("History", log, target, urlBuilder,
+        windowManager.addWindow(target, new HistoryWindow("History", log, target,
                 eventBus, backBufferFactory, historyLines));
 
         return true;

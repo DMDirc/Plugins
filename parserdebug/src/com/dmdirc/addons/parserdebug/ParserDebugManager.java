@@ -46,8 +46,6 @@ public class ParserDebugManager implements DebugInfoListener {
     private final DMDircMBassador eventBus;
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers;
-    /** URL Builder. */
-    private final URLBuilder urlBuilder;
     /** Window manager. */
     private final WindowManager windowManager;
     private final BackBufferFactory backBufferFactory;
@@ -58,7 +56,6 @@ public class ParserDebugManager implements DebugInfoListener {
             final WindowManager windowManager,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {
-        this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.eventBus = eventBus;
         this.backBufferFactory = backBufferFactory;
@@ -102,7 +99,7 @@ public class ParserDebugManager implements DebugInfoListener {
         try {
             parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
-                    connection, urlBuilder, eventBus, backBufferFactory);
+                    connection, eventBus, backBufferFactory);
             windowManager.addWindow(connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
             window.addLine("======================", true);

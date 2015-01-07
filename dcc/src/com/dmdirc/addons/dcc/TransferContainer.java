@@ -35,7 +35,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.util.URLBuilder;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -87,10 +86,10 @@ public class TransferContainer extends FrameContainer implements
             final AggregateConfigProvider config,
             final BackBufferFactory backBufferFactory, final String title,
             final String targetNick, @Nullable final Connection connection,
-            final URLBuilder urlBuilder, final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus) {
         super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
-                title, title, config, backBufferFactory, urlBuilder, eventBus,
+                title, title, config, backBufferFactory, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));
         this.plugin = plugin;
         this.dcc = dcc;

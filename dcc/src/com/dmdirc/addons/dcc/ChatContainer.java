@@ -31,12 +31,11 @@ import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.EventUtils;
-import com.dmdirc.util.URLBuilder;
 
 import java.util.Arrays;
 
@@ -68,7 +67,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param targetNick          Nickname of target
      * @param tabCompleterFactory The factory to use to create tab completers.
      * @param messageSinkManager  The sink manager to use to dispatch messages.
-     * @param urlBuilder          The URL builder to use when finding icons.
      * @param eventBus            The bus to dispatch events on.
      */
     public ChatContainer(
@@ -82,13 +80,11 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final String targetNick,
             final TabCompleterFactory tabCompleterFactory,
             final MessageSinkManager messageSinkManager,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus) {
         super(parent, title, "dcc-chat-inactive", configManager, backBufferFactory,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 messageSinkManager,
                 tabCompleterFactory,
-                urlBuilder,
                 eventBus,
                 Arrays.asList(
                         WindowComponent.TEXTAREA.getIdentifier(),
