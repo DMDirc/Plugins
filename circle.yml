@@ -32,9 +32,8 @@ checkout:
 
 dependencies:
   override:
-    - ./gradlew --parallel client:dependencies plugins:dependencies:
-        pwd:
-          ../meta
+    - ./gradlew dependencies:
+        pwd: ../meta
 
 test:
   override:
