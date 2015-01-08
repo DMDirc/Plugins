@@ -32,7 +32,7 @@ import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
@@ -49,6 +49,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
+import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
@@ -56,6 +57,7 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
+import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
 import com.dmdirc.ui.core.profiles.CoreProfilesDialogModel;
@@ -118,6 +120,11 @@ public class DialogModule {
     }
 
     @Provides
+    public ErrorsDialogModel getErrorsDialogModel(final CoreErrorsDialogModel model) {
+        return model;
+    }
+
+    @Provides
     @Singleton
     public DialogProvider<NewServerDialog> getNewServerDialogProvider(
             final Provider<NewServerDialog> provider) {
@@ -140,13 +147,6 @@ public class DialogModule {
 
     @Provides
     @Singleton
-    public DialogProvider<ErrorListDialog> getErrorListDialogProvider(
-            final Provider<ErrorListDialog> provider) {
-        return new DialogProvider<>(provider);
-    }
-
-    @Provides
-    @Singleton
     public DialogProvider<FeedbackDialog> getFeedbackDialogProvider(
             final Provider<FeedbackDialog> provider) {
         return new DialogProvider<>(provider);
@@ -156,6 +156,13 @@ public class DialogModule {
     @Singleton
     public DialogProvider<AboutDialog> getAboutDialogProvider(
             final Provider<AboutDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<ErrorsDialog> getErrorsDialogProvider(
+            final Provider<ErrorsDialog> provider) {
         return new DialogProvider<>(provider);
     }
 

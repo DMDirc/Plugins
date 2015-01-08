@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
+import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.logger.ErrorLevel;
@@ -36,7 +36,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -73,7 +73,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     /** Show menu item. */
     private final JMenuItem show;
     /** Error list dialog provider. */
-    private final DialogProvider<ErrorListDialog> errorListDialogProvider;
+    private final DialogProvider<ErrorsDialog> errorListDialogProvider;
     /** Currently showing error level. */
     private ErrorLevel errorLevel;
 
@@ -90,7 +90,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
             @GlobalConfig final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final Provider<SwingStatusBar> statusBar,
-            final DialogProvider<ErrorListDialog> errorListDialogProvider,
+            final DialogProvider<ErrorsDialog> errorListDialogProvider,
             final ErrorManager errorManager) {
         super(new JLabel());
 
@@ -144,7 +144,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
     private void checkErrors() {
         SwingUtilities.invokeLater(() -> {
             clearError();
-            final List<ProgramError> errors = errorManager.getErrors();
+            final Set<ProgramError> errors = errorManager.getErrors();
 
             if (errors.isEmpty()) {
                 setVisible(false);
