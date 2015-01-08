@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.newerror;
+package com.dmdirc.addons.ui_swing.dialogs.errors;
 
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.IconManager;

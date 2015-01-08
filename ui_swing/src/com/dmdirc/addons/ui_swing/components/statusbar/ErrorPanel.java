@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.addons.ui_swing.dialogs.newerror.ErrorsDialog;
+import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.logger.ErrorLevel;

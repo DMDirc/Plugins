@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing.dialogs.newerror;
+package com.dmdirc.addons.ui_swing.dialogs.errors;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
