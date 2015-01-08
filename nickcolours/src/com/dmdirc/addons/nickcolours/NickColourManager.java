@@ -25,10 +25,17 @@ package com.dmdirc.addons.nickcolours;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ChannelGotNamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
@@ -36,14 +43,18 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import net.engio.mbassy.listener.Handler;
@@ -62,8 +73,12 @@ public class NickColourManager {
     private final ConfigBinder configBinder;
     /** Plugin's setting domain. */
     private final String domain;
+    private final IconManager iconManager;
+    private final Provider<Window> mainWindowProvider;
     /** Event bus to subscribe to events on . */
     private final DMDircMBassador eventBus;
+    /** The plugin's info. */
+    private final PluginInfo pluginInfo;
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = {
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
@@ -72,13 +87,20 @@ public class NickColourManager {
     private boolean userandomcolour;
 
     @Inject
-    public NickColourManager(@GlobalConfig final ColourManager colourManager,
+    public NickColourManager(
+            @GlobalConfig final ColourManager colourManager,
             @PluginDomain(NickColourPlugin.class) final String domain,
             @GlobalConfig final AggregateConfigProvider globalConfig,
+            final IconManager iconManager,
+            @MainWindow final Provider<Window> mainWindowProvider,
+            final PluginInfo pluginInfo,
             final DMDircMBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
+        this.iconManager = iconManager;
+        this.mainWindowProvider = mainWindowProvider;
+        this.pluginInfo = pluginInfo;
         this.eventBus = eventBus;
         configBinder = globalConfig.getBinder().withDefaultDomain(domain);
     }
@@ -255,4 +277,35 @@ public class NickColourManager {
     public void handleRandomColours(final List<String> value) {
         randColours = value.toArray(new String[value.size()]);
     }
+
+    @Handler
+    public void handlePrefsOpened(final ClientPrefsOpenedEvent event) {
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                pluginInfo, "Nick Colours",
+                "General configuration for NickColour plugin.");
+        final PreferencesCategory colours = new PluginPreferencesCategory(
+                pluginInfo, "Colours",
+                "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
+                () -> new NickColourPanel(mainWindowProvider.get(), iconManager, colourManager,
+                        event.getModel().getIdentity(), event.getModel().getConfigManager(),
+                        pluginInfo.getDomain()
+                )));
+
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "userandomcolour", "Use random colour",
+                "Use a pseudo-random colour for each person?",
+                event.getModel().getConfigManager(), event.getModel().getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "useowncolour", "Use colour for own nick",
+                "Always use the same colour for our own nickname?",
+                event.getModel().getConfigManager(), event.getModel().getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.COLOUR, pluginInfo.getDomain(),
+                "owncolour", "Colour to use for own nick",
+                "Colour used for our own nickname, if above setting is enabled.",
+                event.getModel().getConfigManager(), event.getModel().getIdentity()));
+
+        general.addSubCategory(colours);
+        event.getModel().getCategory("Plugins").addSubCategory(general);
+    }
+
 }
