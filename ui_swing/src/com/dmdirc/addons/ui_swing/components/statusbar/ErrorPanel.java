@@ -41,7 +41,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
@@ -55,8 +54,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
-    /** non error state image icon. */
-    private final Icon defaultIcon;
     /** Parent window that will own popups. */
     private final Window parentWindow;
     /** The manager to use to retrieve icons. */
@@ -67,11 +64,6 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
     private final JPopupMenu menu;
     /** Error list dialog provider. */
     private final DialogProvider<ErrorsDialog> errorListDialogProvider;
-    /** The event bus to listen to error changes on .*/
-    private final DMDircMBassador eventBus;
-    /** Currently showing error level. */
-    private ErrorLevel errorLevel;
-    private boolean hasBeenVisible;
 
     /**
      * Creates a new ErrorPanel for the specified status bar.
@@ -92,12 +84,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
         this.iconManager = iconManager;
         this.errorListDialogProvider = errorListDialogProvider;
         this.errorManager = errorManager;
-        this.eventBus = eventBus;
-        defaultIcon = iconManager.getIcon("normal");
 
         menu = new JPopupMenu();
-        label.setIcon(defaultIcon);
-        setVisible(errorManager.getErrorCount() > 0);
         menu.add(JMenuItemBuilder.create().setText("Open")
                 .addActionListener(e -> errorListDialogProvider.displayOrRequestFocus()).build());
         menu.add(JMenuItemBuilder.create()
@@ -105,20 +93,12 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
                 .addActionListener(e -> errorManager.getErrors().forEach(errorManager::deleteError))
                 .build());
         checkErrors();
+        eventBus.subscribe(this);
     }
 
     @Override
     protected StatusbarPopupWindow getWindow() {
         return new ErrorPopup(errorManager, iconManager, this, parentWindow);
-    }
-
-    @Override
-    public void setVisible(final boolean visible) {
-        if (!hasBeenVisible) {
-            hasBeenVisible = true;
-            eventBus.subscribe(this);
-        }
-        super.setVisible(visible);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
@@ -133,20 +113,10 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
 
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
-        label.setIcon(defaultIcon);
-        errorLevel = null;
         final Set<ProgramError> errors = errorManager.getErrors();
-
-        if (errors.isEmpty()) {
-            setVisible(false);
-        } else {
-            errors.stream().filter(error -> errorLevel == null ||
-                    !error.getLevel().moreImportant(errorLevel)).forEach(error -> {
-                errorLevel = error.getLevel();
-                label.setIcon(iconManager.getIcon(errorLevel.getIcon()));
-            });
-            setVisible(true);
-        }
+        label.setIcon(iconManager.getIcon(errors.stream().map(ProgramError::getLevel)
+                .reduce(ErrorLevel.UNKNOWN, ErrorLevel::getMoreImportant).getIcon()));
+        setVisible(!errors.isEmpty());
     }
 
     @Override
