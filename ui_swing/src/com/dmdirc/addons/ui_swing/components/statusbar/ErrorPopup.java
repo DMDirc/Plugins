@@ -31,7 +31,7 @@ import com.dmdirc.util.collections.MapList;
 
 import java.awt.Font;
 import java.awt.Window;
-import java.util.List;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -72,7 +72,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
 
     @Override
     protected void initContent(final JPanel panel) {
-        final List<ProgramError> errors = errorManager.getErrors();
+        final Set<ProgramError> errors = errorManager.getErrors();
         final MapList<ErrorLevel, ProgramError> buckets = new MapList<>();
         final MapList<ErrorReportStatus, ProgramError> statuses = new MapList<>();
 

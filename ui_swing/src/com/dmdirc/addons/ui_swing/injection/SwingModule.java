@@ -89,6 +89,7 @@ import dagger.Provides;
             ServerSettings.class,
             ChannelSettings.class
         })
+@SuppressWarnings("TypeMayBeWeakened")
 public class SwingModule {
 
     /** The controller to return to clients. */
