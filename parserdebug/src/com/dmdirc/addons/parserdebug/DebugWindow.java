@@ -27,9 +27,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.util.URLBuilder;
+import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -54,12 +53,11 @@ public class DebugWindow extends FrameContainer {
             final String title,
             final Parser parser,
             final Connection connection,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {
         super(connection.getWindowModel(), "raw", "Parser Debug", title,
                 connection.getWindowModel().getConfigManager(), backBufferFactory,
-                urlBuilder, eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
+                eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;
         this.parser = parser;
         this.connection = connection;

@@ -50,13 +50,12 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.parser.interfaces.ClientInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
+import com.dmdirc.ui.messages.BackBufferFactory;
+import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.URLBuilder;
 
 import com.google.common.collect.Lists;
@@ -103,8 +102,6 @@ public class DCCManager {
     private final Window mainWindow;
     /** The configuration domain to use. */
     private final String domain;
-    /** The URL builder to use when finding icons. */
-    private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
 
@@ -135,7 +132,6 @@ public class DCCManager {
         this.tabCompleterFactory = tabCompleterFactory;
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
-        this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.backBufferFactory = backBufferFactory;
 
@@ -211,7 +207,7 @@ public class DCCManager {
             if (reverse && !token.isEmpty()) {
                 final TransferContainer container1 = new TransferContainer(this, send,
                         config, backBufferFactory, "*Receive: " + nickname, nickname, null,
-                        urlBuilder, eventBus);
+                        eventBus);
                 windowManager.addWindow(getContainer(), container1);
                 send.setToken(token);
                 if (resume) {
@@ -238,7 +234,7 @@ public class DCCManager {
             } else {
                 final TransferContainer container1 = new TransferContainer(this, send,
                         config, backBufferFactory, "Receive: " + nickname, nickname, null,
-                        urlBuilder, eventBus);
+                        eventBus);
                 windowManager.addWindow(getContainer(), container1);
                 if (resume) {
                     parser.sendCTCP(nickname, "DCC", "RESUME "
@@ -429,7 +425,6 @@ public class DCCManager {
                 nickname,
                 tabCompleterFactory,
                 messageSinkManager,
-                urlBuilder,
                 eventBus);
         windowManager.addWindow(getContainer(), f);
         f.addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());
@@ -655,8 +650,7 @@ public class DCCManager {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, backBufferFactory, mainWindow,
-                urlBuilder, eventBus);
+        container = new PlaceholderContainer(this, config, backBufferFactory, mainWindow, eventBus);
         windowManager.addWindow(container);
     }
 

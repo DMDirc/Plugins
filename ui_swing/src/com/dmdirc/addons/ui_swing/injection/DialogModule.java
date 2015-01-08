@@ -52,6 +52,7 @@ import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
+import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
@@ -157,12 +158,13 @@ public class DialogModule {
             final PrefsComponentFactory compFactory,
             final AutoCommandManager autoCommandManager,
             @MainWindow final Window parentWindow,
-            final ColourManagerFactory colourManagerFactory) {
+            final ColourManagerFactory colourManagerFactory,
+            final IconManager iconManager) {
         return new KeyedDialogProvider<Connection, ServerSettingsDialog>() {
             @Override
             protected ServerSettingsDialog getInstance(final Connection key) {
                 return new ServerSettingsDialog(preferencesManager, compFactory, autoCommandManager,
-                        key, parentWindow, colourManagerFactory);
+                        key, parentWindow, colourManagerFactory, iconManager);
             }
         };
     }
@@ -181,14 +183,15 @@ public class DialogModule {
             final CommandController commandController,
             final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
-            final TabCompleterUtils tabCompleterUtils) {
+            final TabCompleterUtils tabCompleterUtils,
+            final IconManager iconManager) {
         return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
             @Override
             protected ChannelSettingsDialog getInstance(final Channel key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager, compFactory, key,
                         parentWindow, clipboard, commandController, eventBus,
-                        colourManagerFactory, tabCompleterUtils);
+                        colourManagerFactory, tabCompleterUtils, iconManager);
             }
         };
     }

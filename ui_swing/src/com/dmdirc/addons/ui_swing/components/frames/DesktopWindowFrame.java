@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
+import com.dmdirc.ui.IconManager;
 
 import java.awt.Point;
 
@@ -44,6 +45,7 @@ public class DesktopWindowFrame extends JFrame {
     private static final long serialVersionUID = 1;
     /** TextFrame associated with this popout window. */
     private final TextFrame windowWindow;
+    private final IconManager iconManager;
     /** Initial location for popped out window. */
     private final Point initialLocation;
 
@@ -52,16 +54,16 @@ public class DesktopWindowFrame extends JFrame {
      *
      * @param windowWindow Frame that we want to contain in this Desktop frame. popped out.
      */
-    public DesktopWindowFrame(final TextFrame windowWindow) {
+    public DesktopWindowFrame(final TextFrame windowWindow, final IconManager iconManager) {
         this.windowWindow = windowWindow;
+        this.iconManager = iconManager;
         initialLocation = windowWindow.getLocationOnScreen();
 
         setLayout(new MigLayout("fill, ins rel"));
         add(windowWindow, "grow");
         setPreferredSize(windowWindow.getSize());
         setTitle(windowWindow.getContainer().getTitle());
-        setIconImage(windowWindow.getIconManager().getImage(windowWindow
-                .getContainer().getIcon()));
+        setIconImage(iconManager.getImage(windowWindow.getContainer().getIcon()));
     }
 
     /**
@@ -76,7 +78,7 @@ public class DesktopWindowFrame extends JFrame {
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
     public void iconChanged(final FrameIconChangedEvent event) {
         if (event.getContainer().equals(windowWindow.getContainer())) {
-            setIconImage(windowWindow.getIconManager().getImage(event.getIcon()));
+            setIconImage(iconManager.getImage(event.getIcon()));
         }
     }
 

@@ -33,11 +33,10 @@ import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterUtils;
+import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.util.URLBuilder;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -55,8 +54,6 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             CommandType.TYPE_CHAT);
     /** The sink manager to use to dispatch messages. */
     private final MessageSinkManager messageSinkManager;
-    /** The URL builder to use when finding icons. */
-    private final URLBuilder urlBuilder;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
     private final BackBufferFactory backBufferFactory;
@@ -70,13 +67,11 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     public RedirectCommand(
             final CommandController controller,
             final MessageSinkManager messageSinkManager,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory,
             final TabCompleterUtils tabCompleterUtils) {
         super(controller);
         this.messageSinkManager = messageSinkManager;
-        this.urlBuilder = urlBuilder;
         this.eventBus = eventBus;
         this.backBufferFactory = backBufferFactory;
         this.tabCompleterUtils = tabCompleterUtils;
@@ -88,7 +83,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
         final Chat target = ((ChatCommandContext) context).getChat();
         target.getWindowModel().getCommandParser().parseCommand(
                 new FakeWriteableFrameContainer(target.getWindowModel(), messageSinkManager,
-                        eventBus, urlBuilder, backBufferFactory), args.getArgumentsAsString());
+                        eventBus, backBufferFactory), args.getArgumentsAsString());
     }
 
     @Override

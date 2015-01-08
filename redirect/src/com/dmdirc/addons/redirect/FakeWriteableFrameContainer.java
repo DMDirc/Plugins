@@ -28,7 +28,6 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.util.URLBuilder;
 
 import java.util.Collections;
 import java.util.Date;
@@ -49,10 +48,9 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final FrameContainer target,
             final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus,
-            final URLBuilder urlBuilder,
             final BackBufferFactory backBufferFactory) {
         super(target, target.getIcon(), target.getName(), target.getTitle(),
-                target.getConfigManager(), backBufferFactory, urlBuilder,
+                target.getConfigManager(), backBufferFactory,
                 target.getCommandParser(), target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;

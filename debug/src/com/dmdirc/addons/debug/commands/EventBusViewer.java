@@ -37,7 +37,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.URLBuilder;
 
 import java.lang.reflect.Method;
 
@@ -54,7 +53,6 @@ import net.engio.mbassy.listener.References;
  */
 public class EventBusViewer extends DebugCommand {
 
-    private final URLBuilder urlBuilder;
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
     private final DMDircMBassador globalEventBus;
@@ -67,13 +65,11 @@ public class EventBusViewer extends DebugCommand {
     public EventBusViewer(
             final Provider<Debug> commandProvider,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final URLBuilder urlBuilder,
             final WindowManager windowManager,
             final DMDircMBassador globalEventBus,
             final BackBufferFactory backBufferFactory) {
         super(commandProvider);
         this.globalConfig = globalConfig;
-        this.urlBuilder = urlBuilder;
         this.windowManager = windowManager;
         this.globalEventBus = globalEventBus;
         this.backBufferFactory = backBufferFactory;
@@ -97,12 +93,11 @@ public class EventBusViewer extends DebugCommand {
 
         final CustomWindow window;
         if (isGlobal) {
-            window = new CustomWindow("Event bus", "Event bus", globalConfig, urlBuilder,
+            window = new CustomWindow("Event bus", "Event bus", globalConfig,
                     globalEventBus, backBufferFactory);
             windowManager.addWindow(window);
         } else {
-            window = new CustomWindow("Event bus", "Event bus", origin, urlBuilder,
-                    backBufferFactory);
+            window = new CustomWindow("Event bus", "Event bus", origin, backBufferFactory);
             windowManager.addWindow(origin, window);
         }
 
