@@ -29,7 +29,7 @@ import javax.swing.JMenuItem;
 /**
 * Builder for creating new {@link JMenuItem}s.
 */
-class JMenuItemBuilder {
+public class JMenuItemBuilder {
 
     private final JMenuItem menuItem;
 
