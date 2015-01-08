@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.collections.DoubleMap;
 
 import javax.swing.BorderFactory;

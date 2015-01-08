@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.errors;
 
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;

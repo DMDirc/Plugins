@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;

@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.updater.manager.UpdateManagerListener;

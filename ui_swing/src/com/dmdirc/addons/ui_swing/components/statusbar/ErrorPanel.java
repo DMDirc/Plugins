@@ -29,7 +29,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorListener;
 import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;

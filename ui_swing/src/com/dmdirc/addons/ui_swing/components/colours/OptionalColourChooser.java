@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.colours;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.util.colours.Colour;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.collections.ListenerList;
 

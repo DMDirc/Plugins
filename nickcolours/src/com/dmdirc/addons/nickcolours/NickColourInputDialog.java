@@ -24,7 +24,7 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Window;

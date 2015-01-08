@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.validating;
 
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.validators.Validator;
 
 import java.awt.Component;

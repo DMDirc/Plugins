@@ -61,7 +61,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.ServiceLocator;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.util.URLHandler;
 import com.dmdirc.util.URLBuilder;
 

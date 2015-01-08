@@ -31,7 +31,7 @@ import com.dmdirc.events.PluginRefreshEvent;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
 import java.awt.Window;

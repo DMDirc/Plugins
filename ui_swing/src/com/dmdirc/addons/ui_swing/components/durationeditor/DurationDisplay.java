@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.durationeditor;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.DateUtils;
 import com.dmdirc.util.collections.ListenerList;
 

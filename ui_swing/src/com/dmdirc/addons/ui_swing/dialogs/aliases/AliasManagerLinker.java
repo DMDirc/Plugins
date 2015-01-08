@@ -31,7 +31,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModelListener;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Dialog;
 import java.beans.PropertyVetoException;

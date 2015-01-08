@@ -31,7 +31,7 @@ import com.dmdirc.events.ServerInviteExpiredEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.InviteManager;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;

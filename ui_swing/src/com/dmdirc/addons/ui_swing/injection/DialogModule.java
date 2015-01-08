@@ -54,7 +54,7 @@ import com.dmdirc.interfaces.ui.FeedbackDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;

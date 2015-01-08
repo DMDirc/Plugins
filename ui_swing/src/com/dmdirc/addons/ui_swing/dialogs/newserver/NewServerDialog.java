@@ -31,7 +31,7 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Window;
 

@@ -29,7 +29,7 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.profiles.MutableProfile;
 
 import java.awt.Window;

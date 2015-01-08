@@ -31,7 +31,7 @@ import com.dmdirc.addons.ui_swing.wizard.WizardListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.plugins.CorePluginExtractor;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;

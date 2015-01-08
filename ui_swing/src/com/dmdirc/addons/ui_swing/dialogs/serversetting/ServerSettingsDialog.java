@@ -34,7 +34,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
 import java.awt.Window;

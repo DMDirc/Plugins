@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.ui.IconManager;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;

@@ -30,7 +30,7 @@ import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.util.Arrays;
 import java.util.Collections;

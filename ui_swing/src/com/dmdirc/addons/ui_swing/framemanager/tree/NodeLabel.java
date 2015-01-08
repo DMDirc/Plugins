@@ -30,7 +30,7 @@ import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.colours.Colour;
 

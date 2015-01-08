@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.renderers.CertificateChainEntryCellRenderer;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
 import java.util.List;
