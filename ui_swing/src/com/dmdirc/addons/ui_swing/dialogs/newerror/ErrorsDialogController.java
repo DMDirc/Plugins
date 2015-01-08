@@ -48,6 +48,7 @@ import javax.swing.ListSelectionModel;
 public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     private final ErrorsDialogModel model;
+    private JTable table;
     private GenericTableModel<ProgramError> tableModel;
     private JTextField date;
     private JTextField severity;
@@ -66,6 +67,7 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
             final JTextField reportStatus, final JTextArea details, final JButton deleteAll,
             final JButton delete, final JButton send, final JButton close) {
         this.tableModel = tableModel;
+        this.table = table;
         this.date = date;
         this.severity = severity;
         this.reportStatus = reportStatus;
@@ -93,20 +95,20 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
         delete.addActionListener(e -> model.deleteSelectedError());
         send.addActionListener(e -> model.sendSelectedError());
         close.addActionListener(e -> dialog.dispose());
+        checkEnabledStates();
     }
 
     @Override
     public void errorDeleted(final ProgramError error) {
-        UIUtilities.invokeAndWait(() -> {
+        UIUtilities.invokeLater(() -> {
             tableModel.removeValue(error);
-            deleteAll.setEnabled(model.isDeleteAllAllowed());
             checkEnabledStates();
         });
     }
 
     @Override
     public void errorAdded(final ProgramError error) {
-        UIUtilities.invokeAndWait(() -> {
+        UIUtilities.invokeLater(() -> {
             tableModel.addValue(error);
             checkEnabledStates();
         });
@@ -114,7 +116,13 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
-        UIUtilities.invokeAndWait(() -> {
+        if (selectedError.isPresent()) {
+            final int index = tableModel.getIndex(selectedError.get());
+            table.getSelectionModel().setSelectionInterval(index, index);
+        } else {
+            table.getSelectionModel().setSelectionInterval(-1, -1);
+        }
+        UIUtilities.invokeLater(() -> {
             date.setText(selectedError.map(ProgramError::getDate)
                     .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
             severity.setText(
@@ -131,7 +139,7 @@ public class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void errorStatusChanged(final ProgramError error) {
-        UIUtilities.invokeAndWait(() -> {
+        UIUtilities.invokeLater(() -> {
             final int index = tableModel.getIndex(error);
             tableModel.fireTableRowsUpdated(index, index);
             checkEnabledStates();

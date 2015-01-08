@@ -26,12 +26,10 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
-import com.dmdirc.addons.ui_swing.dialogs.error.ErrorListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.url.URLDialogFactory;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
-import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
@@ -43,7 +41,6 @@ import java.awt.Window;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.swing.SwingUtilities;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -79,8 +76,6 @@ public class SwingManager {
     private final Provider<MainFrame> mainFrameProvider;
     /** Swing window manager. */
     private final Provider<SwingWindowManager> swingWindowManager;
-    /** Error list dialog provider. */
-    private final DialogProvider<ErrorListDialog> errorListDialogProvider;
     /** The main frame of the Swing UI. */
     private MainFrame mainFrame;
     /** Swing UI initialiser. */
@@ -103,7 +98,6 @@ public class SwingManager {
      * @param swingEventBus           The swing event bus to listen on for swing events.
      * @param treeProvider            Provider to use for tree-based frame managers.
      * @param swingWindowManager      Swing window manager
-     * @param errorListDialogProvider Error list dialog provider
      * @param uiInitialiser           Initialiser to set system/swing settings.
      */
     @Inject
@@ -122,7 +116,6 @@ public class SwingManager {
             final SwingEventBus swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
-            final DialogProvider<ErrorListDialog> errorListDialogProvider,
             final SwingUIInitialiser uiInitialiser) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
@@ -138,7 +131,6 @@ public class SwingManager {
         this.swingEventBus = swingEventBus;
         this.treeProvider = treeProvider;
         this.swingWindowManager = swingWindowManager;
-        this.errorListDialogProvider = errorListDialogProvider;
         this.uiInitialiser = uiInitialiser;
     }
 
@@ -160,7 +152,6 @@ public class SwingManager {
         eventBus.subscribe(this);
         eventBus.subscribe(mainFrame);
         eventBus.subscribe(linkHandler);
-        SwingUtilities.invokeLater(() -> errorListDialogProvider.get().load());
     }
 
     /**
@@ -170,7 +161,6 @@ public class SwingManager {
         swingWindowManager.get().getTopLevelWindows().forEach(Window::dispose);
         windowManager.removeListener(windowFactory.get());
         windowFactory.get().dispose();
-        SwingUtilities.invokeLater(() -> errorListDialogProvider.get().dispose());
         swingEventBus.unsubscribe(mainFrame);
         swingEventBus.unsubscribe(ctrlTabManager);
         mainFrame.dispose();

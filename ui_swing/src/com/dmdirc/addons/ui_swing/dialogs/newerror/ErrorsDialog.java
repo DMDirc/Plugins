@@ -111,6 +111,7 @@ public class ErrorsDialog extends StandardDialog {
         tableScrollPane = new JScrollPane();
         splitPane = getSplitPane();
         table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         table.getModel().addTableModelListener(table);
         tableScrollPane.setViewportView(table);
         table.setPreferredScrollableViewportSize(new Dimension(600, 150));
