@@ -30,7 +30,7 @@ import com.dmdirc.events.StatusBarMessageClearEvent;
 import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.StatusMessage;
 
 import java.awt.Window;

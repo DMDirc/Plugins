@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.event.ActionEvent;

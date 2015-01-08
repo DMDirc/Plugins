@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModelListener;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.profiles.MutableProfile;
 
 import com.google.common.collect.Lists;

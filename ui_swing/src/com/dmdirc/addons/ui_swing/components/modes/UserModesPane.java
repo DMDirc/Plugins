@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 /** User mode panel. */
 public final class UserModesPane extends ModesPane {

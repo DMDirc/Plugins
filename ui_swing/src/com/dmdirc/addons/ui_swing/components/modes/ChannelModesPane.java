@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.components.modes;
 
 import com.dmdirc.Channel;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 /** Non list mode panel. */
 public final class ChannelModesPane extends ModesPane {

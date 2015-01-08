@@ -31,7 +31,6 @@ import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.ui.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 

@@ -44,7 +44,7 @@ import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 

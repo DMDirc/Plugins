@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.events.ClientMinimisedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.AWTException;

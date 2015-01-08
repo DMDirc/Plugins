@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.colours;
 
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Component;

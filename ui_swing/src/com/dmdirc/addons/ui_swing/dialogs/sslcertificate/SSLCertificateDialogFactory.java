@@ -24,7 +24,7 @@ package com.dmdirc.addons.ui_swing.dialogs.sslcertificate;
 
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.ServerCertificateProblemEncounteredEvent;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.SSLCertificateDialogModel;
 
 import java.awt.Window;

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.renderers;
 
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.dialogs.sslcertificate.CertificateChainEntry;
 
 import javax.swing.Icon;

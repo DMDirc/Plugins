@@ -28,7 +28,7 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

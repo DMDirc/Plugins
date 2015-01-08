@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.StatusMessage;
 import com.dmdirc.util.collections.RollingList;
 

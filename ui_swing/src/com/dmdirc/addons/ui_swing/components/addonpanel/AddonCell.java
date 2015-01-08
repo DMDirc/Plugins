@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Color;
 import java.awt.Font;

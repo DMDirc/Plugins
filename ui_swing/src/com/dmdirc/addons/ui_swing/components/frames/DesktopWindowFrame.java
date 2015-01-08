@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Point;
 

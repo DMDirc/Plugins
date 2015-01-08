@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.IgnoreList;
-import com.dmdirc.ui.IconManager;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 import com.dmdirc.util.validators.RegexValidator;
 import com.dmdirc.util.validators.ValidatorChain;

@@ -33,7 +33,6 @@ import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.ui.IconManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
