@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -71,7 +70,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
     private Optional<Connection> activeConnection;
 
     @Inject
-    public InviteLabel(final DMDircMBassador eventBus, @GlobalConfig final IconManager iconManager,
+    public InviteLabel(final DMDircMBassador eventBus, final IconManager iconManager,
             final MainFrame mainFrame, final SwingEventBus swingEventBus) {
         super(new JLabel());
 

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -88,7 +87,7 @@ public class CategoryPanel extends JPanel {
     public CategoryPanel(
             final DMDircMBassador eventBus,
             final PrefsComponentFactory factory,
-            @GlobalConfig final IconManager iconManager) {
+            final IconManager iconManager) {
         this(eventBus, factory, iconManager, null);
     }
 

@@ -91,7 +91,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     @Inject
     public MessageLabel(
             @GlobalConfig final AggregateConfigProvider config,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final DMDircMBassador eventBus) {
         super(new MigLayout("fill, ins 0, gap 0  0"));

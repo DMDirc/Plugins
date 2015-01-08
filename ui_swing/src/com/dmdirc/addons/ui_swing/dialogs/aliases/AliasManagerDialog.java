@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -57,7 +56,7 @@ public class AliasManagerDialog extends StandardDialog {
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
-            @GlobalConfig final IconManager iconManager, final DMDircMBassador eventBus) {
+            final IconManager iconManager, final DMDircMBassador eventBus) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
         setTitle("Alias Manager");

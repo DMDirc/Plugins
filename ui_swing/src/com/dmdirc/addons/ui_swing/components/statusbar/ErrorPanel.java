@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -87,7 +86,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements
      */
     @Inject
     public ErrorPanel(
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final Provider<SwingStatusBar> statusBar,
             final DialogProvider<ErrorsDialog> errorListDialogProvider,

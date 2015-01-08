@@ -77,7 +77,7 @@ public class MDIBar extends JPanel implements ConfigChangeListener {
     @Inject
     public MDIBar(
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @PluginDomain(SwingController.class) final String domain,
             final ActiveFrameManager activeFrameManager,
             final SwingEventBus eventBus) {

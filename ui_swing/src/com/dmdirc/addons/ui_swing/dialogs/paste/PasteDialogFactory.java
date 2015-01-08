@@ -53,7 +53,7 @@ public class PasteDialogFactory {
 
     @Inject
     public PasteDialogFactory(
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @GlobalConfig final AggregateConfigProvider config,
             final ServiceManager serviceManager,
             final CommandController commandController,
