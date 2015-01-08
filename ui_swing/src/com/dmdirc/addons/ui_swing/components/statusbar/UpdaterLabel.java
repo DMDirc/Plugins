@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
@@ -70,7 +69,7 @@ public class UpdaterLabel extends StatusbarPopupPanel<JLabel> implements UpdateM
      */
     @Inject
     public UpdaterLabel(
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final CachingUpdateManager updateManager,
             final DialogProvider<SwingUpdaterDialog> updaterDialogProvider,

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profile;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -92,7 +91,7 @@ public class ProfileManagerDialog extends StandardDialog {
      */
     @Inject
     public ProfileManagerDialog(@MainWindow final Window mainFrame, final ProfilesDialogModel model,
-            @GlobalConfig final IconManager iconManager) {
+            final IconManager iconManager) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         setTitle("Profile Manager");
         this.model = model;

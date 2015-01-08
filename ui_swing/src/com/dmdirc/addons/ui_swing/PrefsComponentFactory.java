@@ -89,7 +89,7 @@ public final class PrefsComponentFactory {
     @Inject
     public PrefsComponentFactory(
             final DMDircMBassador eventBus,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @GlobalConfig final ColourManager colourManager) {
         this.iconManager = iconManager;
         this.colourManager = colourManager;

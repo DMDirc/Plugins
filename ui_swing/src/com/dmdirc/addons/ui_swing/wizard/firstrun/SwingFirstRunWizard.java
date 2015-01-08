@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -67,7 +66,7 @@ public class SwingFirstRunWizard implements WizardListener, FirstRunWizard {
     @Inject
     public SwingFirstRunWizard(@MainWindow final Window parentWindow,
             @UserConfig final ConfigProvider config,
-            final CorePluginExtractor pluginExtractor, @GlobalConfig final IconManager iconManager,
+            final CorePluginExtractor pluginExtractor, final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileDialogProvider) {
         this.corePluginExtractor = pluginExtractor;
         this.config = config;

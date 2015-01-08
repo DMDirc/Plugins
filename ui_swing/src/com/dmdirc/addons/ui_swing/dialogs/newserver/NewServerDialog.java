@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.newserver;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.NoBorderJCheckBox;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
@@ -54,7 +53,7 @@ public class NewServerDialog extends StandardDialog {
 
     @Inject
     public NewServerDialog(@MainWindow final Window mainFrame, final NewServerDialogModel model,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             final DialogProvider<ProfileManagerDialog> profileManagerDialog) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final NewServerLinker linker = new NewServerLinker(model, this);

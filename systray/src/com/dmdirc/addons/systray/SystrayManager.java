@@ -66,7 +66,7 @@ public class SystrayManager implements ActionListener, MouseListener {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SystrayPlugin.class) final String domain,
             final MainFrame mainFrame,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             final DMDircMBassador eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;

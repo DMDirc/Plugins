@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.errors;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -73,7 +72,7 @@ public class ErrorsDialog extends StandardDialog {
      */
     @Inject
     public ErrorsDialog(@MainWindow final Window owner,
-            final ErrorsDialogModel model, @GlobalConfig final IconManager iconManager) {
+            final ErrorsDialogModel model, final IconManager iconManager) {
         super(owner, ModalityType.MODELESS);
         this.model = model;
         this.iconManager = iconManager;

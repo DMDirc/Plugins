@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -68,7 +67,7 @@ public class FeedbackNag extends JLabel implements StatusBarComponent,
      */
     @Inject
     public FeedbackNag(
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             final DialogProvider<FeedbackDialog> feedbackDialogProvider,
             final DMDircMBassador eventBus) {
         this.feedbackDialogProvider = feedbackDialogProvider;

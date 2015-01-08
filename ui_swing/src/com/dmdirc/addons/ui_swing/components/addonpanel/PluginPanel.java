@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -80,7 +79,7 @@ public class PluginPanel extends AddonPanel {
             @MainWindow final Window parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig) {
         super(parentWindow, workerFactory, eventBus);

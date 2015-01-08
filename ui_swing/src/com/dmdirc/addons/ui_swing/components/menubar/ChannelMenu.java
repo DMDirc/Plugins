@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.Channel;
-import com.dmdirc.ClientModule;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -76,7 +75,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
             final ActiveFrameManager activeFrameManager,
             final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
             final MainFrame mainFrame,
-            @ClientModule.GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             final DialogProvider<ChannelListDialog> channelListDialogProvider) {
         super("Channel");
         this.mainFrame = mainFrame;

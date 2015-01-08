@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.feedback;
 
-import com.dmdirc.ClientModule;
 import com.dmdirc.addons.ui_swing.components.NoBorderJCheckBox;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
@@ -52,7 +51,7 @@ public class FeedbackDialog extends StandardDialog {
     @Inject
     public FeedbackDialog(@MainWindow final Window mainFrame,
             final FeedbackDialogModel model,
-            @ClientModule.GlobalConfig final IconManager iconManager) {
+            final IconManager iconManager) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         final FeedbackModelLinker linker = new FeedbackModelLinker(this, model);
         linker.init();

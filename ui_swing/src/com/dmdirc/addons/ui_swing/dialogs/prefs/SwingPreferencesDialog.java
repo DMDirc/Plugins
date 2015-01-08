@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
@@ -98,7 +97,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     @Inject
     public SwingPreferencesDialog(
             @MainWindow final Window parentWindow,
-            @GlobalConfig final IconManager iconManager,
+            final IconManager iconManager,
             @ForSettings final DialogProvider<SwingRestartDialog> restartDialogProvider,
             final Provider<PreferencesDialogModel> dialogModelProvider,
             final Provider<CategoryPanel> categoryPanelProvider,
