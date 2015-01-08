@@ -78,8 +78,7 @@ public class NickColourManager {
     /** Event bus to subscribe to events on . */
     private final DMDircMBassador eventBus;
     /** The plugin's info. */
-    // TODO: Should probably make this final and introduce a factory to create NickColourManagers.
-    private PluginInfo pluginInfo;
+    private final PluginInfo pluginInfo;
     /** "Random" colours to use to colour nicknames. */
     private String[] randColours = {
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
@@ -94,12 +93,14 @@ public class NickColourManager {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final IconManager iconManager,
             @MainWindow final Provider<Window> mainWindowProvider,
+            final PluginInfo pluginInfo,
             final DMDircMBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;
         this.colourManager = colourManager;
         this.iconManager = iconManager;
         this.mainWindowProvider = mainWindowProvider;
+        this.pluginInfo = pluginInfo;
         this.eventBus = eventBus;
         configBinder = globalConfig.getBinder().withDefaultDomain(domain);
     }
@@ -275,10 +276,6 @@ public class NickColourManager {
     @ConfigBinding(key = "randomcolours", invocation = EDTInvocation.class)
     public void handleRandomColours(final List<String> value) {
         randColours = value.toArray(new String[value.size()]);
-    }
-
-    public void setPluginInfo(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
     }
 
     @Handler

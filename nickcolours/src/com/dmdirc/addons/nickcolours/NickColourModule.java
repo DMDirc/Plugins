@@ -24,6 +24,7 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
 import dagger.Module;
 import dagger.Provides;
@@ -34,10 +35,13 @@ import dagger.Provides;
 @Module(injects = NickColourManager.class, addsTo = SwingModule.class)
 public class NickColourModule {
 
+    /** This plugin's plugin info. */
+    private final PluginInfo pluginInfo;
     /** The domain for plugin settings. */
     private final String domain;
 
-    public NickColourModule(final String domain) {
+    public NickColourModule(final PluginInfo pluginInfo, final String domain) {
+        this.pluginInfo = pluginInfo;
         this.domain = domain;
     }
 
@@ -50,6 +54,11 @@ public class NickColourModule {
     @PluginDomain(NickColourPlugin.class)
     public String getSettingsDomain() {
         return domain;
+    }
+
+    @Provides
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }
