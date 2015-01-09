@@ -22,21 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.menubar.JMenuItemBuilder;
 import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.events.NonFatalProgramErrorEvent;
-import com.dmdirc.events.ProgramErrorDeletedEvent;
+import com.dmdirc.interfaces.ui.ErrorsDialogModelListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ProgramError;
-import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -44,13 +43,11 @@ import javax.inject.Singleton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
-import net.engio.mbassy.listener.Handler;
-
 /**
  * Shows error status in the status bar.
  */
 @Singleton
-public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
+public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDialogModelListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 2;
@@ -59,7 +56,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
     /** The manager to use to retrieve icons. */
     private final IconManager iconManager;
     /** Error manager. */
-    private final ErrorManager errorManager;
+    private final CoreErrorsDialogModel model;
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Error list dialog provider. */
@@ -77,43 +74,32 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
             final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final DialogProvider<ErrorsDialog> errorListDialogProvider,
-            final ErrorManager errorManager,
-            final DMDircMBassador eventBus) {
+            final CoreErrorsDialogModel model) {
         super(new JLabel());
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;
         this.errorListDialogProvider = errorListDialogProvider;
-        this.errorManager = errorManager;
+        this.model = model;
+        model.load();
 
         menu = new JPopupMenu();
         menu.add(JMenuItemBuilder.create().setText("Open")
                 .addActionListener(e -> errorListDialogProvider.displayOrRequestFocus()).build());
         menu.add(JMenuItemBuilder.create()
                 .setText("Clear All")
-                .addActionListener(e -> errorManager.getErrors().forEach(errorManager::deleteError))
+                .addActionListener(e -> model.deleteAllErrors())
                 .build());
         checkErrors();
-        eventBus.subscribe(this);
     }
 
     @Override
     protected StatusbarPopupWindow getWindow() {
-        return new ErrorPopup(errorManager, iconManager, this, parentWindow);
-    }
-
-    @Handler(invocation = EdtHandlerInvocation.class)
-    public void errorAdded(final NonFatalProgramErrorEvent event) {
-        checkErrors();
-    }
-
-    @Handler(invocation = EdtHandlerInvocation.class)
-    public void errorDeleted(final ProgramErrorDeletedEvent event) {
-        checkErrors();
+        return new ErrorPopup(model, iconManager, this, parentWindow);
     }
 
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
-        final Set<ProgramError> errors = errorManager.getErrors();
+        final Set<ProgramError> errors = model.getErrors();
         label.setIcon(iconManager.getIcon(errors.stream().map(ProgramError::getLevel)
                 .reduce(ErrorLevel.UNKNOWN, ErrorLevel::getMoreImportant).getIcon()));
         setVisible(!errors.isEmpty());
@@ -163,4 +149,23 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> {
         }
     }
 
+    @Override
+    public void errorDeleted(final ProgramError error) {
+        UIUtilities.invokeLater(this::checkErrors);
+    }
+
+    @Override
+    public void errorAdded(final ProgramError error) {
+        UIUtilities.invokeLater(this::checkErrors);
+    }
+
+    @Override
+    public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
+        //Ignore
+    }
+
+    @Override
+    public void errorStatusChanged(final ProgramError error) {
+        //Ignore
+    }
 }
