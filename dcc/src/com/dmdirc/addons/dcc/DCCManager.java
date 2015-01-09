@@ -41,6 +41,12 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ServerCtcpEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
@@ -56,7 +62,6 @@ import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
-import com.dmdirc.util.URLBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -66,7 +71,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -104,6 +109,8 @@ public class DCCManager {
     private final String domain;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
+    /** Plugin info. */
+    private final PluginInfo pluginInfo;
 
     /**
      * Creates a new instance of this plugin.
@@ -120,7 +127,6 @@ public class DCCManager {
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
-            final URLBuilder urlBuilder,
             final DMDircMBassador eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory,
@@ -130,6 +136,7 @@ public class DCCManager {
         this.windowManager = windowManager;
         this.commandController = commandController;
         this.tabCompleterFactory = tabCompleterFactory;
+        this.pluginInfo = pluginInfo;
         this.domain = pluginInfo.getDomain();
         this.config = globalConfig;
         this.eventBus = eventBus;
@@ -146,7 +153,7 @@ public class DCCManager {
 
                     @Override
                     public Set<String> getComponents() {
-                        return new HashSet<>(Arrays.asList(
+                        return new HashSet<>(Collections.singletonList(
                                 "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
                     }
                 });
@@ -161,7 +168,7 @@ public class DCCManager {
 
                     @Override
                     public Set<String> getComponents() {
-                        return new HashSet<>(Arrays.asList(
+                        return new HashSet<>(Collections.singletonList(
                                 "com.dmdirc.addons.dcc.ui.TransferPanel"));
                     }
                 });
@@ -169,6 +176,71 @@ public class DCCManager {
         final ConfigProvider defaults = identityController.getAddonSettings();
         defaults.setOption(domain, "receive.savelocation",
                 baseDirectory + "downloads" + File.separator);
+    }
+
+    @Handler
+    public void handlePrefsOpened(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                pluginInfo, "DCC", "", "category-dcc");
+        final PreferencesCategory firewall = new PluginPreferencesCategory(
+                pluginInfo, "Firewall", "");
+        final PreferencesCategory sending = new PluginPreferencesCategory(
+                pluginInfo, "Sending", "");
+        final PreferencesCategory receiving = new PluginPreferencesCategory(
+                pluginInfo, "Receiving", "");
+
+        manager.getCategory("Plugins").addSubCategory(general.setInlineAfter());
+        general.addSubCategory(firewall.setInline());
+        general.addSubCategory(sending.setInline());
+        general.addSubCategory(receiving.setInline());
+
+        firewall.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+                pluginInfo.getDomain(), "firewall.ip", "Forced IP",
+                "What IP should be sent as our IP (Blank = work it out)",
+                manager.getConfigManager(), manager.getIdentity()));
+        firewall.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "firewall.ports.usePortRange", "Use Port Range",
+                "Useful if you have a firewall that only forwards specific "
+                        + "ports", manager.getConfigManager(), manager.getIdentity()));
+        firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "firewall.ports.startPort", "Start Port",
+                "Port to try to listen on first", manager.getConfigManager(),
+                manager.getIdentity()));
+        firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "firewall.ports.endPort", "End Port",
+                "Port to try to listen on last", manager.getConfigManager(),
+                manager.getIdentity()));
+        receiving.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY,
+                pluginInfo.getDomain(), "receive.savelocation", "Default save location",
+                "Where the save as window defaults to?",
+                manager.getConfigManager(), manager.getIdentity()));
+        sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "send.reverse", "Reverse DCC",
+                "With reverse DCC, the sender connects rather than "
+                        + "listens like normal dcc", manager.getConfigManager(),
+                manager.getIdentity()));
+        sending.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "send.forceturbo", "Use Turbo DCC",
+                "Turbo DCC doesn't wait for ack packets. this is "
+                        + "faster but not always supported.",
+                manager.getConfigManager(), manager.getIdentity()));
+        receiving.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "receive.reverse.sendtoken",
+                "Send token in reverse receive",
+                "If you have problems with reverse dcc receive resume,"
+                        + " try toggling this.", manager.getConfigManager(),
+                manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "send.blocksize", "Blocksize to use for DCC",
+                "Change the block size for send/receive, this can "
+                        + "sometimes speed up transfers.", manager.getConfigManager(),
+                manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "general.percentageInTitle",
+                "Show percentage of transfers in the window title",
+                "Show the current percentage of transfers in the DCC window "
+                        + "title", manager.getConfigManager(), manager.getIdentity()));
     }
 
     public String getDomain() {
