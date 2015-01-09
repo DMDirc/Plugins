@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.ErrorManager;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
-import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.util.collections.MapList;
 
 import java.awt.Font;
@@ -36,6 +36,7 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 /**
  * Shows a breakdown of errors that have occurred.
@@ -49,30 +50,30 @@ public class ErrorPopup extends StatusbarPopupWindow {
     /** Icon manager. */
     private final IconManager iconManager;
     /** Error manager to retrieve errors from. */
-    private ErrorManager errorManager;
+    private final CoreErrorsDialogModel model;
 
     /**
      * Creates a new error popup.
      *
-     * @param errorManager The error manager to retrieve errors from
+     * @param model        The error model to retrieve errors from
      * @param iconManager  The manager to use to retrieve icons.
      * @param parent       Parent panel
      * @param parentWindow Parent window
      */
     public ErrorPopup(
-            final ErrorManager errorManager,
+            final CoreErrorsDialogModel model,
             final IconManager iconManager,
             final JPanel parent,
             final Window parentWindow) {
         super(parent, parentWindow);
 
-        this.errorManager = errorManager;
+        this.model = model;
         this.iconManager = iconManager;
     }
 
     @Override
     protected void initContent(final JPanel panel) {
-        final Set<ProgramError> errors = errorManager.getErrors();
+        final Set<ProgramError> errors = model.getErrors();
         final MapList<ErrorLevel, ProgramError> buckets = new MapList<>();
         final MapList<ErrorReportStatus, ProgramError> statuses = new MapList<>();
 
@@ -85,7 +86,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header);
 
-        header = new JLabel("#", JLabel.RIGHT);
+        header = new JLabel("#", SwingConstants.RIGHT);
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header, "growx, pushx, wrap");
 
@@ -94,8 +95,8 @@ public class ErrorPopup extends StatusbarPopupWindow {
                 final int count = buckets.values(level).size();
 
                 panel.add(new JLabel(level.toString(), iconManager.getIcon(
-                        level.getIcon()), JLabel.LEFT));
-                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
+                        level.getIcon()), SwingConstants.LEFT));
+                panel.add(new JLabel(String.valueOf(count), SwingConstants.RIGHT),
                         "growx, pushx, wrap");
             }
         }
@@ -106,7 +107,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header);
 
-        header = new JLabel("#", JLabel.RIGHT);
+        header = new JLabel("#", SwingConstants.RIGHT);
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         panel.add(header, "growx, pushx, wrap");
 
@@ -114,8 +115,8 @@ public class ErrorPopup extends StatusbarPopupWindow {
             if (statuses.containsKey(status)) {
                 final int count = statuses.values(status).size();
 
-                panel.add(new JLabel(status.toString(), JLabel.LEFT));
-                panel.add(new JLabel(String.valueOf(count), JLabel.RIGHT),
+                panel.add(new JLabel(status.toString(), SwingConstants.LEFT));
+                panel.add(new JLabel(String.valueOf(count), SwingConstants.RIGHT),
                         "growx, pushx, wrap");
             }
         }
