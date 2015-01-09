@@ -80,6 +80,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
         this.iconManager = iconManager;
         this.errorListDialogProvider = errorListDialogProvider;
         this.model = model;
+        model.addListener(this);
         model.load();
 
         menu = new JPopupMenu();
@@ -151,12 +152,12 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
 
     @Override
     public void errorDeleted(final ProgramError error) {
-        UIUtilities.invokeLater(this::checkErrors);
+        UIUtilities.invokeAndWait(this::checkErrors);
     }
 
     @Override
     public void errorAdded(final ProgramError error) {
-        UIUtilities.invokeLater(this::checkErrors);
+        UIUtilities.invokeAndWait(this::checkErrors);
     }
 
     @Override
