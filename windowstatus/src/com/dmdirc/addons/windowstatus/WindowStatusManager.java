@@ -33,6 +33,12 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
@@ -41,6 +47,7 @@ import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
 import javax.inject.Inject;
 
@@ -53,6 +60,7 @@ public class WindowStatusManager {
 
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
+    private final PluginInfo pluginInfo;
     /** Config to read settings from. */
     private final ConfigBinder configBinder;
     /** The event bus to post events to. */
@@ -73,8 +81,10 @@ public class WindowStatusManager {
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(WindowStatusPlugin.class) final String domain,
             final DMDircMBassador eventBus,
-            final SwingEventBus swingEventBus) {
+            final SwingEventBus swingEventBus,
+            final PluginInfo pluginInfo) {
         this.activeFrameManager = activeFrameManager;
+        this.pluginInfo = pluginInfo;
         this.configBinder = config.getBinder().withDefaultDomain(domain);
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
@@ -204,4 +214,27 @@ public class WindowStatusManager {
         nonePrefix = value;
         updateStatus();
     }
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                pluginInfo, "Window status", "");
+
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "channel.shownone", "Show 'none' count",
+                "Should the count for users with no state be shown?",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+                pluginInfo.getDomain(), "channel.noneprefix", "'None' count prefix",
+                "The Prefix to use when showing the 'none' count",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "client.showname", "Show real name",
+                "Should the realname for clients be shown if known?",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        manager.getCategory("Plugins").addSubCategory(category);
+    }
+
 }

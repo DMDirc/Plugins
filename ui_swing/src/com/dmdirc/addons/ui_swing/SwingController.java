@@ -29,7 +29,6 @@ import com.dmdirc.addons.ui_swing.commands.PopOutCommand;
 import com.dmdirc.addons.ui_swing.commands.ServerSettings;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
@@ -51,8 +50,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     private final PluginInfo pluginInfo;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
-    /** This plugin's settings domain. */
-    private final String domain;
 
     /**
      * Instantiates a new SwingController.
@@ -61,14 +58,13 @@ public class SwingController extends BaseCommandPlugin implements UIController {
      */
     public SwingController(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-        this.domain = pluginInfo.getDomain();
     }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new SwingModule(this, pluginInfo.getDomain())));
+        setObjectGraph(graph.plus(new SwingModule(this, pluginInfo, pluginInfo.getDomain())));
         getObjectGraph().validate();
         swingManager = getObjectGraph().get(SwingManager.class);
 
@@ -100,13 +96,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         }
 
         super.onUnload();
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        manager.getCategory("GUI").addSubCategory(
-                new SwingPreferencesModel(pluginInfo, domain, manager.getConfigManager(),
-                        manager.getIdentity()).getSwingUICategory());
     }
 
     /**
