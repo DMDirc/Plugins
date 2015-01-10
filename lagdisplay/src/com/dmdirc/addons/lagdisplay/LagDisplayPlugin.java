@@ -22,11 +22,6 @@
 
 package com.dmdirc.addons.lagdisplay;
 
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
@@ -37,25 +32,14 @@ import dagger.ObjectGraph;
  */
 public final class LagDisplayPlugin extends BasePlugin {
 
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
     /** The manager currently in use. */
     private LagDisplayManager manager;
-
-    /**
-     * Creates a new LagDisplayPlugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     */
-    public LagDisplayPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new LagDisplayModule(pluginInfo.getDomain())));
+        setObjectGraph(graph.plus(new LagDisplayModule(pluginInfo)));
         manager = getObjectGraph().get(LagDisplayManager.class);
     }
 
@@ -68,29 +52,4 @@ public final class LagDisplayPlugin extends BasePlugin {
     public void onUnload() {
         manager.unload();
     }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory cat = new PluginPreferencesCategory(
-                pluginInfo, "Lag display plugin", "");
-        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "usealternate",
-                "Alternate method", "Use an alternate method of determining "
-                + "lag which bypasses bouncers or proxies that may reply?",
-                manager.getConfigManager(), manager.getIdentity()));
-        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "graph", "Show graph", "Show a graph of ping times "
-                + "for the current server in the information popup?",
-                manager.getConfigManager(), manager.getIdentity()));
-        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "labels", "Show labels", "Show labels on selected "
-                + "points on the ping graph?",
-                manager.getConfigManager(), manager.getIdentity()));
-        cat.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                pluginInfo.getDomain(), "history", "Graph points", "Number of data points "
-                + "to plot on the graph, if enabled.",
-                manager.getConfigManager(), manager.getIdentity()));
-        manager.getCategory("Plugins").addSubCategory(cat);
-    }
-
 }

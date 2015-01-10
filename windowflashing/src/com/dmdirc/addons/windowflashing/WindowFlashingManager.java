@@ -27,8 +27,16 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientFocusGainedEvent;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +52,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class WindowFlashingManager {
 
+    private final PluginInfo pluginInfo;
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Event bus. */
@@ -70,8 +79,10 @@ public class WindowFlashingManager {
     @Inject
     public WindowFlashingManager(
             @GlobalConfig final AggregateConfigProvider config,
+            @PluginDomain(WindowFlashing.class) final PluginInfo pluginInfo,
             final MainFrame mainFrame,
             final DMDircMBassador eventBus) {
+        this.pluginInfo = pluginInfo;
         this.mainFrame = mainFrame;
         this.eventBus = eventBus;
         binder = config.getBinder();
@@ -163,6 +174,38 @@ public class WindowFlashingManager {
         if (mainFrame != null) {
             user32.FlashWindowEx(stopFlashObject());
         }
+    }
+
+
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                pluginInfo, "Window Flashing",
+                "General configuration for window flashing plugin.");
+
+        category.addSetting(new PreferencesSetting(
+                PreferencesType.OPTIONALINTEGER, pluginInfo.getDomain(), "blinkrate",
+                "Blink rate", "Specifies the rate at which the taskbar and or "
+                + "caption will blink, if unspecified this will be your cursor "
+                + "blink rate.",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(
+                PreferencesType.OPTIONALINTEGER, pluginInfo.getDomain(), "flashcount",
+                "Flash count", "Specifies the number of times to blink, if "
+                + "unspecified this will blink indefinitely",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "flashtaskbar", "Flash taskbar",
+                "Should the taskbar entry flash?",
+                manager.getConfigManager(), manager.getIdentity()));
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "flashcaption", "Flash caption",
+                "Should the window caption flash?",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        manager.getCategory("Plugins").addSubCategory(category);
     }
 
 }

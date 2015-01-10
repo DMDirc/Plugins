@@ -30,6 +30,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
 import java.io.File;
 
@@ -44,16 +45,16 @@ public class LoggingModule {
 
     public static final String LOGS_DIRECTORY = "logs";
 
-    private final String domain;
+    private final PluginInfo pluginInfo;
 
-    public LoggingModule(final String domain) {
-        this.domain = domain;
+    public LoggingModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
     @Provides
     @PluginDomain(LoggingPlugin.class)
     public String getDomain() {
-        return domain;
+        return pluginInfo.getDomain();
     }
 
     @Provides
@@ -70,6 +71,12 @@ public class LoggingModule {
         }
 
         return globalConfig.getOptionString(domain, "general.directory");
+    }
+
+    @Provides
+    @PluginDomain(LoggingPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }

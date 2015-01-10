@@ -22,11 +22,6 @@
 
 package com.dmdirc.addons.systray;
 
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -42,19 +37,8 @@ import dagger.ObjectGraph;
  */
 public class SystrayPlugin extends BaseCommandPlugin {
 
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
     /** Systray manager. */
     private SystrayManager manager;
-
-    /**
-     * Creates a new system tray plugin.
-     *
-     * @param pluginInfo This plugin's plugin info.
-     */
-    public SystrayPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
@@ -97,20 +81,4 @@ public class SystrayPlugin extends BaseCommandPlugin {
         manager.unload();
         super.onUnload();
     }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory category = new PluginPreferencesCategory(
-                pluginInfo, "System Tray",
-                "General configuration settings");
-
-        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "autominimise", "Auto-hide DMDirc when minimised",
-                "If this option is enabled, the systray plugin will hide DMDirc"
-                + " to the system tray whenever DMDirc is minimised",
-                manager.getConfigManager(), manager.getIdentity()));
-
-        manager.getCategory("Plugins").addSubCategory(category);
-    }
-
 }

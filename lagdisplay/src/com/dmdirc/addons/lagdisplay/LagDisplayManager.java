@@ -31,6 +31,12 @@ import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.events.ServerGotPingEvent;
 import com.dmdirc.events.ServerNoPingEvent;
@@ -42,6 +48,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.collections.RollingList;
 
 import java.util.Date;
@@ -71,6 +78,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     private final Provider<LagDisplayPanel> panelProvider;
     /** The settings domain to use. */
     private final String domain;
+    private final PluginInfo pluginInfo;
     /** Config to read global settings from. */
     private final AggregateConfigProvider globalConfig;
     /** A cache of ping times. */
@@ -92,12 +100,14 @@ public class LagDisplayManager implements ConfigChangeListener {
             final ActiveFrameManager activeFrameManager,
             final Provider<LagDisplayPanel> panelProvider,
             @PluginDomain(LagDisplayPlugin.class) final String domain,
+            @PluginDomain(LagDisplayPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
         this.activeFrameManager = activeFrameManager;
         this.panelProvider = panelProvider;
         this.domain = domain;
+        this.pluginInfo = pluginInfo;
         this.globalConfig = globalConfig;
     }
 
@@ -297,6 +307,33 @@ public class LagDisplayManager implements ConfigChangeListener {
         return activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
                 .flatMap(FrameContainer::getConnection)
                 .filter(connection::equals).isPresent();
+    }
+
+
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory cat = new PluginPreferencesCategory(
+                pluginInfo, "Lag display plugin", "");
+        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "usealternate",
+                "Alternate method", "Use an alternate method of determining "
+                + "lag which bypasses bouncers or proxies that may reply?",
+                manager.getConfigManager(), manager.getIdentity()));
+        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "graph", "Show graph", "Show a graph of ping times "
+                + "for the current server in the information popup?",
+                manager.getConfigManager(), manager.getIdentity()));
+        cat.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "labels", "Show labels", "Show labels on selected "
+                + "points on the ping graph?",
+                manager.getConfigManager(), manager.getIdentity()));
+        cat.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "history", "Graph points", "Number of data points "
+                + "to plot on the graph, if enabled.",
+                manager.getConfigManager(), manager.getIdentity()));
+        manager.getCategory("Plugins").addSubCategory(cat);
     }
 
 }
