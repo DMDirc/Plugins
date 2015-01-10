@@ -31,9 +31,12 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 
 import java.awt.Window;
@@ -80,6 +83,8 @@ public class SwingManager {
     private MainFrame mainFrame;
     /** Swing UI initialiser. */
     private final SwingUIInitialiser uiInitialiser;
+    private final PluginInfo pluginInfo;
+    private final String domain;
 
     /**
      * Creates a new instance of {@link SwingManager}.
@@ -116,7 +121,9 @@ public class SwingManager {
             final SwingEventBus swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
-            final SwingUIInitialiser uiInitialiser) {
+            final SwingUIInitialiser uiInitialiser,
+            @PluginDomain(SwingController.class) final PluginInfo pluginInfo,
+            @PluginDomain(SwingController.class) final String domain) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.menuBar = menuBar;
@@ -132,6 +139,8 @@ public class SwingManager {
         this.treeProvider = treeProvider;
         this.swingWindowManager = swingWindowManager;
         this.uiInitialiser = uiInitialiser;
+        this.pluginInfo = pluginInfo;
+        this.domain = domain;
     }
 
     /**
@@ -206,6 +215,13 @@ public class SwingManager {
     @Handler
     public void showFeedbackNag(final FeedbackNagEvent event) {
         UIUtilities.invokeLater(feedbackNagProvider::get);
+    }
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        event.getModel().getCategory("GUI").addSubCategory(
+                new SwingPreferencesModel(pluginInfo, domain, event.getModel().getConfigManager(),
+                        event.getModel().getIdentity()).getSwingUICategory());
     }
 
 }

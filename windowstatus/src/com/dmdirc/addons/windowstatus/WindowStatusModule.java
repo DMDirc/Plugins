@@ -53,4 +53,10 @@ public class WindowStatusModule {
         return pluginInfo.getDomain();
     }
 
+    @Provides
+    @PluginDomain(WindowStatusPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }

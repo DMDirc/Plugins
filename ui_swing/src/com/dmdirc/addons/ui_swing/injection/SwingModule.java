@@ -59,6 +59,7 @@ import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.ServiceLocator;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -89,15 +90,17 @@ import dagger.Provides;
             ServerSettings.class,
             ChannelSettings.class
         })
+@SuppressWarnings("TypeMayBeWeakened")
 public class SwingModule {
 
-    /** The controller to return to clients. */
     private final SwingController controller;
-    /** The domain for plugin settings. */
+    private final PluginInfo pluginInfo;
     private final String domain;
 
-    public SwingModule(final SwingController controller, final String domain) {
+    public SwingModule(final SwingController controller, final PluginInfo pluginInfo,
+            final String domain) {
         this.controller = controller;
+        this.pluginInfo = pluginInfo;
         this.domain = domain;
     }
 
@@ -211,6 +214,12 @@ public class SwingModule {
         }
 
         return provider.getFrameManager();
+    }
+
+    @Provides
+    @PluginDomain(SwingController.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }
