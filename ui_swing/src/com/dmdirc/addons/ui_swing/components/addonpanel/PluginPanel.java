@@ -38,6 +38,7 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,6 +54,10 @@ public class PluginPanel extends AddonPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
+
+    /** Comparator to use to sort plugins in the panel. */
+    private static final Comparator<? super PluginInfo> COMPARATOR = new PluginInfoComparator();
+
     /** Manager to retrieve plugin information from. */
     private final PluginManager pluginManager;
     /** Manager to use to retrieve addon-related icons. */
@@ -97,14 +102,14 @@ public class PluginPanel extends AddonPanel {
         final List<PluginInfo> list = new ArrayList<>();
         final Collection<PluginInfo> sortedList = new ArrayList<>();
         list.addAll(pluginManager.getPluginInfos());
-        Collections.sort(list);
+        Collections.sort(list, COMPARATOR);
         list.stream().filter(plugin -> plugin.getMetaData().getParent() == null).forEach(plugin -> {
             final List<PluginInfo> childList = new ArrayList<>();
             sortedList.add(plugin);
             plugin.getChildren().stream()
                     .filter(child -> !childList.contains(child))
                     .forEach(childList::add);
-            Collections.sort(childList);
+            Collections.sort(childList, COMPARATOR);
             sortedList.addAll(childList);
         });
 
@@ -134,6 +139,14 @@ public class PluginPanel extends AddonPanel {
     @Override
     protected String getTypeName() {
         return "plugins";
+    }
+
+    private static class PluginInfoComparator implements Comparator<PluginInfo> {
+
+        @Override
+        public int compare(final PluginInfo o1, final PluginInfo o2) {
+            return o1.getMetaData().getName().compareTo(o2.getMetaData().getName());
+        }
     }
 
 }

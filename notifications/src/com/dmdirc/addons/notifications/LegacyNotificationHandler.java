@@ -20,52 +20,28 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.osd;
+package com.dmdirc.addons.notifications;
 
-import com.dmdirc.plugins.Exported;
+import com.dmdirc.plugins.ExportedService;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-
-import dagger.ObjectGraph;
 
 /**
- * Allows the user to display on-screen-display messages.
+ * A notification handler that works using exported services.
  */
-public class OsdPlugin extends BaseCommandPlugin {
+public class LegacyNotificationHandler implements NotificationHandler {
 
-    /** The OSD Manager that this plugin is using. */
-    private OsdManager osdManager;
+    private final PluginInfo pluginInfo;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new OsdModule(pluginInfo)));
-        osdManager = getObjectGraph().get(OsdManager.class);
-
-        registerCommand(OsdCommand.class, OsdCommand.INFO);
+    public LegacyNotificationHandler(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
     @Override
-    public void onLoad() {
-        osdManager.onLoad();
-    }
-
-    @Override
-    public void onUnload() {
-        osdManager.onUnload();
-    }
-
-    /**
-     * Shows an OSD with the specified message, title is ignored, exported method used for
-     * showNotification.
-     *
-     * @param title   Ignored
-     * @param message Message to show
-     */
-    @Exported
-    public void showOSD(final String title, final String message) {
-        osdManager.showWindow(-1, message);
+    public void showNotification(final String title, final String message) {
+        final ExportedService source = pluginInfo.getExportedService("showNotification");
+        if (source != null) {
+            source.execute(title, message);
+        }
     }
 
 }

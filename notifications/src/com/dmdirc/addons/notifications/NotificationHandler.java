@@ -20,38 +20,19 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.identd;
-
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
-
-import dagger.ObjectGraph;
+package com.dmdirc.addons.notifications;
 
 /**
- * The Identd plugin answers ident requests from IRC servers.
+ * Handler of notifications.
  */
-public class IdentdPlugin extends BasePlugin {
+public interface NotificationHandler {
 
-    /** Identd Manager. */
-    private IdentdManager identdManager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new IdentModule(pluginInfo)));
-        identdManager = getObjectGraph().get(IdentdManager.class);
-    }
-
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        identdManager.onUnload();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        identdManager.onLoad();
-    }
+    /**
+     * Displays a notification to the user.
+     *
+     * @param title The title of the notification.
+     * @param message The notification content.
+     */
+    void showNotification(String title, String message);
 
 }
