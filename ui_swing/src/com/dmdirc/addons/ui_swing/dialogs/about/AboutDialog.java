@@ -40,6 +40,7 @@ import java.awt.Window;
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.layout.LayoutUtil;
@@ -110,7 +111,7 @@ public class AboutDialog extends StandardDialog {
     public void handleInfoRequest(final ClientInfoRequestEvent event) {
         event.addInfoItem(InfoItem.create("Swing UI Version",
                         pluginInfo.getMetaData().getVersion().toString()),
-                InfoItem.create("Look and Feel", SwingController.getLookAndFeel()),
+                InfoItem.create("Look and Feel", UIManager.getLookAndFeel().getName()),
                 InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
         );
     }

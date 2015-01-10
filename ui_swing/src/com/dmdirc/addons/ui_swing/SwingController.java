@@ -36,8 +36,6 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import java.awt.GraphicsEnvironment;
 
-import javax.swing.UIManager;
-
 import dagger.ObjectGraph;
 
 /**
@@ -84,15 +82,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         }
 
         super.onUnload();
-    }
-
-    /**
-     * Returns the current look and feel.
-     *
-     * @return Current look and feel
-     */
-    public static String getLookAndFeel() {
-        return UIManager.getLookAndFeel().getName();
     }
 
     /**
