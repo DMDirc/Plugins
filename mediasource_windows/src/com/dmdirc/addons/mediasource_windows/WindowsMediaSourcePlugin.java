@@ -22,89 +22,29 @@
 
 package com.dmdirc.addons.mediasource_windows;
 
-import com.dmdirc.addons.nowplaying.MediaSource;
-import com.dmdirc.addons.nowplaying.MediaSourceManager;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.plugins.implementations.BasePlugin;
-import com.dmdirc.plugins.implementations.PluginFilesHelper;
-import com.dmdirc.util.io.StreamUtils;
 
-import com.google.common.io.CharStreams;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import dagger.ObjectGraph;
 
 /**
  * Manages all Windows based media sources.
  */
-public class WindowsMediaSourcePlugin extends BasePlugin
-        implements MediaSourceManager {
+public class WindowsMediaSourcePlugin extends BasePlugin {
 
-    /** Media sources. */
-    private final List<MediaSource> sources;
-    /** Plugin files helper. */
-    private final PluginFilesHelper filesHelper;
-
-    /**
-     * Creates a new instance of DcopMediaSourcePlugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     */
-    public WindowsMediaSourcePlugin(final PluginManager pluginManager,
-            final PluginInfo pluginInfo) {
-        this.filesHelper = new PluginFilesHelper(pluginManager, pluginInfo);
-        sources = new ArrayList<>();
-        sources.add(new DllSource(this, "Winamp", true));
-        sources.add(new DllSource(this, "iTunes", false));
-    }
+    private WindowsMediaSourceManager manager;
 
     @Override
-    public List<MediaSource> getSources() {
-        return sources;
-    }
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
 
-    /**
-     * Get the output from GetMediaInfo.exe for the given player and method
-     *
-     * @param player Player to ask about
-     * @param method Method to call
-     *
-     * @return a MediaInfoOutput with the results
-     */
-    protected MediaInfoOutput getOutput(final String player, final String method) {
-        try {
-            final Process myProcess = Runtime.getRuntime().exec(new String[]{
-                filesHelper.getFilesDirString() + "GetMediaInfo.exe",
-                player,
-                method});
-            StreamUtils.readStream(myProcess.getErrorStream());
-            final String data = CharStreams.toString(new InputStreamReader(
-                    myProcess.getInputStream()));
-            try {
-                myProcess.waitFor();
-            } catch (InterruptedException e) {
-            }
-
-            return new MediaInfoOutput(myProcess.exitValue(), data);
-        } catch (SecurityException | IOException e) {
-        }
-
-        return new MediaInfoOutput(-1, "Error executing GetMediaInfo.exe");
+        setObjectGraph(graph.plus(new WindowsMediaSourceModule(pluginInfo)));
+        manager = getObjectGraph().get(WindowsMediaSourceManager.class);
     }
 
     @Override
     public void onLoad() {
-        // Extract the .dlls and .exe
-        try {
-            filesHelper.extractResourcesEndingWith(".dll");
-            filesHelper.extractResourcesEndingWith(".exe");
-        } catch (IOException ex) {
-            throw new IllegalStateException("Unable to extract needed files: " + ex.getMessage(),
-                    ex);
-        }
+        manager.onLoad();
     }
 
 }
