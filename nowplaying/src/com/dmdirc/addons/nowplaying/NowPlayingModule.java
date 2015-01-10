@@ -44,4 +44,10 @@ public class NowPlayingModule {
         return pluginInfo.getDomain();
     }
 
+    @Provides
+    @PluginDomain(NowPlayingPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }

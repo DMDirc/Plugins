@@ -20,39 +20,27 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.notifications;
+package com.dmdirc.addons.mediasource_vlc;
 
+import com.dmdirc.ClientModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
-/**
- * Notification Manager plugin, aggregates notification sources exposing them via a single command.
- */
-public class NotificationsPlugin extends BaseCommandPlugin {
+@Module(injects = VlcManager.class, addsTo = ClientModule.class)
+public class VlcModule {
 
-    /** Notifications manager. */
-    private NotificationsManager manager;
+    private final PluginInfo pluginInfo;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new NotificationsModule(pluginInfo)));
-        registerCommand(NotificationCommand.class, NotificationCommand.INFO);
-        manager = getObjectGraph().get(NotificationsManager.class);
+    public VlcModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    @Override
-    public void onLoad() {
-        manager.onLoad();
-        super.onLoad();
+    @Provides
+    @PluginDomain(VlcMediaSourcePlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
-
-    @Override
-    public void onUnload() {
-        manager.onUnload();
-        super.onUnload();
-    }
-
 }

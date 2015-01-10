@@ -29,7 +29,8 @@ import com.dmdirc.plugins.PluginInfo;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(injects = NotifyMyAndroidCommand.class, addsTo = ClientModule.class)
+@Module(injects = {NotifyMyAndroidManager.class, NotifyMyAndroidCommand.class},
+        addsTo = ClientModule.class)
 public class NotifyMyAndroidModule {
 
     private final PluginInfo pluginInfo;
@@ -42,6 +43,12 @@ public class NotifyMyAndroidModule {
     @PluginDomain(NotifyMyAndroidPlugin.class)
     public String getSettingsDomain() {
         return pluginInfo.getDomain();
+    }
+
+    @Provides
+    @PluginDomain(NotifyMyAndroidPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
 
 }

@@ -22,11 +22,6 @@
 
 package com.dmdirc.addons.nma;
 
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
@@ -37,42 +32,13 @@ import dagger.ObjectGraph;
  */
 public class NotifyMyAndroidPlugin extends BaseCommandPlugin {
 
-    /** Our info object. */
-    private final PluginInfo pluginInfo;
-
-    /**
-     * Creates a new instance of the {@link NotifyMyAndroidPlugin}.
-     *
-     * @param pluginInfo The plugin info object for this plugin.
-     */
-    public NotifyMyAndroidPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
+    private NotifyMyAndroidManager notifyMyAndroidManager;
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
         setObjectGraph(graph.plus(new NotifyMyAndroidModule(pluginInfo)));
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory category = new PluginPreferencesCategory(
-                pluginInfo, "Notify My Android",
-                "General configuration for Notify My Android plugin.");
-
-        category.addSetting(new PreferencesSetting(
-                PreferencesType.TEXT, pluginInfo.getDomain(), "apikey",
-                "API Key", "Comma-separated list of NotifyMyAndroid API keys"
-                + " to be notified when the command is used.",
-                manager.getConfigManager(), manager.getIdentity()));
-        category.addSetting(new PreferencesSetting(
-                PreferencesType.TEXT, pluginInfo.getDomain(), "application",
-                "Application", "Name of the application to report to "
-                + "NotifyMyAndroid",
-                manager.getConfigManager(), manager.getIdentity()));
-
-        manager.getCategory("Plugins").addSubCategory(category);
+        notifyMyAndroidManager = getObjectGraph().get(NotifyMyAndroidManager.class);
     }
 
 }
