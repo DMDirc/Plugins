@@ -45,4 +45,10 @@ public class NotificationsModule {
         return pluginInfo.getDomain();
     }
 
+    @Provides
+    @PluginDomain(NotificationsPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }
