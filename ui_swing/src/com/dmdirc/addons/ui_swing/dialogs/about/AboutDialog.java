@@ -56,7 +56,6 @@ public class AboutDialog extends StandardDialog {
     private static final long serialVersionUID = 5;
     private final URLHandler urlHandler;
     private final AboutDialogModel model;
-    private final SwingController controller;
     private final DMDircMBassador eventBus;
     private final AggregateConfigProvider config;
     private final PluginInfo pluginInfo;
@@ -68,12 +67,10 @@ public class AboutDialog extends StandardDialog {
             final AboutDialogModel model,
             final URLHandler urlHandler,
             final DMDircMBassador eventBus,
-            final SwingController controller,
             @PluginDomain(SwingController.class) final PluginInfo pluginInfo) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
-        this.controller = controller;
         this.eventBus = eventBus;
         this.config = config;
         this.pluginInfo = pluginInfo;
