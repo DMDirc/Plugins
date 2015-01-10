@@ -161,6 +161,8 @@ public class SwingManager {
         eventBus.subscribe(this);
         eventBus.subscribe(mainFrame);
         eventBus.subscribe(linkHandler);
+
+        mainFrame.setVisible(true);
     }
 
     /**
