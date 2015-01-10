@@ -54,4 +54,10 @@ public class FDModule {
         return new PluginFilesHelper(manager, pluginInfo);
     }
 
+    @Provides
+    @PluginDomain(FreeDesktopNotificationsPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }

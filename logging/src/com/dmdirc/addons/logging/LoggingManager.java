@@ -27,6 +27,11 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.BaseChannelActionEvent;
 import com.dmdirc.events.BaseChannelMessageEvent;
 import com.dmdirc.events.BaseQueryActionEvent;
@@ -41,6 +46,7 @@ import com.dmdirc.events.ChannelOpenedEvent;
 import com.dmdirc.events.ChannelPartEvent;
 import com.dmdirc.events.ChannelQuitEvent;
 import com.dmdirc.events.ChannelTopicChangeEvent;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
@@ -52,6 +58,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Styliser;
@@ -97,6 +104,7 @@ public class LoggingManager implements ConfigChangeListener {
     private static final Object FORMAT_LOCK = new Object();
     /** This plugin's plugin info. */
     private final String domain;
+    private final PluginInfo pluginInfo;
     /** Global config. */
     private final AggregateConfigProvider config;
     /** The manager to add history windows to. */
@@ -125,12 +133,14 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Inject
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
+            @PluginDomain(LoggingPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager, final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
             final BackBufferFactory backBufferFactory,
             final LogFileLocator locator) {
         this.domain = domain;
+        this.pluginInfo = pluginInfo;
         this.config = globalConfig;
         this.windowManager = windowManager;
         this.eventBus = eventBus;
@@ -601,6 +611,83 @@ public class LoggingManager implements ConfigChangeListener {
         historyLines = config.getOptionInt(domain, "history.lines");
         colour = config.getOption(domain, "backbuffer.colour");
         backbufferLines = config.getOptionInt(domain, "backbuffer.lines");
+    }
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                pluginInfo, "Logging", "General configuration for Logging plugin.");
+        final PreferencesCategory backbuffer = new PluginPreferencesCategory(
+                pluginInfo, "Back Buffer", "Options related to the automatic backbuffer");
+        final PreferencesCategory advanced = new PluginPreferencesCategory(
+                pluginInfo, "Advanced",
+                "Advanced configuration for Logging plugin. You shouldn't need to edit this unless you know what you are doing.");
+
+        general.addSetting(new PreferencesSetting(PreferencesType.DIRECTORY,
+                pluginInfo.getDomain(), "general.directory", "Directory",
+                "Directory for log files", manager.getConfigManager(),
+                manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "general.networkfolders",
+                "Separate logs by network",
+                "Should the files be stored in a sub-dir with the networks name?",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "general.addtime", "Timestamp logs",
+                "Should a timestamp be added to the log files?",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+                pluginInfo.getDomain(), "general.timestamp", "Timestamp format",
+                "The String to pass to 'SimpleDateFormat' to format the timestamp",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "general.stripcodes", "Strip Control Codes",
+                "Remove known irc control codes from lines before saving?",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "general.channelmodeprefix",
+                "Show channel mode prefix", "Show the @,+ etc next to nicknames",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        backbuffer.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "backbuffer.autobackbuffer", "Automatically display",
+                "Automatically display the backbuffer when a channel is joined",
+                manager.getConfigManager(), manager.getIdentity()));
+        backbuffer.addSetting(new PreferencesSetting(PreferencesType.COLOUR,
+                pluginInfo.getDomain(), "backbuffer.colour", "Colour to use for display",
+                "Colour used when displaying the backbuffer",
+                manager.getConfigManager(), manager.getIdentity()));
+        backbuffer.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "backbuffer.lines", "Number of lines to show",
+                "Number of lines used when displaying backbuffer",
+                manager.getConfigManager(), manager.getIdentity()));
+        backbuffer.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "backbuffer.timestamp", "Show Formatter-Timestamp",
+                "Should the line be added to the frame with the timestamp from "
+                        + "the formatter aswell as the file contents",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "advanced.filenamehash", "Add Filename hash",
+                "Add the MD5 hash of the channel/client name to the filename. "
+                        + "(This is used to allow channels with similar names "
+                        + "(ie a _ not a  -) to be logged separately)",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "advanced.usedate", "Use Date directories",
+                "Should the log files be in separate directories based on the date?",
+                manager.getConfigManager(), manager.getIdentity()));
+        advanced.addSetting(new PreferencesSetting(PreferencesType.TEXT,
+                pluginInfo.getDomain(), "advanced.usedateformat", "Archive format",
+                "The String to pass to 'SimpleDateFormat' to format the "
+                        + "directory name(s) for archiving",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        general.addSubCategory(backbuffer.setInline());
+        general.addSubCategory(advanced.setInline());
+        manager.getCategory("Plugins").addSubCategory(general.setInlineAfter());
     }
 
     /** Open File. */

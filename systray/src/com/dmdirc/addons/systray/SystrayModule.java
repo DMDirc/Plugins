@@ -44,4 +44,10 @@ public class SystrayModule {
         return pluginInfo.getDomain();
     }
 
+    @Provides
+    @PluginDomain(SystrayPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }

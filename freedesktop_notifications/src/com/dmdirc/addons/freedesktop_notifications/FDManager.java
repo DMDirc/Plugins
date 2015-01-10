@@ -25,12 +25,19 @@ package com.dmdirc.addons.freedesktop_notifications;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamUtils;
@@ -42,6 +49,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.engio.mbassy.listener.Handler;
 
 @Singleton
 public class FDManager implements ConfigChangeListener {
@@ -56,6 +65,7 @@ public class FDManager implements ConfigChangeListener {
     private final PluginFilesHelper filesHelper;
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
+    private final PluginInfo pluginInfo;
     /** notification timeout. */
     private int timeout;
     /** notification icon. */
@@ -71,12 +81,14 @@ public class FDManager implements ConfigChangeListener {
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
             final PluginFilesHelper filesHelper,
-            final DMDircMBassador eventBus) {
+            final DMDircMBassador eventBus,
+            @PluginDomain(FreeDesktopNotificationsPlugin.class) final PluginInfo pluginInfo) {
         this.domain = domain;
         this.config = config;
         this.userConfig = userConfig;
         this.filesHelper = filesHelper;
         this.eventBus = eventBus;
+        this.pluginInfo = pluginInfo;
     }
 
     /**
@@ -169,6 +181,35 @@ public class FDManager implements ConfigChangeListener {
 
     public void onUnLoad() {
         config.removeListener(this);
+    }
+
+
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory general = new PluginPreferencesCategory(
+                pluginInfo, "FreeDesktop Notifications",
+                "General configuration for FreeDesktop Notifications plugin.");
+
+        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
+                pluginInfo.getDomain(), "general.timeout", "Timeout",
+                "Length of time in seconds before the notification popup closes.",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.FILE,
+                pluginInfo.getDomain(), "general.icon", "icon",
+                "Path to icon to use on the notification.",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "advanced.escapehtml", "Escape HTML",
+                "Some Implementations randomly parse HTML, escape it before showing?",
+                manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "advanced.stripcodes", "Strip Control Codes",
+                "Strip IRC Control codes from messages?",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        manager.getCategory("Plugins").addSubCategory(general);
     }
 
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.lagdisplay;
+package com.dmdirc.addons.osd;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
 import com.dmdirc.plugins.PluginDomain;
@@ -30,27 +30,20 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * DI module for the lag display plugin.
+ * Dependency injection module for the OSD plugin.
  */
-@Module(injects = LagDisplayManager.class, addsTo = SwingModule.class)
-public class LagDisplayModule {
+@Module(injects = {OsdManager.class, OsdCommand.class}, addsTo = SwingModule.class)
+public class OsdModule {
 
     private final PluginInfo pluginInfo;
 
-    public LagDisplayModule(final PluginInfo pluginInfo) {
+    public OsdModule(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
     }
 
     @Provides
-    @PluginDomain(LagDisplayPlugin.class)
-    public String getDomain() {
-        return pluginInfo.getDomain();
-    }
-
-    @Provides
-    @PluginDomain(LagDisplayPlugin.class)
+    @PluginDomain(OsdPlugin.class)
     public PluginInfo getPluginInfo() {
         return pluginInfo;
     }
-
 }

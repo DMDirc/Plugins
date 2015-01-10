@@ -25,10 +25,17 @@ package com.dmdirc.addons.systray;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientMinimisedEvent;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.AWTException;
@@ -48,6 +55,7 @@ import net.engio.mbassy.listener.Handler;
 
 public class SystrayManager implements ActionListener, MouseListener {
 
+    private final PluginInfo pluginInfo;
     /** Main frame instance. */
     private final MainFrame mainFrame;
     /** This plugin's settings domain. */
@@ -65,11 +73,13 @@ public class SystrayManager implements ActionListener, MouseListener {
     public SystrayManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(SystrayPlugin.class) final String domain,
+            @PluginDomain(SystrayPlugin.class) final PluginInfo pluginInfo,
             final MainFrame mainFrame,
             final IconManager iconManager,
             final DMDircMBassador eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
+        this.pluginInfo = pluginInfo;
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
         this.eventBus = eventBus;
@@ -156,6 +166,22 @@ public class SystrayManager implements ActionListener, MouseListener {
         if (globalConfig.getOptionBool(domain, "autominimise")) {
             mainFrame.setVisible(false);
         }
+    }
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                pluginInfo, "System Tray",
+                "General configuration settings");
+
+        category.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
+                pluginInfo.getDomain(), "autominimise", "Auto-hide DMDirc when minimised",
+                "If this option is enabled, the systray plugin will hide DMDirc"
+                        + " to the system tray whenever DMDirc is minimised",
+                manager.getConfigManager(), manager.getIdentity()));
+
+        manager.getCategory("Plugins").addSubCategory(category);
     }
 
     @Override

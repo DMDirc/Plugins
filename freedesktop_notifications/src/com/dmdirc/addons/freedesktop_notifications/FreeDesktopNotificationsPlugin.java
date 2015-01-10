@@ -22,11 +22,6 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
@@ -38,14 +33,8 @@ import dagger.ObjectGraph;
  */
 public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin {
 
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
     /** Manager to show notifications. */
     private FDManager manager;
-
-    public FreeDesktopNotificationsPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
@@ -81,35 +70,9 @@ public class FreeDesktopNotificationsPlugin extends BaseCommandPlugin {
      * Called when this plugin is Unloaded.
      */
     @Override
-    public synchronized void onUnload() {
+    public void onUnload() {
         manager.onUnLoad();
         super.onUnload();
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        final PreferencesCategory general = new PluginPreferencesCategory(
-                pluginInfo, "FreeDesktop Notifications",
-                "General configuration for FreeDesktop Notifications plugin.");
-
-        general.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
-                pluginInfo.getDomain(), "general.timeout", "Timeout",
-                "Length of time in seconds before the notification popup closes.",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.FILE,
-                pluginInfo.getDomain(), "general.icon", "icon",
-                "Path to icon to use on the notification.",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.escapehtml", "Escape HTML",
-                "Some Implementations randomly parse HTML, escape it before showing?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "advanced.stripcodes", "Strip Control Codes",
-                "Strip IRC Control codes from messages?",
-                manager.getConfigManager(), manager.getIdentity()));
-
-        manager.getCategory("Plugins").addSubCategory(general);
     }
 
 }

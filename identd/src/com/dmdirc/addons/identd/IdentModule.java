@@ -44,4 +44,10 @@ public class IdentModule {
         return pluginInfo.getDomain();
     }
 
+    @Provides
+    @PluginDomain(IdentdPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
 }
