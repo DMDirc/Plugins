@@ -42,7 +42,7 @@ public class VlcMediaSourcePluginTest {
             UnsupportedEncodingException {
         final PluginInfo pluginInfo = mock(PluginInfo.class);
         final IdentityController identityController = mock(IdentityController.class);
-        final VlcMediaSourcePlugin plugin = new VlcMediaSourcePlugin(pluginInfo, identityController);
+        final VlcManager plugin = new VlcManager(pluginInfo, identityController);
 
         final TextFile index = new TextFile(FileUtils.getPathForResource(
                 getClass().getResource("index-1.html")), Charset.forName("UTF-8"));
