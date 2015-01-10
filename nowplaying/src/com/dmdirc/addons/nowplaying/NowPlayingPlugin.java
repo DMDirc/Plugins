@@ -22,10 +22,6 @@
 
 package com.dmdirc.addons.nowplaying;
 
-import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
@@ -36,22 +32,8 @@ import dagger.ObjectGraph;
  */
 public class NowPlayingPlugin extends BaseCommandPlugin {
 
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
-    /** This plugin's settings domain. */
-    private final String domain;
     /** Now playing manager. */
     private NowPlayingManager nowplayingmanager;
-
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     */
-    public NowPlayingPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-        this.domain = pluginInfo.getDomain();
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
@@ -71,19 +53,6 @@ public class NowPlayingPlugin extends BaseCommandPlugin {
     public void onUnload() {
         super.onUnload();
         nowplayingmanager.onUnload();
-    }
-
-    @Override
-    public void showConfig(final PreferencesDialogModel manager) {
-        final ConfigPanel configPanel = UIUtilities.invokeAndWait(
-                () -> new ConfigPanel(nowplayingmanager, manager.getConfigManager(),
-                        manager.getIdentity(), domain,
-                        nowplayingmanager.getSettings()));
-
-        final PreferencesCategory category = new PluginPreferencesCategory(
-                pluginInfo, "Now Playing",
-                "", "category-nowplaying", configPanel);
-        manager.getCategory("Plugins").addSubCategory(category);
     }
 
 }

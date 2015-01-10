@@ -24,6 +24,11 @@ package com.dmdirc.addons.notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.prefs.PluginPreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -47,6 +52,7 @@ public class NotificationsManager {
     private List<String> order;
     /** This plugin's settings domain. */
     private final String domain;
+    private final PluginInfo pluginInfo;
     /** Global config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Plugin manager. */
@@ -56,9 +62,11 @@ public class NotificationsManager {
 
     @Inject
     public NotificationsManager(@PluginDomain(NotificationsPlugin.class) final String domain,
+            @PluginDomain(NotificationsPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
+        this.pluginInfo = pluginInfo;
         this.globalConfig = globalConfig;
         this.pluginManager = pluginManager;
         this.eventBus = eventBus;
@@ -180,6 +188,20 @@ public class NotificationsManager {
             }
         }
         return null;
+    }
+
+    @Handler
+    public void showConfig(final ClientPrefsOpenedEvent event) {
+        final PreferencesDialogModel manager = event.getModel();
+        final NotificationConfig configPanel = UIUtilities.invokeAndWait(
+                () -> new NotificationConfig(manager.getIdentity(), pluginInfo.getDomain(),
+                        manager.getConfigManager()
+                                .getOptionList(pluginInfo.getDomain(), "methodOrder")));
+
+        final PreferencesCategory category = new PluginPreferencesCategory(
+                pluginInfo, "Notifications", "", "category-notifications",
+                configPanel);
+        manager.getCategory("Plugins").addSubCategory(category);
     }
 
 }
