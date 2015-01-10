@@ -57,6 +57,7 @@ public class NickColourModule {
     }
 
     @Provides
+    @PluginDomain(NickColourPlugin.class)
     public PluginInfo getPluginInfo() {
         return pluginInfo;
     }

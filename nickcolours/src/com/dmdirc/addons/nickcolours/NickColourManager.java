@@ -93,7 +93,7 @@ public class NickColourManager {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final IconManager iconManager,
             @MainWindow final Provider<Window> mainWindowProvider,
-            final PluginInfo pluginInfo,
+            @PluginDomain(NickColourPlugin.class) final PluginInfo pluginInfo,
             final DMDircMBassador eventBus) {
         this.domain = domain;
         this.globalConfig = globalConfig;

@@ -57,6 +57,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.Parser;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
@@ -118,7 +119,7 @@ public class DCCManager {
     @Inject
     public DCCManager(
             @MainWindow final Window mainWindow,
-            final PluginInfo pluginInfo,
+            @PluginDomain(DCCPlugin.class) final PluginInfo pluginInfo,
             final IdentityController identityController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,

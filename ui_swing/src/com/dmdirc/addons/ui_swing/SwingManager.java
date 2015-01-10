@@ -122,8 +122,8 @@ public class SwingManager {
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,
             final SwingUIInitialiser uiInitialiser,
-            final PluginInfo pluginInfo,
-            @PluginDomain(SwingController.class)final String domain) {
+            @PluginDomain(SwingController.class) final PluginInfo pluginInfo,
+            @PluginDomain(SwingController.class) final String domain) {
         this.windowFactory = windowFactory;
         this.windowManager = windowManager;
         this.menuBar = menuBar;

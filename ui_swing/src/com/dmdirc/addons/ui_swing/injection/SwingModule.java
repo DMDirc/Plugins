@@ -217,6 +217,7 @@ public class SwingModule {
     }
 
     @Provides
+    @PluginDomain(SwingController.class)
     public PluginInfo getPluginInfo() {
         return pluginInfo;
     }

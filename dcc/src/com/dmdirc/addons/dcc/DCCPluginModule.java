@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 
 import dagger.Module;
@@ -42,6 +43,7 @@ public class DCCPluginModule {
     }
 
     @Provides
+    @PluginDomain(DCCPlugin.class)
     public PluginInfo getPluginInfo() {
         return pluginInfo;
     }

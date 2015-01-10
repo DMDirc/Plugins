@@ -82,7 +82,7 @@ public class WindowStatusManager {
             @PluginDomain(WindowStatusPlugin.class) final String domain,
             final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus,
-            final PluginInfo pluginInfo) {
+            @PluginDomain(WindowStatusPlugin.class) final PluginInfo pluginInfo) {
         this.activeFrameManager = activeFrameManager;
         this.pluginInfo = pluginInfo;
         this.configBinder = config.getBinder().withDefaultDomain(domain);
