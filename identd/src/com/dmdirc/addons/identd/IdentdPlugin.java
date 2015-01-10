@@ -22,14 +22,8 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.config.prefs.PluginPreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.config.prefs.PreferencesDialogModel;
-import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
-import com.dmdirc.util.validators.PortValidator;
 
 import dagger.ObjectGraph;
 
@@ -38,22 +32,8 @@ import dagger.ObjectGraph;
  */
 public class IdentdPlugin extends BasePlugin {
 
-    /** This plugin's plugin info. */
-    private final PluginInfo pluginInfo;
-    /** This plugin's settings domain. */
-    private final String domain;
     /** Identd Manager. */
     private IdentdManager identdManager;
-
-    /**
-     * Creates a new instance of this plugin.
-     *
-     * @param pluginInfo This plugin's plugin info
-     */
-    public IdentdPlugin(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-        domain = pluginInfo.getDomain();
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {

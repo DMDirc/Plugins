@@ -33,7 +33,6 @@ import dagger.ObjectGraph;
  */
 public class OsdPlugin extends BaseCommandPlugin {
 
-
     /** The OSD Manager that this plugin is using. */
     private OsdManager osdManager;
 
