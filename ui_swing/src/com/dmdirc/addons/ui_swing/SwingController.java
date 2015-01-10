@@ -47,22 +47,15 @@ import dagger.ObjectGraph;
 public class SwingController extends BaseCommandPlugin implements UIController {
 
     /** This plugin's plugin info object. */
-    private final PluginInfo pluginInfo;
+    private PluginInfo pluginInfo;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
-
-    /**
-     * Instantiates a new SwingController.
-     *
-     * @param pluginInfo      Plugin info
-     */
-    public SwingController(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
+
+        this.pluginInfo = pluginInfo;
 
         setObjectGraph(graph.plus(new SwingModule(this, pluginInfo, pluginInfo.getDomain())));
         getObjectGraph().validate();
