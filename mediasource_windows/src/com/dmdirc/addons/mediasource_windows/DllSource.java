@@ -36,7 +36,7 @@ public class DllSource implements MediaSource {
     /** Use getArtistTitle */
     private final boolean useArtistTitle;
     /** Parent Plugin. */
-    final WindowsMediaSourcePlugin parent;
+    final WindowsMediaSourceManager parent;
 
     /**
      * Instantiates the media source.
@@ -44,7 +44,7 @@ public class DllSource implements MediaSource {
      * @param parent     The plugin that owns this DllSource
      * @param playerName Name of Player and DLL
      */
-    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName) {
+    public DllSource(final WindowsMediaSourceManager parent, final String playerName) {
         this(parent, playerName, false);
     }
 
@@ -56,7 +56,7 @@ public class DllSource implements MediaSource {
      * @param useArtistTitle True if getArtistTitle should be parsed rather than using getArtist()
      *                       and getTitle()
      */
-    public DllSource(final WindowsMediaSourcePlugin parent, final String playerName,
+    public DllSource(final WindowsMediaSourceManager parent, final String playerName,
             final boolean useArtistTitle) {
         this.playerName = playerName;
         this.useArtistTitle = useArtistTitle;

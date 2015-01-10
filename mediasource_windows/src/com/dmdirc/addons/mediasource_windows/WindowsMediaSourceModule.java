@@ -22,29 +22,28 @@
 
 package com.dmdirc.addons.mediasource_windows;
 
+import com.dmdirc.ClientModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Manages all Windows based media sources.
+ * DI module for the windows media source plugin.
  */
-public class WindowsMediaSourcePlugin extends BasePlugin {
+@Module(injects = WindowsMediaSourceManager.class, addsTo = ClientModule.class)
+public class WindowsMediaSourceModule {
 
-    private WindowsMediaSourceManager manager;
+    private final PluginInfo pluginInfo;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new WindowsMediaSourceModule(pluginInfo)));
-        manager = getObjectGraph().get(WindowsMediaSourceManager.class);
+    public WindowsMediaSourceModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    @Override
-    public void onLoad() {
-        manager.onLoad();
+    @Provides
+    @PluginDomain(WindowsMediaSourcePlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
-
 }
