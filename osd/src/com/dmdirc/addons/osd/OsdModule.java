@@ -22,41 +22,28 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.plugins.Exported;
+import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
-import dagger.ObjectGraph;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Allows the user to display on-screen-display messages.
+ * Dependency injection module for the OSD plugin.
  */
-public class OsdPlugin extends BaseCommandPlugin {
+@Module(injects = {OsdManager.class, OsdCommand.class}, addsTo = SwingModule.class)
+public class OsdModule {
 
+    private final PluginInfo pluginInfo;
 
-    /** The OSD Manager that this plugin is using. */
-    private OsdManager osdManager;
-
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new OsdModule(pluginInfo)));
-        osdManager = getObjectGraph().get(OsdManager.class);
-
-        registerCommand(OsdCommand.class, OsdCommand.INFO);
+    public OsdModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
     }
 
-    /**
-     * Shows an OSD with the specified message, title is ignored, exported method used for
-     * showNotification.
-     *
-     * @param title   Ignored
-     * @param message Message to show
-     */
-    @Exported
-    public void showOSD(final String title, final String message) {
-        osdManager.showWindow(-1, message);
+    @Provides
+    @PluginDomain(OsdPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
     }
-
 }
