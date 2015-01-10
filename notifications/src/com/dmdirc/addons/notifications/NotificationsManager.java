@@ -38,7 +38,9 @@ import com.dmdirc.plugins.PluginManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -46,8 +48,8 @@ import net.engio.mbassy.listener.Handler;
 
 public class NotificationsManager {
 
-    /** The notification methods that we know of. */
-    private final Collection<String> methods = new ArrayList<>();
+    /** The notification handlers that we know of. */
+    private final Map<String, NotificationHandler> handlers = new HashMap<>();
     /** The user's preferred order for method usage. */
     private List<String> order;
     /** This plugin's settings domain. */
@@ -73,7 +75,7 @@ public class NotificationsManager {
     }
 
     public void onLoad() {
-        methods.clear();
+        handlers.clear();
         loadSettings();
         eventBus.subscribe(this);
         pluginManager.getPluginInfos().stream()
@@ -82,7 +84,7 @@ public class NotificationsManager {
     }
 
     public void onUnload() {
-        methods.clear();
+        handlers.clear();
         eventBus.unsubscribe(this);
     }
 
@@ -113,8 +115,8 @@ public class NotificationsManager {
      */
     private void addPlugin(final PluginInfo target) {
         if (target.hasExportedService("showNotification")) {
-            methods.add(target.getMetaData().getName());
-            addMethodToOrder(target);
+            handlers.put(target.getMetaData().getName(), new LegacyNotificationHandler(pluginInfo));
+            addHandlerToOrder(target);
         }
     }
 
@@ -124,7 +126,7 @@ public class NotificationsManager {
      *
      * @param source The notification method to be tested
      */
-    private void addMethodToOrder(final PluginInfo source) {
+    private void addHandlerToOrder(final PluginInfo source) {
         if (!order.contains(source.getMetaData().getName())) {
             order.add(source.getMetaData().getName());
         }
@@ -137,54 +139,50 @@ public class NotificationsManager {
      * @param target The plugin to be tested
      */
     private void removePlugin(final PluginInfo target) {
-        methods.remove(target.getMetaData().getName());
+        handlers.remove(target.getMetaData().getName());
     }
 
     /**
-     * Retrieves a method based on its name.
+     * Retrieves a handler based on its name.
      *
      * @param name The name to search for
      *
-     * @return The method with the specified name or null if none were found.
+     * @return The handler with the specified name or null if none were found.
      */
-    public PluginInfo getMethod(final String name) {
-        return pluginManager.getPluginInfoByName(name);
+    public NotificationHandler getHandler(final String name) {
+        return handlers.get(name);
     }
 
     /**
-     * Retrieves all the methods registered with this plugin.
+     * Retrieves the names of all the handlers registered with this plugin.
      *
-     * @return All known notification sources
+     * @return All known notification handler names
      */
-    public List<PluginInfo> getMethods() {
-        final List<PluginInfo> plugins = new ArrayList<>();
-        for (String method : methods) {
-            plugins.add(pluginManager.getPluginInfoByName(method));
-        }
-        return plugins;
+    public Collection<String> getHandlerNames() {
+        return handlers.keySet();
     }
 
     /**
-     * Does this plugin have any active notification methods?
+     * Does this plugin have any active notification handler?
      *
-     * @return true iif active notification methods are registered
+     * @return true iif active notification handlers are registered
      */
-    public boolean hasActiveMethod() {
-        return !methods.isEmpty();
+    public boolean hasActiveHandler() {
+        return !handlers.isEmpty();
     }
 
     /**
-     * Returns the user's preferred method if loaded, or null if none loaded.
+     * Returns the user's preferred handler if loaded, or null if none loaded.
      *
-     * @return Preferred notification method
+     * @return Preferred notification handler
      */
-    public PluginInfo getPreferredMethod() {
-        if (methods.isEmpty()) {
+    public NotificationHandler getPreferredHandler() {
+        if (handlers.isEmpty()) {
             return null;
         }
         for (String method : order) {
-            if (methods.contains(method)) {
-                return pluginManager.getPluginInfoByName(method);
+            if (handlers.containsKey(method)) {
+                return handlers.get(method);
             }
         }
         return null;
