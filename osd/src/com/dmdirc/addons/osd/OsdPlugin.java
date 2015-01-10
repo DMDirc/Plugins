@@ -47,6 +47,16 @@ public class OsdPlugin extends BaseCommandPlugin {
         registerCommand(OsdCommand.class, OsdCommand.INFO);
     }
 
+    @Override
+    public void onLoad() {
+        osdManager.onLoad();
+    }
+
+    @Override
+    public void onUnload() {
+        osdManager.onUnload();
+    }
+
     /**
      * Shows an OSD with the specified message, title is ignored, exported method used for
      * showNotification.
