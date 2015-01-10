@@ -39,7 +39,7 @@ public class LoggingPlugin extends BaseCommandPlugin {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new LoggingModule(pluginInfo.getDomain())));
+        setObjectGraph(graph.plus(new LoggingModule(pluginInfo)));
         manager = getObjectGraph().get(LoggingManager.class);
 
         registerCommand(LoggingCommand.class, LoggingCommand.INFO);
