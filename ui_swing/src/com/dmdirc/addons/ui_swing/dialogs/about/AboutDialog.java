@@ -40,6 +40,7 @@ import java.awt.Window;
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.layout.LayoutUtil;
@@ -55,7 +56,6 @@ public class AboutDialog extends StandardDialog {
     private static final long serialVersionUID = 5;
     private final URLHandler urlHandler;
     private final AboutDialogModel model;
-    private final SwingController controller;
     private final DMDircMBassador eventBus;
     private final AggregateConfigProvider config;
     private final PluginInfo pluginInfo;
@@ -67,12 +67,10 @@ public class AboutDialog extends StandardDialog {
             final AboutDialogModel model,
             final URLHandler urlHandler,
             final DMDircMBassador eventBus,
-            final SwingController controller,
             @PluginDomain(SwingController.class) final PluginInfo pluginInfo) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
-        this.controller = controller;
         this.eventBus = eventBus;
         this.config = config;
         this.pluginInfo = pluginInfo;
@@ -110,7 +108,7 @@ public class AboutDialog extends StandardDialog {
     public void handleInfoRequest(final ClientInfoRequestEvent event) {
         event.addInfoItem(InfoItem.create("Swing UI Version",
                         pluginInfo.getMetaData().getVersion().toString()),
-                InfoItem.create("Look and Feel", SwingController.getLookAndFeel()),
+                InfoItem.create("Look and Feel", UIManager.getLookAndFeel().getName()),
                 InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
         );
     }
