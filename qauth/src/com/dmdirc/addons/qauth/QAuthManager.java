@@ -86,12 +86,12 @@ public class QAuthManager {
     }
 
     private boolean isValidConnection(final Connection connection) {
-        return "Quakenet".equals(connection.getNetwork());
+        return "Quakenet".equalsIgnoreCase(connection.getNetwork());
     }
 
     private boolean isValidUser(final User user) {
         // TODO: Check hostname?
-        return "Q".equals(user.getNickname());
+        return "Q".equalsIgnoreCase(user.getNickname());
     }
 
     private void acceptInvite(final Invite invite) {
