@@ -30,6 +30,8 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.ClientInfoRequestEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.core.about.InfoItem;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -56,6 +58,7 @@ public class AboutDialog extends StandardDialog {
     private final SwingController controller;
     private final DMDircMBassador eventBus;
     private final AggregateConfigProvider config;
+    private final PluginInfo pluginInfo;
 
     @Inject
     public AboutDialog(
@@ -64,13 +67,15 @@ public class AboutDialog extends StandardDialog {
             final AboutDialogModel model,
             final URLHandler urlHandler,
             final DMDircMBassador eventBus,
-            final SwingController controller) {
+            final SwingController controller,
+            @PluginDomain(SwingController.class) final PluginInfo pluginInfo) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
         this.controller = controller;
         this.eventBus = eventBus;
         this.config = config;
+        this.pluginInfo = pluginInfo;
 
         eventBus.subscribe(this);
         model.load();
@@ -103,7 +108,8 @@ public class AboutDialog extends StandardDialog {
 
     @Handler
     public void handleInfoRequest(final ClientInfoRequestEvent event) {
-        event.addInfoItem(InfoItem.create("Swing UI Version", controller.getVersion().toString()),
+        event.addInfoItem(InfoItem.create("Swing UI Version",
+                        pluginInfo.getMetaData().getVersion().toString()),
                 InfoItem.create("Look and Feel", SwingController.getLookAndFeel()),
                 InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
         );
