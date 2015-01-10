@@ -330,6 +330,6 @@ public class OsdManager implements CategoryChangeListener, PreferencesInterface,
     }
 
     public void onUnload() {
-        eventBus.subscribe(this);
+        eventBus.unsubscribe(this);
     }
 }
