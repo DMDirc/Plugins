@@ -69,11 +69,7 @@ public class SwingController extends BaseCommandPlugin implements UIController {
             throw new IllegalStateException(
                     "Swing UI can't be run in a headless environment");
         }
-
         swingManager.load();
-
-        UIUtilities.invokeAndWait(() -> getMainFrame().setVisible(true));
-
         super.onLoad();
     }
 
@@ -113,18 +109,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
     @Exported
     public FrameManagerProvider getTreeManager() {
         return swingManager.getTreeProvider();
-    }
-
-    /**
-     * Retrieves the main frame to use.
-     *
-     * @return The main frame to use.
-     *
-     * @deprecated Should be injected where needed.
-     */
-    @Deprecated
-    public MainFrame getMainFrame() {
-        return swingManager.getMainFrame();
     }
 
 }
