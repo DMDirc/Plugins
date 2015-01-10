@@ -30,12 +30,9 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.plugins.ExportedService;
-import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
@@ -78,22 +75,20 @@ public class NotificationCommand extends Command implements
                 "--method".equalsIgnoreCase(args.getArguments()[0])) {
             if (args.getArguments().length > 1) {
                 final String sourceName = args.getArguments()[1];
-                final ExportedService source = manager.getMethod(sourceName)
-                        .getExportedService("showNotification");
+                final NotificationHandler handler = manager.getHandler(sourceName);
 
-                if (source == null) {
+                if (handler == null) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR,
                             "Method not found.");
                 } else {
-                    source.execute("DMDirc", args.getArgumentsAsString(2));
+                    handler.showNotification("DMDirc", args.getArgumentsAsString(2));
                 }
             } else {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR,
                         "You must specify a method when using --method.");
             }
-        } else if (manager.hasActiveMethod()) {
-            manager.getPreferredMethod().getExportedService("showNotification")
-                    .execute("DMDirc", args.getArgumentsAsString(0));
+        } else if (manager.hasActiveHandler()) {
+            manager.getPreferredHandler().showNotification("DMDirc", args.getArgumentsAsString(0));
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "No active notification methods available.");
@@ -108,17 +103,17 @@ public class NotificationCommand extends Command implements
      */
     private void doMethodList(final FrameContainer origin,
             final boolean isSilent) {
-        final List<PluginInfo> methods = manager.getMethods();
+        final Collection<String> handlers = manager.getHandlerNames();
 
-        if (methods.isEmpty()) {
+        if (handlers.isEmpty()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "No notification "
                     + "methods available.");
         } else {
             final String[] headers = {"Method"};
-            final String[][] data = new String[methods.size()][1];
+            final String[][] data = new String[handlers.size()][1];
             int i = 0;
-            for (PluginInfo method : methods) {
-                data[i][0] = method.getMetaData().getName();
+            for (String handler : handlers) {
+                data[i][0] = handler;
                 i++;
             }
 
@@ -136,9 +131,7 @@ public class NotificationCommand extends Command implements
             res.add("--method");
             return res;
         } else if (arg == 1 && "--method".equalsIgnoreCase(context.getPreviousArgs().get(0))) {
-            res.addAll(manager.getMethods().stream()
-                    .map(source -> source.getMetaData().getName())
-                    .collect(Collectors.toList()));
+            res.addAll(manager.getHandlerNames());
             return res;
         }
         return res;
