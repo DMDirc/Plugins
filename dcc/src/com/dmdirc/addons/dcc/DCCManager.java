@@ -40,6 +40,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
+import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -63,7 +64,7 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.awt.Dialog;
 import java.awt.Window;
@@ -72,7 +73,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -142,36 +142,12 @@ public class DCCManager {
         this.eventBus = eventBus;
         this.backBufferFactory = backBufferFactory;
 
-        windowFactory.registerImplementation(
-                new SwingWindowFactory.WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container, commandParser,
-                                Lists.<Supplier<? extends JComponent>>newArrayList(
-                                        PlaceholderPanel::new));
-                    }
-
-                    @Override
-                    public Set<String> getComponents() {
-                        return new HashSet<>(Collections.singletonList(
-                                "com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
-                    }
-                });
-        windowFactory.registerImplementation(
-                new SwingWindowFactory.WindowProvider() {
-                    @Override
-                    public TextFrame getWindow(final FrameContainer container) {
-                        return componentFrameFactory.getComponentFrame(container, commandParser,
-                                Lists.<Supplier<? extends JComponent>>newArrayList(
-                                        () -> new TransferPanel(container, eventBus)));
-                    }
-
-                    @Override
-                    public Set<String> getComponents() {
-                        return new HashSet<>(Collections.singletonList(
-                                "com.dmdirc.addons.dcc.ui.TransferPanel"));
-                    }
-                });
+        windowFactory.registerImplementation(new ComponentFrameWindowProvider(
+                "com.dmdirc.addons.dcc.ui.PlaceholderPanel", componentFrameFactory,
+                commandParser, PlaceholderPanel::new));
+        windowFactory.registerImplementation(new ComponentFrameWindowProvider(
+                "com.dmdirc.addons.dcc.ui.TransferPanel", componentFrameFactory,
+                commandParser, () -> new TransferPanel(container, eventBus)));
 
         final ConfigProvider defaults = identityController.getAddonSettings();
         defaults.setOption(domain, "receive.savelocation",
@@ -195,14 +171,14 @@ public class DCCManager {
         general.addSubCategory(sending.setInline());
         general.addSubCategory(receiving.setInline());
 
-        firewall.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                pluginInfo.getDomain(), "firewall.ip", "Forced IP",
-                "What IP should be sent as our IP (Blank = work it out)",
+        firewall.addSetting(
+                new PreferencesSetting(PreferencesType.TEXT, pluginInfo.getDomain(), "firewall.ip",
+                        "Forced IP", "What IP should be sent as our IP (Blank = work it out)",
+                        manager.getConfigManager(), manager.getIdentity()));
+        firewall.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
+                "firewall.ports.usePortRange", "Use Port Range",
+                "Useful if you have a firewall that only forwards specific " + "ports",
                 manager.getConfigManager(), manager.getIdentity()));
-        firewall.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "firewall.ports.usePortRange", "Use Port Range",
-                "Useful if you have a firewall that only forwards specific "
-                        + "ports", manager.getConfigManager(), manager.getIdentity()));
         firewall.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 pluginInfo.getDomain(), "firewall.ports.startPort", "Start Port",
                 "Port to try to listen on first", manager.getConfigManager(),
@@ -236,11 +212,10 @@ public class DCCManager {
                 "Change the block size for send/receive, this can "
                         + "sometimes speed up transfers.", manager.getConfigManager(),
                 manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "general.percentageInTitle",
-                "Show percentage of transfers in the window title",
-                "Show the current percentage of transfers in the DCC window "
-                        + "title", manager.getConfigManager(), manager.getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
+                "general.percentageInTitle", "Show percentage of transfers in the window title",
+                "Show the current percentage of transfers in the DCC window " + "title",
+                manager.getConfigManager(), manager.getIdentity()));
     }
 
     public String getDomain() {
@@ -792,6 +767,35 @@ public class DCCManager {
             // This is almost certainly not what we want, but we can't work out
             // the right one.
             return "127.0.0.1"; //NOPMD
+        }
+    }
+
+    private static class ComponentFrameWindowProvider implements SwingWindowFactory.WindowProvider {
+
+        private final String component;
+        private final ComponentFrameFactory componentFrameFactory;
+        private final CommandParser commandParser;
+        private final Supplier<? extends JComponent> componentSupplier;
+
+        ComponentFrameWindowProvider(final String component,
+                final ComponentFrameFactory componentFrameFactory,
+                final CommandParser commandParser,
+                final Supplier<? extends JComponent> componentSupplier) {
+            this.component = component;
+            this.componentFrameFactory = componentFrameFactory;
+            this.commandParser = commandParser;
+            this.componentSupplier = componentSupplier;
+        }
+
+        @Override
+        public TextFrame getWindow(final FrameContainer container) {
+            return componentFrameFactory.getComponentFrame(container, commandParser,
+                    Collections.singletonList(componentSupplier));
+        }
+
+        @Override
+        public Set<String> getComponents() {
+            return Sets.newHashSet(component);
         }
     }
 
