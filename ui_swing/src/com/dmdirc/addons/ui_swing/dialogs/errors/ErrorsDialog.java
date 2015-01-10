@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.dialogs.errors;
 
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
+import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ErrorsDialogModel;
@@ -110,7 +111,7 @@ public class ErrorsDialog extends StandardDialog {
         tableModel.setHeaderNames("Severity", "Report Status", "Message");
         tableScrollPane = new JScrollPane();
         splitPane = getSplitPane();
-        table = new JTable(tableModel);
+        table = new PackingTable(tableModel, tableScrollPane);
         table.setAutoCreateRowSorter(true);
         table.getModel().addTableModelListener(table);
         tableScrollPane.setViewportView(table);
