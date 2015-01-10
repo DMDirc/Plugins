@@ -33,7 +33,6 @@ import com.dmdirc.interfaces.ui.UIController;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BaseCommandPlugin;
-import com.dmdirc.updater.Version;
 
 import java.awt.GraphicsEnvironment;
 
@@ -46,16 +45,12 @@ import dagger.ObjectGraph;
  */
 public class SwingController extends BaseCommandPlugin implements UIController {
 
-    /** This plugin's plugin info object. */
-    private PluginInfo pluginInfo;
     /** The manager we're using for dependencies. */
     private SwingManager swingManager;
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
-
-        this.pluginInfo = pluginInfo;
 
         setObjectGraph(graph.plus(new SwingModule(this, pluginInfo, pluginInfo.getDomain())));
         getObjectGraph().validate();
@@ -89,15 +84,6 @@ public class SwingController extends BaseCommandPlugin implements UIController {
         }
 
         super.onUnload();
-    }
-
-    /**
-     * Returns the version of this swing UI.
-     *
-     * @return Swing version
-     */
-    public Version getVersion() {
-        return pluginInfo.getMetaData().getVersion();
     }
 
     /**
