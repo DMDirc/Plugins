@@ -143,7 +143,7 @@ public class NickColourManager {
             color = nickColours.get(nickOption2);
         }
         if (color != null) {
-            putColour(client, new Colour(color.getRed(), color.getGreen(), color.getBlue()));
+            putColour(client, NickColourUtils.getColourfromColor(color));
         }
     }
 

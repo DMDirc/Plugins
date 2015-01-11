@@ -77,7 +77,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
      */
     public NickColourPanel(final Window parentWindow, final IconManager iconManager,
             final ColourManager colourManager, final NickColourManager manager,
-            Map<String, Color> nickColours) {
+            final Map<String, Color> nickColours) {
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;
         this.colourManager = colourManager;
@@ -117,14 +117,14 @@ public class NickColourPanel extends JPanel implements ActionListener,
         final int row = table.getSelectedRow();
         switch (e.getActionCommand()) {
             case "Add":
-                new NickColourInputDialog(parentWindow, colourManager, iconManager, this);
+                new NickColourInputDialog(parentWindow, colourManager, iconManager, model);
                 break;
             case "Edit":
                 final NickColourEntry entry = model.getValue(row);
                 final String network = entry.getNetwork();
                 final String nickname = entry.getUser();
                 final Color textcolour = entry.getColor();
-                new NickColourInputDialog(parentWindow, colourManager, iconManager, this,
+                new NickColourInputDialog(parentWindow, colourManager, iconManager, model,
                         row, nickname, network, textcolour);
                 break;
             case "Delete":
