@@ -133,7 +133,7 @@ public class NickColourInputDialog extends StandardDialog {
 
     /** Initialises the listeners. */
     private void initListeners() {
-        getOkButton().addActionListener(e -> saveSettings());
+        getOkButton().addActionListener(e -> { saveSettings(); dispose(); });
         getCancelButton().addActionListener(e -> dispose());
     }
 
