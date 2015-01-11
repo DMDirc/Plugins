@@ -22,18 +22,18 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -41,8 +41,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -54,13 +52,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** The table headings. */
-    private static final String[] HEADERS
-            = {"Network", "Nickname", "Text colour", "Nicklist colour"};
     /** The table used for displaying the options. */
     private final JTable table;
-    /** The identity to write settings to. */
-    private final ConfigProvider configIdentity;
     /** Edit button. */
     private final JButton editButton;
     /** Delete button. */
@@ -71,10 +64,8 @@ public class NickColourPanel extends JPanel implements ActionListener,
     private final IconManager iconManager;
     /** Colour manage to use to parse colours. */
     private final ColourManager colourManager;
-    /** Config provider to read settings from. */
-    private final AggregateConfigProvider config;
-    /** The plugin's config domain. */
-    private final String domain;
+    private final NickColourManager manager;
+    private final GenericTableModel<NickColourEntry> model;
 
     /**
      * Creates a new instance of NickColourPanel.
@@ -82,51 +73,25 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * @param parentWindow  Parent window that will own any new dialogs.
      * @param iconManager   Icon manager to load icons from.
      * @param colourManager The colour manager to use to parse colours.
-     * @param userSettings  The provider to write user settings to.
-     * @param config        The config provider to read settings from.
-     * @param domain        The plugin's config domain
+     * @param nickColours
      */
-    public NickColourPanel(
-            final Window parentWindow, final IconManager iconManager,
-            final ColourManager colourManager,
-            final ConfigProvider userSettings,
-            final AggregateConfigProvider config, final String domain) {
+    public NickColourPanel(final Window parentWindow, final IconManager iconManager,
+            final ColourManager colourManager, final NickColourManager manager,
+            Map<String, Color> nickColours) {
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;
         this.colourManager = colourManager;
-        this.configIdentity = userSettings;
-        this.config = config;
-        this.domain = domain;
-
-        final Object[][] data = NickColourManager.getData(config, domain);
-
-        table = new JTable(new DefaultTableModel(data, HEADERS)) {
-            /** A version number for this class. */
-            private static final long serialVersionUID = 1;
-            /** The colour renderer we're using for colour cells. */
-            private final ColourRenderer colourRenderer = new ColourRenderer(colourManager);
-
-            @Override
-            public TableCellRenderer getCellRenderer(final int row,
-                    final int column) {
-                if (column == 2 || column == 3) {
-                    return colourRenderer;
-                } else {
-                    return super.getCellRenderer(row, column);
-                }
-            }
-
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return false;
-            }
-        };
-
+        this.manager = manager;
+        model = new GenericTableModel<>(NickColourEntry.class,
+                "getUser", "getNetwork", "getColor");
+        nickColours.forEach((description, colour) -> model.addValue(NickColourEntry
+                .create(description.split(":")[0], description.split(":")[1], colour)));
+        model.setHeaderNames("User", "Network", "Colour");
+        table = new JTable(model);
+        table.setDefaultRenderer(Color.class, new ColourRenderer());
         final JScrollPane scrollPane = new JScrollPane(table);
-
         table.getSelectionModel().addListSelectionListener(this);
         table.setFillsViewportHeight(true);
-        table.setDefaultRenderer(Color.class, new ColourRenderer(colourManager));
 
         setLayout(new MigLayout("ins 0, fillx, hmax 500"));
         add(scrollPane, "grow, push, wrap, spanx");
@@ -155,23 +120,16 @@ public class NickColourPanel extends JPanel implements ActionListener,
                 new NickColourInputDialog(parentWindow, colourManager, iconManager, this);
                 break;
             case "Edit":
-                final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-                final String network = (String) model.getValueAt(row, 0);
-                final String nickname = (String) model.getValueAt(row, 1);
-                String textcolour = (String) model.getValueAt(row, 2);
-                String nickcolour = (String) model.getValueAt(row, 3);
-                if (textcolour == null) {
-                    textcolour = "";
-                }
-                if (nickcolour == null) {
-                    nickcolour = "";
-                }
+                final NickColourEntry entry = model.getValue(row);
+                final String network = entry.getNetwork();
+                final String nickname = entry.getUser();
+                final Color textcolour = entry.getColor();
                 new NickColourInputDialog(parentWindow, colourManager, iconManager, this,
-                        row, nickname, network, textcolour, nickcolour);
+                        row, nickname, network, textcolour);
                 break;
             case "Delete":
                 if (row > -1) {
-                    ((DefaultTableModel) table.getModel()).removeRow(row);
+                    model.removeValue(model.getValue(row));
                 }
                 break;
         }
@@ -183,7 +141,7 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * @param row The row to be removed
      */
     public void removeRow(final int row) {
-        ((DefaultTableModel) table.getModel()).removeRow(row);
+        model.removeValue(model.getValue(row));
     }
 
     /**
@@ -192,44 +150,22 @@ public class NickColourPanel extends JPanel implements ActionListener,
      * @param network    The network setting
      * @param nickname   The nickname setting
      * @param textcolour The textpane colour setting
-     * @param nickcolour The nick list colour setting
      */
     public void addRow(final String network, final String nickname,
-            final String textcolour, final String nickcolour) {
-        final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-        model.addRow(new Object[]{network, nickname, textcolour, nickcolour});
-    }
-
-    /**
-     * Retrieves the current data in use by this panel.
-     *
-     * @return This panel's current data.
-     */
-    private List<Object[]> getData() {
-        final List<Object[]> res = new ArrayList<>();
-        final DefaultTableModel model = ((DefaultTableModel) table.getModel());
-
-        @SuppressWarnings("unchecked")
-        final List<List<?>> rows = (List<List<?>>) model.getDataVector();
-        for (List<?> row : rows) {
-            res.add(new Object[]{row.get(0), row.get(1), row.get(2), row.get(3)});
-        }
-
-        return res;
+            final String textcolour) {
+        final Colour colour = colourManager.getColourFromString(textcolour, null);
+        model.addValue(NickColourEntry.create(network, nickname, new Color(colour.getRed(),
+                colour.getGreen(), colour.getBlue())));
     }
 
     @Override
     public void save() {
-        // Remove all old config entries
-        for (Object[] parts : NickColourManager.getData(config, domain)) {
-            configIdentity.unsetOption(domain, "color:" + parts[0] + ":" + parts[1]);
+        final Map<String, Color> values = new HashMap<>();
+        for (int i =0; i < model.getRowCount(); i++) {
+            final NickColourEntry entry = model.getValue(i);
+            values.put(entry.getNetwork()+ ':' +entry.getUser(), entry.getColor());
         }
-
-        // And write the new ones
-        for (Object[] row : getData()) {
-            configIdentity.
-                    setOption(domain, "color:" + row[0] + ":" + row[1], row[2] + ":" + row[3]);
-        }
+        manager.saveNickColourStore(values);
     }
 
     @Override
