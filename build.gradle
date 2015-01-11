@@ -4,6 +4,8 @@ subprojects {
     apply plugin: 'findbugs'
     apply plugin: 'pmd'
 
+    apply from: '../gradle/coverage.gradle'
+
     configurations {
         bundle
 
@@ -140,6 +142,7 @@ buildscript {
 
     dependencies {
         classpath group: 'com.dmdirc', name: 'git-version', version: '1.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
     }
 }
 
@@ -163,3 +166,6 @@ def plugin(name) {
         println "Couldn't find project $name"
     }
 }
+
+apply from: 'gradle/coveralls.gradle'
+
