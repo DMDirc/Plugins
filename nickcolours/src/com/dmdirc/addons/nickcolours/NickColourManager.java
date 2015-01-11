@@ -26,7 +26,10 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -40,18 +43,17 @@ import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.parser.interfaces.StringConverter;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.colours.Colour;
 
+import java.awt.Color;
 import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -67,24 +69,19 @@ public class NickColourManager {
 
     /** Manager to parse colours with. */
     private final ColourManager colourManager;
-    /** Config to read settings from. */
-    private final AggregateConfigProvider globalConfig;
-    /** Config binder. */
     private final ConfigBinder configBinder;
-    /** Plugin's setting domain. */
-    private final String domain;
     private final IconManager iconManager;
     private final Provider<Window> mainWindowProvider;
-    /** Event bus to subscribe to events on . */
     private final DMDircMBassador eventBus;
-    /** The plugin's info. */
+    private final NickColourYamlStore nickColourYamlStore;
+    private final Path path;
     private final PluginInfo pluginInfo;
-    /** "Random" colours to use to colour nicknames. */
     private String[] randColours = {
         "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;
+    private Map<String, Color> nickColours;
 
     @Inject
     public NickColourManager(
@@ -94,14 +91,16 @@ public class NickColourManager {
             final IconManager iconManager,
             @MainWindow final Provider<Window> mainWindowProvider,
             @PluginDomain(NickColourPlugin.class) final PluginInfo pluginInfo,
-            final DMDircMBassador eventBus) {
-        this.domain = domain;
-        this.globalConfig = globalConfig;
+            final DMDircMBassador eventBus,
+            final NickColourYamlStore nickColourYamlStore,
+            @Directory(DirectoryType.BASE) final Path path) {
         this.colourManager = colourManager;
         this.iconManager = iconManager;
         this.mainWindowProvider = mainWindowProvider;
         this.pluginInfo = pluginInfo;
         this.eventBus = eventBus;
+        this.nickColourYamlStore = nickColourYamlStore;
+        this.path = path;
         configBinder = globalConfig.getBinder().withDefaultDomain(domain);
     }
 
@@ -127,8 +126,8 @@ public class NickColourManager {
         final StringConverter sc = client.getUser().getConnection().getParser().get()
                 .getStringConverter();
         final User myself = client.getUser();
-        final String nickOption1 = "color:" + sc.toLowerCase(network + ':' + client.getNickname());
-        final String nickOption2 = "color:" + sc.toLowerCase("*:" + client.getNickname());
+        final String nickOption1 = sc.toLowerCase(network + ':' + client.getNickname());
+        final String nickOption2 = sc.toLowerCase("*:" + client.getNickname());
 
         if (useowncolour && client.getUser().equals(myself)) {
             final Colour color = colourManager.getColourFromString(owncolour, null);
@@ -137,22 +136,14 @@ public class NickColourManager {
             putColour(client, getColour(client.getNickname()));
         }
 
-        String[] parts = null;
-
-        if (globalConfig.hasOptionString(domain, nickOption1)) {
-            parts = getParts(globalConfig, domain, nickOption1);
-        } else if (globalConfig.hasOptionString(domain, nickOption2)) {
-            parts = getParts(globalConfig, domain, nickOption2);
+        Color color = null;
+        if (nickColours.containsKey(nickOption1)) {
+            color = nickColours.get(nickOption1);
+        } else if (nickColours.containsKey(nickOption2)) {
+            color = nickColours.get(nickOption2);
         }
-
-        if (parts != null) {
-            Colour textColor = null;
-
-            if (parts[0] != null) {
-                textColor = colourManager.getColourFromString(parts[0], null);
-            }
-
-            putColour(client, textColor);
+        if (color != null) {
+            putColour(client, new Colour(color.getRed(), color.getGreen(), color.getBlue()));
         }
     }
 
@@ -186,68 +177,12 @@ public class NickColourManager {
     }
 
     /**
-     * Reads the nick colour data from the config.
-     *
-     * @param config Config to read settings from
-     * @param domain Config domain
-     *
-     * @return A multi-dimensional array of nick colour info.
-     */
-    public static Object[][] getData(final ReadOnlyConfigProvider config, final String domain) {
-        final Collection<Object[]> data = new ArrayList<>();
-
-        config.getOptions(domain).keySet().stream().filter(key -> key.startsWith("color:"))
-                .forEach(key -> {
-                    final String network = key.substring(6, key.indexOf(':', 6));
-                    final String user = key.substring(1 + key.indexOf(':', 6));
-                    final String[] parts = getParts(config, domain, key);
-
-                    data.add(new Object[]{network, user, parts[0], parts[1]});
-                });
-
-        final Object[][] res = new Object[data.size()][4];
-
-        int i = 0;
-        for (Object[] row : data) {
-            res[i] = row;
-
-            i++;
-        }
-
-        return res;
-    }
-
-    /**
-     * Retrieves the config option with the specified key, and returns an array of the colours that
-     * should be used for it.
-     *
-     * @param config Config to read settings from
-     * @param domain Config domain
-     * @param key    The config key to look up
-     *
-     * @return The colours specified by the given key
-     */
-    private static String[] getParts(final ReadOnlyConfigProvider config, final String domain,
-            final String key) {
-        String[] parts = config.getOption(domain, key).split(":");
-
-        if (parts.length == 0) {
-            parts = new String[]{null, null};
-        } else if (parts.length == 1) {
-            parts = new String[]{parts[0], null};
-        } else if (parts.length == 2) {
-            parts = new String[]{parts[0], parts[1]};
-        }
-
-        return parts;
-    }
-
-    /**
      * Loads this plugin.
      */
     public void onLoad() {
         eventBus.subscribe(this);
         configBinder.bind(this, NickColourManager.class);
+        nickColours = nickColourYamlStore.readNickColourEntries(path.resolve("nickcolours.yml"));
     }
 
     /**
@@ -256,6 +191,11 @@ public class NickColourManager {
     public void onUnload() {
         eventBus.unsubscribe(this);
         configBinder.unbind(this);
+        saveNickColourStore(nickColours);
+    }
+
+    public void saveNickColourStore(final Map<String, Color> savingNickColours) {
+        nickColourYamlStore.writeNickColourEntries(path.resolve("nickcolours.yml"), savingNickColours);
     }
 
     @ConfigBinding(key = "useowncolour", invocation = EDTInvocation.class)
@@ -280,29 +220,26 @@ public class NickColourManager {
 
     @Handler
     public void handlePrefsOpened(final ClientPrefsOpenedEvent event) {
-        final PreferencesCategory general = new PluginPreferencesCategory(
-                pluginInfo, "Nick Colours",
-                "General configuration for NickColour plugin.");
-        final PreferencesCategory colours = new PluginPreferencesCategory(
-                pluginInfo, "Colours",
+        final PreferencesCategory general =
+                new PluginPreferencesCategory(pluginInfo, "Nick Colours",
+                        "General configuration for NickColour plugin.");
+        final PreferencesCategory colours = new PluginPreferencesCategory(pluginInfo, "Colours",
                 "Set colours for specific nicknames.", UIUtilities.invokeAndWait(
-                () -> new NickColourPanel(mainWindowProvider.get(), iconManager, colourManager,
-                        event.getModel().getIdentity(), event.getModel().getConfigManager(),
-                        pluginInfo.getDomain()
-                )));
+                () -> new NickColourPanel(mainWindowProvider.get(), iconManager,
+                        colourManager, this, nickColours)));
 
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "userandomcolour", "Use random colour",
-                "Use a pseudo-random colour for each person?",
-                event.getModel().getConfigManager(), event.getModel().getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "useowncolour", "Use colour for own nick",
-                "Always use the same colour for our own nickname?",
-                event.getModel().getConfigManager(), event.getModel().getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
+                        "userandomcolour", "Use random colour",
+                        "Use a pseudo-random colour for each person?",
+                        event.getModel().getConfigManager(), event.getModel().getIdentity()));
+        general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, pluginInfo.getDomain(),
+                        "useowncolour", "Use colour for own nick",
+                        "Always use the same colour for our own nickname?",
+                        event.getModel().getConfigManager(), event.getModel().getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.COLOUR, pluginInfo.getDomain(),
-                "owncolour", "Colour to use for own nick",
-                "Colour used for our own nickname, if above setting is enabled.",
-                event.getModel().getConfigManager(), event.getModel().getIdentity()));
+                        "owncolour", "Colour to use for own nick",
+                        "Colour used for our own nickname, if above setting is enabled.",
+                        event.getModel().getConfigManager(), event.getModel().getIdentity()));
 
         general.addSubCategory(colours);
         event.getModel().getCategory("Plugins").addSubCategory(general);

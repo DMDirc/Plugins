@@ -22,38 +22,24 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.google.auto.value.AutoValue;
+
 import java.awt.Color;
 
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-
 /**
- * Provides a colour renderer for JTables.
+ *
  */
-public class ColourRenderer extends DefaultTableCellRenderer {
+@AutoValue
+public abstract class NickColourEntry {
 
-    /** A version number for this class. */
-    private static final long serialVersionUID = 1;
+    NickColourEntry() {}
 
-    /**
-     * Creates a new instance of ColourRenderer.
-     */
-    public ColourRenderer() {
-        setHorizontalAlignment(CENTER);
-        setOpaque(true);
+    public abstract String getNetwork();
+    public abstract String getUser();
+    public abstract Color getColor();
+
+    public static NickColourEntry create(final String network, final String user,
+            final Color color) {
+        return new AutoValue_NickColourEntry(network, user, color);
     }
-
-    @Override
-    protected void setValue(final Object value) {
-        final Color color = (Color) value;
-        if (color == null) {
-            setBorder(new LineBorder(Color.GRAY));
-            setText("Not Set");
-        } else {
-            setBorder(new LineBorder(Color.BLACK));
-            setText("");
-            setBackground(color);
-        }
-    }
-
 }

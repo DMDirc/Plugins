@@ -22,11 +22,12 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManager;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,8 +42,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * New nick colour input dialog.
  */
-public class NickColourInputDialog extends StandardDialog
-        implements ActionListener {
+public class NickColourInputDialog extends StandardDialog implements ActionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -58,8 +58,6 @@ public class NickColourInputDialog extends StandardDialog
     private JTextField network;
     /** text colour input. */
     private ColourChooser textColour;
-    /** nicklist colour input. */
-    private ColourChooser nicklistColour;
 
     /**
      * Creates a new instance of NickColourInputDialog.
@@ -72,7 +70,6 @@ public class NickColourInputDialog extends StandardDialog
      * @param nickname      The nickname that's currently set
      * @param network       The network that's currently set
      * @param textcolour    The text colour that's currently set
-     * @param nickcolour    The nicklist colour that's currently set
      */
     public NickColourInputDialog(
             final Window parentWindow,
@@ -80,7 +77,7 @@ public class NickColourInputDialog extends StandardDialog
             final IconManager iconManager,
             final NickColourPanel panel, final int row,
             final String nickname, final String network,
-            final String textcolour, final String nickcolour) {
+            final Color textcolour) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.panel = panel;
@@ -88,7 +85,7 @@ public class NickColourInputDialog extends StandardDialog
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        initComponents(colourManager, iconManager, nickname, network, textcolour, nickcolour);
+        initComponents(colourManager, iconManager, nickname, network, textcolour);
         initListeners();
         layoutComponents();
 
@@ -109,7 +106,7 @@ public class NickColourInputDialog extends StandardDialog
             final ColourManager colourManager,
             final IconManager iconManager,
             final NickColourPanel panel) {
-        this(parentWindow, colourManager, iconManager, panel, -1, "", "", "", "");
+        this(parentWindow, colourManager, iconManager, panel, -1, "", "", null);
 
         isnew = true;
     }
@@ -120,21 +117,17 @@ public class NickColourInputDialog extends StandardDialog
      * @param defaultNickname   The default value for the nickname text field
      * @param defaultNetwork    The default value for the network text field
      * @param defaultTextColour The default value for the text colour option
-     * @param defaultNickColour The default value for the nick colour option
      */
     private void initComponents(
             final ColourManager colourManager,
             final IconManager iconManager,
             final String defaultNickname,
-            final String defaultNetwork, final String defaultTextColour,
-            final String defaultNickColour) {
+            final String defaultNetwork, final Color defaultTextColour) {
         orderButtons(new JButton(), new JButton());
 
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
-        textColour = new ColourChooser(colourManager, iconManager, defaultTextColour, true, true);
-        nicklistColour = new ColourChooser(colourManager, iconManager, defaultNickColour,
-                true, true);
+        textColour = new ColourChooser(colourManager, iconManager, "", true, true);
     }
 
     /** Initialises the listeners. */
@@ -155,9 +148,6 @@ public class NickColourInputDialog extends StandardDialog
 
         add(new JLabel("Text colour: "));
         add(textColour, "growx");
-
-        add(new JLabel("Nicklist colour: "));
-        add(nicklistColour, "growx");
 
         add(getLeftButton(), "right");
         add(getRightButton(), "right");
@@ -181,7 +171,7 @@ public class NickColourInputDialog extends StandardDialog
 
         panel.addRow(network.getText().toLowerCase(),
                 nickname.getText().toLowerCase(),
-                nickname.getText().toLowerCase(), nicklistColour.getColour());
+                textColour.getColour());
     }
 
 }
