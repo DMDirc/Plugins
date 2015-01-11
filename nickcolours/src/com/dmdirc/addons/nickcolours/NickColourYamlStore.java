@@ -25,8 +25,6 @@ package com.dmdirc.addons.nickcolours;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.BaseYamlStore;
-import com.dmdirc.util.colours.Colour;
-import com.dmdirc.util.colours.ColourUtils;
 
 import java.awt.Color;
 import java.nio.file.Path;
@@ -79,7 +77,8 @@ public class NickColourYamlStore extends BaseYamlStore<NickColourEntry> {
             final String network = requiredString(map, "network");
             final String user = requiredString(map, "user");
             final String colour = requiredString(map, "colour");
-            return Optional.of(NickColourEntry.create(network, user, getColourFromString(colour)));
+            return Optional.of(NickColourEntry.create(network, user,
+                    NickColourUtils.getColourFromString(colourManager, colour)));
         } catch (IllegalArgumentException ex) {
             LOG.info("Unable to read profile", ex);
             return Optional.empty();
@@ -91,16 +90,7 @@ public class NickColourYamlStore extends BaseYamlStore<NickColourEntry> {
         final Map<Object, Object> map = new HashMap<>();
         map.put("network", object.getNetwork());
         map.put("user", object.getUser());
-        map.put("colour", getStringFromColor(object.getColor()));
+        map.put("colour", NickColourUtils.getStringFromColor(object.getColor()));
         return map;
-    }
-
-    private Color getColourFromString(final String value) {
-        final Colour colour = colourManager.getColourFromString(value, null);
-        return new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
-    }
-
-    private String getStringFromColor(final Color color) {
-        return ColourUtils.getHex(new Colour(color.getRed(), color.getGreen(), color.getBlue()));
     }
 }

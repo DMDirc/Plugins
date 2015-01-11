@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.nickcolours;
 
+import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.colours.ColourChooser;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
@@ -29,8 +30,6 @@ import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -42,7 +41,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * New nick colour input dialog.
  */
-public class NickColourInputDialog extends StandardDialog implements ActionListener {
+public class NickColourInputDialog extends StandardDialog {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
@@ -50,8 +49,9 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
     private boolean isnew;
     /** The row we're editing, if this isn't a new entry. */
     private final int row;
-    /** The NickColourPanel we're reporting to. */
-    private final NickColourPanel panel;
+    private final ColourManager colourManager;
+    /** The table model to modify entries in. */
+    private final GenericTableModel<NickColourEntry> model;
     /** nickname textfield. */
     private JTextField nickname;
     /** network textfield. */
@@ -65,7 +65,7 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
      * @param parentWindow  The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
      * @param iconManager   The icon manager to use for the dialog icon.
-     * @param panel         The panel that's opening this dialog
+     * @param model         The table model to modify entries in
      * @param row           The row of the table we're editing
      * @param nickname      The nickname that's currently set
      * @param network       The network that's currently set
@@ -75,12 +75,13 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
             final Window parentWindow,
             final ColourManager colourManager,
             final IconManager iconManager,
-            final NickColourPanel panel, final int row,
+            final GenericTableModel<NickColourEntry> model, final int row,
             final String nickname, final String network,
             final Color textcolour) {
         super(parentWindow, ModalityType.MODELESS);
+        this.colourManager = colourManager;
 
-        this.panel = panel;
+        this.model = model;
         this.row = row;
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -99,14 +100,14 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
      * @param parentWindow  The window that owns this dialog.
      * @param colourManager The colour manager to use to retrieve colours.
      * @param iconManager   The icon manager to use for the dialog icon.
-     * @param panel         The panel that's opening this dialog
+     * @param model         The table model to modify entries in
      */
     public NickColourInputDialog(
             final Window parentWindow,
             final ColourManager colourManager,
             final IconManager iconManager,
-            final NickColourPanel panel) {
-        this(parentWindow, colourManager, iconManager, panel, -1, "", "", null);
+            final GenericTableModel<NickColourEntry> model) {
+        this(parentWindow, colourManager, iconManager, model, -1, "", "", null);
 
         isnew = true;
     }
@@ -132,8 +133,8 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
 
     /** Initialises the listeners. */
     private void initListeners() {
-        getOkButton().addActionListener(this);
-        getCancelButton().addActionListener(this);
+        getOkButton().addActionListener(e -> saveSettings());
+        getCancelButton().addActionListener(e -> dispose());
     }
 
     /** Lays out the components. */
@@ -155,23 +156,18 @@ public class NickColourInputDialog extends StandardDialog implements ActionListe
         pack();
     }
 
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == getOkButton()) {
-            saveSettings();
-        }
-        dispose();
-    }
-
     /** Saves settings. */
     public void saveSettings() {
-        if (!isnew) {
-            panel.removeRow(row);
-        }
-
-        panel.addRow(network.getText().toLowerCase(),
-                nickname.getText().toLowerCase(),
+        final Color colour = NickColourUtils.getColourFromString(colourManager,
                 textColour.getColour());
+        final NickColourEntry entry = NickColourEntry.create(network.getText().toLowerCase(),
+                nickname.getText().toLowerCase(),
+                new Color(colour.getRed(), colour.getGreen(), colour.getBlue()));
+        if (isnew) {
+            model.replaceValueAt(entry, row);
+        } else {
+            model.addValue(entry);
+        }
     }
 
 }
