@@ -78,7 +78,7 @@ public class NickColourYamlStore extends BaseYamlStore<NickColourEntry> {
             final String user = requiredString(map, "user");
             final String colour = requiredString(map, "colour");
             return Optional.of(NickColourEntry.create(network, user,
-                    NickColourUtils.getColourFromString(colourManager, colour)));
+                    NickColourUtils.getColorFromString(colourManager, colour)));
         } catch (IllegalArgumentException ex) {
             LOG.info("Unable to read profile", ex);
             return Optional.empty();

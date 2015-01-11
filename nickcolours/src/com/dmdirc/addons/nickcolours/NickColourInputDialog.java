@@ -158,7 +158,7 @@ public class NickColourInputDialog extends StandardDialog {
 
     /** Saves settings. */
     public void saveSettings() {
-        final Color colour = NickColourUtils.getColourFromString(colourManager,
+        final Color colour = NickColourUtils.getColorFromString(colourManager,
                 textColour.getColour());
         final NickColourEntry entry = NickColourEntry.create(network.getText().toLowerCase(),
                 nickname.getText().toLowerCase(),

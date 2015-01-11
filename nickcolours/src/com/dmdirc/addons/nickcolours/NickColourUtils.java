@@ -34,7 +34,7 @@ final class NickColourUtils {
         //Utility class
     }
 
-    static Color getColourFromString(final ColourManager colourManager, final String value) {
+    static Color getColorFromString(final ColourManager colourManager, final String value) {
         final Colour colour = colourManager.getColourFromString(value, null);
         return new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
     }
