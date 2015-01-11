@@ -40,6 +40,9 @@ final class NickColourUtils {
     }
 
     static String getStringFromColor(final Color color) {
+        if (color == null) {
+            return "";
+        }
         return ColourUtils.getHex(new Colour(color.getRed(), color.getGreen(), color.getBlue()));
     }
 
