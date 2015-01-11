@@ -23,11 +23,9 @@
 package com.dmdirc.addons.nickkeep;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 
 import dagger.Module;
-import dagger.Provides;
 
 /**
  * Dagger injection module for the Nick Keep plugin
@@ -39,17 +37,5 @@ public class NickKeepModule {
 
     public NickKeepModule(final PluginInfo pluginInfo) {
         this.pluginInfo = pluginInfo;
-    }
-
-    @Provides
-    @PluginDomain(NickKeepPlugin.class)
-    public String getSettingsDomain() {
-        return pluginInfo.getDomain();
-    }
-
-    @Provides
-    @PluginDomain(NickKeepPlugin.class)
-    public PluginInfo getPluginInfo() {
-        return pluginInfo;
     }
 }
