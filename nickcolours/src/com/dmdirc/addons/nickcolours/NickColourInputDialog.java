@@ -128,7 +128,8 @@ public class NickColourInputDialog extends StandardDialog {
 
         nickname = new JTextField(defaultNickname);
         network = new JTextField(defaultNetwork);
-        textColour = new ColourChooser(colourManager, iconManager, "", true, true);
+        textColour = new ColourChooser(colourManager, iconManager, NickColourUtils
+                .getStringFromColor(defaultTextColour), true, true);
     }
 
     /** Initialises the listeners. */
