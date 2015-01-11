@@ -165,9 +165,9 @@ public class NickColourInputDialog extends StandardDialog {
                 nickname.getText().toLowerCase(),
                 new Color(colour.getRed(), colour.getGreen(), colour.getBlue()));
         if (isnew) {
-            model.replaceValueAt(entry, row);
-        } else {
             model.addValue(entry);
+        } else {
+            model.replaceValueAt(entry, row);
         }
     }
 
