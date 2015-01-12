@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nickkeep;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.plugins.PluginInfo;
 
 import dagger.Module;
 
@@ -31,11 +30,4 @@ import dagger.Module;
  * Dagger injection module for the Nick Keep plugin
  */
 @Module(injects = NickKeepModule.class, addsTo = ClientModule.class)
-public class NickKeepModule {
-
-    private final PluginInfo pluginInfo;
-
-    public NickKeepModule(final PluginInfo pluginInfo) {
-        this.pluginInfo = pluginInfo;
-    }
-}
+public class NickKeepModule {}

@@ -22,33 +22,34 @@
 
 package com.dmdirc.addons.nickkeep;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import dagger.ObjectGraph;
+import static org.mockito.Mockito.verify;
 
-/**
- * Plugin to provide Nick Keep support to DMDirc.
- */
-public class NickKeepPlugin extends BasePlugin {
+@RunWith(MockitoJUnitRunner.class)
+public class NickKeepPluginTest {
 
-    private NickKeepManager manager;
+    @Mock private NickKeepManager nickKeepManager;
+    private NickKeepPlugin instance;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new NickKeepModule()));
-        manager = getObjectGraph().get(NickKeepManager.class);
+    @Before
+    public void setUp() throws Exception {
+        instance = new NickKeepPlugin();
     }
 
-    @Override
-    public void onLoad() {
-        manager.load();
+    @Test
+    public void testOnLoad() throws Exception {
+        instance.onLoad();
+        verify(nickKeepManager).load();
     }
 
-    @Override
-    public void onUnload() {
-        manager.unload();
+    @Test
+    public void testOnUnload() throws Exception {
+        instance.onUnload();
+        verify(nickKeepManager).unload();
     }
 }

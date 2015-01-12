@@ -22,20 +22,63 @@
 
 package com.dmdirc.addons.nickkeep;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.config.profiles.Profile;
+import com.dmdirc.events.ChannelNickChangeEvent;
+import com.dmdirc.interfaces.Connection;
+
+import java.util.Optional;
+
 import javax.inject.Inject;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Provides Nick Keep support in DMDirc.
  */
 public class NickKeepManager {
 
+    private final DMDircMBassador eventBus;
+
     @Inject
-    public NickKeepManager() {
+    public NickKeepManager(final DMDircMBassador eventBus) {
+        this.eventBus = eventBus;
     }
 
     public void load() {
+        eventBus.subscribe(this);
     }
 
     public void unload() {
+        eventBus.unsubscribe(this);
+    }
+
+    @Handler
+    public void handleNickChange(final ChannelNickChangeEvent event) {
+        final Optional<Connection> connection = event.getChannel().getConnection();
+        if (!connection.isPresent()) {
+            //No point carrying on without a connection
+            return;
+        }
+        final Optional<String> currentNickname = connection.map(Connection::getNickname)
+                .orElse(Optional.empty());
+        if (!currentNickname.isPresent()) {
+            //No point carrying on if we don't know our own nickname
+            return;
+        }
+        final Optional<String> desiredNickname = connection.map(Connection::getProfile)
+                .map(Profile::getNicknames).map(c -> c.stream().findFirst())
+                .orElse(Optional.empty());
+        if (!desiredNickname.isPresent()) {
+            //No point carrying on without a desired nickname
+            return;
+        }
+        if (!event.getOldNick().equals(desiredNickname.get())) {
+            //This isnt the nickname we're looking for, move along
+            return;
+        }
+        if (!currentNickname.equals(desiredNickname)) {
+            connection.ifPresent(c -> c.setNickname(desiredNickname.get()));
+        }
     }
 }
