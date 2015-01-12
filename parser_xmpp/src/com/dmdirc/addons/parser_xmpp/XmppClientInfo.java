@@ -24,6 +24,9 @@ package com.dmdirc.addons.parser_xmpp;
 
 import com.dmdirc.parser.common.AwayState;
 import com.dmdirc.parser.common.BaseClientInfo;
+import com.dmdirc.parser.interfaces.ChannelClientInfo;
+
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +65,11 @@ public class XmppClientInfo extends BaseClientInfo {
     @Override
     public int getChannelCount() {
         return 0;
+    }
+
+    @Override
+    public List<ChannelClientInfo> getChannelClients() {
+        return Lists.newArrayList();
     }
 
     /**

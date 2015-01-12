@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 
 import java.awt.Color;
@@ -53,8 +53,8 @@ public class TopicLabel extends JPanel {
     private static final int MILLIS_IN_SECOND = 1000;
     /** Topic this label represents. */
     private final Topic topic;
-    /** The channel to which this label belongs. */
-    private final Channel channel;
+    /** The group chat to which this label belongs. */
+    private final GroupChat groupChat;
     /** Topic field. */
     private JEditorPane pane;
     /** Empty Attrib set. */
@@ -63,19 +63,18 @@ public class TopicLabel extends JPanel {
     /**
      * Instantiates a new topic label based on the specified topic.
      *
-     * @param channel The channel to which this label belongs
+     * @param groupChat The group chat to which this label belongs
      * @param topic   Specified topic
      *
      * @since 0.6.3
      */
-    public TopicLabel(final Channel channel, final Topic topic) {
-
+    public TopicLabel(final GroupChat groupChat, final Topic topic) {
         if (topic == null) {
             throw new IllegalArgumentException();
         }
 
         this.topic = topic;
-        this.channel = channel;
+        this.groupChat = groupChat;
 
         super.setBackground(UIManager.getColor("Table.background"));
         super.setForeground(UIManager.getColor("Table.foreground"));
@@ -123,7 +122,7 @@ public class TopicLabel extends JPanel {
         setLayout(new MigLayout("fill, ins 0, debug", "[]0[]", "[]0[]"));
 
         if (!topic.getTopic().isEmpty()) {
-            channel.getBackBuffer().getStyliser().addStyledString(
+            groupChat.getWindowModel().getBackBuffer().getStyliser().addStyledString(
                     new StyledDocumentMaker((StyledDocument) pane.getDocument(), as),
                     topic.getTopic());
             add(pane, "wmax 450, grow, push, wrap, gapleft 5, gapleft 5");
@@ -159,6 +158,8 @@ public class TopicLabel extends JPanel {
     @Override
     public void setBackground(final Color bg) {
         super.setBackground(bg);
+        // This method can be called from the super class constructor, so topic may not have been
+        // instansiated.
         if (topic != null
                 && ((getBackground() != null && !getBackground().equals(bg))
                 || (bg != null && !bg.equals(getBackground())))) {
@@ -169,6 +170,8 @@ public class TopicLabel extends JPanel {
     @Override
     public void setForeground(final Color fg) {
         super.setForeground(fg);
+        // This method can be called from the super class constructor, so topic may not have been
+        // instansiated.
         if (topic != null
                 && ((getForeground() != null && !getForeground().equals(fg))
                 || (fg != null && !fg.equals(getForeground())))) {

@@ -1,0 +1,34 @@
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco'
+
+repositories {
+  jcenter()
+}
+
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports', dependsOn: subprojects.test) {
+  description = 'Generates an aggregate report from all subprojects'
+
+  additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+  sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories = files(subprojects.sourceSets.main.output)
+  executionData = files(subprojects.jacocoTestReport.executionData).filter { it.exists() }
+
+  reports {
+    html.enabled = true
+    xml.enabled = true
+  }
+}
+
+coveralls {
+  jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+  subprojects.sourceSets.main.allSource.srcDirs*.path.each { sourceDirs.addAll(it) }
+}
+
+tasks.coveralls {
+  group = 'Coverage reports'
+  description = 'Uploads the aggregated coverage report to Coveralls'
+
+  dependsOn jacocoRootReport
+  onlyIf { System.env.'CI' }
+}
+
