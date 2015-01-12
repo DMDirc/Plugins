@@ -58,6 +58,7 @@ public class ErrorsDialog extends StandardDialog {
     private GenericTableModel<ProgramError> tableModel;
     private JSplitPane splitPane;
     private JScrollPane tableScrollPane;
+    private JScrollPane detailsScrollPane;
     private JTextField date;
     private JTextField severity;
     private JTextField reportStatus;
@@ -86,8 +87,8 @@ public class ErrorsDialog extends StandardDialog {
     @Override
     public void display() {
         new ErrorsDialogController(model)
-                .init(this, tableModel, table, date, severity, reportStatus, details, deleteAll,
-                        delete, send, getCancelButton());
+                .init(this, tableModel, table, date, severity, reportStatus, details,
+                        detailsScrollPane, deleteAll, delete, send, getCancelButton());
         super.display();
     }
 
@@ -110,6 +111,8 @@ public class ErrorsDialog extends StandardDialog {
                 "getLevel", "getReportStatus", "getMessage");
         tableModel.setHeaderNames("Severity", "Report Status", "Message");
         tableScrollPane = new JScrollPane();
+        detailsScrollPane = new JScrollPane();
+        detailsScrollPane.setViewportView(details);
         splitPane = getSplitPane();
         table = new PackingTable(tableModel, tableScrollPane);
         table.setAutoCreateRowSorter(true);
@@ -135,7 +138,7 @@ public class ErrorsDialog extends StandardDialog {
         bottom.add(new JLabel("Report Status: "), "");
         bottom.add(reportStatus, "growx, pushx");
         bottom.add(new JLabel("Details: "), "");
-        bottom.add(new JScrollPane(details), "grow, push");
+        bottom.add(detailsScrollPane, "grow, push");
         return bottom;
     }
 
