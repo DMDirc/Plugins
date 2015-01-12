@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.util.collections.ListenerList;
 
 import java.awt.event.ActionEvent;
@@ -61,20 +61,21 @@ public class TopicHistoryPane extends JPanel implements ListSelectionListener {
     /**
      * Instantiates a new topic history pane.
      *
-     * @param channel Parent channel
+     * @param groupChat Parent group chat
      */
-    public TopicHistoryPane(final Channel channel) {
+    public TopicHistoryPane(final GroupChat groupChat) {
 
         topicHistory.getSelectionModel().addListSelectionListener(this);
         topicHistory.getSelectionModel().setSelectionMode(
                 ListSelectionModel.SINGLE_SELECTION);
-        final List<Topic> topics = channel.getTopics();
+        final List<Topic> topics = groupChat.getTopics();
         Collections.reverse(topics);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
         for (Topic topic : topics) {
-            topicHistory.getModel().addRow(new Object[]{new TopicLabel(channel,
-                topic),});
+            topicHistory.getModel().addRow(new Object[]{
+                    new TopicLabel(groupChat, topic),
+            });
         }
         topicHistory.getSelectionModel().setSelectionInterval(0, 0);
         topicHistory.setShowGrid(false);

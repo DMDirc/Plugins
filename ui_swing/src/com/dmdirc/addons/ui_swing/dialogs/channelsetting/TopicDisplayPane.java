@@ -22,20 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.addons.ui_swing.components.inputfields.TextAreaInputField;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -55,7 +55,7 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Class to display a topic to an end user as part of the channel settings dialog.
+ * Class to display a topic to an end user as part of the groupChat settings dialog.
  */
 public class TopicDisplayPane extends JPanel implements DocumentListener {
 
@@ -63,8 +63,8 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private static final long serialVersionUID = 1;
     /** Parent topic pane. */
     private final ChannelSettingsDialog parent;
-    /** Associated channel. */
-    private final Channel channel;
+    /** Associated group chat. */
+    private final GroupChat groupChat;
     /** Channel window. */
     private final InputWindow channelWindow;
     /** the maximum length allowed for a topic. */
@@ -84,34 +84,34 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * Creates a new topic display panel. This panel shows an editable version of the current topic
      * along with relating meta data and validates the length of the new input.
      *
-     * @param channel           Associated channel
+     * @param groupChat         Associated group chat
      * @param iconManager       Icon manager
      * @param serviceManager    Service manager
-     * @param parent            Parent channel settings dialog
+     * @param parent            Parent settings dialog
      * @param channelWindow     Channel window
      * @param clipboard         Clipboard to copy and paste
      * @param commandController The controller to use to retrieve command information.
      * @param eventBus          The event bus to post errors to.
      */
-    public TopicDisplayPane(final Channel channel, final IconManager iconManager,
+    public TopicDisplayPane(final GroupChat groupChat, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
             final CommandController commandController, final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         this.clipboard = clipboard;
-        this.channel = channel;
+        this.groupChat = groupChat;
         this.parent = parent;
-        topicLengthMax = channel.getConnection().get().getParser().get().getMaxTopicLength();
+        topicLengthMax = groupChat.getConnection().get().getParser().get().getMaxTopicLength();
         this.channelWindow = channelWindow;
         this.eventBus = eventBus;
 
-        initComponents(iconManager, channel.getConfigManager(), serviceManager, commandController,
-                colourManagerFactory, tabCompleterUtils);
+        initComponents(iconManager, groupChat.getWindowModel().getConfigManager(), serviceManager,
+                commandController, colourManagerFactory, tabCompleterUtils);
         addListeners();
         layoutComponents();
 
-        setTopic(channel.getCurrentTopic());
+        setTopic(groupChat.getCurrentTopic());
     }
 
     private void initComponents(
@@ -131,10 +131,10 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setRows(5);
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
-                commandController, channel.getCommandParser(), channelWindow.getContainer(),
-                tabCompleterUtils, channel.getEventBus());
+                commandController, groupChat.getWindowModel().getCommandParser(),
+                channelWindow.getContainer(), tabCompleterUtils, groupChat.getEventBus());
         handler.setTypes(true, false, true, false);
-        handler.setTabCompleter(channel.getTabCompleter());
+        handler.setTabCompleter(groupChat.getWindowModel().getTabCompleter());
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction(eventBus, clipboard, "(\r\n|\n|\r)", " "));
