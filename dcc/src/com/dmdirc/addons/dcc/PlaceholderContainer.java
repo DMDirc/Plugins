@@ -50,7 +50,6 @@ public class PlaceholderContainer extends FrameContainer {
      * @param plugin       The plugin which owns this placeholder
      * @param config       Config manager
      * @param parentWindow Window that will parent new dialogs.
-     * @param urlBuilder   The URL builder to use when finding icons.
      * @param eventBus     The bus to dispatch events on.
      */
     public PlaceholderContainer(
