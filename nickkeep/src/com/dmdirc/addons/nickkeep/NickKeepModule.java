@@ -29,5 +29,5 @@ import dagger.Module;
 /**
  * Dagger injection module for the Nick Keep plugin
  */
-@Module(injects = NickKeepModule.class, addsTo = ClientModule.class)
+@Module(injects = NickKeepManager.class, addsTo = ClientModule.class)
 public class NickKeepModule {}
