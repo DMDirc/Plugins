@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -46,8 +47,8 @@ public class TopicPane extends JPanel implements ActionListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
-    /** Parent channel. */
-    private final Channel channel;
+    /** Parent group chat. */
+    private final GroupChat groupChat;
     /** Channel window. */
     private final InputWindow channelWindow;
     /** Parent dialog. */
@@ -62,7 +63,7 @@ public class TopicPane extends JPanel implements ActionListener {
     /**
      * Creates a new instance of TopicModesPane.
      *
-     * @param channel           Parent channel
+     * @param groupChat         Parent group chat
      * @param iconManager       Icon manager
      * @param commandController The controller to use to retrieve command information.
      * @param serviceManager    Service manager
@@ -71,7 +72,7 @@ public class TopicPane extends JPanel implements ActionListener {
      * @param clipboard         Clipboard to copy and paste with
      * @param eventBus          The event bus to post errors to
      */
-    public TopicPane(final Channel channel, final IconManager iconManager,
+    public TopicPane(final GroupChat groupChat, final IconManager iconManager,
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
@@ -79,7 +80,7 @@ public class TopicPane extends JPanel implements ActionListener {
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
-        this.channel = channel;
+        this.groupChat = groupChat;
         this.parent = parent;
         this.channelWindow = channelWindow;
         this.clipboard = clipboard;
@@ -103,10 +104,10 @@ public class TopicPane extends JPanel implements ActionListener {
             final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
-        topicDisplayPane = new TopicDisplayPane(channel, iconManager, serviceManager, parent,
+        topicDisplayPane = new TopicDisplayPane(groupChat, iconManager, serviceManager, parent,
                 channelWindow, clipboard, commandController, eventBus, colourManagerFactory,
                 tabCompleterUtils);
-        topicHistoryPane = new TopicHistoryPane(channel);
+        topicHistoryPane = new TopicHistoryPane(groupChat);
     }
 
     /** Lays out the components. */
@@ -120,8 +121,8 @@ public class TopicPane extends JPanel implements ActionListener {
     /** Processes the topic and changes it if necessary. */
     protected void setChangedTopic() {
         final String topic = topicDisplayPane.getTopic();
-        if (!channel.getChannelInfo().getTopic().equals(topic)) {
-            channel.setTopic(topic);
+        if (!groupChat.getCurrentTopic().map(Topic::getTopic).orElse("").equals(topic)) {
+            groupChat.setTopic(topic);
         }
     }
 
