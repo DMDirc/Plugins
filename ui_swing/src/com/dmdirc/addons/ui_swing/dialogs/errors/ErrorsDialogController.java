@@ -28,9 +28,7 @@ import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.ErrorsDialogModelListener;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorReportStatus;
-import com.dmdirc.logger.ProgramError;
-
-import com.google.common.base.Joiner;
+import com.dmdirc.ui.core.errors.DisplayableError;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -49,7 +47,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
 
     private final ErrorsDialogModel model;
     private JTable table;
-    private GenericTableModel<ProgramError> tableModel;
+    private GenericTableModel<DisplayableError> tableModel;
     private JTextField date;
     private JTextField severity;
     private JTextField reportStatus;
@@ -63,7 +61,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
         this.model = model;
     }
 
-    public void init(final ErrorsDialog dialog, final GenericTableModel<ProgramError> tableModel,
+    public void init(final ErrorsDialog dialog, final GenericTableModel<DisplayableError> tableModel,
             final JTable table, final JTextField date, final JTextField severity,
             final JTextField reportStatus, final JTextArea details, final JScrollPane detailsScroll,
             final JButton deleteAll, final JButton delete, final JButton send, final JButton close) {
@@ -101,7 +99,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
     }
 
     @Override
-    public void errorDeleted(final ProgramError error) {
+    public void errorDeleted(final DisplayableError error) {
         UIUtilities.invokeLater(() -> {
             tableModel.removeValue(error);
             checkEnabledStates();
@@ -109,7 +107,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
     }
 
     @Override
-    public void errorAdded(final ProgramError error) {
+    public void errorAdded(final DisplayableError error) {
         UIUtilities.invokeLater(() -> {
             tableModel.addValue(error);
             checkEnabledStates();
@@ -117,7 +115,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
     }
 
     @Override
-    public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
+    public void selectedErrorChanged(final Optional<DisplayableError> selectedError) {
         if (selectedError.isPresent()) {
             final int index = tableModel.getIndex(selectedError.get());
             table.getSelectionModel().setSelectionInterval(index, index);
@@ -125,27 +123,21 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
             table.getSelectionModel().setSelectionInterval(-1, -1);
         }
         UIUtilities.invokeLater(() -> {
-            date.setText(selectedError.map(ProgramError::getDate)
+            date.setText(selectedError.map(DisplayableError::getDate)
                     .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
-            severity.setText(
-                    selectedError.map(ProgramError::getLevel).map(ErrorLevel::name).orElse(""));
+            severity.setText(selectedError.map(DisplayableError::getSeverity)
+                    .map(ErrorLevel::name).orElse(""));
             reportStatus.setText(
-                    selectedError.map(ProgramError::getReportStatus).map(ErrorReportStatus::name)
-                            .orElse(""));
-            details.setText("");
-            selectedError.map(ProgramError::getMessage).ifPresent(
-                    message -> details.append("Message: " + message + '\n'));
-            selectedError.map(ProgramError::getDetails).ifPresent(
-                    detail -> details.append("Detail: " + detail +'\n'));
-            selectedError.map(ProgramError::getTrace).ifPresent(
-                    trace -> details.append("Exception: " + Joiner.on('\n').skipNulls().join(trace)));
+                    selectedError.map(DisplayableError::getReportStatus)
+                            .map(ErrorReportStatus::name).orElse(""));
+            details.setText(selectedError.map(DisplayableError::getDetails).orElse(""));
             checkEnabledStates();
             UIUtilities.resetScrollPane(detailsScroll);
         });
     }
 
     @Override
-    public void errorStatusChanged(final ProgramError error) {
+    public void errorStatusChanged(final DisplayableError error) {
         UIUtilities.invokeLater(() -> {
             final int index = tableModel.getIndex(error);
             tableModel.fireTableRowsUpdated(index, index);

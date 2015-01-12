@@ -23,13 +23,13 @@
 package com.dmdirc.addons.ui_swing.dialogs.errors;
 
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.ProgramError;
-import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.ui.core.errors.DisplayableError;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -55,7 +55,7 @@ public class ErrorsDialog extends StandardDialog {
     private final ErrorsDialogModel model;
     private final IconManager iconManager;
     private JTable table;
-    private GenericTableModel<ProgramError> tableModel;
+    private GenericTableModel<DisplayableError> tableModel;
     private JSplitPane splitPane;
     private JScrollPane tableScrollPane;
     private JScrollPane detailsScrollPane;
@@ -107,9 +107,9 @@ public class ErrorsDialog extends StandardDialog {
         reportStatus = new JTextField();
         details = new JTextArea();
         getCancelButton().setText("Close");
-        tableModel = new GenericTableModel<>(ProgramError.class,
-                "getLevel", "getReportStatus", "getMessage");
-        tableModel.setHeaderNames("Severity", "Report Status", "Message");
+        tableModel = new GenericTableModel<>(DisplayableError.class,
+                "getSeverity", "getReportStatus", "getSummary");
+        tableModel.setHeaderNames("Severity", "Report Status", "Summary");
         tableScrollPane = new JScrollPane();
         detailsScrollPane = new JScrollPane();
         detailsScrollPane.setViewportView(details);

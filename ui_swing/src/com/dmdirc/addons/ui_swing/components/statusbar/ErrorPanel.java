@@ -30,8 +30,8 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ErrorsDialogModelListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.logger.ProgramError;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
+import com.dmdirc.ui.core.errors.DisplayableError;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -100,8 +100,8 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
 
     /** Checks all the errors for the most significant error. */
     private void checkErrors() {
-        final Set<ProgramError> errors = model.getErrors();
-        label.setIcon(iconManager.getIcon(errors.stream().map(ProgramError::getLevel)
+        final Set<DisplayableError> errors = model.getErrors();
+        label.setIcon(iconManager.getIcon(errors.stream().map(DisplayableError::getSeverity)
                 .reduce(ErrorLevel.UNKNOWN, ErrorLevel::getMoreImportant).getIcon()));
         setVisible(!errors.isEmpty());
     }
@@ -151,22 +151,22 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
     }
 
     @Override
-    public void errorDeleted(final ProgramError error) {
+    public void errorDeleted(final DisplayableError error) {
         UIUtilities.invokeAndWait(this::checkErrors);
     }
 
     @Override
-    public void errorAdded(final ProgramError error) {
+    public void errorAdded(final DisplayableError error) {
         UIUtilities.invokeAndWait(this::checkErrors);
     }
 
     @Override
-    public void selectedErrorChanged(final Optional<ProgramError> selectedError) {
+    public void selectedErrorChanged(final Optional<DisplayableError> selectedError) {
         //Ignore
     }
 
     @Override
-    public void errorStatusChanged(final ProgramError error) {
+    public void errorStatusChanged(final DisplayableError error) {
         //Ignore
     }
 }
