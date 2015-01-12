@@ -31,12 +31,12 @@ import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.logger.ProgramError;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -57,6 +57,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
     private JButton deleteAll;
     private JButton delete;
     private JButton send;
+    private JScrollPane detailsScroll;
 
     public ErrorsDialogController(final ErrorsDialogModel model) {
         this.model = model;
@@ -64,14 +65,15 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
 
     public void init(final ErrorsDialog dialog, final GenericTableModel<ProgramError> tableModel,
             final JTable table, final JTextField date, final JTextField severity,
-            final JTextField reportStatus, final JTextArea details, final JButton deleteAll,
-            final JButton delete, final JButton send, final JButton close) {
+            final JTextField reportStatus, final JTextArea details, final JScrollPane detailsScroll,
+            final JButton deleteAll, final JButton delete, final JButton send, final JButton close) {
         this.tableModel = tableModel;
         this.table = table;
         this.date = date;
         this.severity = severity;
         this.reportStatus = reportStatus;
         this.details = details;
+        this.detailsScroll = detailsScroll;
         this.deleteAll = deleteAll;
         this.delete = delete;
         this.send = send;
@@ -130,10 +132,15 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
             reportStatus.setText(
                     selectedError.map(ProgramError::getReportStatus).map(ErrorReportStatus::name)
                             .orElse(""));
-            details.setText(selectedError.map(ProgramError::getDetails).orElse(""));
-            details.append(Joiner.on('\n').skipNulls()
-                    .join(selectedError.map(ProgramError::getTrace).orElse(Lists.newArrayList())));
+            details.setText("");
+            selectedError.map(ProgramError::getMessage).ifPresent(
+                    message -> details.append("Message: " + message + '\n'));
+            selectedError.map(ProgramError::getDetails).ifPresent(
+                    detail -> details.append("Detail: " + detail +'\n'));
+            selectedError.map(ProgramError::getTrace).ifPresent(
+                    trace -> details.append("Exception: " + Joiner.on('\n').skipNulls().join(trace)));
             checkEnabledStates();
+            UIUtilities.resetScrollPane(detailsScroll);
         });
     }
 
