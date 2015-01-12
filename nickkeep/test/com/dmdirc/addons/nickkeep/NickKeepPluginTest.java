@@ -22,23 +22,34 @@
 
 package com.dmdirc.addons.nickkeep;
 
+import com.dmdirc.plugins.PluginInfo;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import dagger.ObjectGraph;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NickKeepPluginTest {
 
     @Mock private NickKeepManager nickKeepManager;
+    @Mock private PluginInfo pluginInfo;
+    @Mock private ObjectGraph objectGraph;
     private NickKeepPlugin instance;
 
     @Before
     public void setUp() throws Exception {
+        when(objectGraph.<NickKeepManager>get(any())).thenReturn(nickKeepManager);
+        when(objectGraph.plus(any())).thenReturn(objectGraph);
         instance = new NickKeepPlugin();
+        instance.load(pluginInfo, objectGraph);
     }
 
     @Test
