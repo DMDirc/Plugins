@@ -25,8 +25,8 @@ package com.dmdirc.addons.ui_swing.components.statusbar;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorReportStatus;
-import com.dmdirc.logger.ProgramError;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
+import com.dmdirc.ui.core.errors.DisplayableError;
 import com.dmdirc.util.collections.MapList;
 
 import java.awt.Font;
@@ -73,12 +73,12 @@ public class ErrorPopup extends StatusbarPopupWindow {
 
     @Override
     protected void initContent(final JPanel panel) {
-        final Set<ProgramError> errors = model.getErrors();
-        final MapList<ErrorLevel, ProgramError> buckets = new MapList<>();
-        final MapList<ErrorReportStatus, ProgramError> statuses = new MapList<>();
+        final Set<DisplayableError> errors = model.getErrors();
+        final MapList<ErrorLevel, DisplayableError> buckets = new MapList<>();
+        final MapList<ErrorReportStatus, DisplayableError> statuses = new MapList<>();
 
-        for (final ProgramError error : errors) {
-            buckets.add(error.getLevel(), error);
+        for (final DisplayableError error : errors) {
+            buckets.add(error.getSeverity(), error);
             statuses.add(error.getReportStatus(), error);
         }
 
