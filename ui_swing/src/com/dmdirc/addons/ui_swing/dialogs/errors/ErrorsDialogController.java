@@ -116,13 +116,13 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
 
     @Override
     public void selectedErrorChanged(final Optional<DisplayableError> selectedError) {
-        if (selectedError.isPresent()) {
-            final int index = tableModel.getIndex(selectedError.get());
-            table.getSelectionModel().setSelectionInterval(index, index);
-        } else {
-            table.getSelectionModel().setSelectionInterval(-1, -1);
-        }
         UIUtilities.invokeLater(() -> {
+            if (selectedError.isPresent()) {
+                final int index = tableModel.getIndex(selectedError.get());
+                table.getSelectionModel().setSelectionInterval(index, index);
+            } else {
+                table.getSelectionModel().setSelectionInterval(-1, -1);
+            }
             date.setText(selectedError.map(DisplayableError::getDate)
                     .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
             severity.setText(selectedError.map(DisplayableError::getSeverity)
@@ -141,6 +141,9 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
         UIUtilities.invokeLater(() -> {
             final int index = tableModel.getIndex(error);
             tableModel.fireTableCellUpdated(index, 1);
+            if (index == table.getSelectedRow()) {
+                reportStatus.setText(error.getReportStatus().name());
+            }
             checkEnabledStates();
         });
     }
