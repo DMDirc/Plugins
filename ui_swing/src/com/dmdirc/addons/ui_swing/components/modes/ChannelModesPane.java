@@ -49,18 +49,18 @@ public final class ChannelModesPane extends ModesPane {
 
     @Override
     public boolean hasModeValue(final String mode) {
-        return channel.getConfigManager().hasOptionString("server", "mode" + mode);
+        return channel.getWindowModel().getConfigManager().hasOptionString("server", "mode" + mode);
     }
 
     @Override
     public String getModeValue(final String mode) {
-        return channel.getConfigManager().getOption("server", "mode" + mode);
+        return channel.getWindowModel().getConfigManager().getOption("server", "mode" + mode);
     }
 
     @Override
     public boolean isModeEnabled(final String mode) {
-        return !channel.getConfigManager().hasOptionString("server",
-                "enablemode" + mode) || channel.getConfigManager()
+        return !channel.getWindowModel().getConfigManager().hasOptionString("server",
+                "enablemode" + mode) || channel.getWindowModel().getConfigManager()
                 .getOptionBool("server", "enablemode" + mode);
     }
 
