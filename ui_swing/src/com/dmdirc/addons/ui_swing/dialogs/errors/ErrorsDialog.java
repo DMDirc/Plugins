@@ -115,7 +115,6 @@ public class ErrorsDialog extends StandardDialog {
         detailsScrollPane.setViewportView(details);
         splitPane = getSplitPane();
         table = new PackingTable(tableModel, tableScrollPane);
-        table.setAutoCreateRowSorter(true);
         table.setAutoscrolls(false);
         table.getModel().addTableModelListener(table);
         tableScrollPane.setViewportView(table);
