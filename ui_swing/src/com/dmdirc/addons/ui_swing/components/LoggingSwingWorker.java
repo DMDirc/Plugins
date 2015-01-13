@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.events.AppErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
 
 import java.util.concurrent.ExecutionException;
@@ -59,7 +59,7 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            eventBus.publishAsync(new AppErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
         }
     }
 
