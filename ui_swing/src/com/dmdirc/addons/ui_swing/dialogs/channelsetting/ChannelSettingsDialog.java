@@ -171,7 +171,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         initSettingsTab();
 
-        tabbedPane.setSelectedIndex(channel.getConfigManager().
+        tabbedPane.setSelectedIndex(channel.getWindowModel().getConfigManager().
                 getOptionInt("dialogstate", "channelsettingsdialog"));
     }
 
@@ -198,8 +198,8 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
     /** Initialises the IRC Settings tab. */
     private void initListModesTab() {
-        channelListModesPane = new ChannelListModesPane(channel.getConfigManager(), userConfig,
-                iconManager, channel, this);
+        channelListModesPane = new ChannelListModesPane(channel.getWindowModel().getConfigManager(),
+                userConfig, iconManager, channel, this);
         tabbedPane.addTab("List Modes", channelListModesPane);
     }
 
@@ -216,7 +216,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
                 "These settings are specific to this channel on this network,"
                 + " any settings specified here will overwrite global settings");
         channelSettingsPane.addOption(preferencesManager.getChannelSettings(
-                channel.getConfigManager(), identity));
+                channel.getWindowModel().getConfigManager(), identity));
     }
 
     /** Initialises listeners for this dialog. */
