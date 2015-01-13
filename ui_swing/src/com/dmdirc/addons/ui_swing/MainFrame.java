@@ -153,6 +153,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         this.frameManagerProvider = frameManagerProvider;
         this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
+        activeFrame = Optional.empty();
         version = globalConfig.getOption("version", "version");
         focusOrder = new QueuedLinkedHashSet<>();
     }
@@ -203,7 +204,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     @Override
     public void setTitle(final String title) {
         UIUtilities.invokeLater(() -> {
-            if (title == null || activeFrame == null) {
+            if (title == null || !activeFrame.isPresent()) {
                 MainFrame.super.setTitle(getTitlePrefix());
             } else {
                 MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
@@ -274,7 +275,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     public void initComponents() {
         UIUtilities.invokeAndWait(() -> {
             frameManagerPanel = new JPanel();
-            activeFrame = null;
+            activeFrame = Optional.empty();
             framePanel = new JPanel(new MigLayout("fill, ins 0"));
             initFrameManagers();
             mainSplitPane = initSplitPane();
@@ -505,7 +506,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         final Optional<TextFrame> window = Optional.of(event.getChildWindow());
         focusOrder.remove(window);
         if (activeFrame.equals(window)) {
-            activeFrame = null;
+            activeFrame = Optional.empty();
             framePanel.setVisible(false);
             framePanel.removeAll();
             framePanel.setVisible(true);
