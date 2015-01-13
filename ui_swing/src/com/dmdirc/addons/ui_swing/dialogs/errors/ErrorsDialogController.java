@@ -140,7 +140,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
     public void errorStatusChanged(final DisplayableError error) {
         UIUtilities.invokeLater(() -> {
             final int index = tableModel.getIndex(error);
-            tableModel.fireTableRowsUpdated(index, index);
+            tableModel.fireTableCellUpdated(index, 1);
             checkEnabledStates();
         });
     }
