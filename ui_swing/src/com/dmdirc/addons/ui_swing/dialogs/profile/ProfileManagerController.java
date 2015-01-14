@@ -23,12 +23,13 @@
 package com.dmdirc.addons.ui_swing.dialogs.profile;
 
 import com.dmdirc.addons.ui_swing.components.ConsumerDocumentListener;
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModelListener;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.profiles.MutableProfile;
 
 import com.google.common.collect.Lists;
@@ -36,8 +37,8 @@ import com.google.common.collect.Lists;
 import java.awt.Dialog;
 import java.beans.PropertyVetoException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -48,37 +49,72 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     private final ProfileManagerDialog dialog;
     private final ProfilesDialogModel model;
     private final IconManager iconManager;
-    private final DefaultListModel<MutableProfile> listModel;
-    private final VetoableListSelectionModel selectionModel;
+    private VetoableListSelectionModel selectionModel;
+    private JList<MutableProfile> profileList;
+    private JButton addProfile;
+    private JButton deleteProfile;
+    private JTextField name;
+    private JList<String> nicknames;
+    private JButton addNickname;
+    private JButton editNickname;
+    private JButton deleteNickname;
+    private JTextField realname;
+    private JTextField ident;
+    private JList<String> highlights;
+    private JButton addHighlight;
+    private JButton editHighlight;
+    private JButton deleteHighlight;
+    private JButton okButton;
+    private GenericListModel<MutableProfile> profilesModel;
+    private GenericListModel<String> nicknamesModel;
+    private GenericListModel<String> highlightsModel;
 
     public ProfileManagerController(final ProfileManagerDialog dialog,
             final ProfilesDialogModel model, final IconManager iconManager) {
         this.dialog = dialog;
         this.model = model;
         this.iconManager = iconManager;
-
-        listModel = (DefaultListModel<MutableProfile>) dialog.getProfileList().getModel();
-        selectionModel = new VetoableListSelectionModel();
     }
 
-    public void init() {
+    public void init(final JList<MutableProfile> profileList, final JButton addProfile,
+            final JButton deleteProfile, final JTextField name,
+            final ReorderableJList<String> nicknames, final JButton addNickname,
+            final JButton editNickname, final JButton deleteNickname, final JTextField realname,
+            final JTextField ident, final ReorderableJList<String> highlights,
+            final JButton addHighlight, final JButton editHighlight, final JButton deleteHighlight,
+            final JButton okButton, final JButton cancelButton) {
+        this.profileList = profileList;
+        this.addProfile = addProfile;
+        this.deleteProfile = deleteProfile;
+        this.name = name;
+        this.nicknames = nicknames;
+        this.addNickname = addNickname;
+        this.editNickname = editNickname;
+        this.deleteNickname = deleteNickname;
+        this.realname = realname;
+        this.ident = ident;
+        this.highlights = highlights;
+        this.addHighlight = addHighlight;
+        this.editHighlight = editHighlight;
+        this.deleteHighlight = deleteHighlight;
+        this.okButton = okButton;
         model.loadModel();
-        setupOKButton(dialog.getOkButton());
-        setupCancelButton(dialog.getCancelButton());
-        setupProfileList(dialog.getProfileList());
-        setupAddProfile(dialog.getAddProfile());
-        setupDeleteProfile(dialog.getDeleteProfile());
-        setupEditNickname(dialog.getProfileEditNickname());
-        setupAddNickname(dialog.getProfileAddNickname());
-        setupDeleteNickname(dialog.getProfileDeleteNickname());
-        setupProfileName(dialog.getProfileName());
-        setupProfileNicknames(dialog.getProfileNicknames());
-        setupProfileRealname(dialog.getProfileRealname());
-        setupProfileIdent(dialog.getProfileIdent());
-        setupProfileHighlights(dialog.getProfileHighlights());
-        setupAddHighlight(dialog.getProfileAddHighlight());
-        setupEditHighlight(dialog.getProfileEditHighlight());
-        setupDeleteHighlight(dialog.getProfileDeleteHighlight());
+        setupOKButton(okButton);
+        setupCancelButton(cancelButton);
+        setupProfileList(profileList);
+        setupAddProfile(addProfile);
+        setupDeleteProfile(deleteProfile);
+        setupEditNickname(editNickname);
+        setupAddNickname(addNickname);
+        setupDeleteNickname(deleteNickname);
+        setupProfileName(name);
+        setupProfileNicknames(nicknames);
+        setupProfileRealname(realname);
+        setupProfileIdent(ident);
+        setupProfileHighlights(highlights);
+        setupAddHighlight(addHighlight);
+        setupEditHighlight(editHighlight);
+        setupDeleteHighlight(deleteHighlight);
         model.addListener(this);
     }
 
@@ -95,8 +131,10 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     }
 
     private void setupProfileList(final JList<MutableProfile> profileList) {
+        selectionModel = new VetoableListSelectionModel();
+        profilesModel = (GenericListModel<MutableProfile>) profileList.getModel();
+        profilesModel.addAll(model.getProfileList());
         profileList.setSelectionModel(selectionModel);
-        model.getProfileList().forEach(listModel::addElement);
         selectionModel.addVetoableSelectionListener(e -> {
             if (!model.canSwitchProfiles()) {
                 throw new PropertyVetoException("Cannot switch with invalid profile", e);
@@ -107,27 +145,48 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 model.setSelectedProfile(Optional.ofNullable(profileList.getSelectedValue()));
             }
         });
-        if (model.getSelectedProfileNicknames().isPresent()) {
-            model.getSelectedProfileNicknames().get().forEach(
-                    p -> dialog.getProfileNicknames().getModel().addElement(p));
-        }
-        if (!listModel.isEmpty()) {
-            selectionModel.setLeadSelectionIndex(0);
-        }
     }
 
     private void setupAddProfile(final JButton addProfile) {
         addProfile.addActionListener(
                 e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
                         iconManager, "Profile Manager: Add Profile", "Enter the new profile's name",
-                        model.getNewProfileNameValidator(),
-                        (String s) -> model.addProfile(s, s, s, Lists.newArrayList(s))).display());
+                        model.getNewProfileNameValidator(), (Consumer<String>) model::addProfile)
+                        .display());
     }
 
     private void setupDeleteProfile(final JButton deleteProfile) {
         deleteProfile.setEnabled(model.getSelectedProfile().isPresent());
-        deleteProfile.addActionListener(l -> model.getSelectedProfile()
-                .ifPresent(p -> model.removeProfile(p.getName())));
+        deleteProfile.addActionListener(
+                l -> model.getSelectedProfile().ifPresent(model::removeProfile));
+    }
+
+    private void setupProfileName(final JTextField name) {
+        name.setEnabled(model.getSelectedProfileName().isPresent());
+        name.setText(model.getSelectedProfileName().orElse(""));
+        name.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileName(Optional.of(s));
+            }
+        }));
+    }
+
+    private void setupProfileNicknames(final ReorderableJList<String> nicknames) {
+        nicknamesModel = nicknames.getModel();
+        nicknamesModel.addAll(model.getSelectedProfileNicknames().orElse(Lists.newArrayList()));
+        nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        nicknames.setEnabled(model.getSelectedProfileNicknames().isPresent());
+        nicknames.addListSelectionListener(l -> model.setSelectedProfileSelectedNickname(
+                Optional.ofNullable(nicknames.getSelectedValue())));
+    }
+
+    private void setupAddNickname(final JButton addNickname) {
+        addNickname.setEnabled(!model.getProfileList().isEmpty());
+        addNickname.addActionListener(
+                e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
+                        iconManager, "Profile Manager: Add Nickname", "Enter nickname to add",
+                        model.getSelectedProfileAddNicknameValidator(),
+                        model::addSelectedProfileNickname).display());
     }
 
     private void setupEditNickname(final JButton editNickname) {
@@ -141,19 +200,39 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                         .display()));
     }
 
-    private void setupAddNickname(final JButton addNickname) {
-        addNickname.setEnabled(!model.getProfileList().isEmpty());
-        addNickname.addActionListener(
-                e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
-                        iconManager, "Profile Manager: Add Nickname", "Enter nickname to add",
-                        model.getSelectedProfileAddNicknameValidator(),
-                        model::addSelectedProfileNickname).display());
+    private void setupProfileRealname(final JTextField realname) {
+        realname.setEnabled(model.getSelectedProfileRealname().isPresent());
+        realname.setText(model.getSelectedProfileRealname().orElse(""));
+        realname.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileRealname(Optional.of(s));
+            }
+        }));
+    }
+
+    private void setupProfileIdent(final JTextField ident) {
+        ident.setEnabled(model.getSelectedProfileIdent().isPresent());
+        ident.setText(model.getSelectedProfileIdent().orElse(""));
+        ident.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
+            if (model.getSelectedProfile().isPresent()) {
+                model.setSelectedProfileIdent(Optional.of(s));
+            }
+        }));
     }
 
     private void setupDeleteNickname(final JButton deleteNickname) {
         deleteNickname.setEnabled(model.getSelectedProfileSelectedNickname().isPresent());
         deleteNickname.addActionListener(l -> model.getSelectedProfileSelectedNickname()
                 .ifPresent(model::removeSelectedProfileNickname));
+    }
+
+    private void setupProfileHighlights(final ReorderableJList<String> highlights) {
+        highlightsModel = highlights.getModel();
+        highlightsModel.addAll(model.getSelectedProfileHighlights().orElse(Lists.newArrayList()));
+        highlights.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        highlights.setEnabled(model.getSelectedProfileHighlights().isPresent());
+        highlights.addListSelectionListener(l -> model.setSelectedProfileSelectedHighlight(
+                Optional.ofNullable(highlights.getSelectedValue())));
     }
 
     private void setupAddHighlight(final JButton addHighlight) {
@@ -182,147 +261,103 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 .ifPresent(model::removeSelectedProfileHighlight));
     }
 
-    private void setupProfileName(final JTextField name) {
-        name.setEnabled(model.getSelectedProfileName().isPresent());
-        name.setText(model.getSelectedProfileName().orElse(""));
-        name.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
-            if (model.getSelectedProfile().isPresent()) {
-                model.setSelectedProfileName(Optional.of(s));
-            }
-        }));
-    }
-
-    private void setupProfileHighlights(final ReorderableJList<String> highlights) {
-        highlights.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        highlights.setEnabled(model.getSelectedProfileHighlights().isPresent());
-        highlights.addListSelectionListener(l -> model.setSelectedProfileSelectedHighlight(
-                Optional.ofNullable(highlights.getSelectedValue())));
-    }
-
-    private void setupProfileNicknames(final ReorderableJList<String> nicknames) {
-        nicknames.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        nicknames.setEnabled(model.getSelectedProfileNicknames().isPresent());
-        nicknames.addListSelectionListener(l -> model.setSelectedProfileSelectedNickname(
-                Optional.ofNullable(nicknames.getSelectedValue())));
-    }
-
-    private void setupProfileRealname(final JTextField realname) {
-        realname.setEnabled(model.getSelectedProfileRealname().isPresent());
-        realname.setText(model.getSelectedProfileRealname().orElse(""));
-        realname.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
-            if (model.getSelectedProfile().isPresent()) {
-                model.setSelectedProfileRealname(Optional.of(s));
-            }
-        }));
-    }
-
-    private void setupProfileIdent(final JTextField ident) {
-        ident.setEnabled(model.getSelectedProfileIdent().isPresent());
-        ident.setText(model.getSelectedProfileIdent().orElse(""));
-        ident.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
-            if (model.getSelectedProfile().isPresent()) {
-                model.setSelectedProfileIdent(Optional.of(s));
-            }
-        }));
-    }
-
     @Override
     public void profileAdded(final MutableProfile profile) {
-        dialog.getProfileAddNickname().setEnabled(model.isProfileListValid());
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        listModel.addElement(profile);
+        addNickname.setEnabled(model.isProfileListValid());
+        addHighlight.setEnabled(model.isProfileListValid());
+        okButton.setEnabled(model.isSaveAllowed());
+        profilesModel.add(profile);
     }
 
     @Override
     public void profileRemoved(final MutableProfile profile) {
-        dialog.getProfileAddNickname().setEnabled(model.isProfileListValid());
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        listModel.removeElement(profile);
+        addNickname.setEnabled(model.isProfileListValid());
+        addHighlight.setEnabled(model.isProfileListValid());
+        okButton.setEnabled(model.isSaveAllowed());
+        profilesModel.remove(profile);
     }
 
     @Override
     public void profileEdited(final MutableProfile profile) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
+        okButton.setEnabled(model.isSaveAllowed());
     }
 
     @Override
     public void profileSelectionChanged(final Optional<MutableProfile> profile) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getDeleteProfile().setEnabled(model.getSelectedProfile().isPresent());
+        okButton.setEnabled(model.isSaveAllowed());
+        deleteProfile.setEnabled(model.getSelectedProfile().isPresent());
         if (profile.isPresent()) {
-            final int index = listModel.indexOf(profile.get());
+            final int index = profilesModel.indexOf(profile.get());
             selectionModel.setLeadSelectionIndex(index);
         } else {
             selectionModel.setLeadSelectionIndex(-1);
         }
-        dialog.getProfileName().setEnabled(model.getSelectedProfileIdent().isPresent());
-        dialog.getProfileName().setText(model.getSelectedProfileName().orElse(""));
-        dialog.getProfileNicknames().setEnabled(model.getSelectedProfileNicknames().isPresent());
-        dialog.getProfileNicknames().getModel().clear();
-        if (model.getSelectedProfileNicknames().isPresent()) {
-            model.getSelectedProfileNicknames().get().forEach(
-                    p -> dialog.getProfileNicknames().getModel().addElement(p));
-        }
-        dialog.getProfileRealname().setEnabled(model.getSelectedProfileRealname().isPresent());
-        dialog.getProfileRealname().setText(model.getSelectedProfileRealname().orElse(""));
-        dialog.getProfileIdent().setEnabled(model.getSelectedProfile().isPresent());
-        dialog.getProfileIdent().setText(model.getSelectedProfileIdent().orElse(""));
+        name.setEnabled(model.getSelectedProfileIdent().isPresent());
+        name.setText(model.getSelectedProfileName().orElse(""));
+        nicknames.setEnabled(model.getSelectedProfileNicknames().isPresent());
+        nicknamesModel.clear();
+        nicknamesModel.addAll(model.getSelectedProfileNicknames().orElse(Lists.newArrayList()));
+        highlightsModel.clear();
+        highlightsModel.addAll(model.getSelectedProfileHighlights().orElse(Lists.newArrayList()));
+        realname.setEnabled(model.isSelectedProfileRealnameValid());
+        realname.setText(model.getSelectedProfileRealname().orElse(""));
+        ident.setEnabled(model.getSelectedProfile().isPresent());
+        ident.setText(model.getSelectedProfileIdent().orElse(""));
     }
 
     @Override
     public void selectedNicknameChanged(final Optional<String> nickname) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileDeleteNickname()
-                .setEnabled(model.getSelectedProfileSelectedNickname().isPresent());
-        dialog.getProfileEditNickname()
-                .setEnabled(model.getSelectedProfileSelectedNickname().isPresent());
+        okButton.setEnabled(model.isSaveAllowed());
+        deleteNickname.setEnabled(model.isSelectedProfileNicknamesValid());
+        editNickname.setEnabled(model.isSelectedProfileNicknamesValid());
     }
 
     @Override
     public void selectedProfileNicknameEdited(final String oldNickname, final String newNickname) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileNicknames().getModel().setElementAt(newNickname,
-                dialog.getProfileNicknames().getModel().indexOf(oldNickname));
+        okButton.setEnabled(model.isSaveAllowed());
+        nicknamesModel.set(nicknamesModel.indexOf(oldNickname), newNickname);
+        addNickname.setEnabled(model.isSelectedProfileNicknamesValid());
+        editNickname.setEnabled(model.isSelectedProfileNicknamesValid());
     }
 
     @Override
     public void selectedProfileNicknameAdded(final String nickname) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileNicknames().getModel().addElement(nickname);
+        okButton.setEnabled(model.isSaveAllowed());
+        nicknamesModel.add(nickname);
     }
 
     @Override
     public void selectedProfileNicknameRemoved(final String nickname) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileNicknames().getModel().removeElement(nickname);
+        okButton.setEnabled(model.isSaveAllowed());
+        nicknamesModel.remove(nickname);
     }
 
     @Override
     public void selectedHighlightChanged(final Optional<String> highlight) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileDeleteHighlight()
-                .setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
-        dialog.getProfileEditHighlight()
-                .setEnabled(model.getSelectedProfileSelectedHighlight().isPresent());
+        deleteHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
+        editHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
     }
 
     @Override
     public void selectedProfileHighlightEdited(final String oldHighlight, final String newHighlight) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileHighlights().getModel().setElementAt(newHighlight,
-                dialog.getProfileHighlights().getModel().indexOf(oldHighlight));
+        okButton.setEnabled(model.isSaveAllowed());
+        highlightsModel.set(highlightsModel.indexOf(oldHighlight), newHighlight);
+        deleteHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
+        editHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
     }
 
     @Override
     public void selectedProfileHighlightAdded(final String highlight) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileHighlights().getModel().addElement(highlight);
+        okButton.setEnabled(model.isSaveAllowed());
+        highlightsModel.add(highlight);
+        deleteHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
+        editHighlight.setEnabled(model.isSelectedProfileHighlightsValid());
     }
 
     @Override
     public void selectedProfileHighlightRemoved(final String highlight) {
-        dialog.getOkButton().setEnabled(model.isSaveAllowed());
-        dialog.getProfileHighlights().getModel().removeElement(highlight);
+        okButton.setEnabled(model.isSaveAllowed());
+        highlightsModel.remove(highlight);
     }
 
 }

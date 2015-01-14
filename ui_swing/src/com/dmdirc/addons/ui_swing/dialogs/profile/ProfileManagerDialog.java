@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.profile;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.renderers.PropertyListCellRenderer;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -29,14 +31,12 @@ import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.profiles.MutableProfile;
 
 import java.awt.Window;
 
 import javax.inject.Inject;
 import javax.swing.Box;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -53,12 +53,6 @@ public class ProfileManagerDialog extends StandardDialog {
     private final ProfilesDialogModel model;
     /** Icon manager. */
     private final IconManager iconManager;
-    /** List of profiles. */
-    private final JList<MutableProfile> profileList = new JList<>(new DefaultListModel<>());
-    /** List of nicknames for a profile. */
-    private final ReorderableJList<String> nicknames = new ReorderableJList<>();
-    /** List of highlights for a profile. */
-    private final ReorderableJList<String> highlights = new ReorderableJList<>();
     /** Adds a new nickname to the active profile. */
     private final JButton addNickname = new JButton("Add");
     /** Edits the active nickname in the active profile. */
@@ -81,6 +75,12 @@ public class ProfileManagerDialog extends StandardDialog {
     private final JButton addProfile = new JButton("Add");
     /** Deletes the active profile. */
     private final JButton deleteProfile = new JButton("Delete");
+    /** List of profiles. */
+    private JList<MutableProfile> profileList;
+    /** List of nicknames for a profile. */
+    private ReorderableJList<String> nicknames;
+    /** List of highlights for a profile. */
+    private ReorderableJList<String> highlights;
 
     /**
      * Creates a new instance of ProfileEditorDialog.
@@ -101,6 +101,9 @@ public class ProfileManagerDialog extends StandardDialog {
 
     /** Initialises the components. */
     private void initComponents() {
+        profileList = new JList<>(new GenericListModel<>());
+        nicknames = new ReorderableJList<>(new GenericListModel<>());
+        highlights = new ReorderableJList<>(new GenericListModel<>());
         profileList.setCellRenderer(new PropertyListCellRenderer<>(profileList.getCellRenderer(),
                 MutableProfile.class, "name"));
         setLayout(new MigLayout("fill, wmin 700, wmax 700, flowy"));
@@ -145,63 +148,10 @@ public class ProfileManagerDialog extends StandardDialog {
 
     @Override
     public void display() {
-        new ProfileManagerController(this, model, iconManager).init();
+        new ProfileManagerController(this, model, iconManager).init(profileList, addProfile,
+                deleteProfile, name, nicknames, addNickname, editNickname, deleteNickname,
+                realname, ident, highlights, addHighlight, editHighlight, deleteHighlight,
+                getOkButton(), getCancelButton());
         super.display();
-    }
-
-    public JList<MutableProfile> getProfileList() {
-        return profileList;
-    }
-
-    public ReorderableJList<String> getProfileNicknames() {
-        return nicknames;
-    }
-
-    public JButton getProfileAddNickname() {
-        return addNickname;
-    }
-
-    public JButton getProfileEditNickname() {
-        return editNickname;
-    }
-
-    public JButton getProfileDeleteNickname() {
-        return deleteNickname;
-    }
-
-    public JTextField getProfileName() {
-        return name;
-    }
-
-    public JTextField getProfileIdent() {
-        return ident;
-    }
-
-    public JTextField getProfileRealname() {
-        return realname;
-    }
-
-    public JButton getAddProfile() {
-        return addProfile;
-    }
-
-    public JButton getDeleteProfile() {
-        return deleteProfile;
-    }
-
-    public ReorderableJList<String> getProfileHighlights() {
-        return highlights;
-    }
-
-    public JButton getProfileAddHighlight() {
-        return addHighlight;
-    }
-
-    public JButton getProfileEditHighlight() {
-        return editHighlight;
-    }
-
-    public JButton getProfileDeleteHighlight() {
-        return deleteHighlight;
     }
 }

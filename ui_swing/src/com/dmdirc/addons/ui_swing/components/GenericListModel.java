@@ -54,7 +54,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      *
      * @param list Data to be included in the model
      */
-    public GenericListModel(final List<T> list) {
+    public GenericListModel(final Collection<T> list) {
 
         this.list = Collections.synchronizedList(new ArrayList<>(list));
     }
@@ -222,12 +222,23 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     }
 
     /**
+     * Returns a list of items in this model
+     *
+     * @return List available in this model
+     */
+    public List<T> elements() {
+        return Collections.unmodifiableList(list);
+    }
+
+    /**
      * Adds all the objects in the specified collection to this list.
      *
      * @param collection Collection to add
      */
     public void addAll(final Collection<T> collection) {
+        final int lastIndex = list.size() - 1;
         list.addAll(collection);
+        fireIntervalAdded(this, lastIndex < 0 ? 0 : lastIndex, collection.size());
     }
 
     /**
@@ -238,6 +249,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public void addAll(final int index, final Collection<T> collection) {
         list.addAll(index, collection);
+        fireIntervalAdded(this, index, collection.size());
     }
 
     @Override

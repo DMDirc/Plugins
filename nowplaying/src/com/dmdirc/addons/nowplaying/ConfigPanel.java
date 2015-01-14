@@ -33,7 +33,6 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -112,7 +111,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
         list = new ReorderableJList<>();
 
         for (String source : sources) {
-            list.getModel().addElement(source);
+            list.getModel().add(source);
         }
 
         textfield = new JTextField(globalConfig.getOption(domain, "format"));
@@ -178,15 +177,7 @@ public class ConfigPanel extends JPanel implements PreferencesInterface, KeyList
      * @return An ordered list of sources
      */
     public List<String> getSources() {
-        final List<String> newSources = new LinkedList<>();
-
-        final Enumeration<String> values = list.getModel().elements();
-
-        while (values.hasMoreElements()) {
-            newSources.add(values.nextElement());
-        }
-
-        return newSources;
+        return new LinkedList<>(list.getModel().elements());
     }
 
     @Override

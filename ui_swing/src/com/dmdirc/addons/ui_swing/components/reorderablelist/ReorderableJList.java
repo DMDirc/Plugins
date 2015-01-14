@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -43,7 +45,6 @@ import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
@@ -75,7 +76,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel<>());
+        this(new GenericListModel<>());
     }
 
     /**
@@ -83,7 +84,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel<T> model) {
+    public ReorderableJList(final GenericListModel<T> model) {
         super(model);
 
         setCellRenderer(new ReorderableJListCellRenderer<>(this));
@@ -104,16 +105,16 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
     }
 
     @Override
-    public DefaultListModel<T> getModel() {
-        return (DefaultListModel<T>) super.getModel();
+    public GenericListModel<T> getModel() {
+        return (GenericListModel<T>) super.getModel();
     }
 
     @Override
     public void setModel(final ListModel<T> model) {
-        if (model instanceof DefaultListModel) {
+        if (model instanceof GenericListModel) {
             super.setModel(model);
         } else {
-            throw new IllegalArgumentException("model needs to be an instance of DefaultListModel");
+            throw new IllegalArgumentException("model needs to be an instance of GenericListModel");
         }
     }
 
@@ -242,7 +243,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel<T> mod = getModel();
+        final GenericListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
         for (Object item : (ArrayList<?>) dragged) {
