@@ -50,8 +50,6 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     private final ProfilesDialogModel model;
     private final IconManager iconManager;
     private VetoableListSelectionModel selectionModel;
-    private JList<MutableProfile> profileList;
-    private JButton addProfile;
     private JButton deleteProfile;
     private JTextField name;
     private JList<String> nicknames;
@@ -83,8 +81,6 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
             final JTextField ident, final ReorderableJList<String> highlights,
             final JButton addHighlight, final JButton editHighlight, final JButton deleteHighlight,
             final JButton okButton, final JButton cancelButton) {
-        this.profileList = profileList;
-        this.addProfile = addProfile;
         this.deleteProfile = deleteProfile;
         this.name = name;
         this.nicknames = nicknames;
@@ -164,11 +160,8 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     private void setupProfileName(final JTextField name) {
         name.setEnabled(model.getSelectedProfileName().isPresent());
         name.setText(model.getSelectedProfileName().orElse(""));
-        name.getDocument().addDocumentListener(new ConsumerDocumentListener(s -> {
-            if (model.getSelectedProfile().isPresent()) {
-                model.setSelectedProfileName(Optional.of(s));
-            }
-        }));
+        name.getDocument().addDocumentListener(
+                new ConsumerDocumentListener(s -> model.setSelectedProfileName(Optional.of(s))));
     }
 
     private void setupProfileNicknames(final ReorderableJList<String> nicknames) {
@@ -292,14 +285,15 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
         } else {
             selectionModel.setLeadSelectionIndex(-1);
         }
-        name.setEnabled(model.getSelectedProfileIdent().isPresent());
+        name.setEnabled(model.getSelectedProfile().isPresent());
         name.setText(model.getSelectedProfileName().orElse(""));
-        nicknames.setEnabled(model.getSelectedProfileNicknames().isPresent());
+        nicknames.setEnabled(model.getSelectedProfile().isPresent());
         nicknamesModel.clear();
         nicknamesModel.addAll(model.getSelectedProfileNicknames().orElse(Lists.newArrayList()));
+        highlights.setEnabled(model.getSelectedProfile().isPresent());
         highlightsModel.clear();
         highlightsModel.addAll(model.getSelectedProfileHighlights().orElse(Lists.newArrayList()));
-        realname.setEnabled(model.isSelectedProfileRealnameValid());
+        realname.setEnabled(model.getSelectedProfile().isPresent());
         realname.setText(model.getSelectedProfileRealname().orElse(""));
         ident.setEnabled(model.getSelectedProfile().isPresent());
         ident.setText(model.getSelectedProfileIdent().orElse(""));
