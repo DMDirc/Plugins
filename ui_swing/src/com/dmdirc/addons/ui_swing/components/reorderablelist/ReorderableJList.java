@@ -247,7 +247,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         final GenericListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (Iterable<?>) dragged) {
+        for (Object item : (ArrayList<?>) dragged) {
             @SuppressWarnings("unchecked")
             final T genericItem = (T) item;
             mod.add(newIndex, genericItem);
