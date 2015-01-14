@@ -23,19 +23,18 @@
 package com.dmdirc.addons.ui_swing.dialogs.profile;
 
 import com.dmdirc.addons.ui_swing.components.ConsumerDocumentListener;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.vetoable.VetoableListSelectionModel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModelListener;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.profiles.MutableProfile;
-
-import com.google.common.collect.Lists;
 
 import java.awt.Dialog;
 import java.beans.PropertyVetoException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -121,13 +120,13 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
                 e -> new StandardInputDialog(dialog, Dialog.ModalityType.DOCUMENT_MODAL,
                         iconManager, "Profile Manager: Add Profile", "Enter the new profile's name",
                         model.getNewProfileNameValidator(),
-                        (String s) -> model.addProfile(s, s, s, Lists.newArrayList(s))).display());
+                        (Consumer<String>) model::addProfile).display());
     }
 
     private void setupDeleteProfile(final JButton deleteProfile) {
         deleteProfile.setEnabled(model.getSelectedProfile().isPresent());
         deleteProfile.addActionListener(l -> model.getSelectedProfile()
-                .ifPresent(p -> model.removeProfile(p.getName())));
+                .ifPresent(model::removeProfile));
     }
 
     private void setupEditNickname(final JButton editNickname) {
