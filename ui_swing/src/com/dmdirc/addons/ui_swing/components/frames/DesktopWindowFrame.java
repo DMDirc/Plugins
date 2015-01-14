@@ -23,11 +23,10 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
-import com.dmdirc.addons.ui_swing.components.IconManager;
-
-import java.awt.Point;
+import com.dmdirc.ui.CoreUIUtils;
 
 import javax.swing.JFrame;
 
@@ -46,8 +45,6 @@ public class DesktopWindowFrame extends JFrame {
     /** TextFrame associated with this popout window. */
     private final TextFrame windowWindow;
     private final IconManager iconManager;
-    /** Initial location for popped out window. */
-    private final Point initialLocation;
 
     /**
      * Creates a new instance of DesktopWindowFrame.
@@ -57,7 +54,6 @@ public class DesktopWindowFrame extends JFrame {
     public DesktopWindowFrame(final TextFrame windowWindow, final IconManager iconManager) {
         this.windowWindow = windowWindow;
         this.iconManager = iconManager;
-        initialLocation = windowWindow.getLocationOnScreen();
 
         setLayout(new MigLayout("fill, ins rel"));
         add(windowWindow, "grow");
@@ -71,8 +67,8 @@ public class DesktopWindowFrame extends JFrame {
      */
     public void display() {
         pack();
+        CoreUIUtils.centreWindow(this);
         setVisible(true);
-        setLocation(initialLocation);
     }
 
     @Handler(invocation = EdtHandlerInvocation.class, delivery = Invoke.Asynchronously)
