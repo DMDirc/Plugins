@@ -229,6 +229,7 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     @Override
     public void profileAdded(final MutableProfile profile) {
         dialog.getProfileAddNickname().setEnabled(model.isProfileListValid());
+        dialog.getProfileAddHighlight().setEnabled(model.isProfileListValid());
         dialog.getOkButton().setEnabled(model.isSaveAllowed());
         listModel.addElement(profile);
     }
