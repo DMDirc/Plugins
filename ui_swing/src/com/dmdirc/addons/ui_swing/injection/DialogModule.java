@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.injection;
 
-import com.dmdirc.Channel;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -44,6 +43,7 @@ import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -186,7 +186,7 @@ public class DialogModule {
 
     @Provides
     @Singleton
-    public KeyedDialogProvider<Channel, ChannelSettingsDialog> getChannelSettingsDialogProvider(
+    public KeyedDialogProvider<GroupChat, ChannelSettingsDialog> getChannelSettingsDialogProvider(
             final IdentityFactory identityFactory,
             final SwingWindowFactory windowFactory,
             @UserConfig final ConfigProvider userConfig,
@@ -200,9 +200,9 @@ public class DialogModule {
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils,
             final IconManager iconManager) {
-        return new KeyedDialogProvider<Channel, ChannelSettingsDialog>() {
+        return new KeyedDialogProvider<GroupChat, ChannelSettingsDialog>() {
             @Override
-            protected ChannelSettingsDialog getInstance(final Channel key) {
+            protected ChannelSettingsDialog getInstance(final GroupChat key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager, compFactory, key,
                         parentWindow, clipboard, commandController, eventBus,

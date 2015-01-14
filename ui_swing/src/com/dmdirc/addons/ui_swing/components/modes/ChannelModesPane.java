@@ -22,74 +22,75 @@
 
 package com.dmdirc.addons.ui_swing.components.modes;
 
-import com.dmdirc.Channel;
-import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.interfaces.GroupChat;
+import com.dmdirc.parser.interfaces.Parser;
 
 /** Non list mode panel. */
 public final class ChannelModesPane extends ModesPane {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
-    /** Parent channel. */
-    private final Channel channel;
+    /** Parent group chat. */
+    private final GroupChat groupChat;
 
     /**
      * Creates a new instance of ChannelModesPane.
      *
-     * @param channel Parent channel
+     * @param groupChat Parent group chat
      * @param iconManager The icon manager to use
      */
-    public ChannelModesPane(final Channel channel, final IconManager iconManager) {
-        super(channel.getConfigManager(), iconManager);
+    public ChannelModesPane(final GroupChat groupChat, final IconManager iconManager) {
+        super(groupChat.getWindowModel().getConfigManager(), iconManager);
 
-        this.channel = channel;
+        this.groupChat = groupChat;
         initModesPanel();
     }
 
     @Override
     public boolean hasModeValue(final String mode) {
-        return channel.getWindowModel().getConfigManager().hasOptionString("server", "mode" + mode);
+        return groupChat.getWindowModel().getConfigManager().hasOptionString("server",
+                "mode" + mode);
     }
 
     @Override
     public String getModeValue(final String mode) {
-        return channel.getWindowModel().getConfigManager().getOption("server", "mode" + mode);
+        return groupChat.getWindowModel().getConfigManager().getOption("server", "mode" + mode);
     }
 
     @Override
     public boolean isModeEnabled(final String mode) {
-        return !channel.getWindowModel().getConfigManager().hasOptionString("server",
-                "enablemode" + mode) || channel.getWindowModel().getConfigManager()
+        return !groupChat.getWindowModel().getConfigManager().hasOptionString("server",
+                "enablemode" + mode) || groupChat.getWindowModel().getConfigManager()
                 .getOptionBool("server", "enablemode" + mode);
     }
 
     @Override
     public boolean isModeSettable(final String mode) {
-        return channel.getConnection().get().getParser().get().isUserSettable(mode.toCharArray()
+        return groupChat.getConnection().get().getParser().get().isUserSettable(mode.toCharArray()
                 [0]);
     }
 
     @Override
     public String getAvailableBooleanModes() {
-        return channel.getConnection().get().getParser().get().getBooleanChannelModes();
+        return groupChat.getConnection().get().getParser().get().getBooleanChannelModes();
     }
 
     @Override
     public String getOurBooleanModes() {
-        return channel.getChannelInfo().getModes();
+        return groupChat.getModes();
     }
 
     @Override
     public String getAllParamModes() {
-        final Parser parser = channel.getConnection().get().getParser().get();
+        final Parser parser = groupChat.getConnection().get().getParser().get();
         return parser.getParameterChannelModes()
                 + parser.getDoubleParameterChannelModes();
     }
 
     @Override
     public String getParamModeValue(final String mode) {
-        return channel.getChannelInfo().getMode(mode.charAt(0));
+        return groupChat.getModeValue(mode.charAt(0));
     }
 
     @Override
@@ -101,12 +102,17 @@ public final class ChannelModesPane extends ModesPane {
         } else {
             state = getParamModes().get(mode).getState();
         }
-        channel.getChannelInfo().alterMode(state, mode.charAt(0), parameter);
+
+        if (state) {
+            groupChat.setMode(mode.charAt(0), parameter);
+        } else {
+            groupChat.removeMode(mode.charAt(0), parameter);
+        }
     }
 
     @Override
     public void flushModes() {
-        channel.getChannelInfo().flushModes();
+        groupChat.flushModes();
     }
 
 }

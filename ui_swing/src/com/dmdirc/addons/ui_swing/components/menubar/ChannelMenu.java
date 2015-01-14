@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
@@ -34,6 +33,7 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 
@@ -60,7 +60,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
     /** Main frame. */
     private final MainFrame mainFrame;
     /** Dialog provider. */
-    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
+    private final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider;
     /** Channel list dialog provider. */
     private final DialogProvider<ChannelListDialog> channelListDialogProvider;
     /** Active frame manager. */
@@ -73,7 +73,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
     @Inject
     public ChannelMenu(
             final ActiveFrameManager activeFrameManager,
-            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
+            final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider,
             final MainFrame mainFrame,
             final IconManager iconManager,
             final DialogProvider<ChannelListDialog> channelListDialogProvider) {
@@ -121,8 +121,9 @@ public class ChannelMenu extends JMenu implements MenuListener {
 
     private void showChannelSettings() {
         activeFrameManager.getActiveFrame().ifPresent(f -> {
-            if (f.getContainer() instanceof Channel) {
-                dialogProvider.displayOrRequestFocus((Channel) f.getContainer());
+            // TODO: Can't assume containers will be group chats.
+            if (f.getContainer() instanceof GroupChat) {
+                dialogProvider.displayOrRequestFocus((GroupChat) f.getContainer());
             }
         });
     }

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.commands;
 
-import com.dmdirc.Channel;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
@@ -36,6 +35,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,7 @@ public class ChannelSettings extends Command implements IntelligentCommand {
     public static final CommandInfo INFO = new BaseCommandInfo("channelsettings",
             "channelsettings - opens the channel settings window", CommandType.TYPE_CHANNEL);
     /** The controller to use to show the settings window. */
-    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
+    private final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider;
 
     /**
      * Creates a new instance of the {@link ChannelSettings} command.
@@ -62,7 +62,7 @@ public class ChannelSettings extends Command implements IntelligentCommand {
     @Inject
     public ChannelSettings(
             final CommandController commandController,
-            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider) {
+            final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider) {
         super(commandController);
         this.dialogProvider = dialogProvider;
     }
