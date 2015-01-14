@@ -278,7 +278,7 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
     @Override
     public void profileSelectionChanged(final Optional<MutableProfile> profile) {
         okButton.setEnabled(model.isSaveAllowed());
-        deleteProfile.setEnabled(model.isProfileListValid());
+        deleteProfile.setEnabled(model.getSelectedProfile().isPresent());
         if (profile.isPresent()) {
             final int index = profilesModel.indexOf(profile.get());
             selectionModel.setLeadSelectionIndex(index);
