@@ -22,10 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -47,7 +48,7 @@ public class ListReorderButtonPanel<T> extends JPanel implements
     /** List to reorder. */
     private final JList<T> list;
     /** Default list model. */
-    private final DefaultListModel<T> model;
+    private final GenericListModel<T> model;
     /** Up button. */
     private final JButton up;
     /** Down button. */
@@ -129,7 +130,7 @@ public class ListReorderButtonPanel<T> extends JPanel implements
      * @param newIndex Current index
      */
     private void moveElement(final T object, final int newIndex) {
-        model.removeElement(object);
+        model.remove(object);
         model.add(newIndex, object);
         list.setSelectedIndex(newIndex);
     }

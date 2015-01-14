@@ -27,7 +27,6 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.ConfigProvider;
 
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
         list = new ReorderableJList<>();
 
         for (String method : methods) {
-            list.getModel().addElement(method);
+            list.getModel().add(method);
         }
 
         setLayout(new MigLayout("fillx, ins 0"));
@@ -117,15 +116,7 @@ public class NotificationConfig extends JPanel implements PreferencesInterface {
      * @return An ordered list of methods
      */
     public List<String> getMethods() {
-        final List<String> newMethods = new LinkedList<>();
-
-        final Enumeration<?> values = list.getModel().elements();
-
-        while (values.hasMoreElements()) {
-            newMethods.add((String) values.nextElement());
-        }
-
-        return newMethods;
+        return new LinkedList<>(list.getModel().elements());
     }
 
     @Override

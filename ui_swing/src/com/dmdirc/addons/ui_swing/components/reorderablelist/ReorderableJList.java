@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.reorderablelist;
 
+import com.dmdirc.addons.ui_swing.components.GenericListModel;
+
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -75,7 +77,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
     /** Instantiate new ReorderableJList. */
     public ReorderableJList() {
-        this(new DefaultListModel<>());
+        this(new GenericListModel<>());
     }
 
     /**
@@ -83,7 +85,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
      *
      * @param model Model
      */
-    public ReorderableJList(final DefaultListModel<T> model) {
+    public ReorderableJList(final GenericListModel<T> model) {
         super(model);
 
         setCellRenderer(new ReorderableJListCellRenderer<>(this));
@@ -104,8 +106,8 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
     }
 
     @Override
-    public DefaultListModel<T> getModel() {
-        return (DefaultListModel<T>) super.getModel();
+    public GenericListModel<T> getModel() {
+        return (GenericListModel<T>) super.getModel();
     }
 
     @Override
@@ -113,7 +115,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
         if (model instanceof DefaultListModel) {
             super.setModel(model);
         } else {
-            throw new IllegalArgumentException("model needs to be an instance of DefaultListModel");
+            throw new IllegalArgumentException("model needs to be an instance of GenericListModel");
         }
     }
 
@@ -242,10 +244,10 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
         //move items
         final boolean sourceBeforeTarget = draggedIndex < index;
-        final DefaultListModel<T> mod = getModel();
+        final GenericListModel<T> mod = getModel();
         final int newIndex = sourceBeforeTarget ? index - 1 : index;
         mod.remove(draggedIndex);
-        for (Object item : (ArrayList<?>) dragged) {
+        for (Object item : (Iterable<?>) dragged) {
             @SuppressWarnings("unchecked")
             final T genericItem = (T) item;
             mod.add(newIndex, genericItem);
