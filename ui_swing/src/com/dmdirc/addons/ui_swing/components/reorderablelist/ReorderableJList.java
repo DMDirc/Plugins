@@ -45,7 +45,6 @@ import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
@@ -112,7 +111,7 @@ public class ReorderableJList<T> extends JList<T> implements DragSourceListener,
 
     @Override
     public void setModel(final ListModel<T> model) {
-        if (model instanceof DefaultListModel) {
+        if (model instanceof GenericListModel) {
             super.setModel(model);
         } else {
             throw new IllegalArgumentException("model needs to be an instance of GenericListModel");
