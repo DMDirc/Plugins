@@ -236,7 +236,9 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      * @param collection Collection to add
      */
     public void addAll(final Collection<T> collection) {
+        final int lastIndex = list.size() - 1;
         list.addAll(collection);
+        fireIntervalAdded(this, lastIndex < 0 ? 0 : lastIndex, collection.size());
     }
 
     /**
@@ -247,6 +249,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public void addAll(final int index, final Collection<T> collection) {
         list.addAll(index, collection);
+        fireIntervalAdded(this, index, collection.size());
     }
 
     @Override
