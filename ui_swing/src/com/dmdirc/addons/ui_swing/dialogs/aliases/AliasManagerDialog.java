@@ -24,13 +24,13 @@ package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidationFactory;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.commandparser.aliases.Alias;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
 import java.awt.Dimension;
@@ -53,22 +53,57 @@ import net.miginfocom.swing.MigLayout;
 public class AliasManagerDialog extends StandardDialog {
 
     private static final long serialVersionUID = 1;
+    private final AliasDialogModel model;
+    private final IconManager iconManager;
+    private final DMDircMBassador eventBus;
+    private JList<Alias> aliasList;
+    private JTextField command;
+    private JSpinner argumentsNumber;
+    private JTextArea response;
+    private JButton addAlias;
+    private JButton deleteAlias;
+    private JScrollPane responseScroll;
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
             final IconManager iconManager, final DMDircMBassador eventBus) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
+        this.model = model;
+        this.iconManager = iconManager;
+        this.eventBus = eventBus;
+        initComponents();
+        layoutComponents();
+    }
+
+    @Override
+    public void display() {
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
+        UIUtilities.addUndoManager(eventBus, response);
+        linker.bindCommandList(aliasList);
+        linker.bindCommand(command);
+        linker.bindArgumentsNumber(argumentsNumber);
+        linker.bindResponse(response, responseScroll);
+        linker.bindAddAlias(addAlias);
+        linker.bindDeleteAlias(deleteAlias);
+        linker.bindOKButton(getOkButton());
+        linker.bindCancelButton(getCancelButton());
+        linker.init();
+        model.loadModel();
+        super.display();
+    }
+
+    private void initComponents() {
         setTitle("Alias Manager");
-        final JList<Alias> aliasList = new JList<>();
-        final JTextField command = new JTextField();
-        final JSpinner argumentsNumber = new JSpinner();
-        final JTextArea response = new JTextArea();
-        final JButton addAlias = new JButton("Add Alias");
-        final JButton deleteAlias = new JButton("Delete Alias");
-        final JScrollPane responseScroll = new JScrollPane(response);
-        getOkButton();
-        getCancelButton();
+        aliasList = new JList<>();
+        command = new JTextField();
+        argumentsNumber = new JSpinner();
+        response = new JTextArea();
+        addAlias = new JButton("Add Alias");
+        deleteAlias = new JButton("Delete Alias");
+        responseScroll = new JScrollPane(response);
+    }
+
+    private void layoutComponents() {
         setMinimumSize(new Dimension(800, 400));
         setPreferredSize(new Dimension(800, 400));
         setLayout(new MigLayout("flowy, fill", "[][][grow]", "[][][][grow][]"));
@@ -92,19 +127,5 @@ public class AliasManagerDialog extends StandardDialog {
 
         add(getLeftButton(), "flowx, split 3, right, sg button");
         add(getRightButton(), "sg button");
-
-        UIUtilities.addUndoManager(eventBus, response);
-
-        linker.bindCommandList(aliasList);
-        linker.bindCommand(command);
-        linker.bindArgumentsNumber(argumentsNumber);
-        linker.bindResponse(response, responseScroll);
-        linker.bindAddAlias(addAlias);
-        linker.bindDeleteAlias(deleteAlias);
-        linker.bindOKButton(getOkButton());
-        linker.bindCancelButton(getCancelButton());
-        linker.init();
-        model.loadModel();
     }
-
 }

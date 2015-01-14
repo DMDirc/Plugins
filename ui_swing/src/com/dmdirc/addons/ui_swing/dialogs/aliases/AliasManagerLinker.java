@@ -172,7 +172,7 @@ public class AliasManagerLinker implements AliasDialogModelListener {
         commandModel.remove(alias);
         if (index >= commandModel.getSize()) {
             model.setSelectedAlias(Optional.ofNullable(
-                    commandModel.getElementAt(commandModel.getSize() - 1)));
+                    commandModel.getElementAt(commandModel.getSize())));
         } else if (index == -1 && !commandModel.isEmpty()) {
             model.setSelectedAlias(Optional.ofNullable(commandModel.get(0)));
         } else {
