@@ -22,15 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.parser.common.ChannelListModeItem;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.collections.MapList;
 import com.dmdirc.util.validators.NotEmptyValidator;
 
@@ -70,8 +70,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
-    /** Channel. */
-    private final Channel channel;
+    /** Group chat. */
+    private final GroupChat groupChat;
     /** Combox box used to switch between list modes. */
     private final JComboBox<String> listModesMenu;
     /** Arraylist of jpanels containing the listmodes. */
@@ -111,33 +111,34 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
      * @param globalConfig The config to read settings from.
      * @param userConfig   The config to write settings to.
      * @param iconManager  The manager to use to retrieve icons for dialogs and validation.
-     * @param channel      Parent channel
+     * @param groupChat    Parent group chat
      * @param parentWindow Parent window
      */
     public ChannelListModesPane(
             final AggregateConfigProvider globalConfig,
             final ConfigProvider userConfig,
             final IconManager iconManager,
-            final Channel channel,
+            final GroupChat groupChat,
             final Window parentWindow) {
 
         this.globalConfig = checkNotNull(globalConfig);
         this.userConfig = checkNotNull(userConfig);
         this.iconManager = checkNotNull(iconManager);
-        this.channel = checkNotNull(channel);
+        this.groupChat = checkNotNull(groupChat);
         this.parentWindow = checkNotNull(parentWindow);
         setOpaque(UIUtilities.getTabbedPaneOpaque());
 
         list = new JList<>();
         nativeRenderer = list.getCellRenderer();
-        if (channel.getConfigManager().getOptionBool("general", "extendedListModes")) {
+        if (groupChat.getWindowModel().getConfigManager()
+                .getOptionBool("general", "extendedListModes")) {
             renderer = new ExtendedListModeCellRenderer();
         } else {
             renderer = new ListModeCellRenderer(nativeRenderer);
         }
         listModesPanel = new JScrollPane();
         listModesPanels = new ArrayList<>();
-        listModesArray = channel.getConnection().get().getParser().get()
+        listModesArray = groupChat.getConnection().get().getParser().get()
                 .getListChannelModes().toCharArray();
         existingListItems = new MapList<>();
         listModesMenu = new JComboBox<>(new DefaultComboBoxModel<>());
@@ -145,8 +146,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         removeListModeButton = new JButton("Remove");
         removeListModeButton.setEnabled(false);
         modeCount = new JLabel();
-        toggle = new JCheckBox("Show extended information",
-                channel.getConfigManager().getOptionBool("general", "extendedListModes"));
+        toggle = new JCheckBox("Show extended information", groupChat.getWindowModel()
+                .getConfigManager().getOptionBool("general", "extendedListModes"));
         toggle.setOpaque(UIUtilities.getTabbedPaneOpaque());
 
         initListModesPanel();
@@ -157,13 +158,13 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     public void update() {
         existingListItems.clear();
 
-        if (channel.getChannelInfo() == null) {
+        if (!groupChat.isOnChannel()) {
             return;
         }
+
         for (int i = 0; i < listModesArray.length; i++) {
             final char mode = listModesArray[i];
-            final Collection<ChannelListModeItem> listItems = channel
-                    .getChannelInfo().getListMode(mode);
+            final Collection<ChannelListModeItem> listItems = groupChat.getListModeItems(mode);
             if (listItems == null) {
                 continue;
             }
@@ -191,8 +192,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
                 getModel();
         for (char mode : listModesArray) {
             String modeText = mode + " list";
-            if (channel.getConfigManager().hasOptionString("server", "mode" + mode)) {
-                modeText = channel.getConfigManager().getOption("server",
+            if (groupChat.getWindowModel().getConfigManager()
+                    .hasOptionString("server", "mode" + mode)) {
+                modeText = groupChat.getWindowModel().getConfigManager().getOption("server",
                         "mode" + mode) + " list [+" + mode + ']';
             }
             model.addElement(modeText);
@@ -236,7 +238,8 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         removeListModeButton.addActionListener(this);
         listModesMenu.addActionListener(this);
         toggle.addActionListener(this);
-        channel.getConfigManager().addChangeListener("general", "extendedListModes", this);
+        groupChat.getWindowModel().getConfigManager()
+                .addChangeListener("general", "extendedListModes", this);
 
     }
 
@@ -266,15 +269,15 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             if (currentModes.containsKey(entry.getKey())) {
                 currentModes.remove(entry.getKey());
             } else {
-                channel.getChannelInfo().alterMode(true, entry.getValue(), entry.getKey().getItem());
+                groupChat.setMode(entry.getValue(), entry.getKey().getItem());
             }
         }
 
         for (Entry<ChannelListModeItem, Character> entry : currentModes.entrySet()) {
-            channel.getChannelInfo().alterMode(false, entry.getValue(), entry.getKey().getItem());
+            groupChat.removeMode(entry.getValue(), entry.getKey().getItem());
         }
 
-        channel.getChannelInfo().flushModes();
+        groupChat.flushModes();
         userConfig.setOption("general", "extendedListModes", toggle.isSelected());
     }
 
@@ -282,9 +285,9 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     private void addListMode() {
         final int selectedIndex = listModesMenu.getSelectedIndex();
         String modeText = String.valueOf(listModesArray[selectedIndex]);
-        if (channel.getConfigManager().hasOptionString("server", "mode"
+        if (groupChat.getWindowModel().getConfigManager().hasOptionString("server", "mode"
                 + listModesArray[selectedIndex])) {
-            modeText = channel.getConfigManager().
+            modeText = groupChat.getWindowModel().getConfigManager().
                     getOption("server", "mode" + listModesArray[selectedIndex]);
         }
         new StandardInputDialog(parentWindow, ModalityType.DOCUMENT_MODAL,
@@ -354,7 +357,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
 
         final int selected = listModesMenu.getSelectedIndex();
         final int current = listModesPanels.get(selected).getModel().getSize();
-        final int maxModes = channel.getConnection().get().getParser().get().
+        final int maxModes = groupChat.getConnection().get().getParser().get().
                 getMaxListModes(listModesArray[selected]);
 
         if (maxModes == -1) {
