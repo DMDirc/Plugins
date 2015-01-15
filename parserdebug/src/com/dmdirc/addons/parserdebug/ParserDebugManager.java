@@ -102,9 +102,9 @@ public class ParserDebugManager implements DebugInfoListener {
                     connection, eventBus, backBufferFactory);
             windowManager.addWindow(connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
-            window.addLine("======================", true);
-            window.addLine("Started Monitoring: " + parser, true);
-            window.addLine("======================", true);
+            window.addLine("======================", new Date());
+            window.addLine("Started Monitoring: " + parser, new Date());
+            window.addLine("======================", new Date());
             return true;
         } catch (CallbackNotFoundException ex) {
             return false;
@@ -123,9 +123,9 @@ public class ParserDebugManager implements DebugInfoListener {
         try {
             parser.getCallbackManager().delCallback(DebugInfoListener.class, this);
             final DebugWindow window = registeredParsers.get(parser);
-            window.addLine("======================", true);
-            window.addLine("No Longer Monitoring: " + parser + " (User Requested)", true);
-            window.addLine("======================", true);
+            window.addLine("======================", new Date());
+            window.addLine("No Longer Monitoring: " + parser + " (User Requested)", new Date());
+            window.addLine("======================", new Date());
             if (close) {
                 window.close();
             }
@@ -159,7 +159,7 @@ public class ParserDebugManager implements DebugInfoListener {
     public void onDebugInfo(final Parser parser, final Date date, final int level, final String data) {
         final DebugWindow window = registeredParsers.get(parser);
         if (window != null) {
-            window.addLine(String.format("[%d] %s%n", level, data), true);
+            window.addLine(String.format("[%d] %s%n", level, data), new Date());
         }
     }
 

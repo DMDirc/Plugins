@@ -31,6 +31,7 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -73,8 +74,8 @@ public class DebugWindow extends FrameContainer {
      * Set the parser to null to stop us holding onto parsers when the server connection is closed.
      */
     public void unsetParser() {
-        addLine("======================", true);
-        addLine("Unset parser: " + parser, true);
+        addLine("======================", new Date());
+        addLine("Unset parser: " + parser, new Date());
         parser = null;
     }
 

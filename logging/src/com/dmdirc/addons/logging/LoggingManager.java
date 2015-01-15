@@ -102,6 +102,7 @@ public class LoggingManager implements ConfigChangeListener {
             "EEEE MMMM dd, yyyy - HH:mm:ss");
     /** Object for synchronising access to the date forma.t */
     private static final Object FORMAT_LOCK = new Object();
+    private static final String timestamp = "[dd/MM/yyyy HH:mm:ss]";
     /** This plugin's plugin info. */
     private final String domain;
     private final PluginInfo pluginInfo;
@@ -124,8 +125,6 @@ public class LoggingManager implements ConfigChangeListener {
     private boolean channelmodeprefix;
     private boolean autobackbuffer;
     private boolean backbufferTimestamp;
-    /** Cached string settings. */
-    private String timestamp;
     private String colour;
     /** Cached int settings. */
     private int historyLines;
@@ -489,20 +488,8 @@ public class LoggingManager implements ConfigChangeListener {
         final StringBuilder finalLine = new StringBuilder();
 
         if (addtime) {
-            String dateString;
-            try {
-                final DateFormat dateFormat = new SimpleDateFormat(timestamp);
-                dateString = dateFormat.format(new Date()).trim();
-            } catch (IllegalArgumentException iae) {
-                // Default to known good format
-                final DateFormat dateFormat = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
-                dateString = dateFormat.format(new Date()).trim();
-
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, iae,
-                        "Dateformat String '" + timestamp + "' is invalid. For more information: "
-                        + "http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html",
-                        ""));
-            }
+            final DateFormat dateFormat = new SimpleDateFormat(timestamp);
+            final String dateString = dateFormat.format(new Date()).trim();
             finalLine.append(dateString);
             finalLine.append(' ');
         }
@@ -608,7 +595,6 @@ public class LoggingManager implements ConfigChangeListener {
         channelmodeprefix = config.getOptionBool(domain, "general.channelmodeprefix");
         autobackbuffer = config.getOptionBool(domain, "backbuffer.autobackbuffer");
         backbufferTimestamp = config.getOptionBool(domain, "backbuffer.timestamp");
-        timestamp = config.getOption(domain, "general.timestamp");
         historyLines = config.getOptionInt(domain, "history.lines");
         colour = config.getOption(domain, "backbuffer.colour");
         backbufferLines = config.getOptionInt(domain, "backbuffer.lines");
@@ -637,10 +623,6 @@ public class LoggingManager implements ConfigChangeListener {
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 pluginInfo.getDomain(), "general.addtime", "Timestamp logs",
                 "Should a timestamp be added to the log files?",
-                manager.getConfigManager(), manager.getIdentity()));
-        general.addSetting(new PreferencesSetting(PreferencesType.TEXT,
-                pluginInfo.getDomain(), "general.timestamp", "Timestamp format",
-                "The String to pass to 'SimpleDateFormat' to format the timestamp",
                 manager.getConfigManager(), manager.getIdentity()));
         general.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
                 pluginInfo.getDomain(), "general.stripcodes", "Strip Control Codes",
