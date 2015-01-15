@@ -285,6 +285,10 @@ public class ProfileManagerController implements ProfilesDialogModelListener {
         } else {
             selectionModel.setLeadSelectionIndex(-1);
         }
+        addNickname.setEnabled(model.getSelectedProfile().isPresent());
+        editNickname.setEnabled(model.getSelectedProfile().isPresent());
+        addHighlight.setEnabled(model.getSelectedProfile().isPresent());
+        editHighlight.setEnabled(model.getSelectedProfile().isPresent());
         name.setEnabled(model.getSelectedProfile().isPresent());
         name.setText(model.getSelectedProfileName().orElse(""));
         nicknames.setEnabled(model.getSelectedProfile().isPresent());
