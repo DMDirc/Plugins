@@ -102,7 +102,7 @@ public class LoggingManager implements ConfigChangeListener {
             "EEEE MMMM dd, yyyy - HH:mm:ss");
     /** Object for synchronising access to the date forma.t */
     private static final Object FORMAT_LOCK = new Object();
-    private static final String timestamp = "[dd/MM/yyyy HH:mm:ss]";
+    private static final DateFormat LOG_FORMAT = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]");
     /** This plugin's plugin info. */
     private final String domain;
     private final PluginInfo pluginInfo;
@@ -488,8 +488,7 @@ public class LoggingManager implements ConfigChangeListener {
         final StringBuilder finalLine = new StringBuilder();
 
         if (addtime) {
-            final DateFormat dateFormat = new SimpleDateFormat(timestamp);
-            final String dateString = dateFormat.format(new Date()).trim();
+            final String dateString = LOG_FORMAT.format(new Date()).trim();
             finalLine.append(dateString);
             finalLine.append(' ');
         }
