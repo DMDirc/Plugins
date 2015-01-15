@@ -70,7 +70,7 @@ public class ChannelSettings extends Command implements IntelligentCommand {
     @Override
     public void execute(@Nonnull final FrameContainer origin,
             final CommandArguments args, final CommandContext context) {
-        dialogProvider.displayOrRequestFocus(((ChannelCommandContext) context).getChannel());
+        dialogProvider.displayOrRequestFocus(((ChannelCommandContext) context).getGroupChat());
     }
 
     @Override
