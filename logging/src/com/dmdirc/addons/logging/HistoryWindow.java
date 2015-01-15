@@ -31,15 +31,25 @@ import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.util.io.ReverseFileReader;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Displays an extended history of a window.
  */
 public class HistoryWindow extends FrameContainer {
+
+    private final Path logFile;
+    private final DMDircMBassador eventBus;
+    private final int numLines;
 
     /**
      * Creates a new HistoryWindow.
@@ -54,22 +64,34 @@ public class HistoryWindow extends FrameContainer {
         super(parent, "raw", title, title, parent.getConfigManager(), backBufferFactory,
                 eventBus,
                 Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
+        this.logFile = logFile;
+        this.eventBus = eventBus;
+        this.numLines = numLines;
 
         initBackBuffer();
-        final int frameBufferSize = parent.getConfigManager().getOptionInt(
-                "ui", "frameBufferSize");
-        try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
-            addLine(reader.getLinesAsString(Math.min(frameBufferSize, numLines)), false);
-        } catch (IOException | SecurityException ex) {
-            eventBus.publishAsync(
-                    new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to read log file.", ""));
-        }
-
+        outputLoggingBackBuffer(parent.getConfigManager().getOptionInt("ui", "frameBufferSize"));
     }
 
     @Override
     public Optional<Connection> getConnection() {
         return getParent().flatMap(FrameContainer::getConnection);
+    }
+
+    @VisibleForTesting
+    void outputLoggingBackBuffer(final int limit) {
+        try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
+            final List<String> lines = reader.getLines(Math.min(limit, numLines));
+            Collections.reverse(lines);
+            lines.forEach(l -> {
+                final ParsePosition pos = new ParsePosition(0);
+                final Date date = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]").parse(l, pos);
+                final String text = l.substring(pos.getIndex()+1);
+                addLine(text, date);
+            });
+        } catch (IOException | SecurityException ex) {
+            eventBus.publishAsync(
+                    new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to read log file.", ""));
+        }
     }
 
 }
