@@ -62,9 +62,9 @@ public class ContactListCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final ChannelCommandContext chanContext = (ChannelCommandContext) context;
 
-        final ContactListListener listener = new ContactListListener(chanContext.getChannel());
+        final ContactListListener listener = new ContactListListener(chanContext.getGroupChat());
         listener.addListeners();
-        chanContext.getChannel().getUsers().forEach(listener::clientAdded);
+        chanContext.getGroupChat().getUsers().forEach(listener::clientAdded);
     }
 
     @Override
