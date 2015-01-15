@@ -561,7 +561,8 @@ public class LoggingManager implements ConfigChangeListener {
         if (channelClient == null) {
             return overrideNick.isEmpty() ? "Unknown Client" : overrideNick;
         } else if (overrideNick.isEmpty()) {
-            return channelmodeprefix ? channelClient.toString() : channelClient.getNickname();
+            return channelmodeprefix ? channelClient.getModePrefixedNickname()
+                    : channelClient.getNickname();
         } else {
             return channelmodeprefix ? channelClient.getImportantMode() + overrideNick :
                     overrideNick;
