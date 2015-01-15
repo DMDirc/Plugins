@@ -83,17 +83,17 @@ public class HistoryWindowTest {
         instance.outputLoggingBackBuffer(4);
         final InOrder inOrder = inOrder(document);
         inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 13:01:05]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAAAAR"));
-        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 13:00:04]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAAAR"));
+                .parse("[21/12/2015 12:58:02]").getTime()), eq
+                (DisplayPropertyMap.EMPTY), eq("RAAR"));
         inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
                 .parse("[21/12/2015 12:59:03]").getTime()), eq
                 (DisplayPropertyMap.EMPTY), eq("RAAAR"));
         inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 12:58:02]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAR"));
+                .parse("[21/12/2015 13:00:04]").getTime()), eq
+                (DisplayPropertyMap.EMPTY), eq("RAAAAR"));
+        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
+                .parse("[21/12/2015 13:01:05]").getTime()), eq
+                (DisplayPropertyMap.EMPTY), eq("RAAAAAR"));
         inOrder.verifyNoMoreInteractions();
     }
 }

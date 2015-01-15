@@ -39,6 +39,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -79,7 +80,8 @@ public class HistoryWindow extends FrameContainer {
     @VisibleForTesting
     void outputLoggingBackBuffer(final int limit) {
         try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
-            final Iterable<String> lines = reader.getLines(Math.min(limit, numLines));
+            final List<String> lines = reader.getLines(Math.min(limit, numLines));
+            Collections.reverse(lines);
             lines.forEach(l -> {
                 final ParsePosition pos = new ParsePosition(0);
                 final Date date = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]").parse(l, pos);
