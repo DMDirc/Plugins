@@ -22,21 +22,21 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.expandingsettings.SettingsPanel;
 import com.dmdirc.addons.ui_swing.components.modes.ChannelModesPane;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 
@@ -62,7 +62,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /** Serial version UID. */
     private static final long serialVersionUID = 8;
     /** The channel object that this dialog belongs to. */
-    private final Channel channel;
+    private final GroupChat channel;
     /** Channel identity file. */
     private final ConfigProvider identity;
     /** Channel window. */
@@ -104,7 +104,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param serviceManager     Service manager
      * @param preferencesManager Preferences Manager
      * @param compFactory        Preferences setting component factory
-     * @param channel            The channel object that we're editing settings for
+     * @param groupChat          The group chat object that we're editing settings for
      * @param parentWindow       Parent window
      * @param clipboard          Clipboard to copy and paste from
      * @param commandController  The controller to use to retrieve command information.
@@ -117,7 +117,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final ServiceManager serviceManager,
             final PreferencesManager preferencesManager,
             final PrefsComponentFactory compFactory,
-            final Channel channel,
+            final GroupChat groupChat,
             final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
@@ -131,17 +131,16 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.serviceManager = checkNotNull(serviceManager);
         this.preferencesManager = checkNotNull(preferencesManager);
         this.compFactory = checkNotNull(compFactory);
-        this.channel = checkNotNull(channel);
+        this.channel = checkNotNull(groupChat);
         this.clipboard = clipboard;
         this.commandController = checkNotNull(commandController);
         this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
         this.iconManager = iconManager;
 
-        identity = identityFactory.createChannelConfig(
-                channel.getConnection().get().getNetwork(),
-                channel.getChannelInfo().getName());
-        channelWindow = (InputWindow) windowFactory.getSwingWindow(channel);
+        identity = identityFactory.createChannelConfig(groupChat.getConnection().get().getNetwork(),
+                groupChat.getName());
+        channelWindow = (InputWindow) windowFactory.getSwingWindow(groupChat.getWindowModel());
 
         initComponents(tabCompleterUtils);
         initListeners();

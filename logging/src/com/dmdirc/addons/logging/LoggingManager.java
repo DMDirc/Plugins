@@ -260,19 +260,19 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelMessage(final BaseChannelMessageEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         appendLine(filename, "<%s> %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
     @Handler
     public void handleChannelAction(final BaseChannelActionEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         appendLine(filename, "* %s %s", getDisplayName(event.getClient()), event.getMessage());
     }
 
     @Handler
     public void handleChannelGotTopic(final ChannelGotTopicEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -286,14 +286,14 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelTopicChange(final ChannelTopicChangeEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         appendLine(filename, "*** %s Changed the topic to: %s",
                 event.getTopic().getClient().map(this::getDisplayName).orElse(""), event.getTopic());
     }
 
     @Handler
     public void handleChannelJoin(final ChannelJoinEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         final GroupChatUser channelClient = event.getClient();
         appendLine(filename, "*** %s (%s) joined the channel", getDisplayName(channelClient),
                 channelClient.getNickname());
@@ -301,7 +301,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelPart(final ChannelPartEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         final String message = event.getMessage();
         final GroupChatUser channelClient = event.getClient();
         if (message.isEmpty()) {
@@ -315,7 +315,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelQuit(final ChannelQuitEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         final String reason = event.getMessage();
         final GroupChatUser channelClient = event.getClient();
         if (reason.isEmpty()) {
@@ -332,7 +332,7 @@ public class LoggingManager implements ConfigChangeListener {
         final GroupChatUser victim = event.getVictim();
         final GroupChatUser perpetrator = event.getClient();
         final String reason = event.getReason();
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
 
         if (reason.isEmpty()) {
             appendLine(filename, "*** %s was kicked by %s",
@@ -345,14 +345,14 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleNickChange(final ChannelNickChangeEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         appendLine(filename, "*** %s is now %s", getDisplayName(event.getClient(),
                 event.getOldNick()), getDisplayName(event.getClient()));
     }
 
     @Handler
     public void handleModeChange(final ChannelModeChangeEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getChannelInfo());
+        final String filename = locator.getLogFile(event.getChannel());
         if (event.getClient().getNickname().isEmpty()) {
             appendLine(filename, "*** Channel modes are: %s", event.getModes());
         } else {
@@ -371,7 +371,7 @@ public class LoggingManager implements ConfigChangeListener {
         final String filename = locator.getLogFile(event.getChannel().getName());
 
         if (autobackbuffer) {
-            showBackBuffer(event.getChannel(), filename);
+            showBackBuffer(event.getChannel().getWindowModel(), filename);
         }
 
         synchronized (FORMAT_LOCK) {

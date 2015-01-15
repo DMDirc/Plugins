@@ -27,10 +27,11 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.parser.interfaces.ChannelInfo;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.io.File;
@@ -39,6 +40,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -103,12 +105,11 @@ public class LogFileLocator {
      *
      * @return the name of the log file to use for this object.
      */
-    public String getLogFile(final ChannelInfo channel) {
+    public String getLogFile(final GroupChat channel) {
         final StringBuffer directory = getLogDirectory();
         final StringBuffer file = new StringBuffer();
-        if (channel.getParser() != null) {
-            addNetworkDir(directory, file, channel.getParser().getNetworkName());
-        }
+        final Optional<String> network = channel.getConnection().map(Connection::getNetwork);
+        network.ifPresent(n -> addNetworkDir(directory, file, n));
         file.append(sanitise(channel.getName().toLowerCase()));
         return getPath(directory, file, channel.getName());
     }

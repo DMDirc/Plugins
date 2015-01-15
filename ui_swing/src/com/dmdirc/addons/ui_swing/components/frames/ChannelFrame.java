@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
@@ -58,7 +57,7 @@ import net.engio.mbassy.listener.Handler;
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 
 /**
- * The channel frame is the GUI component that represents a channel to the user.
+ * The groupChat frame is the GUI component that represents a groupChat to the user.
  */
 public final class ChannelFrame extends InputTextFrame {
 
@@ -79,9 +78,9 @@ public final class ChannelFrame extends InputTextFrame {
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Channel settings dialog provider. */
-    private final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider;
-    /** Channel instance. */
-    private final Channel channel;
+    private final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider;
+    /** Group chat instance. */
+    private final GroupChat groupChat;
     /** Config binder. */
     private final ConfigBinder binder;
 
@@ -91,33 +90,33 @@ public final class ChannelFrame extends InputTextFrame {
      *
      * @param deps               The dependencies required by text frames.
      * @param inputFieldProvider The provider to use to create a new input field.
-     * @param identityFactory    The factory to use to create a channel identity.
+     * @param identityFactory    The factory to use to create a group chat identity.
      * @param topicBarFactory    The factory to use to create topic bars.
-     * @param owner              The Channel object that owns this frame
+     * @param owner              The group chat object that owns this frame
      * @param domain             The domain to read settings from
-     * @param dialogProvider     The dialog provider to get the channel settings dialog from.
+     * @param dialogProvider     The dialog provider to get the group chat settings dialog from.
      */
     public ChannelFrame(
             final String domain,
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final IdentityFactory identityFactory,
-            final KeyedDialogProvider<Channel, ChannelSettingsDialog> dialogProvider,
+            final KeyedDialogProvider<GroupChat, ChannelSettingsDialog> dialogProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final TopicBarFactory topicBarFactory,
-            final Channel owner) {
-        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner);
+            final GroupChat owner) {
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner.getWindowModel());
 
         this.eventBus = deps.eventBus;
         this.globalConfig = deps.globalConfig;
         this.dialogProvider = dialogProvider;
-        this.channel = owner;
+        this.groupChat = owner;
 
         initComponents(topicBarFactory, deps.colourManagerFactory);
         binder = getContainer().getConfigManager().getBinder().withDefaultDomain(domain);
 
         identity = identityFactory.createChannelConfig(owner.getConnection().get().getNetwork(),
-                owner.getChannelInfo().getName());
+                owner.getName());
     }
 
     /**
@@ -142,8 +141,7 @@ public final class ChannelFrame extends InputTextFrame {
 
         nicklist = new NickList(this, getContainer().getConfigManager(), colourManagerFactory);
         settingsMI = new JMenuItem("Settings");
-        settingsMI.addActionListener(l ->
-                dialogProvider.displayOrRequestFocus((Channel) getContainer()));
+        settingsMI.addActionListener(l -> dialogProvider.displayOrRequestFocus(groupChat));
 
         splitPane = new SplitPane(globalConfig, SplitPane.Orientation.HORIZONTAL);
 
@@ -212,7 +210,7 @@ public final class ChannelFrame extends InputTextFrame {
 
     @Override
     public void addCustomPopupItems(final JPopupMenu popupMenu) {
-        if (channel.getConnection().get().getState() == ServerState.CONNECTED) {
+        if (groupChat.getConnection().get().getState() == ServerState.CONNECTED) {
             settingsMI.setEnabled(true);
         } else {
             settingsMI.setEnabled(false);
@@ -228,7 +226,7 @@ public final class ChannelFrame extends InputTextFrame {
     public void windowClosing(final FrameClosingEvent event) {
         saveSplitPanePosition();
         topicBar.close();
-        dialogProvider.dispose(channel);
+        dialogProvider.dispose(groupChat);
         super.windowClosing(event);
     }
 

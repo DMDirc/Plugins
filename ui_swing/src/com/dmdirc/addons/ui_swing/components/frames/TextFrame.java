@@ -182,9 +182,9 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
             popoutFrame.dispose();
             eventBus.unsubscribe(popoutFrame);
             popoutFrame = null;
-            // TODO: This is a horrible hack really.
-            swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.of(this)));
         }
+        // TODO: This is a horrible hack really.
+        swingEventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.of(this)));
     }
 
     /**

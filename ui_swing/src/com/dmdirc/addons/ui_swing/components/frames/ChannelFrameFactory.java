@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.Channel;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
@@ -31,6 +30,7 @@ import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
+import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -56,7 +56,7 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     private final Provider<SwingInputField> inputFieldProvider;
     private final IdentityFactory identityFactory;
     private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
-    private final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider;
+    private final Provider<KeyedDialogProvider<GroupChat, ChannelSettingsDialog>> dialogProvider;
     private final TopicBarFactory topicBarFactory;
     private final DMDircMBassador eventBus;
 
@@ -68,7 +68,7 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final IdentityFactory identityFactory,
-            final Provider<KeyedDialogProvider<Channel, ChannelSettingsDialog>> dialogProvider,
+            final Provider<KeyedDialogProvider<GroupChat, ChannelSettingsDialog>> dialogProvider,
             final TopicBarFactory topicBarFactory) {
         this.eventBus = eventBus;
         this.domain = domain;
@@ -84,7 +84,8 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     public TextFrame getWindow(final FrameContainer container) {
         final ChannelFrame frame = new ChannelFrame(domain, dependencies.get(), inputFieldProvider,
                 identityFactory, dialogProvider.get(), inputTextFramePasteActionFactory,
-                topicBarFactory, (Channel) container);
+                topicBarFactory, (GroupChat) container);
+                // TODO: Can't assume containers are GroupChats...
         eventBus.subscribe(frame);
         return frame;
     }
