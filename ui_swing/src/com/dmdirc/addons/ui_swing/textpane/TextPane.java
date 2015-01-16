@@ -59,6 +59,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.jxlayer.JXLayer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Styled, scrollable text pane.
  */
@@ -288,18 +290,21 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     }
                 } else if (i == selectedRange.getStartLine()) {
                     //loop from start of range to the end
-                    if (selectedRange.getStartPos() != -1) {
-                        selectedText.append(getText(line, selectedRange.getStartPos(),
-                                Styliser.stipControlCodes(line).length(), styled));
+                    final int length = Styliser.stipControlCodes(line).length();
+                    if (selectedRange.getStartPos() != -1 && selectedRange.getStartPos() < length) {
+                        // Ensure that we're actually selecting some text on this line
+                        selectedText.append(getText(line, selectedRange.getStartPos(), length,
+                                styled));
                     }
                 } else if (i == selectedRange.getEndLine()) {
                     //loop from start to end of range
-                    if (selectedRange.getEndPos() != -1) {
-                        selectedText.append(getText(line, 0, selectedRange .getEndPos(), styled));
+                    if (selectedRange.getEndPos() > 0) {
+                        selectedText.append(getText(line, 0, selectedRange.getEndPos(), styled));
                     }
                 } else {
                     //loop the whole line
-                    selectedText.append(getText(line, 0, line.length(), styled));
+                    final int length = Styliser.stipControlCodes(line).length();
+                    selectedText.append(getText(line, 0, length, styled));
                 }
             }
         }
@@ -319,6 +324,9 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      */
     private String getText(final String text, final int start, final int end,
             final boolean styled) {
+        checkArgument(start < end, "'start' (" + start + ") must be less than 'end' (" + end + ')');
+        checkArgument(start >= 0, "'start' (" + start + ") must be non-negative");
+
         if (styled) {
             return Styliser.getStyledText(text, start, end);
         } else {
