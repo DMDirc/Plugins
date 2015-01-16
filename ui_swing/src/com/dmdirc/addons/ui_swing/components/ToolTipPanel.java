@@ -34,15 +34,13 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JPanel;
+import javax.swing.plaf.LayerUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
 import net.miginfocom.swing.MigLayout;
-
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
-import org.jdesktop.jxlayer.plaf.LayerUI;
 
 /**
  * Panel to display tool tips of a component.
@@ -165,13 +163,13 @@ public class ToolTipPanel extends JPanel implements MouseListener {
             return;
         }
         tooltips.put(component, tooltipText);
-        if (component instanceof JXLayer<?>) {
-            final LayerUI<JComponent> layerUI = new AbstractLayerUI<JComponent>() {
+        if (component instanceof JLayer<?>) {
+            final LayerUI<JComponent> layerUI = new LayerUI<JComponent>() {
                 private static final long serialVersionUID = -8698248993206174390L;
 
                 @Override
                 protected void processMouseEvent(final MouseEvent e,
-                        final JXLayer<? extends JComponent> comp) {
+                        final JLayer<? extends JComponent> comp) {
                     if (e.getID() == MouseEvent.MOUSE_ENTERED) {
                         setText(tooltips.get(comp));
                     } else if (e.getID() == MouseEvent.MOUSE_EXITED && comp.
@@ -181,7 +179,7 @@ public class ToolTipPanel extends JPanel implements MouseListener {
                     super.processMouseEvent(e, comp);
                 }
             };
-            UIUtilities.invokeLater(() -> ((JXLayer<JComponent>) component).setUI(layerUI));
+            UIUtilities.invokeLater(() -> ((JLayer<JComponent>) component).setUI(layerUI));
         } else {
             component.addMouseListener(this);
         }

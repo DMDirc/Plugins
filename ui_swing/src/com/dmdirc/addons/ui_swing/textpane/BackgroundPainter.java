@@ -35,8 +35,7 @@ import java.awt.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.JComponent;
-
-import org.jdesktop.jxlayer.plaf.LayerUI;
+import javax.swing.plaf.LayerUI;
 
 /**
  * Background painting layer UI. Paints a opaque background then paints the specified image onto the
