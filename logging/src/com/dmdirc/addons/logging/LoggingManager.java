@@ -124,7 +124,6 @@ public class LoggingManager implements ConfigChangeListener {
     private boolean stripcodes;
     private boolean channelmodeprefix;
     private boolean autobackbuffer;
-    private boolean backbufferTimestamp;
     private String colour;
     /** Cached int settings. */
     private int historyLines;
@@ -415,11 +414,10 @@ public class LoggingManager implements ConfigChangeListener {
                 file.getLines(1);
                 final Stack<String> lines = file.getLines(backbufferLines);
                 while (!lines.empty()) {
-                    frame.addLine(getColouredString(colour, lines.pop()), backbufferTimestamp);
+                    frame.addLine(getColouredString(colour, lines.pop()));
                 }
                 file.close();
-                frame.addLine(getColouredString(colour, "--- End of backbuffer\n"),
-                        backbufferTimestamp);
+                frame.addLine(getColouredString(colour, "--- End of backbuffer\n"));
             } catch (IOException | SecurityException e) {
                 eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
                         "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage(),
@@ -593,7 +591,6 @@ public class LoggingManager implements ConfigChangeListener {
         stripcodes = config.getOptionBool(domain, "general.stripcodes");
         channelmodeprefix = config.getOptionBool(domain, "general.channelmodeprefix");
         autobackbuffer = config.getOptionBool(domain, "backbuffer.autobackbuffer");
-        backbufferTimestamp = config.getOptionBool(domain, "backbuffer.timestamp");
         historyLines = config.getOptionInt(domain, "history.lines");
         colour = config.getOption(domain, "backbuffer.colour");
         backbufferLines = config.getOptionInt(domain, "backbuffer.lines");
@@ -643,11 +640,6 @@ public class LoggingManager implements ConfigChangeListener {
         backbuffer.addSetting(new PreferencesSetting(PreferencesType.INTEGER,
                 pluginInfo.getDomain(), "backbuffer.lines", "Number of lines to show",
                 "Number of lines used when displaying backbuffer",
-                manager.getConfigManager(), manager.getIdentity()));
-        backbuffer.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
-                pluginInfo.getDomain(), "backbuffer.timestamp", "Show Formatter-Timestamp",
-                "Should the line be added to the frame with the timestamp from "
-                        + "the formatter aswell as the file contents",
                 manager.getConfigManager(), manager.getIdentity()));
 
         advanced.addSetting(new PreferencesSetting(PreferencesType.BOOLEAN,
