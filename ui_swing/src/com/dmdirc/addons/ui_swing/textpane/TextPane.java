@@ -52,12 +52,11 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
-
-import org.jdesktop.jxlayer.JXLayer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -122,7 +121,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                 "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this,
                 new CachingDocument<>(document, new AttributedStringMessageMaker()));
-        final JXLayer<JComponent> layer = new JXLayer<>(canvas);
+        final JLayer<JComponent> layer = new JLayer<>(canvas);
         layer.setUI(backgroundPainter);
         add(layer, "dock center");
         add(newLineIndicator, "dock south, center, grow");
