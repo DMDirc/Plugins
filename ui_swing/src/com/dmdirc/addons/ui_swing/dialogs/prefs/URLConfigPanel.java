@@ -41,7 +41,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -191,9 +190,7 @@ public class URLConfigPanel extends JPanel implements
     @Override
     public void save() {
         valueChanged(null);
-        final Collection<URLHandlerHolder> elements = model.elements();
-        final Map<URI, String> handlers = new HashMap<>();
-        elements.stream()
+        final Map<URI, String> handlers = model.elements().stream()
                 .collect(Collectors.toMap(URLHandlerHolder::getUri, URLHandlerHolder::getHandler));
         final Set<String> protocols = globalConfig.getOptions("protocol").keySet();
         for (final String protocol : protocols) {
