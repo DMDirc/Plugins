@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_swing.components;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -238,6 +240,15 @@ public class GenericTableModel<T> extends AbstractTableModel {
         values.add(value);
         final int index = values.indexOf(value);
         fireTableRowsInserted(index, index);
+    }
+
+    /**
+     * Returns a collection of all the elements in this model.
+     *
+     * @return All elements in the model
+     */
+    public Collection<T> elements() {
+        return Collections.unmodifiableCollection(values);
     }
 
     @SuppressWarnings("unchecked")
