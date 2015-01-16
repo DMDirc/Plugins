@@ -22,10 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
+import com.dmdirc.ui.core.util.URLHandler;
+
 import java.net.URI;
 
 /**
- *
+ * Wrapper to hold the constituents of a {@link URLHandler} used to render an editable version in
+ * the UI.
  */
 public class URLHandlerHolder {
 

@@ -234,7 +234,7 @@ public class URLConfigPanel extends JPanel implements
         if (e == null || !e.getValueIsAdjusting()) {
             setVisible(false);
             if (selectedRow != -1 && selectedRow < model.getRowCount()) {
-                final URLProtocolPanel panel = details.get(model.getValueAt(selectedRow, 0));
+                final URLProtocolPanel panel = details.get(model.getValue(selectedRow).getUri());
                 model.getValue(selectedRow).setHandler(panel.getSelection());
             }
             if (table.getSelectedRow() == -1) {
