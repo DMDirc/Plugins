@@ -38,7 +38,7 @@ public class ChannelWhoPlugin extends BasePlugin {
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new ChannelWhoManager(pluginInfo.getDomain())));
+        setObjectGraph(graph.plus(new ChannelWhoModule(pluginInfo.getDomain())));
         manager = getObjectGraph().get(ChannelWhoManager.class);
     }
 
