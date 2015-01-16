@@ -303,7 +303,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     }
                 } else {
                     //loop the whole line
-                    selectedText.append(getText(line, 0, line.length(), styled));
+                    final int length = Styliser.stipControlCodes(line).length();
+                    selectedText.append(getText(line, 0, length, styled));
                 }
             }
         }
