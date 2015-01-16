@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.swing.JButton;
@@ -192,7 +193,8 @@ public class URLConfigPanel extends JPanel implements
         valueChanged(null);
         final Collection<URLHandlerHolder> elements = model.elements();
         final Map<URI, String> handlers = new HashMap<>();
-        elements.forEach(u -> handlers.put(u.getUri(), u.getHandler()));
+        elements.stream()
+                .collect(Collectors.toMap(URLHandlerHolder::getUri, URLHandlerHolder::getHandler));
         final Set<String> protocols = globalConfig.getOptions("protocol").keySet();
         for (final String protocol : protocols) {
             URI uri;
