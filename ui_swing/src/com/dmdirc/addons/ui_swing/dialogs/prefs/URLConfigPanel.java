@@ -24,6 +24,8 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.addons.ui_swing.components.GenericTableModel;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
@@ -32,7 +34,6 @@ import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -40,6 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -52,7 +54,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -73,7 +74,7 @@ public class URLConfigPanel extends JPanel implements
     /** Protocol list. */
     private PackingTable table;
     /** Table mode. */
-    private URLHandlerTableModel model;
+    private GenericTableModel<URLHandlerHolder> model;
     /** Table scrollpane. */
     private JScrollPane tableScrollPane;
     /** Protocol config panel. */
@@ -122,23 +123,10 @@ public class URLConfigPanel extends JPanel implements
      */
     private void initComponents() {
         tableScrollPane = new JScrollPane();
-        model = new URLHandlerTableModel(globalConfig);
-        table = new PackingTable(model, tableScrollPane) {
-            private static final long serialVersionUID = 1;
-
-            @Override
-            public TableCellRenderer getCellRenderer(final int row,
-                    final int column) {
-                switch (column) {
-                    case 0:
-                        return new URISchemeCellRenderer();
-                    case 1:
-                        return new URIHandlerCellRenderer();
-                    default:
-                        return super.getCellRenderer(row, column);
-                }
-            }
-        };
+        model = new GenericTableModel<>(URLHandlerHolder.class, "getUri", "getHandler");
+        table = new PackingTable(model, tableScrollPane);
+        table.setDefaultRenderer(URISchemeCellRenderer.class, new URISchemeCellRenderer());
+        table.setDefaultRenderer(URIHandlerCellRenderer.class, new URIHandlerCellRenderer());
         table.setAutoCreateRowSorter(true);
         table.setAutoCreateColumnsFromModel(true);
         table.setColumnSelectionAllowed(false);
@@ -161,11 +149,19 @@ public class URLConfigPanel extends JPanel implements
         for (final String option : options) {
             try {
                 final URI uri = new URI(option + "://example.test.com");
-                model.addURI(uri);
+                model.addValue(new URLHandlerHolder(uri, getURLHandler(uri)));
                 details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
             } catch (final URISyntaxException ex) {
                 //Ignore wont happen
             }
+        }
+    }
+
+    private String getURLHandler(final URI uri) {
+        if (globalConfig.hasOptionString("protocol", uri.getScheme())) {
+            return globalConfig.getOption("protocol", uri.getScheme());
+        } else {
+            return "";
         }
     }
 
@@ -194,7 +190,9 @@ public class URLConfigPanel extends JPanel implements
     @Override
     public void save() {
         valueChanged(null);
-        final Map<URI, String> handlers = model.getURLHandlers();
+        final Collection<URLHandlerHolder> elements = model.elements();
+        final Map<URI, String> handlers = new HashMap<>();
+        elements.forEach(u -> handlers.put(u.getUri(), u.getHandler()));
         final Set<String> protocols = globalConfig.getOptions("protocol").keySet();
         for (final String protocol : protocols) {
             URI uri;
@@ -237,7 +235,7 @@ public class URLConfigPanel extends JPanel implements
             setVisible(false);
             if (selectedRow != -1 && selectedRow < model.getRowCount()) {
                 final URLProtocolPanel panel = details.get(model.getValueAt(selectedRow, 0));
-                model.setValueAt(panel.getSelection(), selectedRow, 1);
+                model.getValue(selectedRow).setHandler(panel.getSelection());
             }
             if (table.getSelectedRow() == -1) {
                 activeComponent = empty;
@@ -246,8 +244,8 @@ public class URLConfigPanel extends JPanel implements
                 remove.setEnabled(false);
                 selectedRow = -1;
             } else {
-                activeComponent = details.get(model.getValueAt(table.getRowSorter().
-                        convertRowIndexToModel(table.getSelectedRow()), 0));
+                activeComponent = details.get(model.getValue(table.getRowSorter().
+                        convertRowIndexToModel(table.getSelectedRow())).getUri());
                 layoutComponents();
                 add.setEnabled(true);
                 remove.setEnabled(true);
@@ -267,14 +265,15 @@ public class URLConfigPanel extends JPanel implements
                     new URLProtocolValidator(globalConfig), this::saveAddNewURLHandler).display();
 
         } else if (e.getSource() == remove) {
-            model.removeURI(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
+            model.removeValue(model.getValue(table.getRowSorter().convertRowIndexToModel(
+                    table.getSelectedRow())));
         }
     }
 
     private boolean saveAddNewURLHandler(final String text) {
         try {
             final URI uri = new URI(text + "://example.test.com");
-            model.addURI(uri);
+            model.addValue(new URLHandlerHolder(uri, getURLHandler(uri)));
             details.put(uri, new URLProtocolPanel(globalConfig, userConfig, uri, true));
             return true;
         } catch (final URISyntaxException ex) {
