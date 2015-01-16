@@ -77,10 +77,13 @@ public class ErrorPopup extends StatusbarPopupWindow {
         final MapList<ErrorLevel, DisplayableError> buckets = new MapList<>();
         final MapList<ErrorReportStatus, DisplayableError> statuses = new MapList<>();
 
-        for (final DisplayableError error : errors) {
+        errors.stream()
+                .filter(e -> !buckets.containsValue(e.getSeverity(), e))
+                .filter(e -> !statuses.containsValue(e.getReportStatus(), e))
+                .forEach(error -> {
             buckets.add(error.getSeverity(), error);
             statuses.add(error.getReportStatus(), error);
-        }
+        });
 
         JLabel header = new JLabel("Severity");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
