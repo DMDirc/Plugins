@@ -25,6 +25,7 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
+import com.dmdirc.addons.debug.RawWindowFactory;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Connection;
@@ -40,14 +41,15 @@ import javax.inject.Provider;
  */
 public class ShowRaw extends DebugCommand {
 
+    private final RawWindowFactory windowFactory;
+
     /**
      * Creates a new instance of the command.
-     *
-     * @param commandProvider The provider to use to access the main debug command.
      */
     @Inject
-    public ShowRaw(final Provider<Debug> commandProvider) {
+    public ShowRaw(final Provider<Debug> commandProvider, final RawWindowFactory windowFactory) {
         super(commandProvider);
+        this.windowFactory = windowFactory;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ShowRaw extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         final Optional<Connection> connection = origin.getConnection();
         if (connection.isPresent()) {
-            //connection.get().addRaw();
+            windowFactory.getRawWindow(connection.get());
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR,
                     "Cannot show raw window here.");
