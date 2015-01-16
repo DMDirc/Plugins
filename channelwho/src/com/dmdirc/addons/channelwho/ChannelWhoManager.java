@@ -22,22 +22,60 @@
 
 package com.dmdirc.addons.channelwho;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.events.ServerConnectingEvent;
+import com.dmdirc.events.ServerDisconnectedEvent;
+import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.plugins.PluginDomain;
 
 import javax.inject.Inject;
+
+import net.engio.mbassy.listener.Handler;
 
 /**
  * Provides channel who support in DMDirc.
  */
 public class ChannelWhoManager {
 
+    private final ConnectionManager connectionManager;
+    private final DMDircMBassador eventBus;
+
     @Inject
-    public ChannelWhoManager(@PluginDomain(ChannelWhoPlugin.class) final String domain) {
+    public ChannelWhoManager(
+            @PluginDomain(ChannelWhoPlugin.class) final String domain,
+            final ConnectionManager connectionManager,
+            final DMDircMBassador eventBus) {
+        this.connectionManager = connectionManager;
+        this.eventBus = eventBus;
     }
 
     public void load() {
+        eventBus.subscribe(this);
+        connectionManager.getConnections().forEach(this::addConnectionHandler);
     }
 
     public void unload() {
+        connectionManager.getConnections().forEach(this::removeConnectionHandler);
+        eventBus.unsubscribe(this);
     }
+
+    private void addConnectionHandler(final Connection connection) {
+        // TODO: Create a handler class which will monitor settings + handle timers.
+    }
+
+    private void removeConnectionHandler(final Connection connection) {
+        // TODO: Remove handlers
+    }
+
+    @Handler
+    private void handleServerConnectingEvent(final ServerConnectingEvent event) {
+        addConnectionHandler(event.getConnection());
+    }
+
+    @Handler
+    private void handleServerDisconnectedEvent(final ServerDisconnectedEvent event) {
+        removeConnectionHandler(event.getConnection());
+    }
+
 }
