@@ -22,19 +22,26 @@
 
 package com.dmdirc.addons.channelwho;
 
+import com.dmdirc.DMDircMBassador;
+import com.dmdirc.interfaces.ConnectionManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelWhoManagerTest {
 
+    @Mock private ConnectionManager connectionManager;
+    @Mock private DMDircMBassador eventBus;
+
     private ChannelWhoManager instance;
 
     @Before
     public void setUp() throws Exception {
-        instance = new ChannelWhoManager("test");
+        instance = new ChannelWhoManager("test", connectionManager, eventBus);
     }
 
     @Test
