@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatRequestSentEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
@@ -43,6 +42,7 @@ import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -106,7 +106,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 1) {
             final String target = args.getArguments()[1];
@@ -157,7 +157,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
      * @param isSilent   Is this a silent command
      */
     private void startChat(final Parser parser, final Connection connection,
-            final FrameContainer origin, final String myNickname,
+            final WindowModel origin, final String myNickname,
             final String target, final boolean isSilent) {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
@@ -197,7 +197,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
      *
      * @since 0.6.3m1
      */
-    public void sendFile(final String target, final FrameContainer origin,
+    public void sendFile(final String target, final WindowModel origin,
             final Connection connection, final boolean isSilent, final String filename) {
         // New thread to ask the user what file to send
         final File givenFile = new File(filename);

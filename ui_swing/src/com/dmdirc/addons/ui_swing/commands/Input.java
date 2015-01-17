@@ -32,6 +32,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
@@ -66,17 +67,17 @@ public class Input extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "input",
                     "[--clear] <text to insert into inputfield");
         } else if (args.getArguments().length == 1
                 && "--clear".equals(args.getArgumentsAsString(0))) {
-            ((InputWindow) windowFactory.getSwingWindow(origin))
+            ((InputWindow) windowFactory.getSwingWindow((FrameContainer) origin))
                     .getInputHandler().clearInputField();
         } else {
-            ((InputWindow) windowFactory.getSwingWindow(origin))
+            ((InputWindow) windowFactory.getSwingWindow((FrameContainer) origin))
                     .getInputHandler().addToInputField(args
                             .getArgumentsAsString());
         }

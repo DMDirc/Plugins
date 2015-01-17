@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -32,6 +31,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.interfaces.Parser;
 
 import java.util.Optional;
@@ -69,13 +69,12 @@ public final class ParserDebugCommand extends Command {
 
     /**
      * Executes this command.
-     *
-     * @param origin      The frame container in which this command was issued
+     *  @param origin      The frame container in which this command was issued
      * @param commandArgs The user supplied arguments
      * @param context     The Context of this command execution
      */
     @Override
-    public void execute(@Nonnull final FrameContainer origin, final CommandArguments commandArgs,
+    public void execute(@Nonnull final WindowModel origin, final CommandArguments commandArgs,
             final CommandContext context) {
         final boolean isSilent = commandArgs.isSilent();
 

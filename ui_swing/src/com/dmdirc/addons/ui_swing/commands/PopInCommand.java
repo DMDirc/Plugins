@@ -33,6 +33,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -65,10 +66,10 @@ public class PopInCommand extends Command {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
+    public void execute(@Nonnull final WindowModel origin, final CommandArguments args,
             final CommandContext context) {
         UIUtilities.invokeLater(() -> {
-            final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
+            final TextFrame swingWindow = windowFactory.getSwingWindow((FrameContainer) origin);
             if (swingWindow == null) {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
                         + " currently no window to pop in.");

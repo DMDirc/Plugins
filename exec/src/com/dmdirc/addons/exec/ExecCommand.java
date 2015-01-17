@@ -23,7 +23,6 @@
 package com.dmdirc.addons.exec;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -31,6 +30,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.CommandUtils;
 import com.dmdirc.util.io.StreamUtils;
@@ -70,7 +70,7 @@ public class ExecCommand extends Command {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         final String[] commandArray = CommandUtils.parseArguments(
                 args.getArgumentsAsString());

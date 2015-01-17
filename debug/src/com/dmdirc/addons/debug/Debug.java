@@ -31,6 +31,7 @@ import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class Debug extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "debug",
@@ -97,7 +98,7 @@ public class Debug extends Command implements IntelligentCommand {
                         Arrays.asList((controller.getCommandChar()
                                 + command.getName() + ' '
                                 + args.getArgumentsAsString(1)).split(" ")));
-                command.execute(origin, newArgs, context);
+                command.execute((FrameContainer) origin, newArgs, context);
             }
         }
     }
