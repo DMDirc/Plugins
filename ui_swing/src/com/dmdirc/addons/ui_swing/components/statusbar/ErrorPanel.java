@@ -28,9 +28,9 @@ import com.dmdirc.addons.ui_swing.components.menubar.JMenuItemBuilder;
 import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.ErrorsDialogModelListener;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.errors.DisplayableError;
 
 import java.awt.Window;
@@ -56,7 +56,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
     /** The manager to use to retrieve icons. */
     private final IconManager iconManager;
     /** Error manager. */
-    private final CoreErrorsDialogModel model;
+    private final ErrorsDialogModel model;
     /** Dismiss menu. */
     private final JPopupMenu menu;
     /** Error list dialog provider. */
@@ -74,7 +74,7 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
             final IconManager iconManager,
             @MainWindow final Window parentWindow,
             final DialogProvider<ErrorsDialog> errorListDialogProvider,
-            final CoreErrorsDialogModel model) {
+            final ErrorsDialogModel model) {
         super(new JLabel());
         this.parentWindow = parentWindow;
         this.iconManager = iconManager;

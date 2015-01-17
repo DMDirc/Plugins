@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorReportStatus;
-import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.errors.DisplayableError;
 
 import com.google.common.collect.HashMultiset;
@@ -51,7 +51,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
     /** Icon manager. */
     private final IconManager iconManager;
     /** Error manager to retrieve errors from. */
-    private final CoreErrorsDialogModel model;
+    private final ErrorsDialogModel model;
 
     /**
      * Creates a new error popup.
@@ -62,7 +62,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
      * @param parentWindow Parent window
      */
     public ErrorPopup(
-            final CoreErrorsDialogModel model,
+            final ErrorsDialogModel model,
             final IconManager iconManager,
             final JPanel parent,
             final Window parentWindow) {
