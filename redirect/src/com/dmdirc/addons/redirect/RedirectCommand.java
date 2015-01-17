@@ -82,8 +82,9 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final Chat target = ((ChatCommandContext) context).getChat();
         target.getWindowModel().getCommandParser().parseCommand(
-                new FakeWriteableFrameContainer(target.getWindowModel(), messageSinkManager,
-                        eventBus, backBufferFactory), args.getArgumentsAsString());
+                new FakeWriteableFrameContainer((FrameContainer) target.getWindowModel(),
+                        messageSinkManager, eventBus, backBufferFactory),
+                args.getArgumentsAsString());
     }
 
     @Override
