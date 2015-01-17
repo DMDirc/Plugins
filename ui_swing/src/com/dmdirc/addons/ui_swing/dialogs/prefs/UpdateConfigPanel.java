@@ -36,6 +36,7 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
+import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateStatus;
 
@@ -126,9 +127,16 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     }
 
     private void loadModel() {
-        updateManager.getComponents().forEach(u -> tableModel.addValue(new UpdateComponentHolder(u,
-                updateManager.getStatus(u) != UpdateStatus.CHECKING_NOT_PERMITTED,
-                u.getVersion().toString())));
+        updateManager.getComponents().stream()
+                .map(this::createUpdateComponentHolder)
+                .forEach(tableModel::addValue);
+    }
+
+    @SuppressWarnings("TypeMayBeWeakened")
+    private UpdateComponentHolder createUpdateComponentHolder(final UpdateComponent component) {
+        return new UpdateComponentHolder(component,
+                updateManager.getStatus(component) != UpdateStatus.CHECKING_NOT_PERMITTED,
+                component.getVersion().toString());
     }
 
     /**
@@ -138,10 +146,10 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
         tableModel = new GenericTableModel<>(UpdateComponentHolder.class,
-                (i1, i2) -> i2 == 1,
-                (v, i1, i2) -> {
-                    if (i2 == 1) {
-                        tableModel.getValue(i1).setEnabled((Boolean) v);
+                (row, column) -> column == 1,
+                (v, row, column) -> {
+                    if (column == 1) {
+                        tableModel.getValue(row).setEnabled((Boolean) v);
                     }
                 },
                 "getComponentName", "isEnabled", "getVersion");
