@@ -79,13 +79,21 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param getterValues Names of the getters to display in the table
      */
     public GenericTableModel(final Class<T> type, final String... getterValues) {
-        this(type, (i1, i2) -> false, (i1, i2, i3) -> {}, getterValues);
+        this(type, (row, column) -> false, (value, row, column) -> {}, getterValues);
     }
 
     /**
      * Creates a new generic table model.
      *
      * @param type         Type to be displayed, used to verify getters
+     * @param isEditable   Function to decide if a cell is editable or not
+     *                          First parameter is the row
+     *                          Second parameter is the column
+     *                          Third parameter is the return type
+     * @param editFunction The function to be called when editing a particular cell.
+     *                          First parameter is the object
+     *                          Second parameter is the row
+     *                          Third parameter is the column
      * @param getterValues Names of the getters to display in the table
      */
     public GenericTableModel(final Class<T> type,
@@ -187,7 +195,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
     public void setHeaderNames(final String... headerValues) {
         checkArgument(headerValues.length == getters.length,
                 "There must be as many headers as columns");
-        System.arraycopy(headerValues, 0, this.headers, 0, headerValues.length);
+        System.arraycopy(headerValues, 0, headers, 0, headerValues.length);
         fireTableStructureChanged();
     }
 
@@ -219,8 +227,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
     public void replaceValueAt(final T value, final int rowIndex) {
         checkNotNull(value, "Value must not be null");
         checkElementIndex(rowIndex, values.size(), "RowIndex must be valid");
-        values.remove(rowIndex);
-        values.add(rowIndex, value);
+        values.set(rowIndex, value);
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
@@ -262,11 +269,6 @@ public class GenericTableModel<T> extends AbstractTableModel {
      */
     public Collection<T> elements() {
         return Collections.unmodifiableCollection(values);
-    }
-
-    @SuppressWarnings("unchecked")
-    private T castObjectToType(final Object value) {
-        return (T) value;
     }
 
     /**
