@@ -29,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class ConditionalExecuteCommand extends Command {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
+    public void execute(@Nonnull final WindowModel origin, final CommandArguments args,
             final CommandContext context) {
         final String cmdname = args.getWordsAsString(0, 0);
 
@@ -238,7 +239,8 @@ public class ConditionalExecuteCommand extends Command {
             } else {
                 // Command to run!
                 if (namespace.canRun(inverse) && origin.isWritable()) {
-                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i));
+                    origin.getCommandParser().parseCommand((FrameContainer) origin,
+                            args.getArgumentsAsString(i));
                 }
                 return;
             }

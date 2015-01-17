@@ -25,11 +25,13 @@ package com.dmdirc.addons.time;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Map.Entry;
@@ -46,7 +48,7 @@ import javax.inject.Inject;
 public class TimerCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
-    public static final BaseCommandInfo INFO = new BaseCommandInfo("timer",
+    public static final CommandInfo INFO = new BaseCommandInfo("timer",
             "timer [--list|--cancel <timer id> | <repetitions> <interval> "
             + "<command>] - lists all active timers / cancels an active timer "
             + "of given ID / schedules a command to be executed after a certain "
@@ -69,7 +71,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
 
         if (args.getArguments().length > 0) {
@@ -93,7 +95,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
         }
     }
 
-    private void doCommand(final FrameContainer origin, final CommandArguments args) {
+    private void doCommand(final WindowModel origin, final CommandArguments args) {
         final int repetitions;
         final int interval;
 
@@ -112,12 +114,12 @@ public class TimerCommand extends Command implements IntelligentCommand {
             return;
         }
 
-        manager.addTimer(repetitions, interval, command, origin);
+        manager.addTimer(repetitions, interval, command, (FrameContainer) origin);
 
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
     }
 
-    private void doCancel(final FrameContainer origin, final boolean isSilent, final String arg) {
+    private void doCancel(final WindowModel origin, final boolean isSilent, final String arg) {
         final int timerKey;
         try {
             timerKey = Integer.parseInt(arg);
@@ -133,7 +135,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
         }
     }
 
-    private void doList(final FrameContainer origin, final boolean isSilent) {
+    private void doList(final WindowModel origin, final boolean isSilent) {
         final Set<Entry<Integer, TimedCommand>> timerList = manager.listTimers();
         if (timerList.isEmpty()) {
             sendLine(origin, isSilent, FORMAT_ERROR, "There are currently no active timers");
@@ -151,7 +153,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
      * @param origin   The window that the command was entered in
      * @param isSilent Whether this command is being silenced or not
      */
-    private void doUsage(final FrameContainer origin, final boolean isSilent) {
+    private void doUsage(final WindowModel origin, final boolean isSilent) {
         showUsage(origin, isSilent, INFO.getName(), INFO.getHelp());
     }
 

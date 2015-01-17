@@ -22,14 +22,15 @@
 
 package com.dmdirc.addons.notifications;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.Collection;
@@ -44,7 +45,7 @@ public class NotificationCommand extends Command implements
         IntelligentCommand {
 
     /** A command info object for this command. */
-    public static final BaseCommandInfo INFO = new BaseCommandInfo(
+    public static final CommandInfo INFO = new BaseCommandInfo(
             "notification",
             "notification [--methods|--method <method>] text - "
             + "Notifies you of the text",
@@ -66,7 +67,7 @@ public class NotificationCommand extends Command implements
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0 &&
                 "--methods".equalsIgnoreCase(args.getArguments()[0])) {
@@ -101,7 +102,7 @@ public class NotificationCommand extends Command implements
      * @param origin   The input window where the command was entered
      * @param isSilent Whether this command is being silenced
      */
-    private void doMethodList(final FrameContainer origin,
+    private void doMethodList(final WindowModel origin,
             final boolean isSilent) {
         final Collection<String> handlers = manager.getHandlerNames();
 

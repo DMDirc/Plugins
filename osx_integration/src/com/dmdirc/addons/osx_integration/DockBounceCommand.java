@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osx_integration;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -30,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -65,7 +65,7 @@ public class DockBounceCommand extends Command {
 
     @Override
     public void execute(
-            @Nonnull final FrameContainer origin,
+            @Nonnull final WindowModel origin,
             final CommandArguments args,
             final CommandContext context) {
         apple.requestUserAttention(false);

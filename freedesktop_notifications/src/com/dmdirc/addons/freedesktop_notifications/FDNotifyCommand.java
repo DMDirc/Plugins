@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -58,7 +58,7 @@ public final class FDNotifyCommand extends Command {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin, final CommandArguments args,
+    public void execute(@Nonnull final WindowModel origin, final CommandArguments args,
             final CommandContext context) {
         new Thread() {
 
