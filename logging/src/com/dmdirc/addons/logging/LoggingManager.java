@@ -223,7 +223,9 @@ public class LoggingManager implements ConfigChangeListener {
 
         synchronized (FORMAT_LOCK) {
             appendLine(filename, "*** Query opened at: %s", OPENED_AT_FORMAT.format(new Date()));
-            appendLine(filename, "*** Query with User: %s", event.getQuery().getHost());
+            appendLine(filename, "*** Query with User: %s", event.getQuery().getUser().getNickname()
+                    + '!' + event.getQuery().getUser().getUsername().orElse("")
+                    + '@' + event.getQuery().getUser().getHostname().orElse(""));
             appendLine(filename, "");
         }
     }
