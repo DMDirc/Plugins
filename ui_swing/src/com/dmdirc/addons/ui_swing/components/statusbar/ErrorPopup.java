@@ -27,7 +27,9 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.errors.DisplayableError;
-import com.dmdirc.util.collections.MapList;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import java.awt.Font;
 import java.awt.Window;
@@ -74,16 +76,13 @@ public class ErrorPopup extends StatusbarPopupWindow {
     @Override
     protected void initContent(final JPanel panel) {
         final Set<DisplayableError> errors = model.getErrors();
-        final MapList<ErrorLevel, DisplayableError> buckets = new MapList<>();
-        final MapList<ErrorReportStatus, DisplayableError> statuses = new MapList<>();
+        final Multimap<ErrorLevel, DisplayableError> buckets = HashMultimap.create();
+        final Multimap<ErrorReportStatus, DisplayableError> statuses = HashMultimap.create();
 
-        errors.stream()
-                .filter(e -> !buckets.containsValue(e.getSeverity(), e))
-                .filter(e -> !statuses.containsValue(e.getReportStatus(), e))
-                .forEach(error -> {
-            buckets.add(error.getSeverity(), error);
-            statuses.add(error.getReportStatus(), error);
-        });
+        for (final DisplayableError error : errors) {
+            buckets.put(error.getSeverity(), error);
+            statuses.put(error.getReportStatus(), error);
+        }
 
         JLabel header = new JLabel("Severity");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
@@ -95,7 +94,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
 
         for (final ErrorLevel level : ErrorLevel.values()) {
             if (buckets.containsKey(level)) {
-                final int count = buckets.values(level).size();
+                final int count = buckets.get(level).size();
 
                 panel.add(new JLabel(level.toString(), iconManager.getIcon(
                         level.getIcon()), SwingConstants.LEFT));
@@ -116,7 +115,7 @@ public class ErrorPopup extends StatusbarPopupWindow {
 
         for (final ErrorReportStatus status : ErrorReportStatus.values()) {
             if (statuses.containsKey(status)) {
-                final int count = statuses.values(status).size();
+                final int count = statuses.get(status).size();
 
                 panel.add(new JLabel(status.toString(), SwingConstants.LEFT));
                 panel.add(new JLabel(String.valueOf(count), SwingConstants.RIGHT),
