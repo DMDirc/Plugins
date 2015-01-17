@@ -188,7 +188,10 @@ public class WindowStatusManager {
 
     private String updateStatusQuery(final PrivateChat frame) {
         final StringBuilder textString = new StringBuilder();
-        textString.append(frame.getHost());
+        textString
+                .append(frame.getUser().getNickname())
+                .append('!').append(frame.getUser().getRealname().orElse(""))
+                .append('@').append(frame.getUser().getHostname().orElse(""));
         frame.getConnection().ifPresent(c -> {
             if (showname) {
                 frame.getUser().getRealname().ifPresent(s -> textString.append(" - ").append(s));
