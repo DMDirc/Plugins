@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.events.UserErrorEvent;
@@ -36,6 +37,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.updater.UpdateChannel;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
+import com.dmdirc.updater.manager.UpdateStatus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,7 +66,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     /** Table scroll pane, */
     private JScrollPane scrollPane;
     /** Component table model. */
-    private UpdateTableModel tableModel;
+    private GenericTableModel<UpdateComponentHolder> tableModel;
     /** Check now button. */
     private JButton checkNow;
     /** Update channel. */
@@ -103,6 +105,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         this.eventBus = eventBus;
 
         initComponents();
+        loadModel();
         addListeners();
         layoutComponents();
     }
@@ -110,17 +113,22 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     @Override
     public void save() {
         userConfig.setOption("updater", "enable", enable.isSelected());
-        userConfig.setOption("updater", "channel", updateChannel
-                .getSelectedItem().toString());
+        userConfig.setOption("updater", "channel", updateChannel.getSelectedItem().toString());
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            final String componentName = tableModel.getComponent(i).getName();
-            if ((Boolean) tableModel.getValueAt(i, 1)) {
+            final String componentName = tableModel.getValue(i).getComponent().getName();
+            if (tableModel.getValue(i).isEnabled()) {
                 userConfig.unsetOption("updater", "enable-" + componentName);
             } else {
                 userConfig.setOption("updater", "enable-" + componentName, false);
             }
         }
+    }
+
+    private void loadModel() {
+        updateManager.getComponents().forEach(u -> tableModel.addValue(new UpdateComponentHolder(u,
+                updateManager.getStatus(u) != UpdateStatus.CHECKING_NOT_PERMITTED,
+                u.getVersion().toString())));
     }
 
     /**
@@ -129,7 +137,15 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
     private void initComponents() {
         enable = new JCheckBox();
         scrollPane = new JScrollPane();
-        tableModel = new UpdateTableModel(updateManager, updateManager.getComponents());
+        tableModel = new GenericTableModel<>(UpdateComponentHolder.class,
+                (i1, i2) -> i2 == 1,
+                (v, i1, i2) -> {
+                    if (i2 == 1) {
+                        tableModel.getValue(i1).setEnabled((Boolean) v);
+                    }
+                },
+                "getComponentName", "isEnabled", "getVersion");
+        tableModel.setHeaderNames("Component", "Enabled?", "Version");
         final PackingTable table = new PackingTable(tableModel, scrollPane);
         checkNow = new JButton("Check now");
         checkNow.setEnabled(globalConfig.getOptionBool("updater", "enable"));

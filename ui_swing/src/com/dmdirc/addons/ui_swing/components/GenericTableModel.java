@@ -22,12 +22,15 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.util.functional.TriConsumer;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -61,11 +64,13 @@ public class GenericTableModel<T> extends AbstractTableModel {
     /**
      * Generic type this table contains, used to verify getters exist.
      */
-    private final Class<T> clazz;
+    private final Class<T> type;
     /**
      * Cached return types for the getters.
      */
     private final Class<?>[] columnTypes;
+    private final BiFunction<Integer, Integer, Boolean> isEditable;
+    private final TriConsumer<Object, Integer, Integer> editFunction;
 
     /**
      * Creates a new generic table model.
@@ -74,8 +79,25 @@ public class GenericTableModel<T> extends AbstractTableModel {
      * @param getterValues Names of the getters to display in the table
      */
     public GenericTableModel(final Class<T> type, final String... getterValues) {
+        this(type, (i1, i2) -> false, (i1, i2, i3) -> {}, getterValues);
+    }
+
+    /**
+     * Creates a new generic table model.
+     *
+     * @param type         Type to be displayed, used to verify getters
+     * @param getterValues Names of the getters to display in the table
+     */
+    public GenericTableModel(final Class<T> type,
+            final BiFunction<Integer, Integer, Boolean> isEditable,
+            final TriConsumer<Object, Integer, Integer> editFunction,
+            final String... getterValues) {
         checkArgument(getterValues.length > 0, "Getters must be set");
-        clazz = type;
+        checkNotNull(isEditable);
+        checkNotNull(editFunction);
+        this.isEditable = isEditable;
+        this.editFunction = editFunction;
+        this.type = type;
         values = new ArrayList<>();
         headers = new String[getterValues.length];
         getters = new Method[getterValues.length];
@@ -129,6 +151,11 @@ public class GenericTableModel<T> extends AbstractTableModel {
         }
     }
 
+    @Override
+    public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+        return isEditable.apply(rowIndex, columnIndex);
+    }
+
     /**
      * Returns the value at the specified row.
      *
@@ -153,21 +180,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
     }
 
     /**
-     * Sets the name of the header for a specific column.
-     *
-     * @param column Column index
-     * @param header Header name
-     */
-    public void setHeaderName(final int column, final String header) {
-        checkNotNull(header, "Header must not be null");
-        checkElementIndex(column, getters.length, "There must be a column for the header");
-        headers[column] = header;
-        fireTableStructureChanged();
-    }
-
-    /**
-     * Sets all of the header names. Must include all the headers, otherwise use
-     * {@link #setHeaderName(int, String)}.
+     * Sets all of the header names. Must include all the headers.
      *
      * @param headerValues Names for all headers in the table
      */
@@ -190,8 +203,8 @@ public class GenericTableModel<T> extends AbstractTableModel {
         checkElementIndex(rowIndex, values.size(), "Row index must exist");
         checkElementIndex(columnIndex, getters.length, "Column index must exist");
         try {
-            values.add(rowIndex, castObjectToType(value));
-            fireTableRowsInserted(rowIndex, rowIndex);
+            editFunction.accept(value, rowIndex, columnIndex);
+            fireTableRowsUpdated(rowIndex, rowIndex);
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Value of incorrect type.", ex);
         }
@@ -265,7 +278,7 @@ public class GenericTableModel<T> extends AbstractTableModel {
      */
     private Optional<Method> getGetter(final String name) {
         try {
-            return Optional.ofNullable(clazz.getMethod(name));
+            return Optional.ofNullable(type.getMethod(name));
         } catch (NoSuchMethodException ex) {
             return Optional.empty();
         }
