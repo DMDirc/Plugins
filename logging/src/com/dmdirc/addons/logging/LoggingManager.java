@@ -371,7 +371,7 @@ public class LoggingManager implements ConfigChangeListener {
         final String filename = locator.getLogFile(event.getChannel().getName());
 
         if (autobackbuffer) {
-            showBackBuffer(event.getChannel().getWindowModel(), filename);
+            showBackBuffer((FrameContainer) event.getChannel().getWindowModel(), filename);
         }
 
         synchronized (FORMAT_LOCK) {
