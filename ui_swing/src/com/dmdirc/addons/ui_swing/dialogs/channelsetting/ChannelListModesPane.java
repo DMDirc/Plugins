@@ -31,8 +31,10 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.parser.common.ChannelListModeItem;
-import com.dmdirc.util.collections.MapList;
 import com.dmdirc.util.validators.NotEmptyValidator;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -85,7 +87,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
     /** list modes available on this server. */
     private final char[] listModesArray;
     /** Modes on creation. */
-    private final MapList<Character, ChannelListModeItem> existingListItems;
+    private final Multimap<Character, ChannelListModeItem> existingListItems;
     /** Mode count label. */
     private final JLabel modeCount;
     /** Extended info toggle. */
@@ -140,7 +142,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         listModesPanels = new ArrayList<>();
         listModesArray = groupChat.getConnection().get().getParser().get()
                 .getListChannelModes().toCharArray();
-        existingListItems = new MapList<>();
+        existingListItems = ArrayListMultimap.create();
         listModesMenu = new JComboBox<>(new DefaultComboBoxModel<>());
         addListModeButton = new JButton("Add");
         removeListModeButton = new JButton("Remove");
@@ -168,7 +170,7 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
             if (listItems == null) {
                 continue;
             }
-            existingListItems.add(mode, new ArrayList<>(listItems));
+            existingListItems.putAll(mode, listItems);
             final DefaultListModel<ChannelListModeItem> model
                     = (DefaultListModel<ChannelListModeItem>) listModesPanels.get(i).getModel();
 
@@ -248,12 +250,11 @@ public final class ChannelListModesPane extends JPanel implements ActionListener
         final Map<ChannelListModeItem, Character> currentModes = new HashMap<>();
         final Map<ChannelListModeItem, Character> newModes = new HashMap<>();
 
-        for (int i = 0; i < listModesArray.length;
-                i++) {
+        for (int i = 0; i < listModesArray.length; i++) {
             final char mode = listModesArray[i];
             final Enumeration<?> values = ((DefaultListModel<ChannelListModeItem>) listModesPanels
                     .get(i).getModel()).elements();
-            final List<ChannelListModeItem> listItems = existingListItems.get(mode);
+            final Collection<ChannelListModeItem> listItems = existingListItems.get(mode);
 
             for (ChannelListModeItem listItem : listItems) {
                 currentModes.put(listItem, mode);

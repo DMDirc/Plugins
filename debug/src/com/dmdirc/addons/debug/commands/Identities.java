@@ -30,7 +30,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -78,7 +78,7 @@ public class Identities extends DebugCommand {
             type = args.getArgumentsAsString();
         }
 
-        final List<ConfigProvider> identities = identityController.getProvidersByType(type);
+        final Collection<ConfigProvider> identities = identityController.getProvidersByType(type);
         final String[][] data = new String[identities.size()][4];
 
         int i = 0;
