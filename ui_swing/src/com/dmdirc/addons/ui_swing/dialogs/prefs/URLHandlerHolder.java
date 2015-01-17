@@ -48,11 +48,11 @@ public class URLHandlerHolder {
         return handler;
     }
 
-    public void setUri(URI uri) {
+    public void setUri(final URI uri) {
         this.uri = uri;
     }
 
-    public void setHandler(String handler) {
+    public void setHandler(final String handler) {
         this.handler = handler;
     }
 }

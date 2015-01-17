@@ -124,6 +124,7 @@ public class URLConfigPanel extends JPanel implements
     private void initComponents() {
         tableScrollPane = new JScrollPane();
         model = new GenericTableModel<>(URLHandlerHolder.class, "getUri", "getHandler");
+        model.setHeaderNames("Protocol", "Handler");
         table = new PackingTable(model, tableScrollPane);
         table.setDefaultRenderer(URISchemeCellRenderer.class, new URISchemeCellRenderer());
         table.setDefaultRenderer(URIHandlerCellRenderer.class, new URIHandlerCellRenderer());
