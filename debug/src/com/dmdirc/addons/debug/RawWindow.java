@@ -56,7 +56,7 @@ public class RawWindow extends FrameContainer {
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final BackBufferFactory backBufferFactory) {
-        super(connection.getWindowModel(), "raw", "Raw", "(Raw log)",
+        super((FrameContainer) connection.getWindowModel(), "raw", "Raw", "(Raw log)",
                 connection.getWindowModel().getConfigManager(),
                 backBufferFactory,
                 new ServerCommandParser(
