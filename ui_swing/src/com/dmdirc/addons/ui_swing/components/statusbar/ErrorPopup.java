@@ -28,8 +28,7 @@ import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.errors.DisplayableError;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.HashMultiset;
 
 import java.awt.Font;
 import java.awt.Window;
@@ -76,52 +75,34 @@ public class ErrorPopup extends StatusbarPopupWindow {
     @Override
     protected void initContent(final JPanel panel) {
         final Set<DisplayableError> errors = model.getErrors();
-        final Multimap<ErrorLevel, DisplayableError> buckets = HashMultimap.create();
-        final Multimap<ErrorReportStatus, DisplayableError> statuses = HashMultimap.create();
+        final HashMultiset<ErrorLevel> severities = HashMultiset.create();
+        final HashMultiset<ErrorReportStatus> statuses = HashMultiset.create();
+        errors.stream().map(DisplayableError::getSeverity).forEach(severities::add);
+        errors.stream().map(DisplayableError::getReportStatus).forEach(statuses::add);
 
-        for (final DisplayableError error : errors) {
-            buckets.put(error.getSeverity(), error);
-            statuses.put(error.getReportStatus(), error);
-        }
-
-        JLabel header = new JLabel("Severity");
-        header.setFont(header.getFont().deriveFont(Font.BOLD));
-        panel.add(header);
-
-        header = new JLabel("#", SwingConstants.RIGHT);
-        header.setFont(header.getFont().deriveFont(Font.BOLD));
-        panel.add(header, "growx, pushx, wrap");
-
-        for (final ErrorLevel level : ErrorLevel.values()) {
-            if (buckets.containsKey(level)) {
-                final int count = buckets.get(level).size();
-
-                panel.add(new JLabel(level.toString(), iconManager.getIcon(
-                        level.getIcon()), SwingConstants.LEFT));
-                panel.add(new JLabel(String.valueOf(count), SwingConstants.RIGHT),
-                        "growx, pushx, wrap");
-            }
-        }
+        panel.add(buildLabel("Severity", SwingConstants.LEFT));
+        panel.add(buildLabel("#", SwingConstants.RIGHT), "growx, pushx, wrap");
+        severities.elementSet().forEach(s -> {
+            panel.add(new JLabel(s.toString(), iconManager.getIcon(s.getIcon()), SwingConstants.LEFT));
+            panel.add(new JLabel(String.valueOf(severities.count(s)), SwingConstants.RIGHT),
+                    "growx, pushx, wrap");
+        });
 
         panel.add(new JSeparator(), "span, growx, pushx, wrap");
 
-        header = new JLabel("Report status");
+        panel.add(buildLabel("Report status", SwingConstants.LEFT));
+        panel.add(buildLabel("#", SwingConstants.RIGHT), "growx, pushx, wrap");
+        statuses.elementSet().forEach(s -> {
+            panel.add(new JLabel(s.toString(), SwingConstants.LEFT));
+            panel.add(new JLabel(String.valueOf(statuses.count(s)), SwingConstants.RIGHT),
+                    "growx, pushx, wrap");
+        });
+    }
+
+    private JLabel buildLabel(final String text, final int constant) {
+        final JLabel header = new JLabel(text, constant);
         header.setFont(header.getFont().deriveFont(Font.BOLD));
-        panel.add(header);
-
-        header = new JLabel("#", SwingConstants.RIGHT);
-        header.setFont(header.getFont().deriveFont(Font.BOLD));
-        panel.add(header, "growx, pushx, wrap");
-
-        for (final ErrorReportStatus status : ErrorReportStatus.values()) {
-            if (statuses.containsKey(status)) {
-                final int count = statuses.get(status).size();
-
-                panel.add(new JLabel(status.toString(), SwingConstants.LEFT));
-                panel.add(new JLabel(String.valueOf(count), SwingConstants.RIGHT),
-                        "growx, pushx, wrap");
-            }
-        }
+        return header;
     }
 
 }
