@@ -24,11 +24,13 @@ package com.dmdirc.addons.ui_swing.components.expandingsettings;
 
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
-import com.dmdirc.addons.ui_swing.components.IconManager;
-import com.dmdirc.util.collections.DoubleMap;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -50,7 +52,7 @@ public class SettingsPanel extends JPanel {
     /** Use external padding. */
     private final boolean padding;
     /** Current Settings. */
-    private final DoubleMap<PreferencesSetting, JComponent> settings;
+    private final BiMap<PreferencesSetting, JComponent> settings;
     /** Info label. */
     private TextLabel infoLabel;
     /** Current options panel. */
@@ -87,7 +89,7 @@ public class SettingsPanel extends JPanel {
 
         this.compFactory = compFactory;
 
-        settings = new DoubleMap<>();
+        settings = HashBiMap.create();
 
         setOpaque(UIUtilities.getTabbedPaneOpaque());
         this.padding = padding;
@@ -205,7 +207,7 @@ public class SettingsPanel extends JPanel {
      * @param setting Setting to add
      */
     protected void addAddableOption(final JComponent setting) {
-        settings.getKey(setting).setValue(null);
+        settings.inverse().get(setting).setValue(null);
         addOptionPanel.addOption(setting);
     }
 
@@ -217,7 +219,7 @@ public class SettingsPanel extends JPanel {
      * @return Setting or null if not found
      */
     public PreferencesSetting getSettingForComponent(final JComponent comp) {
-        return settings.getKey(comp);
+        return settings.inverse().get(comp);
     }
 
 }
