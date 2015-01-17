@@ -141,8 +141,6 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         for (PreferencesCategory child : category.getSubcats()) {
             if (child.isInline() && category.isInlineBefore()) {
                 addInlineCategory(child, panel);
-            } else if (!child.isInline()) {
-                addCategory(child);
             }
         }
 
@@ -234,7 +232,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     private void addInlineCategory(final PreferencesCategory category,
             final JPanel parent) {
         final JPanel panel = UIUtilities.invokeAndWait(() -> {
-            final JPanel panel1 = new NoRemovePanel(new MigLayout(
+            final JPanel panel1 = new JPanel(new MigLayout(
                             "fillx, gap unrel, wrap 2, "
                             + "hidemode 3, pack, wmax 470-" + leftPadding + '-'
                             + rightPadding + "-2*"
@@ -258,7 +256,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
      */
     private JPanel addCategory(final PreferencesCategory category) {
         final JPanel panel = UIUtilities.invokeAndWait(() -> {
-            final JPanel panel1 = new NoRemovePanel(
+            final JPanel panel1 = new JPanel(
                     new MigLayout("fillx, gap unrel, wrap 2, pack, "
                             + "hidemode 3, wmax 470-"
                             + leftPadding + '-' + rightPadding + "-2*" + padding));
