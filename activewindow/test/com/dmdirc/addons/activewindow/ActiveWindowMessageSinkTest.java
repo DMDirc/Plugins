@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.util.Date;
@@ -48,7 +48,7 @@ public class ActiveWindowMessageSinkTest {
     private static final Pattern PATTERN = Pattern.compile("active");
     @Mock private ActiveFrameManager activeFrameManager;
     @Mock private MessageSinkManager messageSinkManager;
-    @Mock private FrameContainer frameContainer;
+    @Mock private WindowModel frameContainer;
     @Mock private TextFrame textFrame;
     @Mock private Date date;
     private ActiveWindowMessageSink sink;

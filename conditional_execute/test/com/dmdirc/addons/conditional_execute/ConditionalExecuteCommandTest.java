@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.conditional_execute;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class ConditionalExecuteCommandTest {
 
     @Mock private CommandController commandController;
     @Mock private CommandParser commandParser;
-    @Mock private FrameContainer container;
+    @Mock private WindowModel container;
     @Mock private CommandContext context;
     private ConditionalExecuteCommand command;
 

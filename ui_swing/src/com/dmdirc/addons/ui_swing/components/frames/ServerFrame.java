@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
@@ -77,8 +76,7 @@ public final class ServerFrame extends InputTextFrame {
             final KeyedDialogProvider<Connection, ServerSettingsDialog> dialogProvider,
             final SSLCertificateDialogFactory sslDialogFactory,
             final Connection owner) {
-        super(deps, inputFieldProvider, inputTextFramePasteActionFactory,
-                (FrameContainer) owner.getWindowModel());
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner.getWindowModel());
         this.sslDialogFactory = sslDialogFactory;
         this.dialogProvider = dialogProvider;
         this.connection = owner;

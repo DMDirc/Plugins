@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.debug;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import com.google.common.collect.Sets;
 
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 public class DebugTest {
 
     @Mock private CommandArguments arguments;
-    @Mock private FrameContainer container;
+    @Mock private WindowModel container;
     @Mock private CommandController controller;
     @Mock private DebugCommand debugCommand;
     @Mock private CommandContext commandContext;

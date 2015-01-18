@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.audio;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.Toolkit;
 
@@ -42,7 +42,7 @@ public class BeepCommandTest {
 
     @Mock private Toolkit toolkit;
     @Mock private CommandController commandController;
-    @Mock private FrameContainer frameContainer;
+    @Mock private WindowModel frameContainer;
     @Mock private CommandArguments commandArguments;
     @Mock private CommandContext commandContext;
     private BeepCommand beepCommand;

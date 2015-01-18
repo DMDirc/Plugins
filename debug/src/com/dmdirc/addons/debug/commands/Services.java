@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.plugins.Service;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.plugins.ServiceProvider;
@@ -70,7 +70,7 @@ public class Services extends DebugCommand implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
         for (Service service : serviceManager.getAllServices()) {

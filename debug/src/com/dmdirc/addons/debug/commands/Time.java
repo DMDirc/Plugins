@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
 
@@ -61,7 +61,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         doTime(origin, args);
     }
@@ -72,7 +72,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
      * @param origin The origin of the command
      * @param args   The arguments that were passed to the command
      */
-    private void doTime(final FrameContainer origin,
+    private void doTime(final WindowModel origin,
             final CommandArguments args) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), getName(), getUsage());

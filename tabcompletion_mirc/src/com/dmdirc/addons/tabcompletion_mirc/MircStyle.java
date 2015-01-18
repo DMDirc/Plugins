@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.tabcompletion_mirc;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.GroupChat;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompletionMatches;
@@ -45,7 +45,7 @@ public class MircStyle implements TabCompletionStyle {
     /** The tab completer that we use. */
     protected final TabCompleter tabCompleter;
     /** The input window that we use. */
-    protected final FrameContainer window;
+    protected final WindowModel window;
 
     /**
      * Creates a new mIRC-style tab completer.
@@ -53,7 +53,7 @@ public class MircStyle implements TabCompletionStyle {
      * @param completer The tab completer this style is for
      * @param window    The window this tab style is for
      */
-    public MircStyle(final TabCompleter completer, final FrameContainer window) {
+    public MircStyle(final TabCompleter completer, final WindowModel window) {
         this.tabCompleter = completer;
         this.window = window;
     }

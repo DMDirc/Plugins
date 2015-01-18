@@ -23,13 +23,13 @@
 package com.dmdirc.addons.dcc.ui;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.DCCTransferHandler;
 import com.dmdirc.addons.dcc.TransferContainer;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
@@ -86,7 +86,7 @@ public class TransferPanel extends JPanel implements ActionListener,
      * @param owner    The frame container that owns this frame
      * @param errorBus The event bus to post errors to
      */
-    public TransferPanel(final FrameContainer owner, final DMDircMBassador errorBus) {
+    public TransferPanel(final WindowModel owner, final DMDircMBassador errorBus) {
         this.transferContainer = (TransferContainer) owner;
         this.errorBus = errorBus;
         dcc = transferContainer.getDCC();

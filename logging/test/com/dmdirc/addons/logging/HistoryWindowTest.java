@@ -23,10 +23,10 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.events.DisplayPropertyMap;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBuffer;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -56,7 +56,7 @@ public class HistoryWindowTest {
     @Mock private AggregateConfigProvider config;
     @Mock private ConfigBinder configBinder;
     @Mock private Connection connection;
-    @Mock private FrameContainer frameContainer;
+    @Mock private WindowModel frameContainer;
     @Mock private DMDircMBassador eventBus;
     @Mock private BackBufferFactory backBufferFactory;
     private HistoryWindow instance;

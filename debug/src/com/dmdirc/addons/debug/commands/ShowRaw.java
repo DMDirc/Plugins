@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.addons.debug.RawWindowFactory;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.Optional;
 
@@ -63,7 +63,7 @@ public class ShowRaw extends DebugCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         final Optional<Connection> connection = origin.getConnection();
         if (connection.isPresent()) {

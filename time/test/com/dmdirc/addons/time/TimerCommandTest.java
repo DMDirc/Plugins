@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand.IntelligentCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import com.google.common.collect.ImmutableMap;
@@ -52,7 +52,7 @@ public class TimerCommandTest {
 
     @Mock private TimerManager timerManager;
     @Mock private CommandController commandController;
-    @Mock private FrameContainer frameContainer;
+    @Mock private WindowModel frameContainer;
     @Mock private CommandContext commandContext;
     @Mock private IntelligentCommandContext intelligentCommandContext;
     @Mock private CommandArguments commandArguments;
