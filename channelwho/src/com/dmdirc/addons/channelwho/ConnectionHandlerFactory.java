@@ -22,25 +22,41 @@
 
 package com.dmdirc.addons.channelwho;
 
+import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Factory for creating {@link ConnectionHandler}s.
  */
 public class ConnectionHandlerFactory {
 
+    private final AggregateConfigProvider config;
+    private final ScheduledExecutorService executorService;
+    private final ConnectionManager connectionManager;
     private final String domain;
 
     @Inject
-    public ConnectionHandlerFactory(@PluginDomain(ChannelWhoPlugin.class) final String domain) {
+    public ConnectionHandlerFactory(@GlobalConfig final AggregateConfigProvider config,
+            @Named("channelwho") final ScheduledExecutorService executorService,
+            final ConnectionManager connectionManager,
+            @PluginDomain(ChannelWhoPlugin.class) final String domain) {
+        this.config = config;
+        this.executorService = executorService;
+        this.connectionManager = connectionManager;
         this.domain = domain;
     }
 
     public ConnectionHandler get(final Connection connection) {
-        final ConnectionHandler handler = new ConnectionHandler(connection, domain);
+        final ConnectionHandler handler = new ConnectionHandler(config, executorService,
+                connectionManager, domain, connection);
         handler.load();
         return handler;
     }

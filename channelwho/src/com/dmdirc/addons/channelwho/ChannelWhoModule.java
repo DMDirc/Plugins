@@ -23,7 +23,13 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.ClientModule;
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.util.LoggingScheduledExecutorService;
+
+import java.util.concurrent.ScheduledExecutorService;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,5 +49,11 @@ public class ChannelWhoModule {
     @PluginDomain(ChannelWhoPlugin.class)
     public String getSettingsDomain() {
         return domain;
+    }
+
+    @Provides
+    @Named("channelwho")
+    public ScheduledExecutorService getExecutorService(final DMDircMBassador eventBus) {
+        return new LoggingScheduledExecutorService(1, eventBus, "channelwho");
     }
 }
