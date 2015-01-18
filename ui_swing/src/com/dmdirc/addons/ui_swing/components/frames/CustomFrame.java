@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.WindowModel;
 
 import javax.swing.JPopupMenu;
 
@@ -48,7 +49,7 @@ public class CustomFrame extends TextFrame {
     public CustomFrame(
             final TextFrameDependencies deps,
             final CommandParser commandParser,
-            final FrameContainer owner) {
+            final WindowModel owner) {
         super(owner, commandParser, deps);
 
         initComponents();

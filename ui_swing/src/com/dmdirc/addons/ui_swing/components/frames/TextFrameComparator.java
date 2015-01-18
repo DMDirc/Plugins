@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.FrameContainerComparator;
 
 import java.io.Serializable;
@@ -48,7 +49,9 @@ public class TextFrameComparator implements Comparator<TextFrame>,
      */
     @Override
     public int compare(final TextFrame item1, final TextFrame item2) {
-        return comparator.compare(item1.getContainer(), item2.getContainer());
+        return comparator.compare(
+                (FrameContainer) item1.getContainer(),
+                (FrameContainer) item2.getContainer());
     }
 
 }

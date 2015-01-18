@@ -23,13 +23,13 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
     }
 
     @Override
-    public TextFrame getWindow(final FrameContainer container) {
+    public TextFrame getWindow(final WindowModel container) {
         final ServerFrame frame =  new ServerFrame(dependencies.get(), inputFieldProvider,
                 inputTextFramePasteActionFactory, dialogProvider.get(),
                 sslCertificateDialogFactory, container.getConnection().get());

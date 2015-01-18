@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.function.Supplier;
 
@@ -51,7 +51,7 @@ public class ComponentFrame extends TextFrame {
      */
     public ComponentFrame(
             final TextFrameDependencies deps,
-            final FrameContainer owner,
+            final WindowModel owner,
             final CommandParser commandParser,
             final Iterable<Supplier<? extends JComponent>> componentSupplier) {
         super(owner, commandParser, deps);

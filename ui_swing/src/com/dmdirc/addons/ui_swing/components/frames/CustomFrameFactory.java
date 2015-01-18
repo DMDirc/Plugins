@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.util.Collections;
@@ -55,7 +55,7 @@ public class CustomFrameFactory implements SwingWindowFactory.WindowProvider {
     }
 
     @Override
-    public TextFrame getWindow(final FrameContainer container) {
+    public TextFrame getWindow(final WindowModel container) {
         return new CustomFrame(dependencies.get(), commandParser, container);
     }
 

@@ -237,10 +237,12 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             }
 
             node.getLabel().unreadStatusChanged(new UnreadStatusChangedEvent(
-                    window.getContainer(), window.getContainer().getUnreadStatusManager(),
+                    (FrameContainer) window.getContainer(),
+                    window.getContainer().getUnreadStatusManager(),
                     window.getContainer().getUnreadStatusManager().getNotificationColour(),
                     window.getContainer().getUnreadStatusManager().getUnreadLines()));
-            node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
+            node.getLabel().iconChanged(new FrameIconChangedEvent(
+                    (FrameContainer) window.getContainer(),
                     window.getContainer().getIcon()));
         });
     }

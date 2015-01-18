@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.FrameComponentAddedEvent;
 import com.dmdirc.events.FrameComponentRemovedEvent;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import javax.swing.JLabel;
@@ -43,7 +43,7 @@ public class TypingLabel extends JLabel {
     /** A version number for this class. */
     private static final long serialVersionUID = 2;
     /** Parent frame container. */
-    private final FrameContainer container;
+    private final WindowModel container;
     /** Whether or not to show the typing indicator. */
     private boolean useTypingIndicator;
 
@@ -52,7 +52,7 @@ public class TypingLabel extends JLabel {
      *
      * @param container Parent frame container
      */
-    public TypingLabel(final FrameContainer container) {
+    public TypingLabel(final WindowModel container) {
         super("[Typing...]");
         this.container = container;
         setVisible(false);

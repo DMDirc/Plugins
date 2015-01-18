@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.common.ChannelJoinRequest;
 import com.dmdirc.ui.core.util.URLHandler;
 
@@ -61,7 +61,7 @@ public class SwingLinkHandler {
 
     @Handler
     public void handleChannelClick(final LinkChannelClickedEvent event) {
-        final FrameContainer container = event.getWindow().getContainer();
+        final WindowModel container = event.getWindow().getContainer();
         container.getConnection()
                 .map(Connection::getGroupChatManager)
                 .ifPresent(c -> c.join(new ChannelJoinRequest(event.getTarget())));
@@ -74,7 +74,7 @@ public class SwingLinkHandler {
 
     @Handler
     public void handleNicknameClick(final LinkNicknameClickedEvent event) {
-        final FrameContainer container = event.getWindow().getContainer();
+        final WindowModel container = event.getWindow().getContainer();
         container.getConnection().ifPresent(c ->
                 eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
                         windowFactory.getSwingWindow(c.getQuery(event.getTarget()))))));

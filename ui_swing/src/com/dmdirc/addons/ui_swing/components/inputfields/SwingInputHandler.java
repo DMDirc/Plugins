@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
@@ -66,7 +67,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final InputField target,
             final CommandController commandController,
             final CommandParser commandParser,
-            final FrameContainer parentWindow,
+            final WindowModel parentWindow,
             final TabCompleterUtils tabCompleterUtils,
             final DMDircMBassador eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow,

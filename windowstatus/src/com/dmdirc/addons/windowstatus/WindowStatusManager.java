@@ -24,7 +24,6 @@ package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -44,6 +43,7 @@ import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
@@ -126,7 +126,7 @@ public class WindowStatusManager {
      *
      * @param current Window to use when adding status.
      */
-    public void updateStatus(final FrameContainer current) {
+    public void updateStatus(final WindowModel current) {
         if (current == null) {
             return;
         }

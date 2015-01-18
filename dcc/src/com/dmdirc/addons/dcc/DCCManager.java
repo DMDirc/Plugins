@@ -24,7 +24,6 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
@@ -53,6 +52,7 @@ import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -789,7 +789,7 @@ public class DCCManager {
         }
 
         @Override
-        public TextFrame getWindow(final FrameContainer container) {
+        public TextFrame getWindow(final WindowModel container) {
             return componentFrameFactory.getComponentFrame(container, commandParser,
                     Collections.singletonList(componentSupplier));
         }

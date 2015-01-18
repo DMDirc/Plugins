@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
@@ -34,8 +34,8 @@ import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.GroupChat;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.common.ChannelJoinRequest;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Dialog;
 import java.util.Optional;
@@ -131,7 +131,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
     private void doJoinChannel(final String text) {
         activeFrameManager.getActiveFrame()
                 .map(TextFrame::getContainer)
-                .flatMap(FrameContainer::getConnection)
+                .flatMap(WindowModel::getConnection)
                 .map(Connection::getGroupChatManager)
                 .ifPresent(c -> c.join(new ChannelJoinRequest(text)));
     }
@@ -139,7 +139,8 @@ public class ChannelMenu extends JMenu implements MenuListener {
     @Override
     public final void menuSelected(final MenuEvent e) {
         final Optional<ServerState> activeConnectionState = activeFrameManager.getActiveFrame()
-                .map(TextFrame::getContainer).flatMap(FrameContainer::getConnection)
+                .map(TextFrame::getContainer)
+                .flatMap(WindowModel::getConnection)
                 .map(Connection::getState);
         final boolean connected = activeConnectionState.equals(Optional.of(ServerState.CONNECTED));
 

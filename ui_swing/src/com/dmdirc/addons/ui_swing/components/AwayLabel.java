@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.config.ConfigBinding;
@@ -30,6 +29,7 @@ import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.ServerAwayEvent;
 import com.dmdirc.events.ServerBackEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 
 import javax.swing.JLabel;
 
@@ -48,14 +48,14 @@ public class AwayLabel extends JLabel {
     /** Away indicator. */
     private boolean useAwayIndicator;
     /** Parent frame container. */
-    private final FrameContainer container;
+    private final WindowModel container;
 
     /**
      * Creates a new away label for the specified container.
      *
      * @param container Parent frame container
      */
-    public AwayLabel(final FrameContainer container) {
+    public AwayLabel(final WindowModel container) {
         super("(away)");
 
         this.container = checkNotNull(container);

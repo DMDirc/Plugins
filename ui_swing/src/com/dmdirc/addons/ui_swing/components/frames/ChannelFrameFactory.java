@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
@@ -31,6 +30,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.interfaces.GroupChat;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.core.components.WindowComponent;
@@ -81,7 +81,7 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     }
 
     @Override
-    public TextFrame getWindow(final FrameContainer container) {
+    public TextFrame getWindow(final WindowModel container) {
         final ChannelFrame frame = new ChannelFrame(domain, dependencies.get(), inputFieldProvider,
                 identityFactory, dialogProvider.get(), inputTextFramePasteActionFactory,
                 topicBarFactory, (GroupChat) container);

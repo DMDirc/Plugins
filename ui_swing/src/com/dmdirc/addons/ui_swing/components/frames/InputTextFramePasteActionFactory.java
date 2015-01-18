@@ -27,6 +27,7 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
@@ -58,7 +59,7 @@ public class InputTextFramePasteActionFactory {
     public InputTextFramePasteAction getInputTextFramePasteAction(
             final InputTextFrame inputFrame,
             final SwingInputField inputField,
-            final FrameContainer container) {
+            final WindowModel container) {
         return new InputTextFramePasteAction(inputFrame, inputField, container, clipboard,
                 eventBus, pasteDialogFactory, window);
     }
