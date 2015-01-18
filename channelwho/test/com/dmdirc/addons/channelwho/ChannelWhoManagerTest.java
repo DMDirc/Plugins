@@ -23,7 +23,12 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.events.ServerConnectingEvent;
+import com.dmdirc.events.ServerDisconnectedEvent;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+
+import com.google.common.collect.Lists;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,27 +36,58 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelWhoManagerTest {
 
     @Mock private ConnectionHandlerFactory connectionHandlerFactory;
+    @Mock private ConnectionHandler connectionHandler;
     @Mock private ConnectionManager connectionManager;
+    @Mock private Connection connection;
+    @Mock private Connection connection2;
     @Mock private DMDircMBassador eventBus;
 
     private ChannelWhoManager instance;
 
     @Before
     public void setUp() throws Exception {
+        when(connectionManager.getConnections()).thenReturn(Lists.newArrayList(connection));
+        when(connectionHandlerFactory.get(connection)).thenReturn(connectionHandler);
         instance = new ChannelWhoManager(connectionHandlerFactory, connectionManager, eventBus);
+        instance.load();
     }
 
     @Test
     public void testLoad() throws Exception {
-
+        verify(eventBus).subscribe(instance);
+        verify(connectionHandlerFactory).get(connection);
     }
 
     @Test
     public void testUnload() throws Exception {
+        instance.unload();
+        verify(eventBus).unsubscribe(instance);
+        verify(connectionHandler).unload();
+    }
 
+    @Test
+    public void testServerConnectionEvent() throws Exception {
+        instance.handleServerConnectingEvent(new ServerConnectingEvent(connection2));
+        verify(connectionHandlerFactory).get(connection);
+    }
+
+    @Test
+    public void testServerDisconnectionEvent_Existing() throws Exception {
+        instance.handleServerDisconnectedEvent(new ServerDisconnectedEvent(connection));
+        verify(connectionHandler).unload();
+    }
+
+    @Test
+    public void testServerDisconnectionEvent_Unknown() throws Exception {
+        instance.handleServerDisconnectedEvent(new ServerDisconnectedEvent(connection2));
+        verify(connectionHandler, never()).unload();
     }
 }
