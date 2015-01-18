@@ -22,36 +22,26 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.Connection;
+import com.dmdirc.plugins.PluginDomain;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import javax.inject.Inject;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ChannelWhoManagerTest {
+/**
+ * Factory for creating {@link ConnectionHandler}s.
+ */
+public class ConnectionHandlerFactory {
 
-    @Mock private ConnectionHandlerFactory connectionHandlerFactory;
-    @Mock private ConnectionManager connectionManager;
-    @Mock private DMDircMBassador eventBus;
+    private final String domain;
 
-    private ChannelWhoManager instance;
-
-    @Before
-    public void setUp() throws Exception {
-        instance = new ChannelWhoManager(connectionHandlerFactory, connectionManager, eventBus);
+    @Inject
+    public ConnectionHandlerFactory(@PluginDomain(ChannelWhoPlugin.class) final String domain) {
+        this.domain = domain;
     }
 
-    @Test
-    public void testLoad() throws Exception {
-
-    }
-
-    @Test
-    public void testUnload() throws Exception {
-
+    public ConnectionHandler get(final Connection connection) {
+        final ConnectionHandler handler = new ConnectionHandler(connection, domain);
+        handler.load();
+        return handler;
     }
 }

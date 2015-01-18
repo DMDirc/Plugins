@@ -27,7 +27,9 @@ import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
-import com.dmdirc.plugins.PluginDomain;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -38,16 +40,20 @@ import net.engio.mbassy.listener.Handler;
  */
 public class ChannelWhoManager {
 
+    private final ConnectionHandlerFactory connectionHandlerFactory;
     private final ConnectionManager connectionManager;
     private final DMDircMBassador eventBus;
+    private final Map<Connection, ConnectionHandler> connectionHandlers;
 
     @Inject
     public ChannelWhoManager(
-            @PluginDomain(ChannelWhoPlugin.class) final String domain,
+            final ConnectionHandlerFactory connectionHandlerFactory,
             final ConnectionManager connectionManager,
             final DMDircMBassador eventBus) {
+        this.connectionHandlerFactory = connectionHandlerFactory;
         this.connectionManager = connectionManager;
         this.eventBus = eventBus;
+        connectionHandlers = new HashMap<>();
     }
 
     public void load() {
@@ -61,11 +67,14 @@ public class ChannelWhoManager {
     }
 
     private void addConnectionHandler(final Connection connection) {
-        // TODO: Create a handler class which will monitor settings + handle timers.
+        connectionHandlers.computeIfAbsent(connection, connectionHandlerFactory::get);
     }
 
     private void removeConnectionHandler(final Connection connection) {
-        // TODO: Remove handlers
+        final ConnectionHandler connectionHandler = connectionHandlers.remove(connection);
+        if (connectionHandler != null) {
+            connectionHandler.unload();
+        }
     }
 
     @Handler

@@ -22,36 +22,28 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.GroupChat;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+/**
+ * Responsible for managing timers and settings required to who any {@link GroupChat}s on a
+ * {@link Connection} as specified by the user.
+ */
+public class ConnectionHandler {
 
-@RunWith(MockitoJUnitRunner.class)
-public class ChannelWhoManagerTest {
+    private final Connection connection;
+    private final String domain;
 
-    @Mock private ConnectionHandlerFactory connectionHandlerFactory;
-    @Mock private ConnectionManager connectionManager;
-    @Mock private DMDircMBassador eventBus;
-
-    private ChannelWhoManager instance;
-
-    @Before
-    public void setUp() throws Exception {
-        instance = new ChannelWhoManager(connectionHandlerFactory, connectionManager, eventBus);
+    public ConnectionHandler(final Connection connection, final String domain) {
+        this.connection = connection;
+        this.domain = domain;
     }
 
-    @Test
-    public void testLoad() throws Exception {
-
+    public void load() {
+        connection.getWindowModel().getEventBus().subscribe(this);
     }
 
-    @Test
-    public void testUnload() throws Exception {
-
+    public void unload() {
+        connection.getWindowModel().getEventBus().unsubscribe(this);
     }
 }
