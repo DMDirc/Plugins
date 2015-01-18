@@ -34,9 +34,9 @@ import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -50,13 +50,12 @@ import net.engio.mbassy.listener.Handler;
  */
 public class ConnectionHandler {
 
-    private final Map<String, GroupChatUser> users;
+    private final Multimap<String, GroupChatUser> users;
     private final Connection connection;
     private final String domain;
     private final ScheduledExecutorService executorService;
     private final ConnectionManager connectionManager;
     private final ConfigBinder configBinder;
-    private int whoInterval;
     private ScheduledFuture<?> future;
 
     public ConnectionHandler(
@@ -69,7 +68,7 @@ public class ConnectionHandler {
         this.executorService = executorService;
         this.connectionManager = connectionManager;
         configBinder = config.getBinder().withDefaultDomain(domain);
-        users = new HashMap<>();
+        users = HashMultimap.create();
     }
 
     public void load() {
@@ -99,11 +98,10 @@ public class ConnectionHandler {
     @VisibleForTesting
     @ConfigBinding(key="whoInterval")
     void handleWhoInterval(final int value) {
-        whoInterval = value;
         if (future != null) {
             future.cancel(true);
         }
-        future = executorService.schedule(this::checkWho, whoInterval, TimeUnit.MILLISECONDS);
+        future = executorService.schedule(this::checkWho, value, TimeUnit.MILLISECONDS);
     }
 
     @VisibleForTesting
@@ -123,12 +121,9 @@ public class ConnectionHandler {
         if (event.getNumeric() == 301) {
             final String nickname = event.getArgs()[4];
             final String reason = event.getArgs()[5];
-            final GroupChatUser user = users.remove(nickname);
-            if (user != null) {
-                connection.getWindowModel().getEventBus().publishAsync(
-                        new ChannelUserAwayEvent(user.getGroupChat(), user,
-                                Optional.ofNullable(reason)));
-            }
+            users.removeAll(nickname).forEach(u -> connection.getWindowModel().getEventBus()
+                    .publishAsync(new ChannelUserAwayEvent(u.getGroupChat(), u,
+                            Optional.ofNullable(reason))));
         }
     }
 }
