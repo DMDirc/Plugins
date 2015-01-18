@@ -28,6 +28,8 @@ import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,13 +79,15 @@ public class ChannelWhoManager {
         }
     }
 
+    @VisibleForTesting
     @Handler
-    private void handleServerConnectingEvent(final ServerConnectingEvent event) {
+    void handleServerConnectingEvent(final ServerConnectingEvent event) {
         addConnectionHandler(event.getConnection());
     }
 
+    @VisibleForTesting
     @Handler
-    private void handleServerDisconnectedEvent(final ServerDisconnectedEvent event) {
+    void handleServerDisconnectedEvent(final ServerDisconnectedEvent event) {
         removeConnectionHandler(event.getConnection());
     }
 
