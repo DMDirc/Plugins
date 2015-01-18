@@ -24,11 +24,11 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
@@ -46,7 +46,6 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 
@@ -237,12 +236,11 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             }
 
             node.getLabel().unreadStatusChanged(new UnreadStatusChangedEvent(
-                    (FrameContainer) window.getContainer(),
+                    window.getContainer(),
                     window.getContainer().getUnreadStatusManager(),
                     window.getContainer().getUnreadStatusManager().getNotificationColour(),
                     window.getContainer().getUnreadStatusManager().getUnreadLines()));
-            node.getLabel().iconChanged(new FrameIconChangedEvent(
-                    (FrameContainer) window.getContainer(),
+            node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
                     window.getContainer().getIcon()));
         });
     }

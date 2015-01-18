@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.dcc.events;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.ChatContainer;
+import com.dmdirc.interfaces.WindowModel;
 
 /**
  * Fired when a chat socket is opened.
@@ -41,7 +41,7 @@ public class DccChatSocketopenedEvent extends DccDisplayableEvent {
     }
 
     @Override
-    public FrameContainer getSource() {
+    public WindowModel getSource() {
         return chatWindow;
     }
 
