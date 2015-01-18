@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.Timer;
 
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class TimedCommandTest {
 
     @Mock private TimerManager timerManager;
-    @Mock private FrameContainer origin;
+    @Mock private WindowModel origin;
     @Mock private CommandParser commandParser;
     @Mock private TimerFactory timerFactory;
     @Mock private Timer timer;

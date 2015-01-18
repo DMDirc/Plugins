@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.debug;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -36,10 +35,9 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -70,7 +68,7 @@ public class Debug extends Command implements IntelligentCommand {
     @Inject
     public Debug(
             final CommandController controller,
-            final Set<DebugCommand> subcommands) {
+            final Collection<DebugCommand> subcommands) {
         super(controller);
 
         this.controller = controller;
@@ -98,7 +96,7 @@ public class Debug extends Command implements IntelligentCommand {
                         Arrays.asList((controller.getCommandChar()
                                 + command.getName() + ' '
                                 + args.getArgumentsAsString(1)).split(" ")));
-                command.execute((FrameContainer) origin, newArgs, context);
+                command.execute(origin, newArgs, context);
             }
         }
     }
@@ -111,7 +109,7 @@ public class Debug extends Command implements IntelligentCommand {
      * @param type     The type of message to send
      * @param args     The arguments of the message
      */
-    public void proxySendLine(final FrameContainer target,
+    public void proxySendLine(final WindowModel target,
             final boolean isSilent, final String type, final Object... args) {
         sendLine(target, isSilent, type, args);
     }
@@ -124,7 +122,7 @@ public class Debug extends Command implements IntelligentCommand {
      * @param name     The name of the command that's raising the error
      * @param args     The arguments that the command accepts or expects
      */
-    public void proxyShowUsage(final FrameContainer target,
+    public void proxyShowUsage(final WindowModel target,
             final boolean isSilent, final String name, final String args) {
         showUsage(target, isSilent, INFO.getName(), name + ' ' + args);
     }
@@ -147,8 +145,8 @@ public class Debug extends Command implements IntelligentCommand {
      *
      * @return List of command names
      */
-    public List<String> getCommandNames() {
-        final List<String> names = new ArrayList<>(commands.size());
+    public Collection<String> getCommandNames() {
+        final Collection<String> names = new ArrayList<>(commands.size());
 
         names.addAll(commands.values().stream()
                 .map(DebugCommand::getName)

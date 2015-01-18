@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -107,8 +106,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                     if (source.getState() == MediaSourceState.CLOSED) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     } else {
-                        target.getWindowModel().getCommandParser().parseCommand(
-                                (FrameContainer) origin,
+                        target.getWindowModel().getCommandParser().parseCommand(origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     }
                 }
@@ -118,7 +116,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
         } else {
             if (manager.hasRunningSource()) {
-                target.getWindowModel().getCommandParser().parseCommand((FrameContainer) origin,
+                target.getWindowModel().getCommandParser().parseCommand(origin,
                         getInformation(manager.getBestSource(), args.
                                 getArgumentsAsString(0)));
             } else {

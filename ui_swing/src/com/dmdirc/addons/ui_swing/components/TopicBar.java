@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -162,9 +161,8 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
 
         final SwingInputHandler handler = new SwingInputHandler(
                 serviceManager, topicText, commandController,
-                channel.getWindowModel().getCommandParser(),
-                (FrameContainer) channel.getWindowModel(), tabCompleterUtils,
-                channel.getEventBus());
+                channel.getWindowModel().getCommandParser(), channel.getWindowModel(),
+                tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(channel.getWindowModel().getTabCompleter());
 

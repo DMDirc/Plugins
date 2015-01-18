@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.commandparser.CommandArguments;
@@ -30,6 +29,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand.IntelligentCommandCo
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.util.Optional;
@@ -52,7 +52,7 @@ public class ActiveCommandTest {
     @Mock private CommandController commandController;
     @Mock private ActiveFrameManager activeFrameManager;
     @Mock private TabCompleterUtils tabCompleterUtils;
-    @Mock private FrameContainer frameContainer;
+    @Mock private WindowModel frameContainer;
     @Mock private TextFrame textFrame;
     @Mock private CommandArguments commandArguments;
     @Mock private CommandContext commandContext;

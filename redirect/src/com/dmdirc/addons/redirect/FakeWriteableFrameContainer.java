@@ -25,6 +25,7 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Formatter;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
@@ -39,13 +40,13 @@ import java.util.Optional;
 public class FakeWriteableFrameContainer extends FrameContainer {
 
     /** The target for this window. */
-    private final FrameContainer target;
+    private final WindowModel target;
 
     /**
      * Creates a new instance of FakeInputWindow.
      */
     public FakeWriteableFrameContainer(
-            final FrameContainer target,
+            final WindowModel target,
             final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.conditional_execute;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -239,8 +238,7 @@ public class ConditionalExecuteCommand extends Command {
             } else {
                 // Command to run!
                 if (namespace.canRun(inverse) && origin.isWritable()) {
-                    origin.getCommandParser().parseCommand((FrameContainer) origin,
-                            args.getArgumentsAsString(i));
+                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i));
                 }
                 return;
             }

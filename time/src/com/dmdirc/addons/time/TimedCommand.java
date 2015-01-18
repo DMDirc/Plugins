@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,7 +37,7 @@ public class TimedCommand extends TimerTask {
     /** The command to execute. */
     private final String command;
     /** The container to use for executing commands. */
-    private final FrameContainer origin;
+    private final WindowModel origin;
     /** The number of seconds between each execution. */
     private final int delay;
     /** The key for this timer in the Timer Manager. */
@@ -63,7 +63,7 @@ public class TimedCommand extends TimerTask {
             final int repetitions,
             final int delay,
             final String command,
-            final FrameContainer origin) {
+            final WindowModel origin) {
         this.timerKey = timerKey;
         this.repetitions = repetitions;
         this.command = command;

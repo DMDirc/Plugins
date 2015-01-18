@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -114,7 +113,7 @@ public class TimerCommand extends Command implements IntelligentCommand {
             return;
         }
 
-        manager.addTimer(repetitions, interval, command, (FrameContainer) origin);
+        manager.addTimer(repetitions, interval, command, origin);
 
         sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
     }

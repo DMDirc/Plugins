@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -141,8 +140,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         identity = identityFactory.createChannelConfig(groupChat.getConnection().get().getNetwork(),
                 groupChat.getName());
-        channelWindow = (InputWindow) windowFactory.getSwingWindow(
-                (FrameContainer) groupChat.getWindowModel());
+        channelWindow = (InputWindow) windowFactory.getSwingWindow(groupChat.getWindowModel());
 
         initComponents(tabCompleterUtils);
         initListeners();

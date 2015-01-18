@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.time;
 
-import com.dmdirc.FrameContainer;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class TimerManager {
      * @param origin      The frame container to use for the execution
      */
     public void addTimer(final int repetitions, final int interval,
-            final String command, final FrameContainer origin) {
+            final String command, final WindowModel origin) {
 
         synchronized (this) {
             final int timerKey = findFreeKey();

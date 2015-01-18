@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.ui.Window;
 
@@ -64,7 +63,7 @@ public class CommandAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         for (String line : command.split("\n")) {
-            parser.parseCommand((FrameContainer) window.getContainer(), line);
+            parser.parseCommand(window.getContainer(), line);
         }
     }
 

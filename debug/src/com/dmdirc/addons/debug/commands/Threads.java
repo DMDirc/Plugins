@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.util.Map.Entry;
@@ -61,7 +61,7 @@ public class Threads extends DebugCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         for (Entry<Thread, StackTraceElement[]> thread
                 : Thread.getAllStackTraces().entrySet()) {

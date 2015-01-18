@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.commands;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -69,7 +68,7 @@ public class PopOutCommand extends Command {
     public void execute(@Nonnull final WindowModel origin, final CommandArguments args,
             final CommandContext context) {
         UIUtilities.invokeLater(() -> {
-            final TextFrame swingWindow = windowFactory.getSwingWindow((FrameContainer) origin);
+            final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
             if (swingWindow == null) {
                 sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
                         + " currently no window to pop out.");

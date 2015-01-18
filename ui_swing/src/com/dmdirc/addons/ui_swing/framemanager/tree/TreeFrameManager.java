@@ -311,11 +311,11 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             scroller = new TreeTreeScroller(swingEventBus, tree);
 
             for (WindowModel window : windowManager.getRootWindows()) {
-                addWindow(null, windowFactory.getSwingWindow((FrameContainer) window));
+                addWindow(null, windowFactory.getSwingWindow(window));
                 final Collection<WindowModel> childWindows = window.getChildren();
                 for (WindowModel childWindow : childWindows) {
-                    addWindow(nodes.get(windowFactory.getSwingWindow((FrameContainer) window)),
-                            windowFactory.getSwingWindow((FrameContainer) childWindow));
+                    addWindow(nodes.get(windowFactory.getSwingWindow(window)),
+                            windowFactory.getSwingWindow(childWindow));
                 }
             }
 

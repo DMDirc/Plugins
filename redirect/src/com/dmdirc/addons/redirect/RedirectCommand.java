@@ -23,7 +23,6 @@
 package com.dmdirc.addons.redirect;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -83,7 +82,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final Chat target = ((ChatCommandContext) context).getChat();
         target.getWindowModel().getCommandParser().parseCommand(
-                new FakeWriteableFrameContainer((FrameContainer) target.getWindowModel(),
+                new FakeWriteableFrameContainer(target.getWindowModel(),
                         messageSinkManager, eventBus, backBufferFactory),
                 args.getArgumentsAsString());
     }

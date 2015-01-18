@@ -25,7 +25,6 @@ package com.dmdirc.addons.debug.commands;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.CustomWindow;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
@@ -33,6 +32,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.ClientLineAddedEvent;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -86,7 +86,7 @@ public class EventBusViewer extends DebugCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         final boolean isGlobal = args.getArguments().length > 0
                 && "--global".equals(args.getArguments()[0]);
@@ -113,9 +113,9 @@ public class EventBusViewer extends DebugCommand {
     private static class WindowUpdater {
 
         private final DMDircMBassador eventBus;
-        private final FrameContainer target;
+        private final WindowModel target;
 
-        WindowUpdater(final DMDircMBassador eventBus, final FrameContainer target) {
+        WindowUpdater(final DMDircMBassador eventBus, final WindowModel target) {
             this.eventBus = eventBus;
             this.target = target;
         }
@@ -147,7 +147,7 @@ public class EventBusViewer extends DebugCommand {
                                 .append(method.getName().substring(3))
                                 .append(Styliser.CODE_UNDERLINE)
                                 .append('=')
-                                .append(method.invoke(event).toString());
+                                .append(method.invoke(event));
                     } catch (ReflectiveOperationException ex) {
                         // Ignore.
                     }
