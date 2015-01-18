@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class CustomInputFrameFactory implements SwingWindowFactory.WindowProvide
     }
 
     @Override
-    public TextFrame getWindow(final FrameContainer container) {
+    public TextFrame getWindow(final WindowModel container) {
         final CustomInputFrame frame = new CustomInputFrame(dependencies.get(), inputFieldProvider,
                 inputTextFramePasteActionFactory, container);
         eventBus.subscribe(frame);

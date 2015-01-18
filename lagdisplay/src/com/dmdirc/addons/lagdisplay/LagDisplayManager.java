@@ -45,6 +45,7 @@ import com.dmdirc.events.ServerPingSentEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
@@ -305,7 +306,7 @@ public class LagDisplayManager implements ConfigChangeListener {
 
     private boolean isActiveWindow(final Connection connection) {
         return activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
-                .flatMap(FrameContainer::getConnection)
+                .flatMap(WindowModel::getConnection)
                 .filter(connection::equals).isPresent();
     }
 

@@ -35,6 +35,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
@@ -95,7 +96,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
             final TextFrameDependencies deps,
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
-            final FrameContainer owner) {
+            final WindowModel owner) {
         super(owner, owner.getCommandParser(), deps);
 
         serviceManager = deps.serviceManager;

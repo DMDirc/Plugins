@@ -24,7 +24,6 @@ package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -58,6 +57,7 @@ import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.ServiceManager;
@@ -96,7 +96,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
     /** The channel object that owns this frame. */
-    protected final FrameContainer frameParent;
+    protected final WindowModel frameParent;
     /** Colour manager. */
     protected final ColourManager colourManager;
     /** Frame output pane. */
@@ -129,7 +129,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
      * @param deps          Collection of TextPane dependencies.
      */
     protected TextFrame(
-            final FrameContainer owner,
+            final WindowModel owner,
             final CommandParser commandParser,
             final TextFrameDependencies deps) {
         this.swingEventBus = deps.swingEventBus;
@@ -270,7 +270,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
     }
     
     @Override
-    public FrameContainer getContainer() {
+    public WindowModel getContainer() {
         return frameParent;
     }
 

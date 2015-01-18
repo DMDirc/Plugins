@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
@@ -59,7 +58,7 @@ public class SwingWindowFactory implements FrameListener {
     /** A map of known implementations of window interfaces. */
     private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
-    private final Map<FrameContainer, TextFrame> windows = new HashMap<>();
+    private final Map<WindowModel, TextFrame> windows = new HashMap<>();
     /** The event bus to post errors to. */
     private final DMDircMBassador eventBus;
     /** The swing event bus. */
@@ -113,8 +112,8 @@ public class SwingWindowFactory implements FrameListener {
     public void addWindow(final WindowModel parent, final WindowModel window,
             final boolean focus) {
         UIUtilities.invokeLater(() -> {
-            final TextFrame parentWindow = getSwingWindow((FrameContainer) parent);
-            final TextFrame childWindow = doAddWindow((FrameContainer) window);
+            final TextFrame parentWindow = getSwingWindow(parent);
+            final TextFrame childWindow = doAddWindow(window);
 
             if (childWindow == null) {
                 return;
@@ -136,7 +135,7 @@ public class SwingWindowFactory implements FrameListener {
      *
      * @return The created window or null on error
      */
-    protected TextFrame doAddWindow(final FrameContainer window) {
+    protected TextFrame doAddWindow(final WindowModel window) {
         if (!implementations.containsKey(window.getComponents())) {
             eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, null,
                     "Unable to create window: Unknown type.", ""));
@@ -159,8 +158,8 @@ public class SwingWindowFactory implements FrameListener {
 
     @Override
     public void delWindow(final WindowModel parent, final WindowModel window) {
-        final TextFrame parentWindow = getSwingWindow((FrameContainer) parent);
-        final TextFrame childWindow = getSwingWindow((FrameContainer) window);
+        final TextFrame parentWindow = getSwingWindow(parent);
+        final TextFrame childWindow = getSwingWindow(window);
         windows.remove(window);
         UIUtilities.invokeLater(() -> swingEventBus.publish(new SwingWindowDeletedEvent(
                 Optional.ofNullable(parentWindow), childWindow)));
@@ -174,7 +173,7 @@ public class SwingWindowFactory implements FrameListener {
      *
      * @return A relevant window or null
      */
-    public TextFrame getSwingWindow(@Nullable final FrameContainer window) {
+    public TextFrame getSwingWindow(@Nullable final WindowModel window) {
         return windows.get(window);
     }
 
@@ -195,7 +194,7 @@ public class SwingWindowFactory implements FrameListener {
          *
          * @return A new window for the given container.
          */
-        TextFrame getWindow(FrameContainer container);
+        TextFrame getWindow(WindowModel container);
 
         /**
          * Gets the set of components that this provider can provide windows for.

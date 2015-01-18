@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.function.Supplier;
 
@@ -52,7 +53,7 @@ public class ComponentFrameFactory {
     }
 
     public ComponentFrame getComponentFrame(
-            final FrameContainer owner,
+            final WindowModel owner,
             final CommandParser commandParser,
             final Iterable<Supplier<? extends JComponent>> componentSupplier) {
         final ComponentFrame frame = new ComponentFrame(dependencies, owner, commandParser,

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.menubar;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -33,6 +32,7 @@ import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.util.Optional;
 
@@ -104,7 +104,7 @@ public class ServerMenu extends JMenu implements MenuListener {
         disconnect.setMnemonic('d');
         disconnect.addActionListener(e -> activeFrameManager.getActiveFrame()
                 .map(TextFrame::getContainer)
-                .flatMap(FrameContainer::getConnection)
+                .flatMap(WindowModel::getConnection)
                 .ifPresent(Connection::disconnect));
         add(disconnect);
 
@@ -128,7 +128,8 @@ public class ServerMenu extends JMenu implements MenuListener {
     @Override
     public final void menuSelected(final MenuEvent e) {
         final Optional<ServerState> activeConnectionState = activeFrameManager.getActiveFrame()
-                .map(TextFrame::getContainer).flatMap(FrameContainer::getConnection)
+                .map(TextFrame::getContainer)
+                .flatMap(WindowModel::getConnection)
                 .map(Connection::getState);
         final boolean connected = activeConnectionState.equals(Optional.of(ServerState.CONNECTED));
 
