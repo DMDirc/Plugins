@@ -386,6 +386,11 @@ public class XmppParser extends BaseSocketAwareParser {
     }
 
     @Override
+    public void sendWhois(final String nickname) {
+        // TODO: Implement this
+    }
+
+    @Override
     public String getLastLine() {
         return "TODO: Implement me";
     }
