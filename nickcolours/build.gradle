@@ -1,3 +1,4 @@
 dependencies {
   compile plugin('ui_swing')
+  compile group: 'com.google.auto.value', name: 'auto-value', version: '1.0'
 }
