@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -58,7 +59,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(
-            @Nullable final FrameContainer parent,
+            @Nullable final WindowModel parent,
             final String title,
             final String icon,
             final AggregateConfigProvider configManager,

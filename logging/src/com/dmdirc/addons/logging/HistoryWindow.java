@@ -58,7 +58,7 @@ public class HistoryWindow extends FrameContainer {
     public HistoryWindow(
             final String title,
             final Path logFile,
-            final FrameContainer parent,
+            final WindowModel parent,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory,
             final int numLines) {

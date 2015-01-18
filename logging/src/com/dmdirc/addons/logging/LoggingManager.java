@@ -24,7 +24,6 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.Query;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -54,6 +53,7 @@ import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.User;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.logger.ErrorLevel;
@@ -371,7 +371,7 @@ public class LoggingManager implements ConfigChangeListener {
         final String filename = locator.getLogFile(event.getChannel().getName());
 
         if (autobackbuffer) {
-            showBackBuffer((FrameContainer) event.getChannel().getWindowModel(), filename);
+            showBackBuffer(event.getChannel().getWindowModel(), filename);
         }
 
         synchronized (FORMAT_LOCK) {
@@ -400,7 +400,7 @@ public class LoggingManager implements ConfigChangeListener {
      * @param frame    The frame to add the backbuffer lines to
      * @param filename File to get backbuffer from
      */
-    protected void showBackBuffer(final FrameContainer frame, final String filename) {
+    protected void showBackBuffer(final WindowModel frame, final String filename) {
         if (frame == null) {
             eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null, "Given a null frame", ""));
             return;
@@ -562,7 +562,7 @@ public class LoggingManager implements ConfigChangeListener {
      *
      * @return True if the history is available, false otherwise
      */
-    protected boolean showHistory(final FrameContainer target) {
+    protected boolean showHistory(final WindowModel target) {
         final String descriptor;
 
         if (target instanceof GroupChat) {

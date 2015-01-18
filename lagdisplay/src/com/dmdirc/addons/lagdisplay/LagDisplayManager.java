@@ -24,7 +24,6 @@ package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -191,7 +190,7 @@ public class LagDisplayManager implements ConfigChangeListener {
         if (event.getNumeric() != 421) {
             return;
         }
-        final boolean useAlternate = ((FrameContainer) event.getConnection()).getConfigManager()
+        final boolean useAlternate = event.getConnection().getWindowModel().getConfigManager()
                 .getOptionBool(domain, "usealternate");
         final boolean isActive = isActiveWindow(event.getConnection());
         final String[] args = event.getArgs();
