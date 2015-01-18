@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -67,7 +66,7 @@ public class LoggingCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length > 0) {
             if ("history".equalsIgnoreCase(args.getArguments()[0])) {
-                if (!manager.showHistory((FrameContainer) origin)) {
+                if (!manager.showHistory(origin)) {
                     sendLine(origin, args.isSilent(), FORMAT_ERROR,
                             "Unable to open history for this window.");
                 }

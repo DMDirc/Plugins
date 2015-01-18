@@ -23,13 +23,13 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.dcc.events.DccChatMessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSelfmessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketclosedEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
@@ -70,7 +70,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param eventBus            The bus to dispatch events on.
      */
     public ChatContainer(
-            @Nullable final FrameContainer parent,
+            @Nullable final WindowModel parent,
             final DCCChat dcc,
             final AggregateConfigProvider configManager,
             final BackBufferFactory backBufferFactory,
