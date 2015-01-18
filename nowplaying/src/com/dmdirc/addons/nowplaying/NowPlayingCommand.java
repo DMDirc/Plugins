@@ -26,6 +26,7 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
+import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
@@ -33,6 +34,7 @@ import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -51,7 +53,7 @@ import javax.inject.Inject;
 public class NowPlayingCommand extends Command implements IntelligentCommand {
 
     /** A command info object for this command. */
-    public static final BaseCommandInfo INFO = new BaseCommandInfo("nowplaying",
+    public static final CommandInfo INFO = new BaseCommandInfo("nowplaying",
             "nowplaying [--sources|--source <source>] [format] - "
             + "tells the channel the song you're currently playing",
             CommandType.TYPE_CHAT);
@@ -87,7 +89,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         final Chat target = ((ChatCommandContext) context).getChat();
         if (args.getArguments().length > 0
@@ -105,7 +107,8 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                     if (source.getState() == MediaSourceState.CLOSED) {
                         sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
                     } else {
-                        target.getWindowModel().getCommandParser().parseCommand(origin,
+                        target.getWindowModel().getCommandParser().parseCommand(
+                                (FrameContainer) origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     }
                 }
@@ -115,7 +118,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
         } else {
             if (manager.hasRunningSource()) {
-                target.getWindowModel().getCommandParser().parseCommand(origin,
+                target.getWindowModel().getCommandParser().parseCommand((FrameContainer) origin,
                         getInformation(manager.getBestSource(), args.
                                 getArgumentsAsString(0)));
             } else {
@@ -132,7 +135,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
      * @param isSilent Whether this command is being silenced
      * @param format   Format to be passed to getInformation
      */
-    private void doSourceList(final FrameContainer origin, final boolean isSilent,
+    private void doSourceList(final WindowModel origin, final boolean isSilent,
             final String format) {
         final List<MediaSource> sources = manager.getSources();
 

@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
@@ -105,7 +106,8 @@ public final class ChannelFrame extends InputTextFrame {
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final TopicBarFactory topicBarFactory,
             final GroupChat owner) {
-        super(deps, inputFieldProvider, inputTextFramePasteActionFactory, owner.getWindowModel());
+        super(deps, inputFieldProvider, inputTextFramePasteActionFactory,
+                (FrameContainer) owner.getWindowModel());
 
         this.eventBus = deps.eventBus;
         this.globalConfig = deps.globalConfig;

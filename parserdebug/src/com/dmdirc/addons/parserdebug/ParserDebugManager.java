@@ -23,6 +23,7 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.FrameContainer;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.CallbackNotFoundException;
@@ -100,7 +101,7 @@ public class ParserDebugManager implements DebugInfoListener {
             parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
                     connection, eventBus, backBufferFactory);
-            windowManager.addWindow(connection.getWindowModel(), window);
+            windowManager.addWindow((FrameContainer) connection.getWindowModel(), window);
             registeredParsers.put(parser, window);
             window.addLine("======================", new Date());
             window.addLine("Started Monitoring: " + parser, new Date());

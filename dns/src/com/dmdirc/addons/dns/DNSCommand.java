@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dns;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -30,6 +29,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 
 import com.google.common.net.InetAddresses;
 
@@ -64,7 +64,7 @@ public class DNSCommand extends Command {
     }
 
     @Override
-    public void execute(@Nonnull final FrameContainer origin,
+    public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (args.getArguments().length == 0) {
             showUsage(origin, args.isSilent(), "dns", "<IP|hostname>");
@@ -81,7 +81,7 @@ public class DNSCommand extends Command {
         }, 0);
     }
 
-    private void resolve(@Nonnull final FrameContainer origin, final boolean isSilent,
+    private void resolve(@Nonnull final WindowModel origin, final boolean isSilent,
             final String arg) {
         try {
             final InetAddress address = InetAddresses.forString(arg);

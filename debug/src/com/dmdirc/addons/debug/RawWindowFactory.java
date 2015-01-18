@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.debug;
 
+import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.WindowManager;
@@ -58,7 +59,7 @@ public class RawWindowFactory {
     public RawWindow getRawWindow(final Connection connection) {
         final RawWindow rawWindow = new RawWindow(connection, commandController,
                 messageSinkManager, tabCompleterFactory,  backBufferFactory);
-        windowManager.addWindow(connection.getWindowModel(), rawWindow);
+        windowManager.addWindow((FrameContainer) connection.getWindowModel(), rawWindow);
         return rawWindow;
     }
 
