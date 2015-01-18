@@ -34,6 +34,7 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.FrameListener;
 import com.dmdirc.logger.ErrorLevel;
 
@@ -104,16 +105,16 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     @Override
-    public void addWindow(final FrameContainer window, final boolean focus) {
+    public void addWindow(final WindowModel window, final boolean focus) {
         addWindow(null, window, focus);
     }
 
     @Override
-    public void addWindow(final FrameContainer parent, final FrameContainer window,
+    public void addWindow(final WindowModel parent, final WindowModel window,
             final boolean focus) {
         UIUtilities.invokeLater(() -> {
-            final TextFrame parentWindow = getSwingWindow(parent);
-            final TextFrame childWindow = doAddWindow(window);
+            final TextFrame parentWindow = getSwingWindow((FrameContainer) parent);
+            final TextFrame childWindow = doAddWindow((FrameContainer) window);
 
             if (childWindow == null) {
                 return;
@@ -152,14 +153,14 @@ public class SwingWindowFactory implements FrameListener {
     }
 
     @Override
-    public void delWindow(final FrameContainer window) {
+    public void delWindow(final WindowModel window) {
         delWindow(null, window);
     }
 
     @Override
-    public void delWindow(final FrameContainer parent, final FrameContainer window) {
-        final TextFrame parentWindow = getSwingWindow(parent);
-        final TextFrame childWindow = getSwingWindow(window);
+    public void delWindow(final WindowModel parent, final WindowModel window) {
+        final TextFrame parentWindow = getSwingWindow((FrameContainer) parent);
+        final TextFrame childWindow = getSwingWindow((FrameContainer) window);
         windows.remove(window);
         UIUtilities.invokeLater(() -> swingEventBus.publish(new SwingWindowDeletedEvent(
                 Optional.ofNullable(parentWindow), childWindow)));
