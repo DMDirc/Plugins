@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
@@ -68,7 +69,7 @@ public class PlaceholderContainer extends FrameContainer {
     @Override
     public void close() {
         int dccs = 0;
-        for (FrameContainer window : getChildren()) {
+        for (WindowModel window : getChildren()) {
             if (window instanceof TransferContainer
                     && ((TransferContainer) window).getDCC().isActive()
                     || window instanceof ChatContainer
@@ -95,7 +96,7 @@ public class PlaceholderContainer extends FrameContainer {
     }
 
     @Override
-    public void removeChild(final FrameContainer child) {
+    public void removeChild(final WindowModel child) {
         super.removeChild(child);
 
         if (getChildren().isEmpty()) {
