@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -68,7 +69,7 @@ public class Debug extends Command implements IntelligentCommand {
     @Inject
     public Debug(
             final CommandController controller,
-            final Collection<DebugCommand> subcommands) {
+            final Set<DebugCommand> subcommands) {
         super(controller);
 
         this.controller = controller;
