@@ -25,6 +25,8 @@ package com.dmdirc.addons.parser_xmpp;
 import com.dmdirc.parser.common.MyInfo;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.parser.interfaces.ProtocolDescription;
+import com.dmdirc.parser.xmpp.XmppParser;
+import com.dmdirc.parser.xmpp.XmppProtocolDescription;
 import com.dmdirc.plugins.Exported;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
