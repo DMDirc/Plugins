@@ -34,6 +34,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelWhoManagerTest {
 
+    @Mock private ConnectionHandlerFactory connectionHandlerFactory;
     @Mock private ConnectionManager connectionManager;
     @Mock private DMDircMBassador eventBus;
 
@@ -41,7 +42,7 @@ public class ChannelWhoManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        instance = new ChannelWhoManager("test", connectionManager, eventBus);
+        instance = new ChannelWhoManager(connectionHandlerFactory, connectionManager, eventBus);
     }
 
     @Test

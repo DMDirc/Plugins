@@ -32,9 +32,11 @@ import com.dmdirc.interfaces.GroupChat;
 public class ConnectionHandler {
 
     private final Connection connection;
+    private final String domain;
 
-    public ConnectionHandler(final Connection connection) {
+    public ConnectionHandler(final Connection connection, final String domain) {
         this.connection = connection;
+        this.domain = domain;
     }
 
     public void load() {

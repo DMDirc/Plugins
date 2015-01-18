@@ -23,6 +23,7 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.plugins.PluginDomain;
 
 import javax.inject.Inject;
 
@@ -31,12 +32,15 @@ import javax.inject.Inject;
  */
 public class ConnectionHandlerFactory {
 
+    private final String domain;
+
     @Inject
-    public ConnectionHandlerFactory() {
+    public ConnectionHandlerFactory(@PluginDomain(ChannelWhoPlugin.class) final String domain) {
+        this.domain = domain;
     }
 
     public ConnectionHandler get(final Connection connection) {
-        final ConnectionHandler handler = new ConnectionHandler(connection);
+        final ConnectionHandler handler = new ConnectionHandler(connection, domain);
         handler.load();
         return handler;
     }
