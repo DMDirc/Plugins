@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.FrameContainer;
-import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.WindowModelComparator;
 import com.dmdirc.interfaces.ui.Window;
 
 import java.io.Serializable;
@@ -35,16 +34,14 @@ import java.util.Comparator;
 public class WindowComparator implements Comparator<Window>, Serializable {
 
     private static final long serialVersionUID = 1L;
-    private final FrameContainerComparator comparator;
+    private final WindowModelComparator comparator;
 
     public WindowComparator() {
-        comparator = new FrameContainerComparator();
+        comparator = new WindowModelComparator();
     }
 
     @Override
     public int compare(final Window item1, final Window item2) {
-        return comparator.compare(
-                (FrameContainer) item1.getContainer(),
-                (FrameContainer) item2.getContainer());
+        return comparator.compare(item1.getContainer(), item2.getContainer());
     }
 }

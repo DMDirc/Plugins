@@ -22,8 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.FrameContainer;
-import com.dmdirc.FrameContainerComparator;
+import com.dmdirc.WindowModelComparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -37,7 +36,7 @@ public class TextFrameComparator implements Comparator<TextFrame>,
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Comparator to proxy compares to. */
-    private final FrameContainerComparator comparator = new FrameContainerComparator();
+    private final WindowModelComparator comparator = new WindowModelComparator();
 
     /**
      * Compares two frame containers names.
@@ -49,9 +48,7 @@ public class TextFrameComparator implements Comparator<TextFrame>,
      */
     @Override
     public int compare(final TextFrame item1, final TextFrame item2) {
-        return comparator.compare(
-                (FrameContainer) item1.getContainer(),
-                (FrameContainer) item2.getContainer());
+        return comparator.compare(item1.getContainer(), item2.getContainer());
     }
 
 }
