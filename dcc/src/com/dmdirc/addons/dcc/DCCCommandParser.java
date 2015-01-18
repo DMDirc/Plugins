@@ -23,9 +23,9 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
 /**
@@ -58,12 +58,12 @@ public class DCCCommandParser extends GlobalCommandParser {
      * @param line   The line input by the user
      */
     @Override
-    protected void handleNonCommand(final FrameContainer origin, final String line) {
+    protected void handleNonCommand(final WindowModel origin, final String line) {
         origin.sendLine(line);
     }
 
     @Override
-    public void setOwner(final FrameContainer owner) {
+    public void setOwner(final WindowModel owner) {
         // Don't care
     }
 
