@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.activewindow;
 
-import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.sink.MessageSink;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
@@ -59,7 +59,7 @@ public class ActiveWindowMessageSink implements MessageSink {
 
     @Override
     public void handleMessage(final MessageSinkManager dispatcher,
-            final FrameContainer source, final String[] patternMatches,
+            final WindowModel source, final String[] patternMatches,
             final Date date, final String messageType, final Object... args) {
         activeFrameManager.getActiveFrame()
                 .ifPresent(f -> f.getContainer().addLine(messageType, date, args));
