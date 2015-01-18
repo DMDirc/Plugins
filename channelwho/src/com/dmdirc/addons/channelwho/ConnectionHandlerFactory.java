@@ -24,10 +24,16 @@ package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.interfaces.Connection;
 
+import javax.inject.Inject;
+
 /**
  * Factory for creating {@link ConnectionHandler}s.
  */
 public class ConnectionHandlerFactory {
+
+    @Inject
+    public ConnectionHandlerFactory() {
+    }
 
     public ConnectionHandler get(final Connection connection) {
         final ConnectionHandler handler = new ConnectionHandler(connection);
