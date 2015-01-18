@@ -26,6 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -74,7 +75,7 @@ public class HistoryWindow extends FrameContainer {
 
     @Override
     public Optional<Connection> getConnection() {
-        return getParent().flatMap(FrameContainer::getConnection);
+        return getParent().flatMap(WindowModel::getConnection);
     }
 
     @VisibleForTesting

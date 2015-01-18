@@ -40,6 +40,7 @@ import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
@@ -307,12 +308,12 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             }
             scroller = new TreeTreeScroller(swingEventBus, tree);
 
-            for (FrameContainer window : windowManager.getRootWindows()) {
-                addWindow(null, windowFactory.getSwingWindow(window));
-                final Collection<FrameContainer> childWindows = window.getChildren();
-                for (FrameContainer childWindow : childWindows) {
-                    addWindow(nodes.get(windowFactory.getSwingWindow(window)),
-                            windowFactory.getSwingWindow(childWindow));
+            for (WindowModel window : windowManager.getRootWindows()) {
+                addWindow(null, windowFactory.getSwingWindow((FrameContainer) window));
+                final Collection<WindowModel> childWindows = window.getChildren();
+                for (WindowModel childWindow : childWindows) {
+                    addWindow(nodes.get(windowFactory.getSwingWindow((FrameContainer) window)),
+                            windowFactory.getSwingWindow((FrameContainer) childWindow));
                 }
             }
 
