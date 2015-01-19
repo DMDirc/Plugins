@@ -101,7 +101,7 @@ public class ChannelWhoManager {
     @Handler
     void handlePrefsDialog(final ClientPrefsOpenedEvent event) {
         final PreferencesCategory category = new PreferencesCategory("Channel Who", "Provides " +
-                "support for sendinw WHO requests to channels at regular intervals");
+                "support for sending WHO requests to channels at regular intervals");
         category.addSetting(new PreferencesSetting(PreferencesType.DURATION,
                 new NumericalValidator(0, Integer.MAX_VALUE), domain, "whointerval",
                 "Who Interval", "The interval WHO requests will be sent to channels",
