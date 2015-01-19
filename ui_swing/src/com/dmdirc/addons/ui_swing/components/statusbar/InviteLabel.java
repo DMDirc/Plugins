@@ -163,7 +163,7 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
         if (event.getWindow().isPresent()) {
             activeConnection = event.getWindow().get().getContainer().getConnection();
         } else {
-            activeConnection = null;
+            activeConnection = Optional.empty();
         }
         update();
     }
