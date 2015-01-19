@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.Apple;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
@@ -120,7 +121,7 @@ public class ServerMenu extends JMenu implements MenuListener {
             final JMenuItem exit = new JMenuItem();
             exit.setText("Exit");
             exit.setMnemonic('x');
-            exit.addActionListener(e -> lifecycleController.quit());
+            exit.addActionListener(e -> UIUtilities.invokeOffEDT(lifecycleController::quit));
             add(exit);
         }
     }

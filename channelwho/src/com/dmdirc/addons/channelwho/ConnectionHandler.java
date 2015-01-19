@@ -87,11 +87,13 @@ public class ConnectionHandler {
 
     @VisibleForTesting
     void checkWho() {
-        connectionManager.getConnections().forEach(connection ->
-                connection.getGroupChatManager().getChannels().forEach(channel -> {
-                    if (channel.getWindowModel().getConfigManager().getOptionBool(domain, "sendwho")) {
+        connectionManager.getConnections().forEach(
+                connection -> connection.getGroupChatManager().getChannels().forEach(channel -> {
+                    if (channel.getWindowModel().getConfigManager()
+                            .getOptionBool(domain, "sendwho")) {
                         channel.requestUsersInfo();
-                    }}));
+                    }
+                }));
     }
 
     @VisibleForTesting

@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
+import com.dmdirc.addons.ui_swing.components.RunnableSwingWorker;
 import com.dmdirc.util.colours.Colour;
 
 import java.awt.Color;
@@ -243,6 +244,10 @@ public final class UIUtilities {
         } else {
             SwingUtilities.invokeLater(runnable);
         }
+    }
+
+    public static void invokeOffEDT(final Runnable runnable) {
+        new RunnableSwingWorker<Void,Void>(runnable).execute();
     }
 
     /**
