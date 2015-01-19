@@ -90,7 +90,8 @@ public class ConnectionHandler {
         connectionManager.getConnections().forEach(connection ->
                 connection.getGroupChatManager().getChannels().forEach(channel -> {
                     if (channel.getWindowModel().getConfigManager().getOptionBool(domain, "sendwho")) {
-                        channel.requestUsersInfo();}}));
+                        channel.requestUsersInfo();
+                    }}));
     }
 
     @VisibleForTesting
