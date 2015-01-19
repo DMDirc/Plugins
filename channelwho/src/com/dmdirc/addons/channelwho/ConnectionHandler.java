@@ -109,7 +109,9 @@ public class ConnectionHandler {
     void handleAwayEvent(final ChannelUserAwayEvent event) {
         if (!event.getReason().isPresent()) {
             event.setDisplayProperty(DisplayProperty.DO_NOT_DISPLAY, true);
-            if (users.put(event.getUser().getNickname(), event.getUser())) {
+            final boolean notseen = !users.containsKey(event.getUser().getNickname());
+            users.put(event.getUser().getNickname(), event.getUser());
+            if (notseen) {
                 event.getChannel().getConnection()
                         .ifPresent(c -> c.requestUserInfo(event.getUser().getUser()));
             }
