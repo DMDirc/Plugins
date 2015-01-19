@@ -23,10 +23,17 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
+import com.dmdirc.events.GroupChatPrefsRequestedEvent;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.util.validators.NumericalValidator;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -42,6 +49,7 @@ import net.engio.mbassy.listener.Handler;
  */
 public class ChannelWhoManager {
 
+    private final String domain;
     private final ConnectionHandlerFactory connectionHandlerFactory;
     private final ConnectionManager connectionManager;
     private final DMDircMBassador eventBus;
@@ -49,9 +57,11 @@ public class ChannelWhoManager {
 
     @Inject
     public ChannelWhoManager(
+            @PluginDomain(ChannelWhoPlugin.class) final String domain,
             final ConnectionHandlerFactory connectionHandlerFactory,
             final ConnectionManager connectionManager,
             final DMDircMBassador eventBus) {
+        this.domain = domain;
         this.connectionHandlerFactory = connectionHandlerFactory;
         this.connectionManager = connectionManager;
         this.eventBus = eventBus;
@@ -77,6 +87,25 @@ public class ChannelWhoManager {
         if (connectionHandler != null) {
             connectionHandler.unload();
         }
+    }
+
+    @VisibleForTesting
+    @Handler
+    void handleGroupChatPrefsRequestedEvent(final GroupChatPrefsRequestedEvent event) {
+        event.getCategory().addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, domain,
+                "sendWho", "Send Who Requests", "Should we send who requests to the channel?",
+                event.getConfig(), event.getIdentity()));
+    }
+
+    @VisibleForTesting
+    @Handler
+    void handlePrefsDialog(final ClientPrefsOpenedEvent event) {
+        final PreferencesCategory category = new PreferencesCategory("Channel Who", "Provides " +
+                "support for sending WHO requests to channels at regular intervals");
+        category.addSetting(new PreferencesSetting(PreferencesType.DURATION,
+                new NumericalValidator(0, Integer.MAX_VALUE), domain, "whointerval",
+                "Who Interval", "The interval WHO requests will be sent to channels",
+                event.getModel().getConfigManager(), event.getModel().getIdentity()));
     }
 
     @VisibleForTesting

@@ -81,7 +81,7 @@ public class ConnectionHandler {
         executorService.shutdown();
         connection.getWindowModel().getEventBus().unsubscribe(this);
         if (future != null) {
-            future.cancel(true);
+            future.cancel(false);
         }
     }
 
@@ -89,19 +89,19 @@ public class ConnectionHandler {
     void checkWho() {
         connectionManager.getConnections().forEach(connection ->
                 connection.getGroupChatManager().getChannels().forEach(channel -> {
-            if (channel.getWindowModel().getConfigManager().getOptionBool(domain, "sendWho")) {
-                channel.requestUsersInfo();
-            }
-        }));
+                    if (channel.getWindowModel().getConfigManager().getOptionBool(domain, "sendwho")) {
+                        channel.requestUsersInfo();
+                    }}));
     }
 
     @VisibleForTesting
-    @ConfigBinding(key="whoInterval")
+    @ConfigBinding(key="whointerval")
     void handleWhoInterval(final int value) {
         if (future != null) {
-            future.cancel(true);
+            future.cancel(false);
         }
-        future = executorService.schedule(this::checkWho, value, TimeUnit.MILLISECONDS);
+        future = executorService.scheduleAtFixedRate(this::checkWho, value, value,
+                TimeUnit.MILLISECONDS);
     }
 
     @VisibleForTesting

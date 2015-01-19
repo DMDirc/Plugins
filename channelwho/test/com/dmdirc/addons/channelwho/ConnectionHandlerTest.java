@@ -81,8 +81,8 @@ public class ConnectionHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(scheduledExecutorService.schedule(any(Runnable.class), anyLong(), any()))
-                .thenReturn(scheduledFuture);
+        when(scheduledExecutorService.scheduleAtFixedRate(any(Runnable.class), anyLong(), anyLong(),
+                any())).thenReturn(scheduledFuture);
         when(windowModel.getEventBus()).thenReturn(eventBus);
         when(connection.getWindowModel()).thenReturn(windowModel);
         when(config.getBinder()).thenReturn(configBinder);
@@ -107,7 +107,7 @@ public class ConnectionHandlerTest {
         instance.load();
         verify(configBinder).bind(instance, ConnectionHandler.class);
         verify(eventBus).subscribe(instance);
-        verify(scheduledExecutorService).schedule(any(Runnable.class), eq(5l),
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5l), eq(5l),
                 eq(TimeUnit.MILLISECONDS));
     }
 
@@ -122,26 +122,26 @@ public class ConnectionHandlerTest {
     @Test
     public void testHandleWhoInterval() throws Exception {
         instance.handleWhoInterval(10);
-        verify(scheduledFuture).cancel(true);
-        verify(scheduledExecutorService).schedule(any(Runnable.class), eq(5l),
+        verify(scheduledFuture).cancel(false);
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5l), eq(5l),
                 eq(TimeUnit.MILLISECONDS));
-        verify(scheduledExecutorService).schedule(any(Runnable.class), eq(10l),
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(10l), eq(10l),
                 eq(TimeUnit.MILLISECONDS));
     }
 
     @Test
     public void testCheckWho_True() throws Exception {
-        when(config.getOptionBool("domain", "sendWho")).thenReturn(true);
+        when(config.getOptionBool("domain", "sendwho")).thenReturn(true);
         instance.checkWho();
-        verify(config).getOptionBool("domain", "sendWho");
+        verify(config).getOptionBool("domain", "sendwho");
         verify(groupChat).requestUsersInfo();
     }
 
     @Test
     public void testCheckWho_False() throws Exception {
-        when(config.getOptionBool("domain", "sendWho")).thenReturn(false);
+        when(config.getOptionBool("domain", "sendwho")).thenReturn(false);
         instance.checkWho();
-        verify(config).getOptionBool("domain", "sendWho");
+        verify(config).getOptionBool("domain", "sendwho");
         verify(groupChat, never()).requestUsersInfo();
     }
 

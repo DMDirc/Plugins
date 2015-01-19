@@ -56,7 +56,8 @@ public class ChannelWhoManagerTest {
     public void setUp() throws Exception {
         when(connectionManager.getConnections()).thenReturn(Lists.newArrayList(connection));
         when(connectionHandlerFactory.get(connection)).thenReturn(connectionHandler);
-        instance = new ChannelWhoManager(connectionHandlerFactory, connectionManager, eventBus);
+        instance = new ChannelWhoManager("domain", connectionHandlerFactory, connectionManager,
+                eventBus);
         instance.load();
     }
 
