@@ -67,17 +67,17 @@ public class SettingsMenu extends JMenu {
     private void initSettingsMenu() {
         if (!Apple.isAppleUI()) {
             add(JMenuItemBuilder.create().setText("Preferences").setMnemonic('p')
-                    .addActionListener(e -> prefsDialogProvider.displayOrRequestFocus()).build());
+                    .addActionMethod(prefsDialogProvider::displayOrRequestFocus)
+                    .build());
         }
         add(JMenuItemBuilder.create()
                 .setMnemonic('p')
-                .addActionListener(e -> profileDialogProvider.displayOrRequestFocus())
+                .addActionMethod(profileDialogProvider::displayOrRequestFocus)
                 .setText("Profile Manager")
                 .build());
         add(JMenuItemBuilder.create()
-                .setMnemonic('a')
-                .setText("Alias Manager")
-                .addActionListener(e -> aliasDialogProvider.displayOrRequestFocus())
+                .setMnemonic('a').setText("Alias Manager")
+                .addActionMethod(aliasDialogProvider::displayOrRequestFocus)
                 .build());
     }
 

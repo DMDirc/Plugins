@@ -74,18 +74,16 @@ public class HelpMenu extends JMenu {
         add(JMenuItemBuilder.create()
                 .setMnemonic('j')
                 .setText("Join Dev channel")
-                .addActionListener(e -> connectionManager.joinDevChat())
+                .addActionMethod(connectionManager::joinDevChat)
                 .build());
         add(JMenuItemBuilder.create().setMnemonic('f')
                 .setText("Send Feedback")
-                .addActionListener(e -> feedbackDialogProvider.displayOrRequestFocus())
-                .build());
+                .addActionMethod(feedbackDialogProvider::displayOrRequestFocus).build());
         if (!Apple.isAppleUI()) {
             add(JMenuItemBuilder.create()
                     .setMnemonic('a')
                     .setText("About")
-                    .addActionListener(e -> aboutDialogProvider.displayOrRequestFocus())
-                    .build());
+                    .addActionMethod(aboutDialogProvider::displayOrRequestFocus).build());
         }
     }
 }

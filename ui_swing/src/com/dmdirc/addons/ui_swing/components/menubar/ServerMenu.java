@@ -97,14 +97,14 @@ public class ServerMenu extends JMenu implements MenuListener {
         add(JMenuItemBuilder.create()
                 .setText("New Server...")
                 .setMnemonic('n')
-                .addActionListener(e -> newServerProvider.displayOrRequestFocus())
+                .addActionMethod(newServerProvider::displayOrRequestFocus)
                 .build());
 
         disconnect = JMenuItemBuilder.create()
                 .setText("Disconnect")
                 .setMnemonic('d')
-                .addActionListener(
-                        e -> activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
+                .addActionMethod(() ->
+                        activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
                                 .flatMap(WindowModel::getConnection)
                                 .ifPresent(Connection::disconnect))
                 .build();
@@ -113,7 +113,7 @@ public class ServerMenu extends JMenu implements MenuListener {
         ssd = JMenuItemBuilder.create()
                 .setMnemonic('s')
                 .setText("Server settings")
-                .addActionListener(e -> activeFrameManager.getActiveFrame().ifPresent(
+                .addActionMethod(() -> activeFrameManager.getActiveFrame().ifPresent(
                         f -> f.getContainer().getConnection()
                                 .ifPresent(ssdProvider::displayOrRequestFocus)))
                 .build();
@@ -123,8 +123,8 @@ public class ServerMenu extends JMenu implements MenuListener {
             add(JMenuItemBuilder.create()
                     .setText("Exit")
                     .setMnemonic('x')
-                    .addActionListener(
-                            e -> UIUtilities.invokeOffEDTNoLogging(lifecycleController::quit))
+                    .addActionMethod(
+                            () -> UIUtilities.invokeOffEDTNoLogging(lifecycleController::quit))
                     .build());
         }
     }
