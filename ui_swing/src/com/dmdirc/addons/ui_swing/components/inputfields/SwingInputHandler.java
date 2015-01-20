@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
@@ -155,10 +154,8 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 localTarget.setEditable(false);
-                new RunnableLoggingSwingWorker<>(eventBus,
-                        () -> doTabCompletion(false),
-                        value -> localTarget.setEditable(true)
-                ).execute();
+                UIUtilities.invokeOffEDT(eventBus, () -> doTabCompletion(false),
+                        value -> localTarget.setEditable(true));
             }
         });
         localTarget.getActionMap().put("insert-shift-tab",
@@ -169,10 +166,9 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         localTarget.setEditable(false);
-                        new RunnableLoggingSwingWorker<>(eventBus,
+                        UIUtilities.invokeOffEDT(eventBus,
                                 () -> doTabCompletion(true),
-                                value -> localTarget.setEditable(true)
-                        ).execute();
+                                value -> localTarget.setEditable(true));
                     }
                 });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
@@ -213,7 +209,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                                         "Event is not from known source.");
                     }
                     if (source.isEditable()) {
-                        new RunnableLoggingSwingWorker<>(eventBus, () -> enterPressed(line)).execute();
+                        UIUtilities.invokeOffEDT(eventBus, () -> enterPressed(line));
                     }
                 });
             }

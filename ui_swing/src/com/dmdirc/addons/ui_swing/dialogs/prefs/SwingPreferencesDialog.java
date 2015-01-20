@@ -26,7 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
-import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SupplierLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
@@ -232,11 +231,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             saveOptions();
         }
 
-        new RunnableLoggingSwingWorker<>(eventBus, () -> {
+        UIUtilities.invokeOffEDT(() -> {
             if (manager != null) {
                 manager.dismiss();
             }
-        }).execute();
+        });
         dispose();
     }
 

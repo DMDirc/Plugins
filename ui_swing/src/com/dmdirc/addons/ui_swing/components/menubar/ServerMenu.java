@@ -121,7 +121,7 @@ public class ServerMenu extends JMenu implements MenuListener {
             final JMenuItem exit = new JMenuItem();
             exit.setText("Exit");
             exit.setMnemonic('x');
-            exit.addActionListener(e -> UIUtilities.invokeOffEDT(lifecycleController::quit));
+            exit.addActionListener(e -> UIUtilities.invokeOffEDTNoLogging(lifecycleController::quit));
             add(exit);
         }
     }
