@@ -27,6 +27,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
 import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.SupplierLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
@@ -111,24 +112,28 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
         initComponents();
 
-        worker = new RunnableLoggingSwingWorker<>(eventBus, () -> {
-            mainPanel.setWaiting(true);
-            PreferencesDialogModel prefsManager = null;
-            try {
-                prefsManager = dialogModelProvider.get();
-            } catch (IllegalArgumentException ex) {
-                mainPanel.setError(ex.getMessage());
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
-                        "Unable to load the preferences dialog", ""));
-            }
-            return prefsManager;
-        },
+        worker = new SupplierLoggingSwingWorker<>(eventBus,
+                () -> getPrefsModel(dialogModelProvider),
                 value -> {
                     if (value != null) {
                         setPrefsManager(value);
                     }
-        });
+                });
         worker.execute();
+    }
+
+    private PreferencesDialogModel getPrefsModel(
+            final Provider<PreferencesDialogModel> dialogModelProvider) {
+        mainPanel.setWaiting(true);
+        PreferencesDialogModel prefsManager = null;
+        try {
+            prefsManager = dialogModelProvider.get();
+        } catch (IllegalArgumentException ex) {
+            mainPanel.setError(ex.getMessage());
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                    "Unable to load the preferences dialog", ""));
+        }
+        return prefsManager;
     }
 
     private void setPrefsManager(final PreferencesDialogModel manager) {
