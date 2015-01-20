@@ -94,7 +94,7 @@ public class ChannelMenu extends JMenu implements MenuListener {
      */
     private void initChannelMenu() {
         join = JMenuItemBuilder.create()
-                .setText("Join Channle...")
+                .setText("Join Channel...")
                 .setMnemonic('j')
                 .addActionListener(e -> joinChannel())
                 .build();
