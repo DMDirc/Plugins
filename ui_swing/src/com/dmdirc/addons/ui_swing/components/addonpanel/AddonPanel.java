@@ -23,8 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -37,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
@@ -111,10 +111,8 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
 
         scrollPane = new JScrollPane(new JLabel("Loading " + getTypeName()
                 + "..."));
-        scrollPane.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         blurbLabel = new TextLabel(getTypeName().substring(0, 1).toUpperCase()
                 + getTypeName().substring(1) + " allow you to extend the "
@@ -130,24 +128,14 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Populates the list in a background thread.
      */
     protected void load() {
-        new LoggingSwingWorker<Object, Object>(eventBus) {
-            @Override
-            protected Object doInBackground() {
-                return populateList(addonList);
-            }
-
-            @Override
-            protected void done() {
-                super.done();
-                scrollPane.setViewportView(addonList);
-                UIUtilities.invokeLater(() -> {
-                    addonList.getSelectionModel()
-                            .addListSelectionListener(AddonPanel.this);
-                    addonList.getSelectionModel()
-                            .setSelectionInterval(0, 0);
-                });
-            }
-        }.execute();
+        new RunnableLoggingSwingWorker<>(eventBus,
+                () -> populateList(addonList),
+                value -> {
+                    scrollPane.setViewportView(addonList);
+                    addonList.getSelectionModel().addListSelectionListener(this);
+                    addonList.getSelectionModel().setSelectionInterval(0, 0);
+                }
+        ).execute();
     }
 
     /** Lays out the dialog. */
