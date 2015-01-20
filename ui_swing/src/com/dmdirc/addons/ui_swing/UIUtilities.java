@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
+import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.RunnableSwingWorker;
 import com.dmdirc.util.colours.Colour;
 
@@ -39,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -246,8 +248,38 @@ public final class UIUtilities {
         }
     }
 
-    public static void invokeOffEDT(final Runnable runnable) {
-        new RunnableSwingWorker<Void,Void>(runnable).execute();
+    /**
+     * Invokes something off the EDT, ignoring any exceptions that occur.
+     *
+     * @param runnable Runnable to execute off the EDT
+     */
+    public static void invokeOffEDTNoLogging(final Runnable runnable) {
+        new RunnableSwingWorker<>(runnable).execute();
+    }
+
+    /**
+     * Invokes something off the EDT, logging any exceptions that occur.
+     *
+     * @param eventBus Eventbus to post errors to
+     * @param runnable Runnable to execute off the EDT
+     */
+    public static void invokeOffEDT(final DMDircMBassador eventBus, final Runnable runnable) {
+        new RunnableLoggingSwingWorker<Void, Void>(eventBus, runnable).execute();
+    }
+
+    /**
+     * Invokes something off the EDT, handling the result when its finished on the EDT, logging
+     * any exceptions that occur.
+     *
+     * @param eventBus Eventbus to post errors to
+     * @param runnable Runnable to execute off the EDT
+     * @param consumer Consumer to finalise the runnable on the EDT
+     *
+     * @param <T>      Type the consumer takes
+     */
+    public static <T> void invokeOffEDT(final DMDircMBassador eventBus, final Runnable runnable,
+            final Consumer<T> consumer) {
+        new RunnableLoggingSwingWorker<>(eventBus, runnable, consumer).execute();
     }
 
     /**

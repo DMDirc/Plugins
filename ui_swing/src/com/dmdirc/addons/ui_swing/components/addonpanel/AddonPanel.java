@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.BrowserWindow;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -128,14 +128,13 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Populates the list in a background thread.
      */
     protected void load() {
-        new RunnableLoggingSwingWorker<>(eventBus,
+        UIUtilities.invokeOffEDT(eventBus,
                 () -> populateList(addonList),
                 value -> {
                     scrollPane.setViewportView(addonList);
                     addonList.getSelectionModel().addListSelectionListener(this);
                     addonList.getSelectionModel().setSelectionInterval(0, 0);
-                }
-        ).execute();
+                });
     }
 
     /** Lays out the dialog. */

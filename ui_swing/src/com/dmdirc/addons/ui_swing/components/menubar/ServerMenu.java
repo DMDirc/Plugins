@@ -123,7 +123,8 @@ public class ServerMenu extends JMenu implements MenuListener {
             add(JMenuItemBuilder.create()
                     .setText("Exit")
                     .setMnemonic('x')
-                    .addActionListener(e -> UIUtilities.invokeOffEDT(lifecycleController::quit))
+                    .addActionListener(
+                            e -> UIUtilities.invokeOffEDTNoLogging(lifecycleController::quit))
                     .build());
         }
     }
