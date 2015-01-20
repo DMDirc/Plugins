@@ -231,7 +231,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             saveOptions();
         }
 
-        UIUtilities.invokeOffEDT(() -> {
+        UIUtilities.invokeOffEDT(eventBus, () -> {
             if (manager != null) {
                 manager.dismiss();
             }
