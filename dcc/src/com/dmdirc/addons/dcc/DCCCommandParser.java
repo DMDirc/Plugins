@@ -62,9 +62,4 @@ public class DCCCommandParser extends GlobalCommandParser {
         origin.sendLine(line);
     }
 
-    @Override
-    public void setOwner(final WindowModel owner) {
-        // Don't care
-    }
-
 }

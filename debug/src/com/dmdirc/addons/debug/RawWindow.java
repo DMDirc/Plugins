@@ -24,9 +24,7 @@ package com.dmdirc.addons.debug;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.events.ServerConnectingEvent;
-import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.CallbackManager;
 import com.dmdirc.parser.interfaces.Parser;
@@ -52,17 +50,12 @@ public class RawWindow extends FrameContainer {
 
     public RawWindow(
             final Connection connection,
-            final CommandController commandController,
             final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final BackBufferFactory backBufferFactory) {
         super(connection.getWindowModel(), "raw", "Raw", "(Raw log)",
                 connection.getWindowModel().getConfigManager(),
                 backBufferFactory,
-                new ServerCommandParser(
-                        connection.getWindowModel().getConfigManager(),
-                        commandController,
-                        connection.getWindowModel().getEventBus()),
                 tabCompleterFactory.getTabCompleter(connection.getWindowModel().getTabCompleter(),
                         connection.getWindowModel().getConfigManager(),
                         CommandType.TYPE_QUERY, CommandType.TYPE_CHAT),
