@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.ClientFocusGainedEvent;
-import com.dmdirc.events.ClientFocusLostEvent;
+import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
+import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
 
 import java.awt.event.WindowEvent;
 
