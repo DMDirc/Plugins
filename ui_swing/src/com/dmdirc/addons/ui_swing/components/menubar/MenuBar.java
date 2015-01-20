@@ -108,9 +108,9 @@ public class MenuBar extends JMenuBar {
     }
 
     public void removeMenuItem(final String parentMenu, final String childItem) {
-        Optional<JMenu> menu = getParentMenuItem(parentMenu);
+        final Optional<JMenu> menu = getParentMenuItem(parentMenu);
         if (menu.isPresent()) {
-            Optional<JMenuItem> menuItem = getChildItem(menu.get(), childItem);
+            final Optional<JMenuItem> menuItem = getChildItem(menu.get(), childItem);
             if (menuItem.isPresent()) {
                 menu.get().remove(menuItem.get());
             }
@@ -135,7 +135,7 @@ public class MenuBar extends JMenuBar {
             child = menu.getMenuComponent(i);
             if (child instanceof JMenuItem) {
                 final JMenuItem childMenu = (JMenuItem) child;
-                if (childMenu != null && childMenu.getText().equals(name)) {
+                if (childMenu.getText().equals(name)) {
                     break;
                 }
             }

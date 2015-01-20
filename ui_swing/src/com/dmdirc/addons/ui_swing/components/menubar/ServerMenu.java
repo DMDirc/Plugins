@@ -94,35 +94,37 @@ public class ServerMenu extends JMenu implements MenuListener {
      * Initialises the server menu.
      */
     private void initServerMenu() {
-        final JMenuItem newServer = new JMenuItem();
-        newServer.setText("New Server...");
-        newServer.setMnemonic('n');
-        newServer.addActionListener(e -> newServerProvider.displayOrRequestFocus());
-        add(newServer);
+        add(JMenuItemBuilder.create()
+                .setText("New Server...")
+                .setMnemonic('n')
+                .addActionListener(e -> newServerProvider.displayOrRequestFocus())
+                .build());
 
-        disconnect = new JMenuItem();
-        disconnect.setText("Disconnect");
-        disconnect.setMnemonic('d');
-        disconnect.addActionListener(e -> activeFrameManager.getActiveFrame()
-                .map(TextFrame::getContainer)
-                .flatMap(WindowModel::getConnection)
-                .ifPresent(Connection::disconnect));
+        disconnect = JMenuItemBuilder.create()
+                .setText("Disconnect")
+                .setMnemonic('d')
+                .addActionListener(
+                        e -> activeFrameManager.getActiveFrame().map(TextFrame::getContainer)
+                                .flatMap(WindowModel::getConnection)
+                                .ifPresent(Connection::disconnect))
+                .build();
         add(disconnect);
 
-        ssd = new JMenuItem();
-        ssd.setMnemonic('s');
-        ssd.setText("Server settings");
-        ssd.addActionListener(e -> activeFrameManager.getActiveFrame()
-                .ifPresent(f -> f.getContainer().getConnection()
-                        .ifPresent(ssdProvider::displayOrRequestFocus)));
+        ssd = JMenuItemBuilder.create()
+                .setMnemonic('s')
+                .setText("Server settings")
+                .addActionListener(e -> activeFrameManager.getActiveFrame().ifPresent(
+                        f -> f.getContainer().getConnection()
+                                .ifPresent(ssdProvider::displayOrRequestFocus)))
+                .build();
         add(ssd);
 
         if (!Apple.isAppleUI()) {
-            final JMenuItem exit = new JMenuItem();
-            exit.setText("Exit");
-            exit.setMnemonic('x');
-            exit.addActionListener(e -> UIUtilities.invokeOffEDT(lifecycleController::quit));
-            add(exit);
+            add(JMenuItemBuilder.create()
+                    .setText("Exit")
+                    .setMnemonic('x')
+                    .addActionListener(e -> UIUtilities.invokeOffEDT(lifecycleController::quit))
+                    .build());
         }
     }
 

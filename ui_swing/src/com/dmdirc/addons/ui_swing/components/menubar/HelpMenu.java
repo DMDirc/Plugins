@@ -28,19 +28,15 @@ import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.interfaces.ConnectionManager;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 /**
  * A menu providing help commands to the menu bar.
  */
 @Singleton
-public class HelpMenu extends JMenu implements ActionListener {
+public class HelpMenu extends JMenu {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1;
@@ -75,45 +71,21 @@ public class HelpMenu extends JMenu implements ActionListener {
      * Initialises the help menu.
      */
     private void initHelpMenu() {
-        JMenuItem menuItem;
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('j');
-        menuItem.setText("Join Dev channel");
-        menuItem.setActionCommand("JoinDevChat");
-        menuItem.addActionListener(this);
-        add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('f');
-        menuItem.setText("Send Feedback");
-        menuItem.setActionCommand("feedback");
-        menuItem.addActionListener(this);
-        add(menuItem);
-
+        add(JMenuItemBuilder.create()
+                .setMnemonic('j')
+                .setText("Join Dev channel")
+                .addActionListener(e -> connectionManager.joinDevChat())
+                .build());
+        add(JMenuItemBuilder.create().setMnemonic('f')
+                .setText("Send Feedback")
+                .addActionListener(e -> feedbackDialogProvider.displayOrRequestFocus())
+                .build());
         if (!Apple.isAppleUI()) {
-            menuItem = new JMenuItem();
-            menuItem.setMnemonic('a');
-            menuItem.setText("About");
-            menuItem.setActionCommand("About");
-            menuItem.addActionListener(this);
-            add(menuItem);
+            add(JMenuItemBuilder.create()
+                    .setMnemonic('a')
+                    .setText("About")
+                    .addActionListener(e -> aboutDialogProvider.displayOrRequestFocus())
+                    .build());
         }
     }
-
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "About":
-                aboutDialogProvider.displayOrRequestFocus();
-                break;
-            case "JoinDevChat":
-                connectionManager.joinDevChat();
-                break;
-            case "feedback":
-                feedbackDialogProvider.displayOrRequestFocus();
-                break;
-        }
-    }
-
 }
