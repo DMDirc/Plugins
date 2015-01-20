@@ -52,13 +52,15 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final BackBufferFactory backBufferFactory) {
         super(target, target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), backBufferFactory,
-                target.getCommandParser(), target.getTabCompleter(), messageSinkManager, eventBus,
+                target.getTabCompleter(), messageSinkManager, eventBus,
                 Collections.<String>emptyList());
         this.target = target;
         initBackBuffer();
+        setCommandParser(target.getCommandParser());
     }
 
     @Override
+    @Deprecated
     public void addLine(final String line, final boolean timestamp) {
         addLine(line);
     }

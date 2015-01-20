@@ -69,12 +69,13 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
-        super(parent, icon, title, title, configManager, backBufferFactory, parser,
+        super(parent, icon, title, title, configManager, backBufferFactory,
                 tabCompleterFactory.getTabCompleter(configManager),
                 messageSinkManager,
                 eventBus,
                 components);
         initBackBuffer();
+        setCommandParser(parser);
     }
 
     @Override
