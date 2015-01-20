@@ -24,16 +24,13 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.SwingUtilities;
+import javax.swing.MutableComboBoxModel;
 
 /**
  * System font picking component.
@@ -56,25 +53,9 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        new LoggingSwingWorker<String[], String[]>(eventBus) {
-
-            @Override
-            protected String[] doInBackground() {
-                return GraphicsEnvironment.getLocalGraphicsEnvironment().
-                        getAvailableFontFamilyNames();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    loadFonts(get());
-                } catch (InterruptedException ex) {
-                    //Ignore
-                } catch (ExecutionException ex) {
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
-                }
-            }
-        }.execute();
+        new RunnableLoggingSwingWorker<String[], String[]>(eventBus,
+                () -> GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(),
+                this::loadFonts).execute();
     }
 
     /**
@@ -85,10 +66,9 @@ public class FontPicker extends JComboBox<Object> {
     private void loadFonts(final String... fonts) {
         final int size = getFont().getSize();
         for (final String font : fonts) {
-            SwingUtilities.invokeLater(() -> ((DefaultComboBoxModel<Object>) getModel()).addElement(new Font(
-                    font, Font.PLAIN, size)));
+            ((MutableComboBoxModel<Object>) getModel()).addElement(new Font(font, Font.PLAIN, size));
         }
-        SwingUtilities.invokeLater(() -> setSelectedItem(new Font(fontFamily, Font.PLAIN, size)));
+        setSelectedItem(new Font(fontFamily, Font.PLAIN, size));
     }
 
 }

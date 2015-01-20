@@ -25,7 +25,7 @@ package com.dmdirc.addons.ui_swing.components.inputfields;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
@@ -35,6 +35,7 @@ import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleterUtils;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -153,21 +154,11 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                new LoggingSwingWorker<Object, Void>(eventBus) {
-
-                    @Override
-                    protected Object doInBackground() {
-                        localTarget.setEditable(false);
-                        doTabCompletion(false);
-                        return null;
-                    }
-
-                    @Override
-                    protected void done() {
-                        localTarget.setEditable(true);
-                        super.done();
-                    }
-                }.execute();
+                localTarget.setEditable(false);
+                new RunnableLoggingSwingWorker<>(eventBus,
+                        () -> doTabCompletion(false),
+                        value -> localTarget.setEditable(true)
+                ).execute();
             }
         });
         localTarget.getActionMap().put("insert-shift-tab",
@@ -177,28 +168,18 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        new LoggingSwingWorker<Object, Void>(eventBus) {
-
-                            @Override
-                            protected Object doInBackground() {
-                                localTarget.setEditable(false);
-                                doTabCompletion(true);
-                                return null;
-                            }
-
-                            @Override
-                            protected void done() {
-                                localTarget.setEditable(true);
-                                super.done();
-                            }
-                        }.execute();
+                        localTarget.setEditable(false);
+                        new RunnableLoggingSwingWorker<>(eventBus,
+                                () -> doTabCompletion(true),
+                                value -> localTarget.setEditable(true)
+                        ).execute();
                     }
                 });
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
                 put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "insert-tab");
         localTarget.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).
-                put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                                KeyEvent.SHIFT_MASK), "insert-shift-tab");
+                put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK),
+                        "insert-shift-tab");
     }
 
     @Override
@@ -232,14 +213,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                                         "Event is not from known source.");
                     }
                     if (source.isEditable()) {
-                        new LoggingSwingWorker<Object, Void>(eventBus) {
-
-                            @Override
-                            protected Object doInBackground() {
-                                enterPressed(line);
-                                return null;
-                            }
-                        }.execute();
+                        new RunnableLoggingSwingWorker<>(eventBus, () -> enterPressed(line)).execute();
                     }
                 });
             }

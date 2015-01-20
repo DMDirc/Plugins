@@ -24,8 +24,10 @@ package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.ListScroller;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
+import com.dmdirc.addons.ui_swing.components.SupplierLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForSettings;
@@ -35,12 +37,10 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.logger.ErrorLevel;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -51,6 +51,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -74,7 +75,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     /** Preferences Manager. */
     private PreferencesDialogModel manager;
     /** Manager loading swing worker. */
-    private final LoggingSwingWorker<PreferencesDialogModel, Void> worker;
+    private final SwingWorker<PreferencesDialogModel, Void> worker;
     /** The provider to use for restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
     /** The provider to use to produce a category panel. */
@@ -111,39 +112,28 @@ public final class SwingPreferencesDialog extends StandardDialog implements
 
         initComponents();
 
-        worker = new LoggingSwingWorker<PreferencesDialogModel, Void>(eventBus) {
-
-            @Override
-            protected PreferencesDialogModel doInBackground() {
-                mainPanel.setWaiting(true);
-                PreferencesDialogModel prefsManager = null;
-                try {
-                    prefsManager = dialogModelProvider.get();
-                } catch (IllegalArgumentException ex) {
-                    mainPanel.setError(ex.getMessage());
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
-                            "Unable to load the preferences dialog", ""));
-                }
-                return prefsManager;
-            }
-
-            @Override
-            protected void done() {
-                if (!isCancelled()) {
-                    try {
-                        final PreferencesDialogModel prefsManager = get();
-                        if (prefsManager != null) {
-                            setPrefsManager(prefsManager);
-                        }
-                    } catch (InterruptedException ex) {
-                        //Ignore
-                    } catch (ExecutionException ex) {
-                        eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+        worker = new SupplierLoggingSwingWorker<>(eventBus,
+                () -> getPrefsModel(dialogModelProvider),
+                value -> {
+                    if (value != null) {
+                        setPrefsManager(value);
                     }
-                }
-            }
-        };
+                });
         worker.execute();
+    }
+
+    private PreferencesDialogModel getPrefsModel(
+            final Provider<PreferencesDialogModel> dialogModelProvider) {
+        mainPanel.setWaiting(true);
+        PreferencesDialogModel prefsManager = null;
+        try {
+            prefsManager = dialogModelProvider.get();
+        } catch (IllegalArgumentException ex) {
+            mainPanel.setError(ex.getMessage());
+            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex,
+                    "Unable to load the preferences dialog", ""));
+        }
+        return prefsManager;
     }
 
     private void setPrefsManager(final PreferencesDialogModel manager) {
@@ -242,15 +232,11 @@ public final class SwingPreferencesDialog extends StandardDialog implements
             saveOptions();
         }
 
-        new LoggingSwingWorker<Void, Void>(eventBus) {
-            @Override
-            protected Void doInBackground() {
-                if (manager != null) {
-                    manager.dismiss();
-                }
-                return null;
+        new RunnableLoggingSwingWorker<>(eventBus, () -> {
+            if (manager != null) {
+                manager.dismiss();
             }
-        }.execute();
+        }).execute();
         dispose();
     }
 
