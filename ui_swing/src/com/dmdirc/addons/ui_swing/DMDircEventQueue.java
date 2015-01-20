@@ -26,7 +26,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
-import com.dmdirc.events.ClientKeyPressedEvent;
+import com.dmdirc.addons.ui_swing.events.ClientKeyPressedEvent;
 
 import java.awt.AWTEvent;
 import java.awt.Component;

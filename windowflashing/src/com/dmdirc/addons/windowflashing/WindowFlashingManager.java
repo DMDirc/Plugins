@@ -32,7 +32,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.events.ClientFocusGainedEvent;
+import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
