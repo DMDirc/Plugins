@@ -106,6 +106,7 @@ public class ChannelWhoManager {
                 new NumericalValidator(0, Integer.MAX_VALUE), domain, "whointerval",
                 "Who Interval", "The interval WHO requests will be sent to channels",
                 event.getModel().getConfigManager(), event.getModel().getIdentity()));
+        event.getModel().getCategory("Plugins").addSubCategory(category);
     }
 
     @VisibleForTesting
