@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.dialogs.updater;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
-import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
@@ -182,10 +181,10 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
             header.setText("DMDirc is updating the following components:");
 
-            new RunnableLoggingSwingWorker<>(eventBus,
+            UIUtilities.invokeOffEDT(eventBus,
                     () -> ((UpdateTableModel) table.getModel()).getUpdates().stream()
                     .filter(((UpdateTableModel) table.getModel())::isEnabled)
-                    .forEach(updateManager::install)).execute();
+                    .forEach(updateManager::install));
 
             if (updateManager.getManagerStatus() == UpdateManagerStatus.IDLE_RESTART_NEEDED) {
                 restartDialogProvider.displayOrRequestFocus();

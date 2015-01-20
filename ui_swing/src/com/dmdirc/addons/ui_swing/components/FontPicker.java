@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
 
 import java.awt.Font;
@@ -53,9 +54,9 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        new RunnableLoggingSwingWorker<String[], String[]>(eventBus,
+        UIUtilities.<String[]>invokeOffEDT(eventBus,
                 () -> GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(),
-                this::loadFonts).execute();
+                this::loadFonts);
     }
 
     /**
