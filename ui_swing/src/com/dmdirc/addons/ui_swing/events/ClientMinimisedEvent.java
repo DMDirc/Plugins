@@ -20,33 +20,13 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
-import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
-
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
+import com.dmdirc.events.DMDircEvent;
 
 /**
-* Focus listener that triggers focus events on an event bus.
-*/
-class EventTriggeringFocusListener implements WindowFocusListener {
+ * Fired when the the client is minimised.
+ */
+public class ClientMinimisedEvent extends DMDircEvent {
 
-    private final DMDircMBassador eventBus;
-
-    public EventTriggeringFocusListener(final DMDircMBassador eventBus) {
-        this.eventBus = eventBus;
-    }
-
-    @Override
-    public void windowGainedFocus(final WindowEvent e) {
-        eventBus.publishAsync(new ClientFocusGainedEvent());
-    }
-
-    @Override
-    public void windowLostFocus(final WindowEvent e) {
-        eventBus.publishAsync(new ClientFocusLostEvent());
-    }
 }

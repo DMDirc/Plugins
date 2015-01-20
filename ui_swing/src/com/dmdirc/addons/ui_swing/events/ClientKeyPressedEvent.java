@@ -20,33 +20,25 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.ui_swing;
+package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
-import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
+import com.dmdirc.events.DMDircEvent;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
+import javax.swing.KeyStroke;
 
 /**
-* Focus listener that triggers focus events on an event bus.
-*/
-class EventTriggeringFocusListener implements WindowFocusListener {
+ * Event describing a function key press.
+ */
+public class ClientKeyPressedEvent extends DMDircEvent {
 
-    private final DMDircMBassador eventBus;
+    private final KeyStroke keyStroke;
 
-    public EventTriggeringFocusListener(final DMDircMBassador eventBus) {
-        this.eventBus = eventBus;
+    public ClientKeyPressedEvent(final KeyStroke keyStroke) {
+        this.keyStroke = keyStroke;
     }
 
-    @Override
-    public void windowGainedFocus(final WindowEvent e) {
-        eventBus.publishAsync(new ClientFocusGainedEvent());
+    public KeyStroke getKeyStroke() {
+        return keyStroke;
     }
 
-    @Override
-    public void windowLostFocus(final WindowEvent e) {
-        eventBus.publishAsync(new ClientFocusLostEvent());
-    }
 }
