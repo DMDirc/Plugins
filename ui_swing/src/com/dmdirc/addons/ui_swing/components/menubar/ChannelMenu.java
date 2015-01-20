@@ -100,10 +100,10 @@ public class ChannelMenu extends JMenu implements MenuListener {
                 .build();
         add(join);
 
-        csd = new JMenuItem();
-        csd.setMnemonic('c');
-        csd.setText("Channel Settings");
-        csd.addActionListener(l -> showChannelSettings());
+        csd = JMenuItemBuilder.create()
+                .setMnemonic('c')
+                .setText("Channel Settings")
+                .addActionListener(l -> showChannelSettings()).build();
         add(csd);
 
         list = JMenuItemBuilder.create()
