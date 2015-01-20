@@ -31,7 +31,6 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 /**
  * A menu to add settings related commands to the menu bar.
@@ -66,27 +65,20 @@ public class SettingsMenu extends JMenu {
      * Initialises the settings menu.
      */
     private void initSettingsMenu() {
-        JMenuItem menuItem;
-
         if (!Apple.isAppleUI()) {
-            menuItem = new JMenuItem();
-            menuItem.setText("Preferences");
-            menuItem.setMnemonic('p');
-            menuItem.addActionListener(e -> prefsDialogProvider.displayOrRequestFocus());
-            add(menuItem);
+            add(JMenuItemBuilder.create().setText("Preferences").setMnemonic('p')
+                    .addActionListener(e -> prefsDialogProvider.displayOrRequestFocus()).build());
         }
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('p');
-        menuItem.setText("Profile Manager");
-        menuItem.addActionListener(e -> profileDialogProvider.displayOrRequestFocus());
-        add(menuItem);
-
-        menuItem = new JMenuItem();
-        menuItem.setMnemonic('a');
-        menuItem.setText("Alias Manager");
-        menuItem.addActionListener(e -> aliasDialogProvider.displayOrRequestFocus());
-        add(menuItem);
+        add(JMenuItemBuilder.create()
+                .setMnemonic('p')
+                .addActionListener(e -> profileDialogProvider.displayOrRequestFocus())
+                .setText("Profile Manager")
+                .build());
+        add(JMenuItemBuilder.create()
+                .setMnemonic('a')
+                .setText("Alias Manager")
+                .addActionListener(e -> aliasDialogProvider.displayOrRequestFocus())
+                .build());
     }
 
 }
