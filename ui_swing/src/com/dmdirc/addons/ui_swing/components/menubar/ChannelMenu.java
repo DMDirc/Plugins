@@ -96,21 +96,20 @@ public class ChannelMenu extends JMenu implements MenuListener {
         join = JMenuItemBuilder.create()
                 .setText("Join Channel...")
                 .setMnemonic('j')
-                .addActionListener(e -> joinChannel())
+                .addActionMethod(this::joinChannel)
                 .build();
         add(join);
 
         csd = JMenuItemBuilder.create()
                 .setMnemonic('c')
                 .setText("Channel Settings")
-                .addActionListener(l -> showChannelSettings()).build();
+                .addActionMethod(this::showChannelSettings).build();
         add(csd);
 
         list = JMenuItemBuilder.create()
                 .setText("List channels...")
                 .setMnemonic('l')
-                .addActionListener(e -> channelListDialogProvider.displayOrRequestFocus())
-                .build();
+                .addActionMethod(channelListDialogProvider::displayOrRequestFocus).build();
         add(list);
     }
 

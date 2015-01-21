@@ -56,6 +56,11 @@ public class JMenuItemBuilder {
         return this;
     }
 
+    public JMenuItemBuilder addActionMethod(final Runnable runnable) {
+        menuItem.addActionListener(e -> runnable.run());
+        return this;
+    }
+
     public JMenuItem build() {
         return menuItem;
     }
