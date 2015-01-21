@@ -147,39 +147,43 @@ public class SwingManager {
      * Handles loading of the UI.
      */
     public void load() {
-        uiInitialiser.load();
-        this.mainFrame = mainFrameProvider.get();
-        mainFrame.setMenuBar(menuBar.get());
-        mainFrame.setWindowManager(ctrlTabManager);
-        mainFrame.setStatusBar(statusBar.get());
-        mainFrame.initComponents();
-        swingEventBus.subscribe(mainFrame);
-        swingEventBus.subscribe(ctrlTabManager);
+        UIUtilities.invokeLater(() -> {
+            uiInitialiser.load();
+            this.mainFrame = mainFrameProvider.get();
+            mainFrame.setMenuBar(menuBar.get());
+            mainFrame.setWindowManager(ctrlTabManager);
+            mainFrame.setStatusBar(statusBar.get());
+            mainFrame.initComponents();
+            swingEventBus.subscribe(mainFrame);
+            swingEventBus.subscribe(ctrlTabManager);
 
-        windowManager.addListenerAndSync(windowFactory.get());
-        eventBus.subscribe(statusBar.get());
-        eventBus.subscribe(this);
-        eventBus.subscribe(mainFrame);
-        eventBus.subscribe(linkHandler);
+            windowManager.addListenerAndSync(windowFactory.get());
+            eventBus.subscribe(statusBar.get());
+            eventBus.subscribe(this);
+            eventBus.subscribe(mainFrame);
+            eventBus.subscribe(linkHandler);
 
-        mainFrame.setVisible(true);
+            mainFrame.setVisible(true);
+        });
     }
 
     /**
      * Handles unloading of the UI.
      */
     public void unload() {
-        swingWindowManager.get().getTopLevelWindows().forEach(Window::dispose);
-        windowManager.removeListener(windowFactory.get());
-        windowFactory.get().dispose();
-        swingEventBus.unsubscribe(mainFrame);
-        swingEventBus.unsubscribe(ctrlTabManager);
-        mainFrame.dispose();
-        eventBus.unsubscribe(statusBar.get());
-        eventBus.unsubscribe(this);
-        eventBus.unsubscribe(mainFrame);
-        eventBus.unsubscribe(linkHandler);
-        uiInitialiser.unload();
+        UIUtilities.invokeLater(() -> {
+            swingWindowManager.get().getTopLevelWindows().forEach(Window::dispose);
+            windowManager.removeListener(windowFactory.get());
+            windowFactory.get().dispose();
+            swingEventBus.unsubscribe(mainFrame);
+            swingEventBus.unsubscribe(ctrlTabManager);
+            mainFrame.dispose();
+            eventBus.unsubscribe(statusBar.get());
+            eventBus.unsubscribe(this);
+            eventBus.unsubscribe(mainFrame);
+            eventBus.unsubscribe(linkHandler);
+            uiInitialiser.unload();
+        });
     }
 
     /**
