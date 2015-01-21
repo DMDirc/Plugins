@@ -23,11 +23,14 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
+import com.dmdirc.addons.ui_swing.events.ClientMinimisedEvent;
+import com.dmdirc.addons.ui_swing.events.ClientUnminimisedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
@@ -36,8 +39,6 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
-import com.dmdirc.addons.ui_swing.events.ClientMinimisedEvent;
-import com.dmdirc.addons.ui_swing.events.ClientUnminimisedEvent;
 import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.interfaces.LifecycleController;
@@ -45,7 +46,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.CoreUIUtils;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
 import java.awt.Dialog;
@@ -160,6 +160,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void setVisible(final boolean visible) {
+        checkOnEDT();
         if (!initDone) {
             swingEventBus.subscribe(this);
             imageIcon = new ImageIcon(iconManager.getImage("icon"));
@@ -203,13 +204,12 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void setTitle(final String title) {
-        UIUtilities.invokeLater(() -> {
-            if (title == null || !activeFrame.isPresent()) {
-                MainFrame.super.setTitle(getTitlePrefix());
-            } else {
-                MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
-            }
-        });
+        checkOnEDT();
+        if (title == null || !activeFrame.isPresent()) {
+            MainFrame.super.setTitle(getTitlePrefix());
+        } else {
+            MainFrame.super.setTitle(getTitlePrefix() + " - " + title);
+        }
     }
 
     /**
@@ -258,38 +258,36 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     /** Initialiases the frame managers. */
     private void initFrameManagers() {
-        UIUtilities.invokeAndWait(() -> {
-            frameManagerPanel.removeAll();
-            if (mainFrameManager != null) {
-                swingEventBus.unsubscribe(mainFrameManager);
-            }
-            mainFrameManager = frameManagerProvider.get();
-            mainFrameManager.setParent(frameManagerPanel);
-            swingEventBus.subscribe(mainFrameManager);
-        });
+        checkOnEDT();
+        frameManagerPanel.removeAll();
+        if (mainFrameManager != null) {
+            swingEventBus.unsubscribe(mainFrameManager);
+        }
+        mainFrameManager = frameManagerProvider.get();
+        mainFrameManager.setParent(frameManagerPanel);
+        swingEventBus.subscribe(mainFrameManager);
     }
 
     /**
      * Initialises the components for this frame.
      */
     public void initComponents() {
-        UIUtilities.invokeAndWait(() -> {
-            frameManagerPanel = new JPanel();
-            activeFrame = Optional.empty();
-            framePanel = new JPanel(new MigLayout("fill, ins 0"));
-            initFrameManagers();
-            mainSplitPane = initSplitPane();
+        checkOnEDT();
+        frameManagerPanel = new JPanel();
+        activeFrame = Optional.empty();
+        framePanel = new JPanel(new MigLayout("fill, ins 0"));
+        initFrameManagers();
+        mainSplitPane = initSplitPane();
 
-            setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(800, 600));
 
-            getContentPane().setLayout(new MigLayout(
-                    "fill, ins rel, wrap 1, hidemode 2"));
-            layoutComponents();
+        getContentPane().setLayout(new MigLayout(
+                "fill, ins rel, wrap 1, hidemode 2"));
+        layoutComponents();
 
-            setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-            pack();
-        });
+        pack();
     }
 
     /**
@@ -301,10 +299,9 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * @param menuBar The menu bar to use.
      */
     public void setMenuBar(final MenuBar menuBar) {
-        UIUtilities.invokeAndWait(() -> {
-            apple.setMenuBar(menuBar);
-            setJMenuBar(menuBar);
-        });
+        checkOnEDT();
+        apple.setMenuBar(menuBar);
+        setJMenuBar(menuBar);
     }
 
     /**
@@ -466,6 +463,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void setActiveFrame(final SwingActiveWindowChangeRequestEvent event) {
+        checkOnEDT();
         focusOrder.offerAndMove(activeFrame);
         framePanel.setVisible(false);
         framePanel.removeAll();
@@ -493,16 +491,18 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         swingEventBus.publish(new SwingWindowSelectedEvent(activeFrame));
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void doWindowAdded(final SwingWindowAddedEvent event) {
+        checkOnEDT();
         if (!activeFrame.isPresent()) {
             setActiveFrame(new SwingActiveWindowChangeRequestEvent(
                     Optional.of(event.getChildWindow())));
         }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void doWindowDeleted(final SwingWindowDeletedEvent event) {
+        checkOnEDT();
         final Optional<TextFrame> window = Optional.of(event.getChildWindow());
         focusOrder.remove(window);
         if (activeFrame.equals(window)) {
@@ -518,15 +518,17 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
         }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void titleChanged(final FrameTitleChangedEvent event) {
+        checkOnEDT();
         activeFrame.map(Window::getContainer)
                 .filter(isEqual(event.getContainer()))
                 .ifPresent(c -> setTitle(event.getTitle()));
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
+        checkOnEDT();
         activeFrame.map(Window::getContainer)
                 .filter(isEqual(event.getSource()))
                 .ifPresent(c -> event.getManager().clearStatus());
