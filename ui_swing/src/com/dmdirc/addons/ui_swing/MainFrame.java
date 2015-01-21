@@ -233,7 +233,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
     @Override
     public void windowClosed(final WindowEvent windowEvent) {
-        new Thread(() -> lifecycleController.quit(exitCode), "Quit thread").start();
+        UIUtilities.invokeOffEDTNoLogging(() -> lifecycleController.quit(exitCode));
     }
 
     @Override
