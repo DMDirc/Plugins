@@ -93,7 +93,7 @@ public class ChannelWhoManager {
     @Handler
     void handleGroupChatPrefsRequestedEvent(final GroupChatPrefsRequestedEvent event) {
         event.getCategory().addSetting(new PreferencesSetting(PreferencesType.BOOLEAN, domain,
-                "sendWho", "Send Who Requests", "Should we send who requests to the channel?",
+                "sendwho", "Send Who Requests", "Should we send who requests to the channel?",
                 event.getConfig(), event.getIdentity()));
     }
 
