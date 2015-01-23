@@ -26,6 +26,8 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.parser.events.DataInEvent;
+import com.dmdirc.parser.events.DataOutEvent;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
@@ -33,7 +35,6 @@ import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 import net.engio.mbassy.listener.Handler;
@@ -89,13 +90,14 @@ public class RawWindow extends FrameContainer {
         connection.getParser().map(Parser::getCallbackManager).ifPresent(c -> c.subscribe(this));
     }
 
-    private void handleDataIn(final Parser parser, final Date date, final String line) {
-        addLine("rawIn", date, line);
+    @Handler
+    private void handleDataIn(final DataInEvent event) {
+        addLine("rawIn", event.getDate(), event.getData());
     }
 
-    private void handleDataOut(final Parser parser, final Date date, final String line,
-            final boolean fromParser) {
-        addLine("rawOut", date, line);
+    @Handler
+    private void handleDataOut(final DataOutEvent event) {
+        addLine("rawOut", event.getDate(), event.getData());
     }
 
 }
