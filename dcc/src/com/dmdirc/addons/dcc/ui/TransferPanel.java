@@ -29,10 +29,11 @@ import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
 import com.dmdirc.events.UserErrorEvent;
+import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.parser.events.SocketCloseEvent;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.util.DateUtils;
 
 import java.awt.Desktop;
@@ -40,7 +41,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -49,13 +49,15 @@ import javax.swing.JProgressBar;
 
 import net.miginfocom.swing.MigLayout;
 
+import net.engio.mbassy.listener.Handler;
+
 /**
  * A panel for displaying the progress of DCC transfers.
  *
  * @since 0.6.6
  */
 public class TransferPanel extends JPanel implements ActionListener,
-        SocketCloseListener, DCCTransferHandler, SwingFrameComponent {
+        DCCTransferHandler, SwingFrameComponent {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;
@@ -92,7 +94,10 @@ public class TransferPanel extends JPanel implements ActionListener,
         dcc = transferContainer.getDCC();
 
         dcc.addHandler(this);
-        transferContainer.addSocketCloseCallback(this);
+        transferContainer.getConnection()
+                .flatMap(Connection::getParser)
+                .map(Parser::getCallbackManager)
+                .ifPresent(cm -> cm.subscribe(this));
 
         setLayout(new MigLayout("hidemode 0"));
 
@@ -164,8 +169,8 @@ public class TransferPanel extends JPanel implements ActionListener,
         }
     }
 
-    @Override
-    public void onSocketClosed(final Parser parser, final Date date) {
+    @Handler
+    public void onSocketClosed(final SocketCloseEvent event) {
         if ("Resend".equals(button.getText())) {
             button.setText("Close Window");
         }
