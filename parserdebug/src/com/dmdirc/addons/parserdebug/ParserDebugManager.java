@@ -26,8 +26,8 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.common.CallbackNotFoundException;
+import com.dmdirc.parser.events.DebugInfoEvent;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.util.URLBuilder;
@@ -40,7 +40,7 @@ import javax.inject.Inject;
 
 import net.engio.mbassy.listener.Handler;
 
-public class ParserDebugManager implements DebugInfoListener {
+public class ParserDebugManager {
 
     /** Event bus to subscribe to events on. */
     private final DMDircMBassador eventBus;
@@ -97,7 +97,7 @@ public class ParserDebugManager implements DebugInfoListener {
      */
     public boolean addParser(final Parser parser, final Connection connection) {
         try {
-            parser.getCallbackManager().addCallback(DebugInfoListener.class, this);
+            parser.getCallbackManager().subscribe(this);
             final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
                     connection, eventBus, backBufferFactory);
             windowManager.addWindow(connection.getWindowModel(), window);
@@ -121,7 +121,7 @@ public class ParserDebugManager implements DebugInfoListener {
      */
     public boolean removeParser(final Parser parser, final boolean close) {
         try {
-            parser.getCallbackManager().delCallback(DebugInfoListener.class, this);
+            parser.getCallbackManager().unsubscribe(this);
             final DebugWindow window = registeredParsers.get(parser);
             window.addLine("======================", new Date());
             window.addLine("No Longer Monitoring: " + parser + " (User Requested)", new Date());
@@ -155,11 +155,11 @@ public class ParserDebugManager implements DebugInfoListener {
             }
     }
 
-    @Override
-    public void onDebugInfo(final Parser parser, final Date date, final int level, final String data) {
-        final DebugWindow window = registeredParsers.get(parser);
+    @Handler
+    public void onDebugInfo(final DebugInfoEvent event) {
+        final DebugWindow window = registeredParsers.get(event.getParser());
         if (window != null) {
-            window.addLine(String.format("[%d] %s%n", level, data), new Date());
+            window.addLine(String.format("[%d] %s%n", event.getLevel(), event.getData()), new Date());
         }
     }
 
