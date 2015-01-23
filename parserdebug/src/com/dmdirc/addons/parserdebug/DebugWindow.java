@@ -26,7 +26,6 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.DebugInfoListener;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
@@ -40,7 +39,7 @@ import java.util.Optional;
 public class DebugWindow extends FrameContainer {
 
     /** The debug listener for this window. */
-    protected final DebugInfoListener listener;
+    protected final Object listener;
     /** The parser this window is debugging. */
     protected Parser parser;
     /** The connection we're operating on. */
@@ -50,7 +49,8 @@ public class DebugWindow extends FrameContainer {
      * Creates a new instance of DebugWindow.
      */
     public DebugWindow(
-            final DebugInfoListener listener,
+            // TODO: Icky.
+            final Object listener,
             final String title,
             final Parser parser,
             final Connection connection,
@@ -88,7 +88,7 @@ public class DebugWindow extends FrameContainer {
 
         // Remove any callbacks or listeners
         if (parser != null) {
-            parser.getCallbackManager().delCallback(DebugInfoListener.class, listener);
+            parser.getCallbackManager().unsubscribe(listener);
         }
     }
 
