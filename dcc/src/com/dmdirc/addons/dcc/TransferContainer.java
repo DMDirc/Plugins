@@ -32,24 +32,25 @@ import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.parser.events.SocketCloseEvent;
 import com.dmdirc.parser.interfaces.Parser;
-import com.dmdirc.parser.interfaces.callbacks.SocketCloseListener;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.awt.Desktop;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
+import net.engio.mbassy.listener.Handler;
+
 /**
  * This class links DCC Send objects to a window.
  */
 public class TransferContainer extends FrameContainer implements
-        DCCTransferHandler, SocketCloseListener {
+        DCCTransferHandler {
 
     /** The dcc plugin that owns this frame */
     protected final DCCManager plugin;
@@ -99,7 +100,7 @@ public class TransferContainer extends FrameContainer implements
         myPlugin = plugin;
 
         if (parser != null) {
-            parser.getCallbackManager().addCallback(SocketCloseListener.class, this);
+            parser.getCallbackManager().subscribe(this);
         }
         dcc.addHandler(this);
 
@@ -108,10 +109,10 @@ public class TransferContainer extends FrameContainer implements
         initBackBuffer();
     }
 
-    @Override
-    public void onSocketClosed(final Parser parser, final Date date) {
+    @Handler
+    public void onSocketClosed(final SocketCloseEvent event) {
         // Remove our reference to the parser (and its reference to us)
-        this.parser.getCallbackManager().delAllCallback(this);
+        parser.getCallbackManager().unsubscribe(this);
         this.parser = null;
     }
 
@@ -344,13 +345,6 @@ public class TransferContainer extends FrameContainer implements
         super.close();
 
         dcc.removeFromTransfers();
-    }
-
-    public void addSocketCloseCallback(final SocketCloseListener listener) {
-        if (connection != null) {
-            connection.getParser().map(Parser::getCallbackManager).ifPresent(
-                    cbm -> cbm.addCallback(SocketCloseListener.class, listener));
-        }
     }
 
     @Override
