@@ -126,9 +126,9 @@ public class ConnectionHandler {
         if (event.getNumeric() == 301) {
             final String nickname = event.getArgs()[3];
             final String reason = event.getArgs()[4];
-            users.removeAll(nickname).forEach(u -> connection.getWindowModel().getEventBus()
-                .publishAsync(
-                        new ChannelUserAwayEvent(u.getGroupChat(), u, Optional.ofNullable(reason))));
+            users.removeAll(nickname).forEach(u -> u.getGroupChat().getEventBus()
+                .publishAsync(new ChannelUserAwayEvent(u.getGroupChat(), u,
+                        Optional.ofNullable(reason))));
         }
     }
 }
