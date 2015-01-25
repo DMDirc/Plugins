@@ -27,12 +27,14 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.dialogs.about.AboutDialog;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channellist.ChannelListDialog;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.errors.ErrorsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.feedback.FeedbackDialog;
+import com.dmdirc.addons.ui_swing.dialogs.globalautocommand.GlobalAutoCommandDialog;
 import com.dmdirc.addons.ui_swing.dialogs.newserver.NewServerDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
@@ -51,12 +53,13 @@ import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModel;
 import com.dmdirc.interfaces.ui.ErrorsDialogModel;
 import com.dmdirc.interfaces.ui.FeedbackDialogModel;
+import com.dmdirc.interfaces.ui.GlobalAutoCommandsDialogModel;
 import com.dmdirc.interfaces.ui.NewServerDialogModel;
 import com.dmdirc.interfaces.ui.ProfilesDialogModel;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.core.about.CoreAboutDialogModel;
 import com.dmdirc.ui.core.aliases.CoreAliasDialogModel;
+import com.dmdirc.ui.core.autocommands.CoreGlobalAutoCommandsDialogModel;
 import com.dmdirc.ui.core.errors.CoreErrorsDialogModel;
 import com.dmdirc.ui.core.feedback.CoreFeedbackDialogModel;
 import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
@@ -78,6 +81,7 @@ import dagger.Provides;
  * Facilitates injection of dialogs.
  */
 @Module(library = true, complete = false)
+@SuppressWarnings("TypeMayBeWeakened")
 public class DialogModule {
 
     /**
@@ -125,6 +129,12 @@ public class DialogModule {
     }
 
     @Provides
+    public GlobalAutoCommandsDialogModel getGlobalAutoCommandsdialogModel(
+            final CoreGlobalAutoCommandsDialogModel model) {
+        return model;
+    }
+
+    @Provides
     @Singleton
     public DialogProvider<NewServerDialog> getNewServerDialogProvider(
             final Provider<NewServerDialog> provider) {
@@ -163,6 +173,13 @@ public class DialogModule {
     @Singleton
     public DialogProvider<ErrorsDialog> getErrorsDialogProvider(
             final Provider<ErrorsDialog> provider) {
+        return new DialogProvider<>(provider);
+    }
+
+    @Provides
+    @Singleton
+    public DialogProvider<GlobalAutoCommandDialog> getGlocalAutoCommandDialogModel(
+            final Provider<GlobalAutoCommandDialog> provider) {
         return new DialogProvider<>(provider);
     }
 
