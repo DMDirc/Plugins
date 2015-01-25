@@ -74,7 +74,8 @@ public class GlobalAutoCommandDialog extends StandardDialog {
 
     private void layoutComponents() {
         setLayout(new MigLayout("fill"));
-        add(new TextLabel("These commands will be executed when the client stars."), "wrap, span 2");
+        add(new TextLabel("These commands will be executed when the client starts."),
+                "wrap, span 2");
         add(ValidationFactory
                 .getValidatorPanel(scrollPane, response, model.getResponseValidator(), iconManager),
                 "span 2, grow, push, wrap");
