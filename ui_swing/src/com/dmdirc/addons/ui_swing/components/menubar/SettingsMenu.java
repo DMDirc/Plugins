@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing.components.menubar;
 
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.dialogs.aliases.AliasManagerDialog;
+import com.dmdirc.addons.ui_swing.dialogs.globalautocommand.GlobalAutoCommandDialog;
 import com.dmdirc.addons.ui_swing.dialogs.prefs.SwingPreferencesDialog;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
@@ -46,16 +47,19 @@ public class SettingsMenu extends JMenu {
     private final DialogProvider<SwingPreferencesDialog> prefsDialogProvider;
     /** Provider of alias manager dialogs. */
     private final DialogProvider<AliasManagerDialog> aliasDialogProvider;
+    private final DialogProvider<GlobalAutoCommandDialog> globalAutoCommandDialogDialogProvider;
 
     @Inject
     public SettingsMenu(
             final DialogProvider<ProfileManagerDialog> profileDialogProvider,
             final DialogProvider<SwingPreferencesDialog> prefsDialogProvider,
-            final DialogProvider<AliasManagerDialog> aliasDialogProvider) {
+            final DialogProvider<AliasManagerDialog> aliasDialogProvider,
+            final DialogProvider<GlobalAutoCommandDialog> globalAutoCommandDialogDialogProvider) {
         super("Settings");
         this.profileDialogProvider = profileDialogProvider;
         this.prefsDialogProvider = prefsDialogProvider;
         this.aliasDialogProvider = aliasDialogProvider;
+        this.globalAutoCommandDialogDialogProvider = globalAutoCommandDialogDialogProvider;
 
         setMnemonic('e');
         initSettingsMenu();
@@ -78,6 +82,10 @@ public class SettingsMenu extends JMenu {
         add(JMenuItemBuilder.create()
                 .setMnemonic('a').setText("Alias Manager")
                 .addActionMethod(aliasDialogProvider::displayOrRequestFocus)
+                .build());
+        add(JMenuItemBuilder.create()
+                .setMnemonic('e').setText("Perform")
+                .addActionMethod(globalAutoCommandDialogDialogProvider::displayOrRequestFocus)
                 .build());
     }
 
