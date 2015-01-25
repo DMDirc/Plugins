@@ -168,7 +168,7 @@ public class ConnectionHandlerTest {
     public void testHandleServerNumericEvent_301() throws Exception {
         when(serverNumericEvent.getNumeric()).thenReturn(301);
         when(serverNumericEvent.getArgs()).thenReturn(
-                new String[]{"", "", "", "", "nickname", "reason"});
+                new String[]{"", "", "", "nickname", "reason"});
         instance.load();
         when(channelUserAwayEvent.getReason()).thenReturn(Optional.empty());
         when(groupChatUser.getGroupChat()).thenReturn(groupChat);

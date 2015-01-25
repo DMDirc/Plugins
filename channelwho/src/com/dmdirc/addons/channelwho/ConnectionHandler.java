@@ -124,11 +124,11 @@ public class ConnectionHandler {
     @Handler
     void handleServerNumericEvent(final ServerNumericEvent event) {
         if (event.getNumeric() == 301) {
-            final String nickname = event.getArgs()[4];
-            final String reason = event.getArgs()[5];
+            final String nickname = event.getArgs()[3];
+            final String reason = event.getArgs()[4];
             users.removeAll(nickname).forEach(u -> connection.getWindowModel().getEventBus()
-                    .publishAsync(new ChannelUserAwayEvent(u.getGroupChat(), u,
-                            Optional.ofNullable(reason))));
+                .publishAsync(
+                        new ChannelUserAwayEvent(u.getGroupChat(), u, Optional.ofNullable(reason))));
         }
     }
 }
