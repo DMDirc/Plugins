@@ -22,14 +22,47 @@
 
 package com.dmdirc.addons.jpq;
 
+import com.dmdirc.plugins.PluginInfo;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import dagger.ObjectGraph;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JPQPluginTest {
 
+    @Mock private ObjectGraph objectGraph;
+    @Mock private PluginInfo pluginInfo;
+    @Mock private JPQManager manager;
+    private JPQPlugin instance;
+
+    @Before
+    public void setup() {
+        when(objectGraph.plus(any(JPQModule.class))).thenReturn(objectGraph);
+        when(objectGraph.get(JPQManager.class)).thenReturn(manager);
+        instance = new JPQPlugin();
+    }
+
     @Test
-    public void testSomething() {}
+    public void testLoad() {
+        instance.load(pluginInfo, objectGraph);
+        instance.onLoad();
+        verify(manager).load();
+    }
+
+    @Test
+    public void testUnload() {
+        instance.load(pluginInfo, objectGraph);
+        instance.onUnload();
+        verify(manager).unload();
+    }
 
 }
