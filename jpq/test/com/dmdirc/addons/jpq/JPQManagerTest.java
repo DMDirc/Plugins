@@ -4,6 +4,8 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ChannelSelfJoinEvent;
+import com.dmdirc.events.ChannelSelfPartEvent;
 import com.dmdirc.events.GroupChatPrefsRequestedEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
@@ -37,6 +39,8 @@ public class JPQManagerTest {
     @Mock private ServerConnectedEvent serverConnectedEvent;
     @Mock private ServerDisconnectedEvent serverDisconnectedEvent;
     @Mock private GroupChatPrefsRequestedEvent groupChatPrefsRequestedEvent;
+    @Mock private ChannelSelfJoinEvent channelSelfJoinEvent;
+    @Mock private ChannelSelfPartEvent channelSelfPartEvent;
     @Mock private PreferencesCategory prefsCategory;
     @Mock private AggregateConfigProvider configProvider;
     @Captor private ArgumentCaptor<PreferencesSetting> preferencesSetting;
@@ -72,6 +76,8 @@ public class JPQManagerTest {
                 .thenReturn(Lists.newArrayList(connection1, connection2));
         when(groupChatPrefsRequestedEvent.getCategory()).thenReturn(prefsCategory);
         when(groupChatPrefsRequestedEvent.getConfig()).thenReturn(configProvider);
+        when(channelSelfJoinEvent.getChannel()).thenReturn(groupChat3);
+        when(channelSelfPartEvent.getChannel()).thenReturn(groupChat3);
         when(configProvider.getOption(anyString(), anyString())).thenReturn("true");
         instance = new JPQManager("domain", connectionManager, groupChatHandlerFactory, eventBus);
     }
@@ -118,5 +124,20 @@ public class JPQManagerTest {
         instance.handleConnectionRemoved(serverDisconnectedEvent);
         verify(groupChatHandler1).unload();
         verify(groupChatHandler2).unload();
+    }
+
+    @Test
+    public void testGroupChatAdded() throws Exception {
+        instance.handleConnectionAdded(serverConnectedEvent);
+        instance.handleGroupChatAdded(channelSelfJoinEvent);
+        verify(groupChatHandlerFactory).get(groupChat3);
+    }
+
+    @Test
+    public void testGroupChatRemoved() throws Exception {
+        instance.handleGroupChatAdded(channelSelfJoinEvent);
+        verify(groupChatHandlerFactory).get(groupChat3);
+        instance.handleGroupChatRemoved(channelSelfPartEvent);
+        verify(groupChatHandler3).unload();
     }
 }

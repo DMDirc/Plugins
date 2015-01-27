@@ -105,7 +105,7 @@ public class JPQManager {
     @VisibleForTesting
     @Handler
     void handleGroupChatRemoved(final ChannelSelfPartEvent event) {
-        addGroupChatHandler(event.getChannel());
+        removeGroupChatHandler(event.getChannel());
     }
 
     @VisibleForTesting
