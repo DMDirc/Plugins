@@ -93,6 +93,18 @@ public class JPQManager {
     void handleConnectionRemoved(final ServerDisconnectedEvent event) {
         removeGroupChatHandler(event.getConnection());
     }
+    
+    @VisibleForTesting
+    @Handler
+    void handleGroupChatAdded(final ChannelSelfJoinEvent event) {
+        addGroupChatHandler(event.getChannel());
+    }
+    
+    @VisibleForTesting
+    @Handler
+    void handleGroupChatRemoved(final ChannelSelfPartEvent event) {
+        addGroupChatHandler(event.getChannel());
+    }
 
     @VisibleForTesting
     @Handler
