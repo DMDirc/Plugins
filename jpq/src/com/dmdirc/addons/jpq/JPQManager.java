@@ -25,6 +25,8 @@ package com.dmdirc.addons.jpq;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ChannelSelfJoinEvent;
+import com.dmdirc.events.ChannelSelfPartEvent;
 import com.dmdirc.events.GroupChatPrefsRequestedEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
