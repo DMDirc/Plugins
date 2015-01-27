@@ -23,32 +23,32 @@
 package com.dmdirc.addons.jpq;
 
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
+import com.dmdirc.plugins.PluginDomain;
 
-import dagger.ObjectGraph;
+import javax.inject.Inject;
 
 /**
- * Provides the ability to hide joins, parts and quits from a {@link GroupChat}.
+ * Factory for creating {@link GroupChatHandler}s.
  */
-public class JPQPlugin extends BasePlugin {
+public class GroupChatHandlerFactory {
 
-    private JPQManager manager;
+    private final String domain;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-        setObjectGraph(graph.plus(new JPQModule(pluginInfo)));
-        manager = getObjectGraph().get(JPQManager.class);
+    @Inject
+    public GroupChatHandlerFactory(@PluginDomain(JPQPlugin.class) final String domain) {
+        this.domain = domain;
     }
 
-    @Override
-    public void onLoad() {
-        manager.load();
-    }
-
-    @Override
-    public void onUnload() {
-        manager.unload();
+    /**
+     * Creates a new instance for the specified {@link GroupChat}.
+     *
+     * @param groupChat Group chat to handle
+     *
+     * @return Loaded instance
+     */
+    public GroupChatHandler get(final GroupChat groupChat) {
+        final GroupChatHandler groupChatHandler = new GroupChatHandler(domain, groupChat);
+        groupChatHandler.load();
+        return groupChatHandler;
     }
 }
