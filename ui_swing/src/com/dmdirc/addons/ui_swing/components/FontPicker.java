@@ -33,6 +33,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.MutableComboBoxModel;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * System font picking component.
  */
@@ -65,9 +67,7 @@ public class FontPicker extends JComboBox<Object> {
      * @param fonts Fonts to load
      */
     private void loadFonts(final String... fonts) {
-        if (fonts == null) {
-            return;
-        }
+        checkNotNull(fonts);
         final int size = getFont() == null ? 12 : getFont().getSize();
         for (final String font : fonts) {
             ((MutableComboBoxModel<Object>) getModel()).addElement(new Font(font, Font.PLAIN, size));
