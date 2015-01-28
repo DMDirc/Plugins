@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -59,7 +60,7 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        UIUtilities.<String[]>invokeOffEDT(eventBus, this::getFonts, this::loadFonts);
+        UIUtilities.invokeOffEDT(eventBus, this::getFonts, this::loadFonts);
     }
 
     /**
@@ -67,7 +68,7 @@ public class FontPicker extends JComboBox<Object> {
      *
      * @param fonts Fonts to load
      */
-    private void loadFonts(final String... fonts) {
+    private void loadFonts(final List<String> fonts) {
         checkNotNull(fonts);
         final int size = getFont() == null ? 12 : getFont().getSize();
         for (final String font : fonts) {
@@ -77,8 +78,12 @@ public class FontPicker extends JComboBox<Object> {
     }
 
     private List<String> getFonts() {
-        return Lists.newArrayList(GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getAvailableFontFamilyNames());
+        final String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        if (fonts == null) {
+            return new ArrayList<>();
+        }
+        return Lists.newArrayList(fonts);
     }
 
 }
