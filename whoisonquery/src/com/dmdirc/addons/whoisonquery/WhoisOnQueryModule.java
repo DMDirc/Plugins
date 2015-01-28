@@ -20,15 +20,33 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.jpq;
+package com.dmdirc.addons.whoisonquery;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import com.dmdirc.ClientModule;
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 
-@RunWith(MockitoJUnitRunner.class)
-public class WhoisOnQueryPluginTest {
+import dagger.Module;
+import dagger.Provides;
 
-    @Test
-    public void testSomething() {}
+@Module(injects = WhoisOnQueryManager.class, addsTo = ClientModule.class)
+public class WhoisOnQueryModule {
+
+    private final PluginInfo pluginInfo;
+
+    public WhoisOnQueryModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
+    }
+
+    @Provides
+    @PluginDomain(WhoisOnQueryPlugin.class)
+    public String getDomain() {
+        return pluginInfo.getDomain();
+    }
+
+    @Provides
+    @PluginDomain(WhoisOnQueryPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
 }
