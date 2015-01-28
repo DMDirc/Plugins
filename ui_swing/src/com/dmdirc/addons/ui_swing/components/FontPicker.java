@@ -65,7 +65,10 @@ public class FontPicker extends JComboBox<Object> {
      * @param fonts Fonts to load
      */
     private void loadFonts(final String... fonts) {
-        final int size = getFont().getSize();
+        if (fonts == null) {
+            return;
+        }
+        final int size = getFont() == null ? 12 : getFont().getSize();
         for (final String font : fonts) {
             ((MutableComboBoxModel<Object>) getModel()).addElement(new Font(font, Font.PLAIN, size));
         }
