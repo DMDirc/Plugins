@@ -26,8 +26,11 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.renderers.FontListCellRenderer;
 
+import com.google.common.collect.Lists;
+
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -56,9 +59,7 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        UIUtilities.<String[]>invokeOffEDT(eventBus,
-                () -> GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(),
-                this::loadFonts);
+        UIUtilities.<String[]>invokeOffEDT(eventBus, this::getFonts, this::loadFonts);
     }
 
     /**
@@ -73,6 +74,11 @@ public class FontPicker extends JComboBox<Object> {
             ((MutableComboBoxModel<Object>) getModel()).addElement(new Font(font, Font.PLAIN, size));
         }
         setSelectedItem(new Font(fontFamily, Font.PLAIN, size));
+    }
+
+    private List<String> getFonts() {
+        return Lists.newArrayList(GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames());
     }
 
 }
