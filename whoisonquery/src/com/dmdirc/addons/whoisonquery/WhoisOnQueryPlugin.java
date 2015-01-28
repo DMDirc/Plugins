@@ -20,10 +20,34 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.jpq;
+package com.dmdirc.addons.whoisonquery;
 
+import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.BasePlugin;
 
+import dagger.ObjectGraph;
+
+/**
+ * Sends a whois when a new query is opened.
+ */
 public class WhoisOnQueryPlugin extends BasePlugin {
 
+    private WhoisOnQueryManager manager;
+
+    @Override
+    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
+        super.load(pluginInfo, graph);
+        setObjectGraph(graph.plus(new WhoisOnQueryModule(pluginInfo)));
+        manager = getObjectGraph().get(WhoisOnQueryManager.class);
+    }
+
+    @Override
+    public void onLoad() {
+        manager.load();
+    }
+
+    @Override
+    public void onUnload() {
+        manager.unload();
+    }
 }
