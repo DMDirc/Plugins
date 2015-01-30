@@ -278,7 +278,7 @@ public final class SwingPreferencesDialog extends StandardDialog implements
     @Override
     public void dispose() {
         synchronized (this) {
-            if (!worker.isDone()) {
+            if (worker != null && !worker.isDone()) {
                 worker.cancel(true);
             }
             if (manager != null) {
