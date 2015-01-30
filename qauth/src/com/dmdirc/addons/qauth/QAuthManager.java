@@ -135,7 +135,6 @@ public class QAuthManager {
         }
         event.getConnection().getLocalUser().ifPresent(u -> {
             if (u.equals(event.getUser())) {
-                // TODO: Check account matches?
                 if (!event.getInfo(UserInfoEvent.UserInfoType.ACCOUNT_NAME).isPresent()) {
                     auth(event.getConnection());
                 }
