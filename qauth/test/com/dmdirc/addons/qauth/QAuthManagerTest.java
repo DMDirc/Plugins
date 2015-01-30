@@ -26,6 +26,9 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
 import com.dmdirc.Query;
 import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.prefs.PreferencesCategory;
+import com.dmdirc.config.prefs.PreferencesDialogModel;
+import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.QueryMessageEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
@@ -33,16 +36,21 @@ import com.dmdirc.events.ServerNoticeEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
+import com.dmdirc.plugins.PluginMetaData;
 
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -52,18 +60,26 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class QAuthManagerTest {
 
+    @Mock private AggregateConfigProvider aggregateConfigProvider;
+    @Mock private ConfigProvider configProvider;
+    @Mock private PreferencesDialogModel preferencesDialogModel;
     @Mock private DMDircMBassador eventBus;
     @Mock private PluginInfo pluginInfo;
+    @Mock private PluginMetaData pluginMetaData;
     @Mock private AggregateConfigProvider config;
     @Mock private ConfigBinder configBinder;
     @Mock private ServerConnectedEvent serverConnectedEvent;
     @Mock private ServerInviteReceivedEvent serverInviteReceivedEvent;
     @Mock private ServerNoticeEvent serverNoticeEvent;
     @Mock private QueryMessageEvent queryMessageEvent;
+    @Mock private ClientPrefsOpenedEvent clientPrefsOpenedEvent;
     @Mock private User user;
+    @Mock private User localUser;
     @Mock private Query query;
     @Mock private Invite invite;
     @Mock private Connection connection;
+    @Mock private PreferencesCategory preferencesCategory;
+    @Captor private ArgumentCaptor<PreferencesCategory> preferencesCategoryArgumentCaptor;
     private QAuthManager instance;
 
     @Before
@@ -82,8 +98,15 @@ public class QAuthManagerTest {
         when(user.getNickname()).thenReturn("Q");
         when(query.getConnection()).thenReturn(Optional.of(connection));
         when(connection.getNetwork()).thenReturn("Quakenet");
+        when(connection.getLocalUser()).thenReturn(Optional.of(localUser));
         when(config.getBinder()).thenReturn(configBinder);
         when(configBinder.withDefaultDomain("pluginDomain")).thenReturn(configBinder);
+        when(pluginInfo.getMetaData()).thenReturn(pluginMetaData);
+        when(pluginMetaData.getFriendlyName()).thenReturn("Plugin");
+        when(clientPrefsOpenedEvent.getModel()).thenReturn(preferencesDialogModel);
+        when(preferencesDialogModel.getConfigManager()).thenReturn(aggregateConfigProvider);
+        when(preferencesDialogModel.getIdentity()).thenReturn(configProvider);
+        when(preferencesDialogModel.getCategory("Plugins")).thenReturn(preferencesCategory);
         instance = new QAuthManager("pluginDomain", pluginInfo, config, eventBus);
 
         instance.handleUsername("username");
@@ -208,4 +231,30 @@ public class QAuthManagerTest {
         instance.handleNotices(serverNoticeEvent);
         verify(connection, never()).sendMessage("Q@Cserve.quakenet.org", "invite");
     }
+
+    @Test
+    public void testAuthWithWhois() {
+        instance.handleWhois(true);
+        instance.handleConnect(serverConnectedEvent);
+        verify(connection).requestUserInfo(localUser);
+        verify(connection, never()).sendMessage(anyString(), anyString());
+    }
+
+    @Test
+    public void testAuthWithoutWhois() {
+        instance.handleWhois(false);
+        instance.handleConnect(serverConnectedEvent);
+        verify(connection, never()).requestUserInfo(localUser);
+        verify(connection).sendMessage(anyString(), anyString());
+    }
+
+    @Test
+    public void testHandlePrefsEvent() throws Exception {
+        when(aggregateConfigProvider.getOptionBool("domain", "whoisonquery")).thenReturn(true);
+        instance.showConfig(clientPrefsOpenedEvent);
+        verify(preferencesCategory).addSubCategory(preferencesCategoryArgumentCaptor.capture());
+        assertTrue(preferencesCategoryArgumentCaptor.getValue().getSettings().size() > 1);
+    }
+
+    // TODO: Test ServerNumericEvent method
 }

@@ -35,6 +35,7 @@ import com.dmdirc.events.QueryMessageEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.events.ServerNoticeEvent;
+import com.dmdirc.events.ServerNumericEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -62,6 +63,8 @@ public class QAuthManager {
     private boolean whois;
     private boolean autoInvite;
     private boolean acceptInvites;
+    private boolean waitingWhois;
+    private boolean authed;
 
     @Inject
     public QAuthManager(
@@ -106,13 +109,43 @@ public class QAuthManager {
         connection.sendMessage("Q@Cserve.quakenet.org", "auth " + username + ' ' + password);
     }
 
+    private void sendWhois(final Connection connection) {
+        connection.getLocalUser().ifPresent(u -> {
+            connection.requestUserInfo(u);
+            waitingWhois = true;
+            authed = false;
+        });
+    }
+
     @Handler
     void handleConnect(final ServerConnectedEvent event) {
         if (!isValidConnection(event.getConnection())) {
             return;
         }
-        // TODO: whois
-        auth(event.getConnection());
+        if (whois) {
+            sendWhois(event.getConnection());
+        } else {
+            auth(event.getConnection());
+        }
+    }
+
+    @Handler
+    void handleServerNumericEvent(final ServerNumericEvent event) {
+        if (!waitingWhois) {
+            return;
+        }
+        if(event.getNumeric() == 330 && event.getConnection().getLocalUser().map(User::getNickname)
+                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
+            // TODO: Check account matches? (param arg 4)
+            authed = true;
+        }
+        if (event.getNumeric() == 318 && event.getConnection().getLocalUser().map(User::getNickname)
+                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
+            waitingWhois = false;
+            if (!authed) {
+                auth(event.getConnection());
+            }
+        }
     }
 
     @Handler
