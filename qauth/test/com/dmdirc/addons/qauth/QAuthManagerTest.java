@@ -33,10 +33,12 @@ import com.dmdirc.events.QueryMessageEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.events.ServerNoticeEvent;
+import com.dmdirc.events.UserInfoResponseEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.parser.events.UserInfoEvent;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginMetaData;
 
@@ -54,6 +56,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -79,6 +82,7 @@ public class QAuthManagerTest {
     @Mock private Invite invite;
     @Mock private Connection connection;
     @Mock private PreferencesCategory preferencesCategory;
+    @Mock private UserInfoResponseEvent userInfoResponseEvent;
     @Captor private ArgumentCaptor<PreferencesCategory> preferencesCategoryArgumentCaptor;
     private QAuthManager instance;
 
@@ -107,6 +111,7 @@ public class QAuthManagerTest {
         when(preferencesDialogModel.getConfigManager()).thenReturn(aggregateConfigProvider);
         when(preferencesDialogModel.getIdentity()).thenReturn(configProvider);
         when(preferencesDialogModel.getCategory("Plugins")).thenReturn(preferencesCategory);
+        when(userInfoResponseEvent.getConnection()).thenReturn(connection);
         instance = new QAuthManager("pluginDomain", pluginInfo, config, eventBus);
 
         instance.handleUsername("username");
@@ -256,5 +261,31 @@ public class QAuthManagerTest {
         assertTrue(preferencesCategoryArgumentCaptor.getValue().getSettings().size() > 1);
     }
 
-    // TODO: Test ServerNumericEvent method
+    @Test
+    public void testWhoisReply_NotWaiting() throws Exception {
+        instance.handleUserInfoResponse(userInfoResponseEvent);
+        verifyNoMoreInteractions(connection);
+    }
+
+    @Test
+    public void testWhoisReply_Waiting_Authed() throws Exception {
+        when(userInfoResponseEvent.getInfo(UserInfoEvent.UserInfoType.ACCOUNT_NAME))
+                .thenReturn(Optional.of("RAR"));
+        when(userInfoResponseEvent.getUser()).thenReturn(localUser);
+        instance.handleWhois(true);
+        instance.handleConnect(serverConnectedEvent);
+        instance.handleUserInfoResponse(userInfoResponseEvent);
+        verify(connection, never()).sendMessage(anyString(), anyString());
+    }
+
+    @Test
+    public void testWhoisReply_Waiting_NotAuthed() throws Exception {
+        when(userInfoResponseEvent.getInfo(UserInfoEvent.UserInfoType.ACCOUNT_NAME))
+                .thenReturn(Optional.empty());
+        when(userInfoResponseEvent.getUser()).thenReturn(localUser);
+        instance.handleWhois(true);
+        instance.handleConnect(serverConnectedEvent);
+        instance.handleUserInfoResponse(userInfoResponseEvent);
+        verify(connection).sendMessage(anyString(), anyString());
+    }
 }
