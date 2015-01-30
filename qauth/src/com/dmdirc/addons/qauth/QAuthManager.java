@@ -35,10 +35,11 @@ import com.dmdirc.events.QueryMessageEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.events.ServerNoticeEvent;
-import com.dmdirc.events.ServerNumericEvent;
+import com.dmdirc.events.UserInfoResponseEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.parser.events.UserInfoEvent;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NotEmptyValidator;
@@ -64,7 +65,6 @@ public class QAuthManager {
     private boolean autoInvite;
     private boolean acceptInvites;
     private boolean waitingWhois;
-    private boolean authed;
 
     @Inject
     public QAuthManager(
@@ -113,7 +113,6 @@ public class QAuthManager {
         connection.getLocalUser().ifPresent(u -> {
             connection.requestUserInfo(u);
             waitingWhois = true;
-            authed = false;
         });
     }
 
@@ -130,22 +129,18 @@ public class QAuthManager {
     }
 
     @Handler
-    void handleServerNumericEvent(final ServerNumericEvent event) {
+    void handleUserInfoResponse(final UserInfoResponseEvent event) {
         if (!waitingWhois) {
             return;
         }
-        if(event.getNumeric() == 330 && event.getConnection().getLocalUser().map(User::getNickname)
-                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
-            // TODO: Check account matches? (param arg 4)
-            authed = true;
-        }
-        if (event.getNumeric() == 318 && event.getConnection().getLocalUser().map(User::getNickname)
-                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
-            waitingWhois = false;
-            if (!authed) {
-                auth(event.getConnection());
+        event.getConnection().getLocalUser().ifPresent(u -> {
+            if (u.equals(event.getUser())) {
+                if (!event.getInfo(UserInfoEvent.UserInfoType.ACCOUNT_NAME).isPresent()) {
+                    auth(event.getConnection());
+                }
+                waitingWhois = false;
             }
-        }
+        });
     }
 
     @Handler
