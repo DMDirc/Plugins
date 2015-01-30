@@ -134,13 +134,13 @@ public class QAuthManager {
         if (!waitingWhois) {
             return;
         }
-        if(event.getNumeric() == 330 && event.getConnection().getLocalUser().map(User::getNickname)
-                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
+        final String localNickname = event.getConnection().getLocalUser()
+                .map(User::getNickname).orElse("");
+        if(event.getNumeric() == 330 && localNickname.equalsIgnoreCase(event.getArgs()[3])) {
             // TODO: Check account matches? (param arg 4)
             authed = true;
         }
-        if (event.getNumeric() == 318 && event.getConnection().getLocalUser().map(User::getNickname)
-                .orElse("").equalsIgnoreCase(event.getArgs()[3])) {
+        if (event.getNumeric() == 318 && localNickname.equalsIgnoreCase(event.getArgs()[3])) {
             waitingWhois = false;
             if (!authed) {
                 auth(event.getConnection());
