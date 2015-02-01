@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.framemanager.ctrltab;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -38,9 +37,8 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.util.LogUtils;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -58,6 +56,9 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -66,6 +67,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class CtrlTabWindowManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CtrlTabWindowManager.class);
     /** Node storage, used for adding and deleting nodes correctly. */
     private final Map<TextFrame, TreeViewNode> nodes;
     /** Data model. */
@@ -74,16 +76,12 @@ public class CtrlTabWindowManager {
     private final TreeScroller treeScroller;
     /** Selection model for the tree scroller. */
     private final TreeSelectionModel selectionModel;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     @Inject
     public CtrlTabWindowManager(
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final MainFrame mainFrame,
-            final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus) {
-        this.eventBus = eventBus;
         nodes = new HashMap<>();
         model = new TreeViewModel(globalConfig, new TreeViewNode(null, null));
         selectionModel = new DefaultTreeSelectionModel();
@@ -146,9 +144,8 @@ public class CtrlTabWindowManager {
             }
             final TreeViewNode node = nodes.get(window);
             if (node.getLevel() == 0) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
-                        new IllegalArgumentException(),
-                        "delServer triggered for root node" + node, ""));
+                LOG.warn(LogUtils.USER_ERROR, "delServer triggered for root node {}",
+                        node, new IllegalArgumentException());
             } else {
                 model.removeNodeFromParent(nodes.get(window));
             }

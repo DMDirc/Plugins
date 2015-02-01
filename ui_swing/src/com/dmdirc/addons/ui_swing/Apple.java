@@ -26,10 +26,8 @@ import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
 
@@ -53,7 +51,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * Integrate DMDirc with OS X better.
@@ -61,6 +64,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class Apple implements InvocationHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Apple.class);
     /** Store any addresses that are opened before CLIENT_OPENED. */
     private final Collection<URI> addresses = new ArrayList<>();
     /** Config manager used to read settings. */
@@ -105,8 +109,7 @@ public class Apple implements InvocationHandler {
                 registerOpenURLCallback();
                 eventBus.subscribe(this);
             } catch (UnsatisfiedLinkError ule) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM,
-                        ule, "Unable to load JNI library", ""));
+                LOG.warn(USER_ERROR, "Unable to load JNI library", ule);
             }
         }
     }
@@ -137,7 +140,7 @@ public class Apple implements InvocationHandler {
                     : classes);
             return method.invoke(obj, objects == null ? new Object[0] : objects);
         } catch (ReflectiveOperationException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to find OS X classes.", ""));
+            LOG.info(USER_ERROR, "Unable to find OS X classes.", ex);
         }
 
         return null;

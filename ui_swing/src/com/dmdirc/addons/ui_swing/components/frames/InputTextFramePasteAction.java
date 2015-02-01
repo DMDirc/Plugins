@@ -25,9 +25,7 @@ package com.dmdirc.addons.ui_swing.components.frames;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -39,11 +37,17 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Paste action for input frames.
  */
 public final class InputTextFramePasteAction extends AbstractAction {
 
+    private static final Logger LOG = LoggerFactory.getLogger(InputTextFramePasteAction.class);
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Clipboard to paste from. */
@@ -94,8 +98,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
                 return;
             }
         } catch (final IllegalStateException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to paste from clipboard.", ""));
+            LOG.info(USER_ERROR, "Unable to paste from clipboard.", ex);
             return;
         }
 
@@ -105,11 +108,11 @@ public final class InputTextFramePasteAction extends AbstractAction {
             doPaste((String) Toolkit.getDefaultToolkit()
                     .getSystemClipboard().getData(DataFlavor.stringFlavor));
         } catch (final IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
+            LOG.info(USER_ERROR, "Unable to get clipboard contents: {}",
+                    ex.getMessage(), ex);
         } catch (final UnsupportedFlavorException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unsupported clipboard type", ""));
+            LOG.info(USER_ERROR, "Unsupported clipboard type: {}",
+                    ex.getMessage(), ex);
         }
     }
 

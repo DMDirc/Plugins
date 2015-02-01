@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomFrameFactory;
 import com.dmdirc.addons.ui_swing.components.frames.CustomInputFrameFactory;
@@ -32,10 +31,8 @@ import com.dmdirc.addons.ui_swing.events.SwingActiveWindowChangeRequestEvent;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.FrameListener;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,6 +44,11 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Handles creation of windows in the Swing UI.
  *
@@ -55,12 +57,11 @@ import javax.inject.Singleton;
 @Singleton
 public class SwingWindowFactory implements FrameListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SwingWindowFactory.class);
     /** A map of known implementations of window interfaces. */
     private final Map<Collection<String>, WindowProvider> implementations = new HashMap<>();
     /** A map of frame containers to their Swing windows. */
     private final Map<WindowModel, TextFrame> windows = new HashMap<>();
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /** The swing event bus. */
     private final SwingEventBus swingEventBus;
 
@@ -71,7 +72,6 @@ public class SwingWindowFactory implements FrameListener {
      * @param customInputFrameFactory The factory to use to produce custom input frames.
      * @param serverFrameFactory      The factory to use to produce server frames.
      * @param channelFrameFactory     The factory to use to produce channel frames.
-     * @param eventBus                The event bus to post errors to
      * @param swingEventBus           The swing event bus;
      */
     @Inject
@@ -80,9 +80,7 @@ public class SwingWindowFactory implements FrameListener {
             final CustomInputFrameFactory customInputFrameFactory,
             final ServerFrameFactory serverFrameFactory,
             final ChannelFrameFactory channelFrameFactory,
-            final DMDircMBassador eventBus,
             final SwingEventBus swingEventBus) {
-        this.eventBus = eventBus;
         this.swingEventBus = swingEventBus;
 
         registerImplementation(customFrameFactory);
@@ -137,8 +135,7 @@ public class SwingWindowFactory implements FrameListener {
      */
     protected TextFrame doAddWindow(final WindowModel window) {
         if (!implementations.containsKey(window.getComponents())) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, null,
-                    "Unable to create window: Unknown type.", ""));
+            LOG.error(USER_ERROR, "Unable to create window: Unknown type.");
             return null;
         }
 
