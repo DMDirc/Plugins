@@ -24,15 +24,10 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
-import com.dmdirc.events.ClientInfoRequestEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
-import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.ui.core.about.InfoItem;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;
@@ -40,13 +35,9 @@ import java.awt.Window;
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import net.miginfocom.layout.LayoutUtil;
 import net.miginfocom.swing.MigLayout;
-
-import net.engio.mbassy.listener.Handler;
 
 /**
  * About dialog.
@@ -58,7 +49,6 @@ public class AboutDialog extends StandardDialog {
     private final AboutDialogModel model;
     private final DMDircMBassador eventBus;
     private final AggregateConfigProvider config;
-    private final PluginInfo pluginInfo;
 
     @Inject
     public AboutDialog(
@@ -66,16 +56,12 @@ public class AboutDialog extends StandardDialog {
             @MainWindow final Window parentWindow,
             final AboutDialogModel model,
             final URLHandler urlHandler,
-            final DMDircMBassador eventBus,
-            @PluginDomain(SwingController.class) final PluginInfo pluginInfo) {
+            final DMDircMBassador eventBus) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
         this.eventBus = eventBus;
         this.config = config;
-        this.pluginInfo = pluginInfo;
-
-        eventBus.subscribe(this);
         model.load();
         initComponents();
     }
@@ -102,20 +88,5 @@ public class AboutDialog extends StandardDialog {
                 + "wmin 600, wmax 600, hmin 400, hmax 400"));
         getContentPane().add(tabbedPane, "grow, push");
         getContentPane().add(getOkButton(), "right");
-    }
-
-    @Handler
-    public void handleInfoRequest(final ClientInfoRequestEvent event) {
-        event.addInfoItem(InfoItem.create("Swing UI Version",
-                        pluginInfo.getMetaData().getVersion().toString()),
-                InfoItem.create("Look and Feel", UIManager.getLookAndFeel().getName()),
-                InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
-        );
-    }
-
-    @Override
-    public void dispose() {
-        eventBus.unsubscribe(this);
-        super.dispose();
     }
 }
