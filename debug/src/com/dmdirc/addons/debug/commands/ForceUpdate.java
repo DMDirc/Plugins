@@ -91,8 +91,7 @@ public class ForceUpdate extends DebugCommand {
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         if (globalConfig.getOptionBool("updater", "enable")) {
-            UpdateChecker.checkNow(updateManager, identityController, eventBus,
-                    "Forced update checker");
+            UpdateChecker.checkNow(updateManager, identityController, "Forced update checker");
         } else {
             sendLine(origin, args.isSilent(), FORMAT_ERROR, "Update checking is "
                     + "currently disabled.  You can enable it by typing:");
