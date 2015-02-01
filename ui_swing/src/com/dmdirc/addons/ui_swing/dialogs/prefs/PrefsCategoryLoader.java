@@ -30,7 +30,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.util.LogUtils;
 
 import java.awt.Component;
 import java.awt.MenuContainer;
@@ -47,6 +46,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * Loads a preferences panel for a specified preferences category in the background.
@@ -112,7 +113,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         } catch (InterruptedException ex) {
             panel = errorCategory;
         } catch (ExecutionException ex) {
-            LOG.warn(LogUtils.USER_ERROR, "Error loading prefs panel", ex);
+            LOG.warn(USER_ERROR, "Error loading prefs panel", ex);
             panel = errorCategory;
         }
         return panel;
