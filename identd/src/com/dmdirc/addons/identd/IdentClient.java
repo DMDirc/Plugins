@@ -22,14 +22,12 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.util.LogUtils;
 import com.dmdirc.util.SystemInfo;
 import com.dmdirc.util.io.StreamUtils;
 
@@ -39,13 +37,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The IdentClient responds to an ident request.
  */
 public class IdentClient implements Runnable {
 
-    /** The event bus to post errors on. */
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(IdentClient.class);
     /** The IdentdServer that owns this Client. */
     private final IdentdServer server;
     /** The Socket that we are in charge of. */
@@ -64,11 +64,9 @@ public class IdentClient implements Runnable {
     /**
      * Create the IdentClient.
      */
-    public IdentClient(final DMDircMBassador eventBus, final IdentdServer server,
-            final Socket socket, final ConnectionManager connectionManager,
-            final AggregateConfigProvider config, final String domain,
-            final SystemInfo systemInfo) {
-        this.eventBus = eventBus;
+    public IdentClient(final IdentdServer server, final Socket socket,
+            final ConnectionManager connectionManager, final AggregateConfigProvider config,
+            final String domain, final SystemInfo systemInfo) {
         this.server = server;
         this.socket = socket;
         this.connectionManager = connectionManager;
@@ -99,8 +97,7 @@ public class IdentClient implements Runnable {
             }
         } catch (IOException e) {
             if (thisThread == thread) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
-                        "ClientSocket Error: " + e.getMessage(), ""));
+                LOG.error(LogUtils.USER_ERROR, "ClientSocket Error: {}", e.getMessage(), e);
             }
         } finally {
             StreamUtils.close(socket);
