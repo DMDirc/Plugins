@@ -45,6 +45,7 @@ import net.miginfocom.swing.MigLayout;
 public class GlobalAutoCommandDialog extends StandardDialog {
 
     private final GlobalAutoCommandsDialogModel model;
+    private static final long serialVersionUID = 1L;
     private final IconManager iconManager;
     private JScrollPane scrollPane;
     private JTextArea response;
