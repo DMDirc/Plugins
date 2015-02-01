@@ -48,7 +48,6 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
@@ -56,7 +55,6 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
@@ -89,7 +87,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * Manages logging activities.
@@ -97,6 +100,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class LoggingManager implements ConfigChangeListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingManager.class);
     /** Date format used for "File Opened At" log. */
     private static final DateFormat OPENED_AT_FORMAT = new SimpleDateFormat(
             "EEEE MMMM dd, yyyy - HH:mm:ss");
@@ -153,13 +157,11 @@ public class LoggingManager implements ConfigChangeListener {
         final File dir = new File(directoryProvider.get());
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create logging dir (file exists instead)", ""));
+                LOG.info(USER_ERROR, "Unable to create logging dir (file exists instead)");
             }
         } else {
             if (!dir.mkdirs()) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create logging dir", ""));
+                LOG.info(USER_ERROR, "Unable to create logging dir");
             }
         }
 
@@ -402,7 +404,7 @@ public class LoggingManager implements ConfigChangeListener {
      */
     protected void showBackBuffer(final WindowModel frame, final String filename) {
         if (frame == null) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null, "Given a null frame", ""));
+            LOG.info(USER_ERROR, "Unable to show back buffer, frame was null");
             return;
         }
 
@@ -421,9 +423,8 @@ public class LoggingManager implements ConfigChangeListener {
                 file.close();
                 frame.addLine(getColouredString(colour, "--- End of backbuffer\n"));
             } catch (IOException | SecurityException e) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
-                        "Unable to show backbuffer (Filename: " + filename + "): " + e.getMessage(),
-                        ""));
+                LOG.info(USER_ERROR, "Unable to show backbuffer (Filename: {}): {}", filename,
+                        e.getMessage(), e);
             }
         }
     }
