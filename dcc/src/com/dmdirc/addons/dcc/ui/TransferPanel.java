@@ -28,10 +28,8 @@ import com.dmdirc.addons.dcc.TransferContainer;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.frames.SwingFrameComponent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.events.SocketCloseEvent;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.util.DateUtils;
@@ -49,7 +47,12 @@ import javax.swing.JProgressBar;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * A panel for displaying the progress of DCC transfers.
@@ -59,6 +62,7 @@ import net.engio.mbassy.listener.Handler;
 public class TransferPanel extends JPanel implements ActionListener,
         DCCTransferHandler, SwingFrameComponent {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TransferPanel.class);
     /** A version number for this class. */
     private static final long serialVersionUID = 1L;
     /** Parent container. */
@@ -150,19 +154,17 @@ public class TransferPanel extends JPanel implements ActionListener,
             try {
                 Desktop.getDesktop().open(file);
             } catch (IllegalArgumentException ex) {
-                errorBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                        "Unable to open file: " + file, ""));
+                LOG.info(USER_ERROR, "Unable to open file {}", file.getAbsolutePath(), ex);
                 openButton.setEnabled(false);
             } catch (IOException ex) {
                 try {
                     Desktop.getDesktop().open(file.getParentFile());
                 } catch (IllegalArgumentException ex1) {
-                    errorBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex1, "Unable to open folder: "
-                            + file.getParentFile(), ""));
+                    LOG.info(USER_ERROR, "Unable to open folder: {}",
+                            file.getParentFile().getAbsolutePath(), ex1);
                     openButton.setEnabled(false);
                 } catch (IOException ex1) {
-                    errorBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex1,
-                            "No associated handler to open file or directory.", ""));
+                    LOG.info(USER_ERROR, "No associated handler to open file or directory.", ex1);
                     openButton.setEnabled(false);
                 }
             }

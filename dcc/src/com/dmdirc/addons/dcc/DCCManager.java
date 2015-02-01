@@ -48,7 +48,6 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ServerCtcpEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.User;
@@ -56,7 +55,6 @@ import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -83,7 +81,12 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * This plugin adds DCC to DMDirc.
@@ -91,6 +94,7 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class DCCManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DCCManager.class);
     private final BackBufferFactory backBufferFactory;
     /** Our DCC Container window. */
     private PlaceholderContainer container;
@@ -710,16 +714,16 @@ public class DCCManager {
                 "receive.savelocation"));
         if (dir.exists()) {
             if (!dir.isDirectory()) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create download dir (file exists instead)", ""));
+                LOG.info(USER_ERROR, "Unable to create download dir (file exists instead)",
+                        new IllegalArgumentException("Directory is really a file"));
             }
         } else {
             try {
                 dir.mkdirs();
                 dir.createNewFile();
             } catch (IOException ex) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create download dir", ""));
+                LOG.info(USER_ERROR, "Unable to create download dir",
+                        new IllegalArgumentException("Unable to create download dir"));
             }
         }
 
