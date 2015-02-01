@@ -25,12 +25,10 @@ package com.dmdirc.addons.parserdebug;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.parser.common.CallbackNotFoundException;
 import com.dmdirc.parser.events.DebugInfoEvent;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.util.URLBuilder;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -52,7 +50,6 @@ public class ParserDebugManager {
 
     @Inject
     public ParserDebugManager(
-            final URLBuilder urlBuilder,
             final WindowManager windowManager,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {
@@ -92,23 +89,16 @@ public class ParserDebugManager {
      *
      * @param parser Parser to add
      * @param connection The connection associated with the parser
-     *
-     * @return Whether we added the parser without error
      */
-    public boolean addParser(final Parser parser, final Connection connection) {
-        try {
-            parser.getCallbackManager().subscribe(this);
-            final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
-                    connection, eventBus, backBufferFactory);
-            windowManager.addWindow(connection.getWindowModel(), window);
-            registeredParsers.put(parser, window);
-            window.addLine("======================", new Date());
-            window.addLine("Started Monitoring: " + parser, new Date());
-            window.addLine("======================", new Date());
-            return true;
-        } catch (CallbackNotFoundException ex) {
-            return false;
-        }
+    public void addParser(final Parser parser, final Connection connection) {
+        parser.getCallbackManager().subscribe(this);
+        final DebugWindow window = new DebugWindow(this, "Parser Debug", parser,
+                connection, eventBus, backBufferFactory);
+        windowManager.addWindow(connection.getWindowModel(), window);
+        registeredParsers.put(parser, window);
+        window.addLine("======================", new Date());
+        window.addLine("Started Monitoring: " + parser, new Date());
+        window.addLine("======================", new Date());
     }
 
     /**
@@ -116,24 +106,17 @@ public class ParserDebugManager {
      *
      * @param parser Parser to add
      * @param close  Close debug window?
-     *
-     * @return Whether removed the parser without error
      */
-    public boolean removeParser(final Parser parser, final boolean close) {
-        try {
-            parser.getCallbackManager().unsubscribe(this);
-            final DebugWindow window = registeredParsers.get(parser);
-            window.addLine("======================", new Date());
-            window.addLine("No Longer Monitoring: " + parser + " (User Requested)", new Date());
-            window.addLine("======================", new Date());
-            if (close) {
-                window.close();
-            }
-            registeredParsers.remove(parser);
-            return true;
-        } catch (CallbackNotFoundException ex) {
-            return false;
+    public void removeParser(final Parser parser, final boolean close) {
+        parser.getCallbackManager().unsubscribe(this);
+        final DebugWindow window = registeredParsers.get(parser);
+        window.addLine("======================", new Date());
+        window.addLine("No Longer Monitoring: " + parser + " (User Requested)", new Date());
+        window.addLine("======================", new Date());
+        if (close) {
+            window.close();
         }
+        registeredParsers.remove(parser);
     }
 
     /**
