@@ -24,10 +24,8 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.util.io.ReverseFileReader;
@@ -43,13 +41,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Displays an extended history of a window.
  */
 public class HistoryWindow extends FrameContainer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HistoryWindow.class);
     private final Path logFile;
-    private final DMDircMBassador eventBus;
     private final int numLines;
 
     /**
@@ -63,10 +66,8 @@ public class HistoryWindow extends FrameContainer {
             final BackBufferFactory backBufferFactory,
             final int numLines) {
         super(parent, "raw", title, title, parent.getConfigManager(), backBufferFactory,
-                eventBus,
-                Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
+                eventBus, Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
         this.logFile = logFile;
-        this.eventBus = eventBus;
         this.numLines = numLines;
 
         initBackBuffer();
@@ -90,8 +91,7 @@ public class HistoryWindow extends FrameContainer {
                 addLine(text, date);
             });
         } catch (IOException | SecurityException ex) {
-            eventBus.publishAsync(
-                    new UserErrorEvent(ErrorLevel.MEDIUM, ex, "Unable to read log file.", ""));
+            LOG.warn(USER_ERROR, "Unable to read log file.", ex);
         }
     }
 

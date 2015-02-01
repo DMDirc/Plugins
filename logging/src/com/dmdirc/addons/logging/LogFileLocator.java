@@ -23,15 +23,12 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.config.ConfigBinding;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.io.File;
@@ -47,13 +44,18 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Facilitates finding a path for log files.
  */
 @Singleton
 public class LogFileLocator {
 
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(LogFileLocator.class);
     private final Provider<String> directoryProvider;
 
     /** Whether to append a hash of the file name to the file name... */
@@ -74,11 +76,9 @@ public class LogFileLocator {
 
     @Inject
     public LogFileLocator(
-            final DMDircMBassador eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(LoggingPlugin.class) final String domain) {
-        this.eventBus = eventBus;
         this.directoryProvider = directoryProvider;
 
         globalConfig.getBinder().withDefaultDomain(domain).bind(this, LogFileLocator.class);
@@ -172,8 +172,7 @@ public class LogFileLocator {
 
             if (!new File(directory.toString()).exists()
                     && !new File(directory.toString()).mkdirs()) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                        "Unable to create date dirs", ""));
+                LOG.info(USER_ERROR, "Unable to create data dirs");
             }
         }
 
@@ -208,13 +207,11 @@ public class LogFileLocator {
         final File dir = new File(directory + network + System.getProperty(
                 "file.separator"));
         if (dir.exists() && !dir.isDirectory()) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                    "Unable to create networkfolders dir (file exists instead)", ""));
+            LOG.info(USER_ERROR, "Unable to create networkfolders dir (file exists instead)");
             // Prepend network name to file instead.
             prependNetwork = true;
         } else if (!dir.exists() && !dir.mkdirs()) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, null,
-                    "Unable to create networkfolders dir", ""));
+            LOG.info(USER_ERROR, "Unable to create networkfolders dir");
             prependNetwork = true;
         }
 
