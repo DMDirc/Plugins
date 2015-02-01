@@ -51,7 +51,7 @@ public final class ParserDebugCommand extends Command {
             + "onDebugInfo for the parser that owns this window",
             CommandType.TYPE_SERVER);
     /** Parser debug manager. */
-    final ParserDebugManager parserDebugManager;
+    private final ParserDebugManager parserDebugManager;
 
     /**
      * Creates a new instance of ParserDebugCommand.
@@ -86,17 +86,11 @@ public final class ParserDebugCommand extends Command {
             return;
         }
         if (parserDebugManager.containsParser(parser.get())) {
-            if (parserDebugManager.removeParser(parser.get(), false)) {
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Removing callback ok");
-            } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Removing callback failed");
-            }
+            parserDebugManager.removeParser(parser.get(), false);
+            sendLine(origin, isSilent, FORMAT_OUTPUT, "Removed callback");
         } else {
-            if (parserDebugManager.addParser(parser.get(), connection)) {
-                sendLine(origin, isSilent, FORMAT_OUTPUT, "Adding callback ok");
-            } else {
-                sendLine(origin, isSilent, FORMAT_ERROR, "Adding callback failed");
-            }
+            parserDebugManager.addParser(parser.get(), connection);
+            sendLine(origin, isSilent, FORMAT_OUTPUT, "Added callback");
         }
     }
 
