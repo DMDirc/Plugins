@@ -24,18 +24,15 @@ package com.dmdirc.addons.freedesktop_notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
@@ -50,11 +47,17 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 @Singleton
 public class FDManager implements ConfigChangeListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FDManager.class);
     /** Global configuration. */
     private final AggregateConfigProvider config;
     /** User configuration. */
@@ -63,8 +66,6 @@ public class FDManager implements ConfigChangeListener {
     private final String domain;
     /** Plugin files helper. */
     private final PluginFilesHelper filesHelper;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     private final PluginInfo pluginInfo;
     /** notification timeout. */
     private int timeout;
@@ -81,13 +82,11 @@ public class FDManager implements ConfigChangeListener {
             @UserConfig final ConfigProvider userConfig,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final String domain,
             final PluginFilesHelper filesHelper,
-            final DMDircMBassador eventBus,
             @PluginDomain(FreeDesktopNotificationsPlugin.class) final PluginInfo pluginInfo) {
         this.domain = domain;
         this.config = config;
         this.userConfig = userConfig;
         this.filesHelper = filesHelper;
-        this.eventBus = eventBus;
         this.pluginInfo = pluginInfo;
     }
 
@@ -126,9 +125,11 @@ public class FDManager implements ConfigChangeListener {
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {
+                //Not a proble, carry on
             }
             return true;
         } catch (SecurityException | IOException e) {
+            LOG.info(USER_ERROR, "Unable to show notification", e);
         }
 
         return false;
@@ -173,9 +174,8 @@ public class FDManager implements ConfigChangeListener {
             filesHelper.extractResourcesEndingWith(".py");
             filesHelper.extractResourcesEndingWith(".png");
         } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
-                    "Unable to extract files for Free desktop notifications: " + ex.getMessage(),
-                    ""));
+            LOG.warn(USER_ERROR, "Unable to extract files for Free desktop notifications: {}",
+                    ex.getMessage(), ex);
         }
     }
 
