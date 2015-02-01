@@ -31,6 +31,7 @@ import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.wizard.firstrun.FirstRunWizardExecutor;
+import com.dmdirc.events.ClientInfoRequestEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
@@ -38,12 +39,16 @@ import com.dmdirc.events.UnknownURLEvent;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
+import com.dmdirc.ui.core.about.InfoItem;
 
 import java.awt.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import javax.swing.UIManager;
+
+import net.miginfocom.layout.LayoutUtil;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -228,6 +233,15 @@ public class SwingManager {
         event.getModel().getCategory("GUI").addSubCategory(
                 new SwingPreferencesModel(pluginInfo, domain, event.getModel().getConfigManager(),
                         event.getModel().getIdentity()).getSwingUICategory());
+    }
+
+    @Handler
+    public void handleInfoRequest(final ClientInfoRequestEvent event) {
+        event.addInfoItem(InfoItem.create("Swing UI Version",
+                        pluginInfo.getMetaData().getVersion().toString()),
+                InfoItem.create("Look and Feel", UIManager.getLookAndFeel().getName()),
+                InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
+        );
     }
 
 }
