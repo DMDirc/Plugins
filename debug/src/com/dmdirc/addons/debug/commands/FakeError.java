@@ -22,40 +22,37 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.events.AppErrorEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+
+import static com.dmdirc.util.LogUtils.APP_ERROR;
+import static com.dmdirc.util.LogUtils.FATAL_APP_ERROR;
+import static com.dmdirc.util.LogUtils.FATAL_USER_ERROR;
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Creates DMDirc errors with the specified parameters.
  */
 public class FakeError extends DebugCommand implements IntelligentCommand {
 
-    /** The event bus to post errors on . */
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(FakeError.class);
 
-    /**
-     * Creates a new instance of the command.
-     *
-     * @param commandProvider The provider to use to access the main debug command.
-     * @param eventBus        The event bus to post errors on
-     */
     @Inject
-    public FakeError(final Provider<Debug> commandProvider, final DMDircMBassador eventBus) {
+    public FakeError(final Provider<Debug> commandProvider) {
         super(commandProvider);
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -74,16 +71,34 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
-                && args.getArguments()[0].equals("user")) {
-            eventBus.publishAsync(new UserErrorEvent(getLevel(args.getArguments()),
-                    null, "Debug error message", ""));
+                && "user".equals(args.getArguments()[0])) {
+            raiseError(getLevel(args.getArguments()), false);
         } else if ((args.getArguments().length == 1
                 || args.getArguments().length == 2)
-                && args.getArguments()[0].equals("app")) {
-            eventBus.publishAsync(new AppErrorEvent(getLevel(args.getArguments()),
-                    new IllegalArgumentException(), "Debug error message", ""));
+                && "app".equals(args.getArguments()[0])) {
+            raiseError(getLevel(args.getArguments()), true);
         } else {
             showUsage(origin, args.isSilent(), getName(), getUsage());
+        }
+    }
+
+    private void raiseError(final String level, final boolean appError) {
+        final Marker marker = appError ? APP_ERROR : USER_ERROR;
+        switch (level.toUpperCase()) {
+            case "FATAL":
+                LOG.error(appError ? FATAL_APP_ERROR : FATAL_USER_ERROR, "Debug error message");
+                break;
+            case "HIGH":
+                LOG.error(marker, "Debug error message");
+                break;
+            case "MEDIUM":
+                LOG.warn(marker, "Debug error message");
+                break;
+            case "INFO":
+                LOG.info(marker, "Debug error message");
+                break;
+            default:
+                LOG.info(marker, "Debug error message");
         }
     }
 
@@ -94,15 +109,11 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
      *
      * @return Error level
      */
-    private ErrorLevel getLevel(final String... args) {
+    private String getLevel(final String... args) {
         if (args.length >= 2) {
-            try {
-                return ErrorLevel.valueOf(args[1].toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                return ErrorLevel.HIGH;
-            }
+            return args[1].toUpperCase();
         } else {
-            return ErrorLevel.HIGH;
+            return "HIGH";
         }
     }
 
@@ -120,7 +131,6 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
             res.add("medium");
             res.add("high");
             res.add("fatal");
-            res.add("unknown");
         }
 
         return res;
