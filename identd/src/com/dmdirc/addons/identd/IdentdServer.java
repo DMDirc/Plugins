@@ -23,11 +23,8 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.SystemInfo;
 
@@ -39,13 +36,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * The IdentdServer watches over the ident port when required
  */
 public final class IdentdServer implements Runnable {
 
-    /** The event bus to post errors on. */
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(IdentdServer.class);
     /** The Thread in use for this server */
     private volatile Thread myThread;
     /** The current socket in use for this server */
@@ -66,18 +67,15 @@ public final class IdentdServer implements Runnable {
     /**
      * Create the IdentdServer.
      *
-     * @param eventBus      The event bus to post errors on
      * @param connectionManager Server manager to iterate over servers
      * @param config        Global config
      * @param domain        This plugin's setting domain
      */
     @Inject
-    public IdentdServer(final DMDircMBassador eventBus,
-            final ConnectionManager connectionManager,
+    public IdentdServer(final ConnectionManager connectionManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain,
             final SystemInfo systemInfo) {
-        this.eventBus = eventBus;
         this.connectionManager = connectionManager;
         this.config = config;
         this.domain = domain;
@@ -93,14 +91,13 @@ public final class IdentdServer implements Runnable {
         while (myThread == thisThread) {
             try {
                 final Socket clientSocket = serverSocket.accept();
-                final IdentClient client = new IdentClient(eventBus, this, clientSocket,
-                        connectionManager, config, domain, systemInfo);
+                final IdentClient client = new IdentClient(this, clientSocket, connectionManager,
+                        config, domain, systemInfo);
                 client.start();
                 addClient(client);
             } catch (IOException e) {
                 if (myThread == thisThread) {
-                    eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
-                            "Accepting client failed: " + e.getMessage(), ""));
+                    LOG.error(USER_ERROR, "Accepting client failed: {}", e.getMessage(), e);
                 }
             }
         }
@@ -153,8 +150,7 @@ public final class IdentdServer implements Runnable {
                 myThread = new Thread(this);
                 myThread.start();
             } catch (IOException e) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, e,
-                        "Unable to start identd server: " + e.getMessage(), ""));
+                LOG.error(USER_ERROR, "Unable to start identd server: {}", e.getMessage(), e);
                 if ("Permission denied".equals(e.getMessage())) {
                     failed = true;
                 }
@@ -175,6 +171,7 @@ public final class IdentdServer implements Runnable {
             try {
                 serverSocket.close();
             } catch (IOException e) {
+                LOG.info("Unable to close socket: {}", e.getMessage(), e);
             }
 
             synchronized (clientList) {
