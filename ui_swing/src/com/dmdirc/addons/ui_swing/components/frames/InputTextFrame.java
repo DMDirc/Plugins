@@ -172,7 +172,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
      * Initialises the input field.
      */
     private void initInputField() {
-        UIUtilities.addUndoManager(eventBus, getInputField().getTextField());
+        UIUtilities.addUndoManager(getInputField().getTextField());
 
         getInputField().getActionMap().put("paste", inputTextFramePasteActionFactory
                 .getInputTextFramePasteAction(this, inputField, getContainer()));

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -70,13 +69,11 @@ public class TopicPane extends JPanel implements ActionListener {
      * @param parent            Parent dialog
      * @param channelWindow     Channel window
      * @param clipboard         Clipboard to copy and paste with
-     * @param eventBus          The event bus to post errors to
      */
     public TopicPane(final GroupChat groupChat, final IconManager iconManager,
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
@@ -88,8 +85,8 @@ public class TopicPane extends JPanel implements ActionListener {
         setVisible(false);
 
         removeAll();
-        initTopicsPanel(iconManager, serviceManager, commandController, eventBus,
-                colourManagerFactory, tabCompleterUtils);
+        initTopicsPanel(iconManager, serviceManager, commandController, colourManagerFactory,
+                tabCompleterUtils);
         layoutComponents();
 
         topicHistoryPane.addActionListener(this);
@@ -101,11 +98,10 @@ public class TopicPane extends JPanel implements ActionListener {
             final IconManager iconManager,
             final ServiceManager serviceManager,
             final CommandController commandController,
-            final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         topicDisplayPane = new TopicDisplayPane(groupChat, iconManager, serviceManager, parent,
-                channelWindow, clipboard, commandController, eventBus, colourManagerFactory,
+                channelWindow, clipboard, commandController, colourManagerFactory,
                 tabCompleterUtils);
         topicHistoryPane = new TopicHistoryPane(groupChat);
     }

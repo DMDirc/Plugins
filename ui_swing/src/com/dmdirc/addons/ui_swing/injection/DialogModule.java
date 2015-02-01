@@ -222,8 +222,8 @@ public class DialogModule {
             protected ChannelSettingsDialog getInstance(final GroupChat key) {
                 return new ChannelSettingsDialog(identityFactory, windowFactory,
                         userConfig, serviceManager, preferencesManager, compFactory, key,
-                        parentWindow, clipboard, commandController, eventBus,
-                        colourManagerFactory, tabCompleterUtils, iconManager);
+                        parentWindow, clipboard, commandController, colourManagerFactory,
+                        tabCompleterUtils, iconManager);
             }
         };
     }

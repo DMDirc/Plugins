@@ -39,15 +39,14 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.util.LogUtils;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -70,6 +69,9 @@ import javax.swing.tree.TreePath;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Invoke;
 
@@ -78,6 +80,7 @@ import net.engio.mbassy.listener.Invoke;
  */
 public class TreeFrameManager implements FrameManager, Serializable, ConfigChangeListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TreeFrameManager.class);
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
     /** node storage, used for adding and deleting nodes correctly. */
@@ -195,9 +198,8 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             }
             final DefaultMutableTreeNode node = nodes.get(window);
             if (node.getLevel() == 0) {
-                eventBus.publishAsync(
-                        new UserErrorEvent(ErrorLevel.MEDIUM, new IllegalArgumentException(),
-                                "delServer triggered for root node" + node, ""));
+                LOG.warn(LogUtils.USER_ERROR, "delServer triggered for root node {}",
+                        node, new IllegalArgumentException());
             } else {
                 model.removeNodeFromParent(nodes.get(window));
             }

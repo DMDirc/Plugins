@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.DMDircUndoableEditListener;
 import com.dmdirc.addons.ui_swing.components.RunnableLoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.RunnableSwingWorker;
@@ -91,10 +90,9 @@ public final class UIUtilities {
     /**
      * Adds an undo manager and associated key bindings to the specified text component.
      *
-     * @param eventBus  The event bus to post errors to
      * @param component The text component to add an undo manager to
      */
-    public static void addUndoManager(final DMDircMBassador eventBus, final JTextComponent component) {
+    public static void addUndoManager(final JTextComponent component) {
         final UndoManager undoManager = new UndoManager();
 
         // Listen for undo and redo events
@@ -102,13 +100,13 @@ public final class UIUtilities {
                 new DMDircUndoableEditListener(undoManager));
 
         // Create an undo action and add it to the text component
-        component.getActionMap().put("Undo", new UndoAction(eventBus, undoManager));
+        component.getActionMap().put("Undo", new UndoAction(undoManager));
 
         // Bind the undo action to ctl-Z
         component.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
 
         // Create a redo action and add it to the text component
-        component.getActionMap().put("Redo", new RedoAction(eventBus, undoManager));
+        component.getActionMap().put("Redo", new RedoAction(undoManager));
 
         // Bind the redo action to ctl-Y
         component.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");

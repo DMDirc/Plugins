@@ -22,39 +22,37 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Handles undo's on text components.
  */
 public final class UndoAction extends AbstractAction {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UndoAction.class);
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Undo manager. */
     private final UndoManager undoManager;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of UndoAction.
      *
-     * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public UndoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
+    public UndoAction(final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -64,7 +62,7 @@ public final class UndoAction extends AbstractAction {
                 undoManager.undo();
             }
         } catch (CannotUndoException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to undo", ""));
+            LOG.info(USER_ERROR, "Unable to undo", ex);
         }
     }
 

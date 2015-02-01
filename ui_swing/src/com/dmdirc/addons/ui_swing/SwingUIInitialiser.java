@@ -24,12 +24,10 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.AddonConfig;
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.util.LogUtils;
 
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -41,25 +39,27 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.layout.PlatformDefaults;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Initialises swing and system UI settings.
  */
 public class SwingUIInitialiser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SwingUIInitialiser.class);
     private final Apple apple;
     private final AggregateConfigProvider globalConfig;
     private final ConfigProvider addonConfig;
     private final DialogKeyListener dialogKeyListener;
     private final DMDircEventQueue eventQueue;
-    private final DMDircMBassador eventBus;
 
     @Inject
-    public SwingUIInitialiser(final DMDircMBassador eventBus, final Apple apple,
+    public SwingUIInitialiser(final Apple apple,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @AddonConfig final ConfigProvider addonConfig,
             final DialogKeyListener dialogKeyListener,
             final DMDircEventQueue eventQueue) {
-        this.eventBus = eventBus;
         this.apple = apple;
         this.globalConfig = globalConfig;
         this.addonConfig = addonConfig;
@@ -122,8 +122,7 @@ public class SwingUIInitialiser {
                         Font.PLAIN, 12));
             } catch (UnsupportedOperationException | UnsupportedLookAndFeelException |
                     IllegalAccessException | InstantiationException | ClassNotFoundException ex) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                        "Unable to set UI Settings", ""));
+                LOG.info(LogUtils.USER_ERROR, "Unable to set UI settings", ex);
             }
 
             if ("Metal".equals(UIManager.getLookAndFeel().getName())

@@ -22,39 +22,37 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Handles redo's on text components.
  */
 public final class RedoAction extends AbstractAction {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RedoAction.class);
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Undo manager. */
     private final UndoManager undoManager;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of RedoAction.
      *
-     * @param eventBus    The event bus to post errors to
      * @param undoManager UndoManager to use for this redo action
      */
-    public RedoAction(final DMDircMBassador eventBus, final UndoManager undoManager) {
+    public RedoAction(final UndoManager undoManager) {
         super("Undo");
 
         this.undoManager = undoManager;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -64,7 +62,7 @@ public final class RedoAction extends AbstractAction {
                 undoManager.redo();
             }
         } catch (CannotUndoException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, "Unable to redo", ""));
+            LOG.info(USER_ERROR, "Unable to redo", ex);
         }
     }
 

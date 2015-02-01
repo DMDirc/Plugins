@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
@@ -56,7 +55,6 @@ public class TopicBarFactory {
     private final ServiceManager serviceManager;
     private final Clipboard clipboard;
     private final CommandController commandController;
-    private final DMDircMBassador eventBus;
     private final TabCompleterUtils tabCompleterUtils;
     private final IconManager iconManager;
 
@@ -69,7 +67,6 @@ public class TopicBarFactory {
             final ServiceManager serviceManager,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus,
             final TabCompleterUtils tabCompleterUtils,
             final IconManager iconManager) {
         this.parentWindow = parentWindow;
@@ -79,7 +76,6 @@ public class TopicBarFactory {
         this.serviceManager = serviceManager;
         this.clipboard = clipboard;
         this.commandController = commandController;
-        this.eventBus = eventBus;
         this.tabCompleterUtils = tabCompleterUtils;
         this.iconManager = iconManager;
     }
@@ -90,7 +86,7 @@ public class TopicBarFactory {
         return new TopicBar(parentWindow.get(), globalConfig, domain,
                 colourManagerFactory.getColourManager(channel.getWindowModel().getConfigManager()),
                 serviceManager, clipboard, commandController, channel, window, iconManager,
-                tabCompleterUtils, eventBus);
+                tabCompleterUtils);
     }
 
 }

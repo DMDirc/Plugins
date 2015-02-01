@@ -22,9 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
+import com.dmdirc.util.LogUtils;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -35,11 +33,15 @@ import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.text.JTextComponent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Paste action that replaces matching regexes.
  */
 public final class ReplacePasteAction extends AbstractAction {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ReplacePasteAction.class);
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Clipboard to handle pasting. */
@@ -48,22 +50,18 @@ public final class ReplacePasteAction extends AbstractAction {
     private final String replacementRegex;
     /** Replacement string. */
     private final String replacementString;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of regex replacement paste action.
      *
-     * @param eventBus          The event bus to post errors to
      * @param clipboard         Clipboard to handle pasting
      * @param replacementRegex  Regex to match for replacement
      * @param replacementString Replacement string
      */
-    public ReplacePasteAction(final DMDircMBassador eventBus, final Clipboard clipboard,
+    public ReplacePasteAction(final Clipboard clipboard,
             final String replacementRegex, final String replacementString) {
         super("NoSpacesPasteAction");
 
-        this.eventBus = eventBus;
         this.clipboard = clipboard;
         this.replacementRegex = replacementRegex;
         this.replacementString = replacementString;
@@ -83,12 +81,9 @@ public final class ReplacePasteAction extends AbstractAction {
             ((JTextComponent) e.getSource()).replaceSelection(
                     ((String) clipboard.getData(DataFlavor.stringFlavor))
                             .replaceAll(replacementRegex, replacementString));
-        } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to get clipboard contents: " + ex.getMessage(), ""));
-        } catch (UnsupportedFlavorException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to get clipboard contents", ""));
+        } catch (IOException | UnsupportedFlavorException ex) {
+            LOG.info(LogUtils.USER_ERROR, "Unable to get clipboard contents: {}",
+                    ex.getMessage(), ex);
         }
     }
 

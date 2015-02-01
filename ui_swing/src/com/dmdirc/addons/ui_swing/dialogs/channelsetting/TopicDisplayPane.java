@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.ReplacePasteAction;
@@ -71,8 +70,6 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     private final int topicLengthMax;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /** label showing the number of characters left in a topic. */
     private JLabel topicLengthLabel;
     /** Topic text entry text area. */
@@ -91,12 +88,11 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      * @param channelWindow     Channel window
      * @param clipboard         Clipboard to copy and paste
      * @param commandController The controller to use to retrieve command information.
-     * @param eventBus          The event bus to post errors to.
      */
     public TopicDisplayPane(final GroupChat groupChat, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
             final InputWindow channelWindow, final Clipboard clipboard,
-            final CommandController commandController, final DMDircMBassador eventBus,
+            final CommandController commandController,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         this.clipboard = clipboard;
@@ -104,7 +100,6 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         this.parent = parent;
         topicLengthMax = groupChat.getConnection().get().getParser().get().getMaxTopicLength();
         this.channelWindow = channelWindow;
-        this.eventBus = eventBus;
 
         initComponents(iconManager, groupChat.getWindowModel().getConfigManager(), serviceManager,
                 commandController, colourManagerFactory, tabCompleterUtils);
@@ -137,13 +132,13 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         handler.setTabCompleter(groupChat.getWindowModel().getTabCompleter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new ReplacePasteAction(eventBus, clipboard, "(\r\n|\n|\r)", " "));
+                new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
                 0), new TopicEnterAction(parent));
         topicText.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
                 UIUtilities.getCtrlDownMask()), new TopicEnterAction(parent));
 
-        UIUtilities.addUndoManager(eventBus, topicText);
+        UIUtilities.addUndoManager(topicText);
     }
 
     /** Adds listeners to the components. */
