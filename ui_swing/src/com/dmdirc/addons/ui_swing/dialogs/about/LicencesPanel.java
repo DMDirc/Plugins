@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -45,6 +44,8 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.miginfocom.layout.PlatformDefaults;
@@ -57,6 +58,7 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
+    private final AboutDialogModel model;
     /** Config manager. */
     private final AggregateConfigProvider config;
     /** Licence scroll pane. */
@@ -69,12 +71,12 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
     private JTree list;
 
     public LicencesPanel(final AboutDialogModel model,
-            final AggregateConfigProvider globalConfig,
-            final DMDircMBassador eventBus) {
+            final AggregateConfigProvider globalConfig) {
+        this.model = model;
         config = globalConfig;
         initComponents();
-        new LicenceLoader(model, list, listModel, eventBus).execute();
         addListeners();
+        initLicenses();
         layoutComponents();
     }
 
@@ -154,6 +156,26 @@ public class LicencesPanel extends JPanel implements TreeSelectionListener {
                     + "<b>Description:</b> The intelligent IRC client");
         }
         UIUtilities.resetScrollPane(scrollPane);
+    }
+
+    private void initLicenses() {
+        model.getLicensedComponents().forEach(this::addLicensedComponent);
+        listModel.nodeStructureChanged((TreeNode) listModel.getRoot());
+        for (int i = 0; i < list.getRowCount(); i++) {
+            list.expandRow(i);
+        }
+        list.setSelectionRow(0);
+    }
+
+
+
+    private void addLicensedComponent(final LicensedComponent component) {
+        final MutableTreeNode componentNode = new DefaultMutableTreeNode(component);
+        listModel.insertNodeInto(componentNode, (MutableTreeNode) listModel.getRoot(),
+                listModel.getChildCount(listModel.getRoot()));
+        component.getLicences().forEach(l -> listModel.insertNodeInto(
+                new DefaultMutableTreeNode(l), componentNode,
+                listModel.getChildCount(componentNode)));
     }
 
 }
