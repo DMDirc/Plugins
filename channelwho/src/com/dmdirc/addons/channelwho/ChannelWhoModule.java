@@ -23,7 +23,6 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.LoggingScheduledExecutorService;
 
@@ -53,7 +52,7 @@ public class ChannelWhoModule {
 
     @Provides
     @Named("channelwho")
-    public ScheduledExecutorService getExecutorService(final DMDircMBassador eventBus) {
-        return new LoggingScheduledExecutorService(1, eventBus, "channelwho");
+    public ScheduledExecutorService getExecutorService() {
+        return new LoggingScheduledExecutorService(1, "channelwho");
     }
 }
