@@ -60,7 +60,7 @@ public class FontPicker extends JComboBox<Object> {
         this.fontFamily = fontFamily;
 
         setRenderer(new FontListCellRenderer(getRenderer()));
-        UIUtilities.invokeOffEDT(eventBus, this::getFonts, this::loadFonts);
+        UIUtilities.invokeOffEDT(this::getFonts, this::loadFonts);
     }
 
     /**

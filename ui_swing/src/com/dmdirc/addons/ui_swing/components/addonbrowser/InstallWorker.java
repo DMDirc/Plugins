@@ -62,7 +62,6 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             final DMDircMBassador eventBus,
             final AddonInfo info,
             final InstallerWindow window) {
-        super(eventBus);
         this.downloader = downloader;
         this.info = info;
         this.installer = window;

@@ -22,21 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link LoggingSwingWorker} that runs a {@link Supplier}.
  */
 public class SupplierLoggingSwingWorker<T, V> extends LoggingSwingWorker<T, V> {
 
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(SupplierLoggingSwingWorker.class);
     private final Consumer<T> doneConsumer;
     private final Consumer<List<V>> processConsumer;
     private final Supplier<T> backgroundSupplier;
@@ -44,42 +43,37 @@ public class SupplierLoggingSwingWorker<T, V> extends LoggingSwingWorker<T, V> {
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundSupplier The supplier to call as the background task, off the EDT.
      */
-    public SupplierLoggingSwingWorker(final DMDircMBassador eventBus,
+    public SupplierLoggingSwingWorker(
             final Supplier<T> backgroundSupplier) {
-        this(eventBus, backgroundSupplier, result -> {});
+        this(backgroundSupplier, result -> {});
     }
 
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundSupplier The supplier to call as the background task, off the EDT.
      * @param doneConsumer       The consumer called when the background task is complete
      */
-    public SupplierLoggingSwingWorker(final DMDircMBassador eventBus,
+    public SupplierLoggingSwingWorker(
             final Supplier<T> backgroundSupplier,
             final Consumer<T> doneConsumer) {
-        this(eventBus, backgroundSupplier, doneConsumer, chunks -> {});
+        this(backgroundSupplier, doneConsumer, chunks -> {});
     }
 
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundSupplier The supplier to call as the background task, off the EDT.
      * @param doneConsumer       The consumer called when the background task is complete
      * @param processConsumer    The consumer called to process results of the background task
      *                           as it progresses
      */
-    public SupplierLoggingSwingWorker(final DMDircMBassador eventBus,
+    public SupplierLoggingSwingWorker(
             final Supplier<T> backgroundSupplier,
             final Consumer<T> doneConsumer,
             final Consumer<List<V>> processConsumer) {
-        super(eventBus);
-        this.eventBus = eventBus;
         this.backgroundSupplier = backgroundSupplier;
         this.doneConsumer = doneConsumer;
         this.processConsumer = processConsumer;
@@ -102,7 +96,7 @@ public class SupplierLoggingSwingWorker<T, V> extends LoggingSwingWorker<T, V> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            LOG.warn(ex.getMessage(), ex);
         }
     }
 

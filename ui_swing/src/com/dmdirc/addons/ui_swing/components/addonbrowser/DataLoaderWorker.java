@@ -22,13 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ConfigFile;
@@ -51,6 +48,11 @@ import javax.swing.text.StyleConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Loads the addon data feed into the addon browser.
  */
@@ -58,6 +60,7 @@ public class DataLoaderWorker
         extends LoggingSwingWorker<Collection<AddonInfo>, Object>
         implements DownloadListener {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DataLoaderWorker.class);
     /** List to load data into. */
     private final AddonTable table;
     /** Browser window to pass to addon info objects. */
@@ -80,8 +83,6 @@ public class DataLoaderWorker
     private final AggregateConfigProvider globalConfig;
     /** Downloader to download files. */
     private final Downloader downloader;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new data loader worker.
@@ -92,7 +93,6 @@ public class DataLoaderWorker
      * @param workerFactory Factory to use to produce install workers.
      * @param updateManager Manager to use to retrieve update information.
      * @param tempDirectory The directory to store temporary items in, such as the addons feed.
-     * @param eventBus      The event bus to post errors to
      * @param table         Table to load data into
      * @param download      Download new addons feed?
      * @param browserWindow Browser window to pass to table objects
@@ -105,12 +105,10 @@ public class DataLoaderWorker
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
             final Path tempDirectory,
-            final DMDircMBassador eventBus,
             final AddonTable table,
             final boolean download,
             final BrowserWindow browserWindow,
             final JScrollPane scrollPane) {
-        super(eventBus);
         this.downloader = downloader;
         this.globalConfig = globalConfig;
         this.urlBuilder = urlBuilder;
@@ -121,7 +119,6 @@ public class DataLoaderWorker
         this.tempDirectory = tempDirectory;
         this.browserWindow = browserWindow;
         this.scrollPane = scrollPane;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -173,7 +170,7 @@ public class DataLoaderWorker
         } catch (final InterruptedException ex) {
             data = Collections.emptyList();
         } catch (final ExecutionException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            LOG.warn(USER_ERROR, ex.getMessage(), ex);
             data = Collections.emptyList();
         }
         final int selectedRow;

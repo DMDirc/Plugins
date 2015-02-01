@@ -22,15 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.TitlePanel;
 import com.dmdirc.addons.ui_swing.components.ToolTipPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,39 +72,33 @@ public class CategoryPanel extends JPanel {
     private LoggingSwingWorker<JPanel, Object> worker;
     /** Prefs component factory. */
     private final PrefsComponentFactory factory;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new category panel.
      *
-     * @param eventBus    The event bus to post errors to
      * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
      */
     @Inject
     public CategoryPanel(
-            final DMDircMBassador eventBus,
             final PrefsComponentFactory factory,
             final IconManager iconManager) {
-        this(eventBus, factory, iconManager, null);
+        this(factory, iconManager, null);
     }
 
     /**
      * Instantiates a new category panel.
      *
-     * @param eventBus    The event bus to post errors to
      * @param factory     Prefs component factory instance
      * @param iconManager Icon manager
      * @param category    Initial category
      */
     public CategoryPanel(
-            final DMDircMBassador eventBus, final PrefsComponentFactory factory,
+            final PrefsComponentFactory factory,
             final IconManager iconManager,
             final PreferencesCategory category) {
         super(new MigLayout("fillx, wrap, ins 0"));
         this.factory = factory;
-        this.eventBus = eventBus;
 
         panels = Collections.synchronizedMap(new HashMap<>());
 
@@ -208,7 +201,7 @@ public class CategoryPanel extends JPanel {
         } else {
             UIUtilities.invokeAndWait(() -> scrollPane.setViewportView(loading));
 
-            worker = new PrefsCategoryLoader(factory, eventBus, this, category);
+            worker = new PrefsCategoryLoader(factory, this, category);
             worker.execute();
         }
     }

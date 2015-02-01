@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.Window;
@@ -92,14 +91,12 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /**
      * Creates a new instance of TextPane.
      *
-     * @param eventBus     The event bus to post errors to.
      * @param configDomain The domain to read configuration from.
      * @param urlBuilder   The builder to use to construct URLs for resources.
      * @param clipboard    The clipboard to handle copy and paste actions
      * @param frame        Parent Frame
      */
     public TextPane(
-            final DMDircMBassador eventBus,
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
             final Window frame) {
@@ -117,7 +114,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
         setLayout(new MigLayout("fill, hidemode 3"));
         backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
-                urlBuilder, eventBus, configDomain, "textpanebackground",
+                urlBuilder, configDomain, "textpanebackground",
                 "textpanebackgroundoption");
         canvas = new TextPaneCanvas(this,
                 new CachingDocument<>(document, new AttributedStringMessageMaker()));
