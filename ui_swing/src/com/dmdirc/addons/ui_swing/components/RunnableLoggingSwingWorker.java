@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.DMDircMBassador;
-
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -35,40 +33,33 @@ public class RunnableLoggingSwingWorker<T, V> extends SupplierLoggingSwingWorker
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundRunnable The runnable to call as the background task, off the EDT.
      */
-    public RunnableLoggingSwingWorker(final DMDircMBassador eventBus,
-            final Runnable backgroundRunnable) {
-        this(eventBus, backgroundRunnable, result -> {});
+    public RunnableLoggingSwingWorker(final Runnable backgroundRunnable) {
+        this(backgroundRunnable, result -> {});
     }
 
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundRunnable The runnable to call as the background task, off the EDT.
      * @param doneConsumer       The consumer called when the background task is complete
      */
-    public RunnableLoggingSwingWorker(final DMDircMBassador eventBus,
-            final Runnable backgroundRunnable,
+    public RunnableLoggingSwingWorker(final Runnable backgroundRunnable,
             final Consumer<T> doneConsumer) {
-        this(eventBus, backgroundRunnable, doneConsumer, chunks -> {});
+        this(backgroundRunnable, doneConsumer, chunks -> {});
     }
 
     /**
      * Creates a new logging swing worker.
      *
-     * @param eventBus           Event bus to post errors to.
      * @param backgroundRunnable The runnable to call as the background task, off the EDT.
      * @param doneConsumer       The consumer called when the background task is complete
      * @param processConsumer    The consumer called to process results of the background task
      *                           as it progresses
      */
-    public RunnableLoggingSwingWorker(final DMDircMBassador eventBus,
-            final Runnable backgroundRunnable,
-            final Consumer<T> doneConsumer,
-            final Consumer<List<V>> processConsumer) {
-        super(eventBus, () -> { backgroundRunnable.run(); return null; } , doneConsumer, processConsumer);
+    public RunnableLoggingSwingWorker(final Runnable backgroundRunnable,
+            final Consumer<T> doneConsumer, final Consumer<List<V>> processConsumer) {
+        super(() -> { backgroundRunnable.run(); return null; } , doneConsumer, processConsumer);
     }
 }

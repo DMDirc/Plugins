@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 
 import java.awt.Image;
@@ -32,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageLoader extends LoggingSwingWorker<Image, Void> {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ImageLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageLoader.class);
     /**
      * URL of image file to load.
      */
@@ -49,9 +49,7 @@ public class ImageLoader extends LoggingSwingWorker<Image, Void> {
      */
     private final BackgroundPainter painter;
 
-    public ImageLoader(final URL imageURL, final BackgroundPainter painter,
-            final DMDircMBassador eventBus) {
-        super(eventBus);
+    public ImageLoader(final URL imageURL, final BackgroundPainter painter) {
         this.imageURL = imageURL;
         this.painter = painter;
     }

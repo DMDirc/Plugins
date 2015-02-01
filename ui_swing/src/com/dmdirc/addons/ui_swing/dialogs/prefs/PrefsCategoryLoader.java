@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -31,8 +30,6 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.awt.Component;
 import java.awt.MenuContainer;
@@ -47,11 +44,17 @@ import javax.swing.UIManager;
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Loads a preferences panel for a specified preferences category in the background.
  */
 public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PrefsCategoryLoader.class);
     /** Panel gap. */
     private final int padding = (int) PlatformDefaults.getUnitValueX("related").getValue();
     /** Panel left padding. */
@@ -66,24 +69,18 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
     private final PreferencesCategory category;
     /** Prefs component factory instance. */
     private final PrefsComponentFactory factory;
-    /** The event bus to post the errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Instantiates a new preferences category loader.
      *
      * @param factory       Prefs component factory instance
-     * @param eventBus      The event bus to post errors ro
      * @param categoryPanel Parent Category panel
      * @param category      Preferences Category to load
      */
     public PrefsCategoryLoader(final PrefsComponentFactory factory,
-            final DMDircMBassador eventBus,
             final CategoryPanel categoryPanel,
             final PreferencesCategory category) {
-        super(eventBus);
         this.factory = factory;
-        this.eventBus = eventBus;
         this.categoryPanel = categoryPanel;
         this.category = category;
 
@@ -116,8 +113,7 @@ public class PrefsCategoryLoader extends LoggingSwingWorker<JPanel, Object> {
         } catch (InterruptedException ex) {
             panel = errorCategory;
         } catch (ExecutionException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.MEDIUM, ex,
-                    "Error loading prefs panel", ""));
+            LOG.warn(USER_ERROR, "Error loading prefs panel", ex);
             panel = errorCategory;
         }
         return panel;

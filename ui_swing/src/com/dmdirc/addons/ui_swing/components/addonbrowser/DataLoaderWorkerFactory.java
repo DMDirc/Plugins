@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -47,7 +46,6 @@ public class DataLoaderWorkerFactory {
     private final InstallWorkerFactory workerFactory;
     private final UpdateManager updateManager;
     private final Path tempDirectory;
-    private final DMDircMBassador eventBus;
 
     @Inject
     public DataLoaderWorkerFactory(final Downloader downloader,
@@ -55,7 +53,6 @@ public class DataLoaderWorkerFactory {
             final URLBuilder urlBuilder,
             final InstallWorkerFactory workerFactory,
             final UpdateManager updateManager,
-            final DMDircMBassador eventBus,
             @Directory(DirectoryType.TEMPORARY)
             final Path tempDirectory) {
         this.downloader = downloader;
@@ -64,11 +61,10 @@ public class DataLoaderWorkerFactory {
         this.workerFactory = workerFactory;
         this.updateManager = updateManager;
         this.tempDirectory = tempDirectory;
-        this.eventBus = eventBus;
     }
     public DataLoaderWorker getDataLoaderWorker(final AddonTable list, final boolean download,
             final BrowserWindow browserWindow, final JScrollPane scrollPane) {
         return new DataLoaderWorker(downloader, globalConfig, urlBuilder, workerFactory,
-                updateManager, tempDirectory, eventBus, list, download, browserWindow, scrollPane);
+                updateManager, tempDirectory, list, download, browserWindow, scrollPane);
     }
 }

@@ -262,41 +262,36 @@ public final class UIUtilities {
     /**
      * Invokes something off the EDT, logging any exceptions that occur.
      *
-     * @param eventBus Eventbus to post errors to
      * @param runnable Runnable to execute off the EDT
      */
-    public static void invokeOffEDT(final DMDircMBassador eventBus, final Runnable runnable) {
-        new RunnableLoggingSwingWorker<Void, Void>(eventBus, runnable).execute();
+    public static void invokeOffEDT(final Runnable runnable) {
+        new RunnableLoggingSwingWorker<Void, Void>(runnable).execute();
     }
 
     /**
      * Invokes something off the EDT, handling the result when its finished on the EDT, logging
      * any exceptions that occur.
      *
-     * @param eventBus Eventbus to post errors to
      * @param runnable Runnable to execute off the EDT
      * @param consumer Consumer to finalise the runnable on the EDT
      *
      * @param <T>      Type the consumer takes
      */
-    public static <T> void invokeOffEDT(final DMDircMBassador eventBus, final Runnable runnable,
-            final Consumer<T> consumer) {
-        new RunnableLoggingSwingWorker<>(eventBus, runnable, consumer).execute();
+    public static <T> void invokeOffEDT(final Runnable runnable, final Consumer<T> consumer) {
+        new RunnableLoggingSwingWorker<>(runnable, consumer).execute();
     }
 
     /**
      * Invokes something off the EDT, handling the result when its finished on the EDT, logging
      * any exceptions that occur.
      *
-     * @param eventBus Eventbus to post errors to
      * @param runnable Runnable to execute off the EDT
      * @param consumer Consumer to finalise the runnable on the EDT
      *
      * @param <T>      Type the consumer takes
      */
-    public static <T> void invokeOffEDT(final DMDircMBassador eventBus, final Supplier<T> runnable,
-            final Consumer<T> consumer) {
-        new SupplierLoggingSwingWorker<>(eventBus, runnable, consumer).execute();
+    public static <T> void invokeOffEDT(final Supplier<T> runnable, final Consumer<T> consumer) {
+        new SupplierLoggingSwingWorker<>(runnable, consumer).execute();
     }
 
     /**

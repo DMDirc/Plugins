@@ -181,7 +181,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
 
             header.setText("DMDirc is updating the following components:");
 
-            UIUtilities.invokeOffEDT(eventBus,
+            UIUtilities.invokeOffEDT(
                     () -> ((UpdateTableModel) table.getModel()).getUpdates().stream()
                     .filter(((UpdateTableModel) table.getModel())::isEnabled)
                     .forEach(updateManager::install));

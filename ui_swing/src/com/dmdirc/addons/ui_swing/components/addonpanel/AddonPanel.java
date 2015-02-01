@@ -128,8 +128,7 @@ public abstract class AddonPanel extends JPanel implements AddonToggleListener,
      * Populates the list in a background thread.
      */
     protected void load() {
-        UIUtilities.invokeOffEDT(eventBus,
-                () -> populateList(addonList),
+        UIUtilities.invokeOffEDT(() -> populateList(addonList),
                 value -> {
                     scrollPane.setViewportView(addonList);
                     addonList.getSelectionModel().addListSelectionListener(this);

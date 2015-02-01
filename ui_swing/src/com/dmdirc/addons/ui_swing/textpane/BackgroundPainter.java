@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.BackgroundOption;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.ConfigBinding;
@@ -67,8 +66,6 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Config manager to bind to and retrieve settings from.
      */
     private final AggregateConfigProvider configManager;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /**
      * Background image.
      */
@@ -83,7 +80,6 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      *
      * @param configManager Config manager to retrieve settings from
      * @param urlBuilder    URL Builder
-     * @param eventBus      The event bus to post errors to
      * @param domain        Domain to retrieve settings from
      * @param imageKey      Key for background image
      * @param optionKey     Key for background type
@@ -91,7 +87,6 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     public BackgroundPainter(
             final AggregateConfigProvider configManager,
             final URLBuilder urlBuilder,
-            final DMDircMBassador eventBus,
             @Nonnull final String domain, @Nonnull final String imageKey,
             @Nonnull final String optionKey) {
         this.configManager = configManager;
@@ -99,7 +94,6 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         this.domain = domain;
         this.imageKey = imageKey;
         this.optionKey = optionKey;
-        this.eventBus = eventBus;
         configManager.getBinder().bind(this, BackgroundPainter.class);
     }
 
@@ -132,7 +126,7 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         if (value == null || value.isEmpty()) {
             backgroundImage = null;
         } else {
-            new ImageLoader(urlBuilder.getUrl(value), this, eventBus).execute();
+            new ImageLoader(urlBuilder.getUrl(value), this).execute();
         }
     }
 

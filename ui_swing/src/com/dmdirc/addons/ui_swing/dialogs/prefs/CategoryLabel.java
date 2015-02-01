@@ -22,9 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.config.prefs.PreferencesCategory;
 
 import java.awt.Dimension;
 
@@ -52,14 +51,12 @@ public class CategoryLabel extends JLabel {
      * Creates a new category label.
      *
      * @param iconManager Icon manager
-     * @param eventBus    The event bus to post errors to
      * @param parentList  Parent list
      * @param category    Parent category
      * @param numCats     Number of categories shown
      * @param index       Index of this label
      */
     public CategoryLabel(final IconManager iconManager,
-            final DMDircMBassador eventBus,
             @Nullable final JList<? extends PreferencesCategory> parentList,
             final PreferencesCategory category, final int numCats,
             final int index) {
@@ -67,7 +64,7 @@ public class CategoryLabel extends JLabel {
         final int padding = (int) (1.5 * PlatformDefaults.getUnitValueX("related").getValue());
 
         setText(category.getTitle());
-        new IconLoader(iconManager, eventBus, this, category.getIcon()).execute();
+        new IconLoader(iconManager, this, category.getIcon()).execute();
 
         int level = 0;
         PreferencesCategory temp = category;

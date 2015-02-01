@@ -22,13 +22,14 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.AppErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
-
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.APP_ERROR;
 
 /**
  * Logging swing worker.
@@ -38,16 +39,7 @@ import javax.swing.SwingWorker;
  */
 public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
 
-    private final DMDircMBassador eventBus;
-
-    /**
-     * Creates a new logging swing worker.
-     *
-     * @param eventBus Event bus to post errors to.
-     */
-    public LoggingSwingWorker(final DMDircMBassador eventBus) {
-        this.eventBus = eventBus;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingSwingWorker.class);
 
     @Override
     protected void done() {
@@ -59,7 +51,7 @@ public abstract class LoggingSwingWorker<T, V> extends SwingWorker<T, V> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            eventBus.publishAsync(new AppErrorEvent(ErrorLevel.MEDIUM, ex, ex.getMessage(), ""));
+            LOG.warn(APP_ERROR, ex.getMessage(), ex);
         }
     }
 

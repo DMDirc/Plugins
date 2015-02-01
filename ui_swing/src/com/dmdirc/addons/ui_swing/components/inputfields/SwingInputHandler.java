@@ -49,8 +49,6 @@ import javax.swing.text.JTextComponent;
  */
 public class SwingInputHandler extends InputHandler implements KeyListener {
 
-    private final DMDircMBassador eventBus;
-
     /**
      * Creates a new instance of InputHandler. Adds listeners to the target that we need to operate.
      *
@@ -71,7 +69,6 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final DMDircMBassador eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow,
                 tabCompleterUtils, eventBus);
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -154,7 +151,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 localTarget.setEditable(false);
-                UIUtilities.invokeOffEDT(eventBus, () -> doTabCompletion(false),
+                UIUtilities.invokeOffEDT(() -> doTabCompletion(false),
                         value -> localTarget.setEditable(true));
             }
         });
@@ -166,8 +163,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         localTarget.setEditable(false);
-                        UIUtilities.invokeOffEDT(eventBus,
-                                () -> doTabCompletion(true),
+                        UIUtilities.invokeOffEDT(() -> doTabCompletion(true),
                                 value -> localTarget.setEditable(true));
                     }
                 });
@@ -209,7 +205,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
                                         "Event is not from known source.");
                     }
                     if (source.isEditable()) {
-                        UIUtilities.invokeOffEDT(eventBus, () -> enterPressed(line));
+                        UIUtilities.invokeOffEDT(() -> enterPressed(line));
                     }
                 });
             }

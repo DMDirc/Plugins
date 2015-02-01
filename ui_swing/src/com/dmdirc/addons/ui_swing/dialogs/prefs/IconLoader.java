@@ -22,25 +22,26 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Icon;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * Loads an icon in the background and uses it for a category label once it has been loaded.
  */
 public class IconLoader extends LoggingSwingWorker<Icon, Void> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(IconLoader.class);
     /** Category this icon will be used for. */
     private final CategoryLabel label;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /** Icon to load. */
     private final String icon;
     /** Icon manager. */
@@ -51,15 +52,11 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
      * loaded in the background.
      *
      * @param iconManager Icon manager
-     * @param eventBus    The event bus to post errors to
      * @param label       Label to load category for
      * @param icon        Icon to load
      */
-    public IconLoader(final IconManager iconManager, final DMDircMBassador eventBus,
-            final CategoryLabel label, final String icon) {
-        super(eventBus);
+    public IconLoader(final IconManager iconManager, final CategoryLabel label, final String icon) {
         this.iconManager = iconManager;
-        this.eventBus = eventBus;
         this.label = label;
         this.icon = icon;
     }
@@ -76,7 +73,7 @@ public class IconLoader extends LoggingSwingWorker<Icon, Void> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex, ex.getMessage(), ""));
+            LOG.info(USER_ERROR, ex.getMessage(), ex);
         }
 
     }
