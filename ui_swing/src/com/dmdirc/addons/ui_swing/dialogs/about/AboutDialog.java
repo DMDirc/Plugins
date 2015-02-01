@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -47,7 +46,6 @@ public class AboutDialog extends StandardDialog {
     private static final long serialVersionUID = 5;
     private final URLHandler urlHandler;
     private final AboutDialogModel model;
-    private final DMDircMBassador eventBus;
     private final AggregateConfigProvider config;
 
     @Inject
@@ -55,12 +53,10 @@ public class AboutDialog extends StandardDialog {
             @GlobalConfig final AggregateConfigProvider config,
             @MainWindow final Window parentWindow,
             final AboutDialogModel model,
-            final URLHandler urlHandler,
-            final DMDircMBassador eventBus) {
+            final URLHandler urlHandler) {
         super(parentWindow, ModalityType.MODELESS);
         this.urlHandler = urlHandler;
         this.model = model;
-        this.eventBus = eventBus;
         this.config = config;
         model.load();
         initComponents();
@@ -81,7 +77,7 @@ public class AboutDialog extends StandardDialog {
 
         tabbedPane.add("About", new AboutPanel(urlHandler, model));
         tabbedPane.add("Credits", new CreditsPanel(urlHandler, model));
-        tabbedPane.add("Licences", new LicencesPanel(model, config, eventBus));
+        tabbedPane.add("Licences", new LicencesPanel(model, config));
         tabbedPane.add("Information", new InfoPanel(model));
 
         getContentPane().setLayout(new MigLayout("ins rel, wrap 1, fill, "
