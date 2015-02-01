@@ -22,13 +22,9 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,24 +35,26 @@ import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 public class ScriptManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ScriptManager.class);
     /** Script engine manager. */
     private final ScriptEngineManager scriptEngineManager;
     /** Script directory. */
     private final String scriptDirectory;
     /** Store Script State Name,Engine */
     private final Map<String, ScriptEngineWrapper> scripts = new HashMap<>();
-    /** The event bus to post events to. */
-    private final DMDircMBassador eventBus;
 
     @Inject
     public ScriptManager(final ScriptEngineManager scriptEngineManager,
-            @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
-            final DMDircMBassador eventBus) {
+            @Directory(ScriptModule.SCRIPTS) final String scriptDirectory) {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
-        this.eventBus = eventBus;
     }
 
     /**
@@ -99,11 +97,10 @@ public class ScriptManager {
         if (!scripts.containsKey(scriptFilename)) {
             try {
                 final ScriptEngineWrapper wrapper = new ScriptEngineWrapper(scriptEngineManager,
-                        eventBus, scriptFilename);
+                        scriptFilename);
                 scripts.put(scriptFilename, wrapper);
-            } catch (FileNotFoundException | ScriptException e) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
-                        "Error loading '" + scriptFilename + "': " + e.getMessage(), ""));
+            } catch (ScriptException e) {
+                LOG.info(USER_ERROR, "Error loading '{}': {}", scriptFilename, e.getMessage(), e);
                 return false;
             }
         }

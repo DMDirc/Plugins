@@ -22,10 +22,7 @@
 
 package com.dmdirc.addons.mediasource_dbus;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.nowplaying.MediaSource;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,23 +36,26 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Provides a media source for DBUS players.
  */
 public class DBusMediaSourceManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DBusMediaSourceManager.class);
     /** A map of discovered mpris sources. */
     private final Map<String, MediaSource> mprisSources;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /** The sources used by this media source. */
     private final List<MediaSource> sources;
     /** The path to qdbus. */
     private String qdbus;
 
     @Inject
-    public DBusMediaSourceManager(final DMDircMBassador eventBus) {
-        this.eventBus = eventBus;
+    public DBusMediaSourceManager() {
         sources = new ArrayList<>();
         mprisSources = new HashMap<>();
     }
@@ -146,7 +146,7 @@ public class DBusMediaSourceManager {
                 }
             }
         } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.HIGH, ex, "Unable to get DBUS info", ""));
+            LOG.error(USER_ERROR, "Unable to get DBUS info", ex);
         } finally {
             if (process != null) {
                 process.destroy();

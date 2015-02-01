@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.mediasource_linux_title;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.nowplaying.MediaSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,31 +37,27 @@ import javax.inject.Inject;
 public class TitleMediaSourceManager {
 
     /** The sources to be returned. */
-    private List<MediaSource> sources = null;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private final List<MediaSource> sources;
 
     @Inject
-    public TitleMediaSourceManager(final DMDircMBassador eventBus) {
-        this.eventBus = eventBus;
+    public TitleMediaSourceManager() {
+        sources = new ArrayList<>(2);
     }
 
     public void onLoad() {
-        sources = new ArrayList<>(2);
-        sources.add(new TitleMediaSource(eventBus, "grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'"
+        sources.add(new TitleMediaSource("grep -E '\\(\"last\\.?fm\" \"Last\\.?fm\"\\)'"
                 + "| grep -vE '(\"Last.fm "
                 + "Options\"|\"Diagnostics\"|\"last\\.?fm\"|\"Share\"|\\(has no "
                 + "name\\)):' | sed -r 's/^[^\"]*?\"(.*)\": \\(\"last\\.?fm.*$/\\1/g'", "Last.fm"));
-        sources.add(new TitleMediaSource(eventBus, "grep '\": (\"spotify.exe' | cut -d '\"' -f 2 | "
+        sources.add(new TitleMediaSource("grep '\": (\"spotify.exe' | cut -d '\"' -f 2 | "
                 + "cut -d '-' -f 2- | sed -r 's/^\\s+|\\s+$//g' | sed -r 's/-/–/g'", "Spotify"));
     }
 
     public void onUnload() {
         sources.clear();
-        sources = null;
     }
 
     public List<MediaSource> getSources() {
-        return sources;
+        return Collections.unmodifiableList(sources);
     }
 }

@@ -22,14 +22,9 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.DMDircMBassador;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
-
 import com.google.common.base.Preconditions;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -38,13 +33,17 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
+
 /**
  * Class to create script engines!
  */
 public class ScriptEngineWrapper {
 
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(ScriptEngineWrapper.class);
     /** The Script Engine this wrapper wraps */
     private ScriptEngine engine;
     /** The File this script is from */
@@ -58,17 +57,13 @@ public class ScriptEngineWrapper {
      * Create a new ScriptEngineWrapper
      *
      * @param scriptEngineManager Manager to get script engines
-     * @param eventBus            The event bus to post errors to
      * @param filename            Filename of script
      *
-     * @throws java.io.FileNotFoundException If file is not found
-     * @throws javax.script.ScriptException  If there was an error during creation
+     * @throws ScriptException  If there was an error during creation
      */
     protected ScriptEngineWrapper(final ScriptEngineManager scriptEngineManager,
-            final DMDircMBassador eventBus, final String filename)
-            throws FileNotFoundException, ScriptException {
+            final String filename) throws ScriptException {
         Preconditions.checkNotNull(filename, "File cannot be null");
-        this.eventBus = eventBus;
         this.scriptEngineManager = scriptEngineManager;
         file = new File(filename);
 
@@ -109,7 +104,7 @@ public class ScriptEngineWrapper {
      *
      * @return Created script engine
      *
-     * @throws javax.script.ScriptException  If there was an error during creation
+     * @throws ScriptException  If there was an error during creation
      */
     protected ScriptEngine createEngine() throws ScriptException {
         final ScriptEngine result = scriptEngineManager.getEngineByName("JavaScript");
@@ -141,9 +136,8 @@ public class ScriptEngineWrapper {
             // and do nothing rather that add an error every time a method is called
             // that doesn't exist (such as the action_* methods)
         } catch (ScriptException e) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
-                    "Error calling '" + functionName + "' in '" + file.getPath() + "': " +
-                            e.getMessage(), ""));
+            LOG.info(USER_ERROR, "Error calling '{}' in '{}': {}",
+                    functionName, file.getPath(), e.getMessage(), e);
         }
     }
 
@@ -162,8 +156,7 @@ public class ScriptEngineWrapper {
             // Tell it that it has been rehashed
             callFunction("onRehashSucess");
         } catch (ScriptException e) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
-                    "Reloading '" + file.getPath() + "' failed: " + e.getMessage(), ""));
+            LOG.info(USER_ERROR, "Reloading '{}' failed: {}", file.getPath(), e.getMessage(), e);
             // Tell it that its rehash failed
             callFunction("onRehashFailed", e);
             return false;
