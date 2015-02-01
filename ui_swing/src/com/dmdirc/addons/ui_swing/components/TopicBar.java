@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Topic;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -136,8 +135,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
             final GroupChat channel,
             final ChannelFrame window,
             final IconManager iconManager,
-            final TabCompleterUtils tabCompleterUtils,
-            final DMDircMBassador eventBus) {
+            final TabCompleterUtils tabCompleterUtils) {
         this.channel = channel;
         this.domain = domain;
         this.colourManager = colourManager;
@@ -151,7 +149,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
                 new NewlinesDocumentFilter());
 
         topicText.getActionMap().put("paste-from-clipboard",
-                new ReplacePasteAction(eventBus, clipboard, "(\r\n|\n|\r)", " "));
+                new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));
         topicEdit = new ImageButton<>("edit",
                 iconManager.getIcon("edit-inactive"),
                 iconManager.getIcon("edit"));

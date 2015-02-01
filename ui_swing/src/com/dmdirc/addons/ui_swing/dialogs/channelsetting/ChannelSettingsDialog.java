@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.channelsetting;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -48,6 +47,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -90,8 +90,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private final Clipboard clipboard;
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
     /** Colour manager factory. */
     private final ColourManagerFactory colourManagerFactory;
 
@@ -108,7 +106,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
      * @param parentWindow       Parent window
      * @param clipboard          Clipboard to copy and paste from
      * @param commandController  The controller to use to retrieve command information.
-     * @param eventBus           The event bus to post errors to.
      */
     public ChannelSettingsDialog(
             final IdentityFactory identityFactory,
@@ -121,7 +118,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
             final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils,
             final IconManager iconManager) {
@@ -134,7 +130,6 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         this.channel = checkNotNull(groupChat);
         this.clipboard = clipboard;
         this.commandController = checkNotNull(commandController);
-        this.eventBus = eventBus;
         this.colourManagerFactory = colourManagerFactory;
         this.iconManager = iconManager;
 
@@ -178,7 +173,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     private void initTopicTab(final TabCompleterUtils tabCompleterUtils) {
         topicModesPane = new TopicPane(channel, iconManager,
                 commandController, serviceManager,
-                this, channelWindow, clipboard, eventBus, colourManagerFactory, tabCompleterUtils);
+                this, channelWindow, clipboard, colourManagerFactory, tabCompleterUtils);
         tabbedPane.addTab("Topic", topicModesPane);
     }
 
@@ -187,7 +182,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
         channelModesPane = new ChannelModesPane(channel, iconManager);
 
         final JScrollPane channelModesSP = new JScrollPane(channelModesPane);
-        channelModesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        channelModesSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         channelModesSP.setOpaque(UIUtilities.getTabbedPaneOpaque());
         channelModesSP.getViewport().setOpaque(UIUtilities.getTabbedPaneOpaque());
         channelModesSP.setBorder(null);

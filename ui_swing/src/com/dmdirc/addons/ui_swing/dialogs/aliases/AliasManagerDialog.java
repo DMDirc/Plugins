@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.aliases;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -55,7 +54,6 @@ public class AliasManagerDialog extends StandardDialog {
     private static final long serialVersionUID = 1;
     private final AliasDialogModel model;
     private final IconManager iconManager;
-    private final DMDircMBassador eventBus;
     private JList<Alias> aliasList;
     private JTextField command;
     private JSpinner argumentsNumber;
@@ -66,11 +64,10 @@ public class AliasManagerDialog extends StandardDialog {
 
     @Inject
     public AliasManagerDialog(@MainWindow final Window mainFrame, final AliasDialogModel model,
-            final IconManager iconManager, final DMDircMBassador eventBus) {
+            final IconManager iconManager) {
         super(mainFrame, ModalityType.DOCUMENT_MODAL);
         this.model = model;
         this.iconManager = iconManager;
-        this.eventBus = eventBus;
         initComponents();
         layoutComponents();
     }
@@ -78,7 +75,7 @@ public class AliasManagerDialog extends StandardDialog {
     @Override
     public void display() {
         final AliasManagerLinker linker = new AliasManagerLinker(model, this, iconManager);
-        UIUtilities.addUndoManager(eventBus, response);
+        UIUtilities.addUndoManager(response);
         linker.bindCommandList(aliasList);
         linker.bindCommand(command);
         linker.bindArgumentsNumber(argumentsNumber);
