@@ -22,23 +22,24 @@
 
 package com.dmdirc.addons.mediasource_linux_title;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.nowplaying.MediaSource;
 import com.dmdirc.addons.nowplaying.MediaSourceState;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 /**
  * Provides a media source for Linux players using the `xwininfo` command.
  */
 public class TitleMediaSource implements MediaSource {
 
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(TitleMediaSource.class);
     /** The command to use to get the title. */
     private final String command;
     /** The name of the player we're retrieving. */
@@ -47,12 +48,10 @@ public class TitleMediaSource implements MediaSource {
     /**
      * Creates a new title media source.
      *
-     * @param eventBus The event bus to post errors to
      * @param command  The command to be executed
      * @param name     The name of the media source
      */
-    public TitleMediaSource(final DMDircMBassador eventBus, final String command, final String name) {
-        this.eventBus = eventBus;
+    public TitleMediaSource(final String command, final String name) {
         this.command = command;
         this.name = name;
     }
@@ -115,8 +114,7 @@ public class TitleMediaSource implements MediaSource {
     }
 
     private String getInfo() {
-
-        final String[] args = new String[]{"/bin/bash", "-c", "xwininfo -root -tree | " + command};
+        final String[] args = {"/bin/bash", "-c", "xwininfo -root -tree | " + command};
         try {
             final Process process = Runtime.getRuntime().exec(args);
             try (InputStreamReader reader = new InputStreamReader(process.getInputStream());
@@ -126,12 +124,10 @@ public class TitleMediaSource implements MediaSource {
                     return line;
                 }
             } catch (IOException ex) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                        "Unable to retrieve media source info", ""));
+                LOG.info(USER_ERROR, "Unable to retrieve media source info", ex);
             }
         } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                            "Unable to retrieve media source info", ""));
+            LOG.info(USER_ERROR, "Unable to retrieve media source info", ex);
         }
 
         return "";
