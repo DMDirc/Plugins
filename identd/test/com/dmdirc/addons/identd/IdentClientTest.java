@@ -71,7 +71,7 @@ public class IdentClientTest {
         when(user.getNickname()).thenReturn("nickname");
         when(user.getUsername()).thenReturn(Optional.of("username"));
 
-        return new IdentClient(eventBus, null, null, sm, config, "plugin-Identd", systemInfo);
+        return new IdentClient(null, null, sm, config, "plugin-Identd", systemInfo);
     }
 
     @Test
