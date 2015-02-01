@@ -112,4 +112,10 @@ public class AboutDialog extends StandardDialog {
                 InfoItem.create("MiG Layout Version", LayoutUtil.getVersion())
         );
     }
+
+    @Override
+    public void dispose() {
+        eventBus.unsubscribe(this);
+        super.dispose();
+    }
 }
