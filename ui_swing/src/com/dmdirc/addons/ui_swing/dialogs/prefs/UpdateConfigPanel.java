@@ -198,7 +198,7 @@ public class UpdateConfigPanel extends JPanel implements ActionListener,
         if (enable == e.getSource()) {
             checkNow.setEnabled(enable.isSelected());
         } else {
-            UpdateChecker.checkNow(updateManager, identityController, eventBus);
+            UpdateChecker.checkNow(updateManager, identityController);
         }
     }
 
