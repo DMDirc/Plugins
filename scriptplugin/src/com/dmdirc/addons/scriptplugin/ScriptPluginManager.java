@@ -27,8 +27,6 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
-import com.dmdirc.events.UserErrorEvent;
-import com.dmdirc.logger.ErrorLevel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,10 +39,16 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.engio.mbassy.listener.Handler;
+
+import static com.dmdirc.util.LogUtils.USER_ERROR;
 
 public class ScriptPluginManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ScriptPluginManager.class);
     private final DMDircMBassador eventBus;
     private final String scriptDir;
     private final ScriptManager scriptManager;
@@ -77,9 +81,8 @@ public class ScriptPluginManager {
             try (FileInputStream fis = new FileInputStream(savedVariables)) {
                 globalVariables.load(fis);
             } catch (IOException e) {
-                eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,
-                        "Error reading savedVariables from '" + savedVariables.getPath() + "': "
-                                + e.getMessage(), ""));
+                LOG.info(USER_ERROR, "Error reading savedVariables from '{}': {}",
+                        savedVariables.getPath(), e.getMessage(), e);
             }
         }
     }
@@ -91,8 +94,8 @@ public class ScriptPluginManager {
         try (FileOutputStream fos = new FileOutputStream(savedVariables)) {
             globalVariables.store(fos, "# DMDirc Script Plugin savedVariables");
         } catch (IOException e) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, e,"Error reading savedVariables to '"
-                    + savedVariables.getPath() + "': " + e.getMessage(), ""));
+            LOG.info(USER_ERROR, "Error writing savedVariables to '{}': {}",
+                    savedVariables.getPath(), e.getMessage(), e);
         }
     }
 
@@ -107,8 +110,8 @@ public class ScriptPluginManager {
                 .toUpperCase();
         final List<Object> arguments = new ArrayList<>();
         for (Method method : event.getClass().getMethods()) {
-            if ((method.getName().startsWith("get") && method.getParameterTypes().length == 0)
-                    && !method.getName().equals("getDisplayFormat")) {
+            if (method.getName().startsWith("get") && method.getParameterTypes().length == 0 &&
+                    !"getDisplayFormat".equals(method.getName())) {
                 arguments.add(method.invoke(event));
             }
         }
