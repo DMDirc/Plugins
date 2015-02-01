@@ -125,7 +125,7 @@ public class FDManager implements ConfigChangeListener {
             try {
                 myProcess.waitFor();
             } catch (InterruptedException e) {
-                //Not a proble, carry on
+                //Not a problem, carry on
             }
             return true;
         } catch (SecurityException | IOException e) {
