@@ -23,7 +23,6 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -39,7 +38,6 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
@@ -68,14 +66,11 @@ public class ScriptCommand extends Command implements IntelligentCommand {
     private final String scriptDirectory;
     /** Script manager to handle scripts. */
     private final ScriptManager scriptManager;
-    /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
     /**
      * Creates a new instance of this command.
      *
      * @param scriptManager       Used to manage scripts
-     * @param eventBus            The event bus to post errors to
      * @param globalConfig        Global config
      * @param commandController   The controller to use for command information.
      * @param domain              This plugin's settings domain
@@ -84,7 +79,6 @@ public class ScriptCommand extends Command implements IntelligentCommand {
      */
     @Inject
     public ScriptCommand(final ScriptManager scriptManager,
-            final DMDircMBassador eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDirectory,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,
@@ -96,7 +90,6 @@ public class ScriptCommand extends Command implements IntelligentCommand {
         this.scriptEngineManager = scriptEngineManager;
         this.scriptDirectory = scriptDirectory;
         this.scriptManager = scriptManager;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -135,20 +128,19 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                         final String baseFile = scriptDirectory + '/'
                                 + globalConfig.getOption(domain, "eval.baseFile");
                         if (new File(baseFile).exists()) {
-                            wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus,
-                                    baseFile);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, baseFile);
                         } else {
-                            wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus, null);
+                            wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
                         }
                     } else {
-                        wrapper = new ScriptEngineWrapper(scriptEngineManager, eventBus, null);
+                        wrapper = new ScriptEngineWrapper(scriptEngineManager, null);
                     }
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
                     wrapper.getScriptEngine().put("cmd_args", sargs);
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: " + wrapper.
                             getScriptEngine().eval(script));
-                } catch (FileNotFoundException | ScriptException e) {
+                } catch (ScriptException e) {
                     sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: " + e + " -> " + e.
                             getMessage());
 
