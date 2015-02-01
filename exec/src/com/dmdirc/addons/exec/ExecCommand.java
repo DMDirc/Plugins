@@ -22,17 +22,15 @@
 
 package com.dmdirc.addons.exec;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
-import com.dmdirc.events.UserErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.util.CommandUtils;
+import com.dmdirc.util.LogUtils;
 import com.dmdirc.util.io.StreamUtils;
 
 import com.google.common.io.CharStreams;
@@ -45,28 +43,23 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A command which allows users execute scripts.
  */
 public class ExecCommand extends Command {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ExecCommand.class);
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("exec",
             "exec <command> [<parameters>] - executes an external program "
             + "and displays the output", CommandType.TYPE_GLOBAL);
-    /** Event bus to post errors to. */
-    private final DMDircMBassador eventBus;
 
-    /**
-     * Creates a new instance of this command.
-     *
-     * @param controller The controller to use for command information.
-     * @param eventBus   The event bus to post errors to
-     */
     @Inject
-    public ExecCommand(final CommandController controller, final DMDircMBassador eventBus) {
+    public ExecCommand(final CommandController controller) {
         super(controller);
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -103,8 +96,7 @@ public class ExecCommand extends Command {
                 }
             }
         } catch (IOException ex) {
-            eventBus.publishAsync(new UserErrorEvent(ErrorLevel.LOW, ex,
-                    "Unable to run application: " + ex.getMessage(), ""));
+            LOG.info(LogUtils.USER_ERROR, "Unable to run application: {}", ex.getMessage(), ex);
         }
     }
 
