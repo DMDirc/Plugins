@@ -86,19 +86,20 @@ public class FakeError extends DebugCommand implements IntelligentCommand {
         final Marker marker = appError ? APP_ERROR : USER_ERROR;
         switch (level.toUpperCase()) {
             case "FATAL":
-                LOG.error(appError ? FATAL_APP_ERROR : FATAL_USER_ERROR, "Debug error message");
+                LOG.error(appError ? FATAL_APP_ERROR : FATAL_USER_ERROR, "Debug error message",
+                        new IllegalArgumentException());
                 break;
             case "HIGH":
-                LOG.error(marker, "Debug error message");
+                LOG.error(marker, "Debug error message", new IllegalArgumentException());
                 break;
             case "MEDIUM":
-                LOG.warn(marker, "Debug error message");
+                LOG.warn(marker, "Debug error message", new IllegalArgumentException());
                 break;
             case "INFO":
-                LOG.info(marker, "Debug error message");
+                LOG.info(marker, "Debug error message", new IllegalArgumentException());
                 break;
             default:
-                LOG.info(marker, "Debug error message");
+                LOG.info(marker, "Debug error message", new IllegalArgumentException());
         }
     }
 
