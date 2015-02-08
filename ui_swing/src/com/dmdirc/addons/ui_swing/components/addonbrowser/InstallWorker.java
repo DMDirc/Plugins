@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.addonbrowser;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.util.io.Downloader;
@@ -59,7 +58,6 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
             final String pluginDirectory,
             final String themeDirectory,
             final PluginManager pluginManager,
-            final DMDircMBassador eventBus,
             final AddonInfo info,
             final InstallerWindow window) {
         this.downloader = downloader;
@@ -82,10 +80,10 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                     final Path newFile = Paths.get(pluginDirectory, info.getTitle() + ".jar");
                     try {
                         Files.move(file, newFile);
-                        pluginManager.addPlugin(newFile.getFileName().toString());
+                        pluginManager.refreshPlugins();
                     } catch (IOException ex) {
                         return "Unable to install addon, failed to move file: "
-                                + file.toAbsolutePath().toString();
+                                + file.toAbsolutePath();
                     }
                     break;
                 case TYPE_THEME:
@@ -93,7 +91,7 @@ public class InstallWorker extends LoggingSwingWorker<String, Void> {
                         Files.move(file, Paths.get(themeDirectory, info.getTitle() + ".zip"));
                     } catch (IOException ex) {
                         return "Unable to install addon, failed to move file: "
-                                + file.toAbsolutePath().toString();
+                                + file.toAbsolutePath();
                     }
                     break;
                 default:
