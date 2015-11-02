@@ -60,6 +60,12 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      */
     @Nonnull
     private final String optionKey;
+    /**
+     * Key in the domain to get image opacity level.
+     */
+    @Nonnull
+    private final String opacityKey;
+
     /** The URL builder to use to find icons. */
     private final URLBuilder urlBuilder;
     /**
@@ -74,6 +80,10 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * Background option type.
      */
     private BackgroundOption backgroundOption;
+    /**
+     * Background opacity.
+     */
+    private float opacity;
 
     /**
      * Creates a new background painter.
@@ -83,17 +93,19 @@ public class BackgroundPainter extends LayerUI<JComponent> {
      * @param domain        Domain to retrieve settings from
      * @param imageKey      Key for background image
      * @param optionKey     Key for background type
+     * @param opacityKey    Key for the opacity
      */
     public BackgroundPainter(
             final AggregateConfigProvider configManager,
             final URLBuilder urlBuilder,
             @Nonnull final String domain, @Nonnull final String imageKey,
-            @Nonnull final String optionKey) {
+            @Nonnull final String optionKey, @Nonnull final String opacityKey) {
         this.configManager = configManager;
         this.urlBuilder = urlBuilder;
         this.domain = domain;
         this.imageKey = imageKey;
         this.optionKey = optionKey;
+        this.opacityKey = opacityKey;
         configManager.getBinder().bind(this, BackgroundPainter.class);
     }
 
@@ -110,6 +122,11 @@ public class BackgroundPainter extends LayerUI<JComponent> {
     @Nonnull
     protected String getOptionKey() {
         return optionKey;
+    }
+
+    @Nonnull
+    protected String getOpacityKey() {
+        return opacityKey;
     }
 
     protected void setBackgroundImage(final Image backgroundImage) {
@@ -144,13 +161,25 @@ public class BackgroundPainter extends LayerUI<JComponent> {
         }
     }
 
+    @ConfigBinding(domain = "plugin-ui_swing", key = "textpanebackgroundopacity")
+    public void updateOpacity(final String opacity) {
+        try {
+            this.opacity = Float.valueOf(opacity);
+            if (this.opacity < 0 || this.opacity > 1) {
+                this.opacity = 1;
+            }
+        } catch (IllegalArgumentException ex) {
+            this.opacity = 1;
+        }
+    }
+
     @Override
     public void paint(final Graphics graphics, final JComponent component) {
         final Graphics2D g2 = (Graphics2D) graphics;
         g2.setColor(component.getBackground());
         g2.fill(g2.getClipBounds());
         UIUtilities.paintBackground(g2, component.getBounds(),
-                backgroundImage, backgroundOption);
+                backgroundImage, backgroundOption, opacity);
         super.paint(graphics, component);
     }
 
