@@ -74,6 +74,7 @@ public class GlobalAutoCommandDialog extends StandardDialog {
     }
 
     private void layoutComponents() {
+        setTitle("Global Perform");
         setLayout(new MigLayout("fill"));
         add(new TextLabel("These commands will be executed when the client starts."),
                 "wrap, span 2");
