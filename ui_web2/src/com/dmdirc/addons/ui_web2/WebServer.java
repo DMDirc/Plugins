@@ -22,38 +22,26 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
-
-import dagger.ObjectGraph;
+import spark.Spark;
 
 /**
- * Web UI plugin.
+ * Web server used by the web UI.
  */
-public class WebUiPlugin extends BasePlugin {
+public class WebServer {
 
-    private WebServer webServer;
+    private final int port;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new WebUiModule(pluginInfo, pluginInfo.getDomain())));
-        getObjectGraph().validate();
-
-        webServer = getObjectGraph().get(WebServer.class);
+    public WebServer(final int port) {
+        this.port = port;
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        webServer.start();
+    public void start() {
+        Spark.port(port);
+        Spark.get("/test", (request, response) -> "HELLO");
     }
 
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        webServer.stop();
+    public void stop() {
+        Spark.stop();
     }
 
 }
