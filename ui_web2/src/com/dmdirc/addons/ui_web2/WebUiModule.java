@@ -38,7 +38,8 @@ import dagger.Provides;
  */
 @Module(
         addsTo = ClientModule.class,
-        injects = WebServer.class
+        injects = WebServer.class,
+        library = true
 )
 @SuppressWarnings("TypeMayBeWeakened")
 public class WebUiModule {
