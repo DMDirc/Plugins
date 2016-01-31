@@ -1,0 +1,3 @@
+dependencies {
+  bundle group: 'com.sparkcore', name: 'spark-core', version: '4.2'
+}
