@@ -22,38 +22,54 @@
 
 package com.dmdirc.addons.ui_web2;
 
+import com.dmdirc.ClientModule;
+import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BasePlugin;
 
-import dagger.ObjectGraph;
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Web UI plugin.
+ * Dagger module that provides Web UI-specific dependencies.
  */
-public class WebUiPlugin extends BasePlugin {
+@Module(
+        addsTo = ClientModule.class,
+        injects = WebServer.class
+)
+@SuppressWarnings("TypeMayBeWeakened")
+public class WebUiModule {
 
-    private WebServer webServer;
+    private final PluginInfo pluginInfo;
+    private final String domain;
 
-    @Override
-    public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
-        super.load(pluginInfo, graph);
-
-        setObjectGraph(graph.plus(new WebUiModule(pluginInfo, pluginInfo.getDomain())));
-        getObjectGraph().validate();
-
-        webServer = getObjectGraph().get(WebServer.class);
+    public WebUiModule(final PluginInfo pluginInfo, final String domain) {
+        this.pluginInfo = pluginInfo;
+        this.domain = domain;
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        webServer.start();
+    @Provides
+    @PluginDomain(WebUiPlugin.class)
+    public String getSettingsDomain() {
+        return domain;
     }
 
-    @Override
-    public void onUnload() {
-        super.onUnload();
-        webServer.stop();
+    @Provides
+    @PluginDomain(WebUiPlugin.class)
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
+    @Provides
+    @Singleton
+    public WebServer getWebServer(
+            @PluginDomain(WebUiPlugin.class) final String domain,
+            @GlobalConfig final AggregateConfigProvider globalConfig) {
+        final int port = globalConfig.getOptionInt(domain, "port");
+        return new WebServer(port);
     }
 
 }
