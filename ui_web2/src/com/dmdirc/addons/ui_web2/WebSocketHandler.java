@@ -22,28 +22,38 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import spark.Spark;
+import java.io.IOException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 /**
- * Web server used by the web UI.
+ * Handles websocket connections.
  */
-public class WebServer {
+@WebSocket
+public class WebSocketHandler {
 
-    private final int port;
+    private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
-    public WebServer(final int port) {
-        this.port = port;
+    @OnWebSocketConnect
+    public void connected(final Session session) {
+        sessions.add(session);
     }
 
-    public void start() {
-        Spark.port(port);
-        Spark.webSocket("/ws", WebSocketHandler.class);
-        Spark.staticFileLocation("/www");
-        Spark.get("/test", (request, response) -> "HELLO");
+    @OnWebSocketClose
+    public void closed(final Session session, final int statusCode, final String reason) {
+        sessions.remove(session);
     }
 
-    public void stop() {
-        Spark.stop();
+    @OnWebSocketMessage
+    public void message(final Session session, final String message) throws IOException {
+        // Echo the message back, for testing.
+        session.getRemote().sendString(message);
     }
 
 }
