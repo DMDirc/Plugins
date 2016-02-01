@@ -40,14 +40,17 @@ import org.eclipse.jetty.websocket.api.Session;
 @Singleton
 public class WebSocketController {
 
-    private final Collection<Session> sessions = new CopyOnWriteArrayList<Session>();
+    private final Collection<Session> sessions = new CopyOnWriteArrayList<>();
+    private final InitialStateProducer initialStateProducer;
 
     @Inject
-    public WebSocketController() {
+    public WebSocketController(final InitialStateProducer initialStateProducer) {
+        this.initialStateProducer = initialStateProducer;
     }
 
     void sessionConnected(final Session session) {
         sessions.add(session);
+        sendMessage(session, initialStateProducer.getInitialState());
     }
 
     void sessionClosed(final Session session, final int statusCode, final String reason) {

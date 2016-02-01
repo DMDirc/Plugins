@@ -1,3 +1,4 @@
 dependencies {
   bundle group: 'com.sparkjava', name: 'spark-core', version: '2.3'
+  bundle group: 'com.google.code.gson', name: 'gson', 'version': '2.5'
 }
