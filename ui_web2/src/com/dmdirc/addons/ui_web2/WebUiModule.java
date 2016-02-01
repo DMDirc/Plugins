@@ -68,7 +68,9 @@ public class WebUiModule {
     @Singleton
     public WebServer getWebServer(
             @PluginDomain(WebUiPlugin.class) final String domain,
-            @GlobalConfig final AggregateConfigProvider globalConfig) {
+            @GlobalConfig final AggregateConfigProvider globalConfig,
+            final WebSocketController controller) {
+        WebSocketHandler.setController(controller);
         final int port = globalConfig.getOptionInt(domain, "port");
         return new WebServer(port);
     }

@@ -23,8 +23,6 @@
 package com.dmdirc.addons.ui_web2;
 
 import java.io.IOException;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -38,21 +36,36 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 @WebSocket
 public class WebSocketHandler {
 
-    private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
+    /** Controller to use. */
+    @SuppressWarnings("StaticNonFinalField")
+    private static WebSocketController controller;
+
+    /**
+     * Sets the controller that manages ALL instances of {@link WebSocketHandler}.
+     *
+     * @param controller Controller to use.
+     */
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
+    public static void setController(final WebSocketController controller) {
+        WebSocketHandler.controller = controller;
+    }
 
     @OnWebSocketConnect
     public void connected(final Session session) {
-        sessions.add(session);
+        controller.sessionConnected(session);
     }
 
     @OnWebSocketClose
     public void closed(final Session session, final int statusCode, final String reason) {
-        sessions.remove(session);
+        controller.sessionClosed(session, statusCode, reason);
     }
 
     @OnWebSocketMessage
-    public void message(final Session session, final String message) throws IOException {
-        // Echo the message back, for testing.
+    public void message(final Session session, final String message) {
+        controller.messageReceived(session, message);
+    }
+
+    public static void sendMessage(final Session session, final String message) throws IOException {
         session.getRemote().sendString(message);
     }
 
