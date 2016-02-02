@@ -30,6 +30,8 @@ import com.dmdirc.interfaces.ConnectionManager;
 
 import com.google.common.collect.Lists;
 
+import java.net.URI;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +78,8 @@ public class ChannelWhoManagerTest {
 
     @Test
     public void testServerConnectionEvent() throws Exception {
-        instance.handleServerConnectingEvent(new ServerConnectingEvent(connection2));
+        instance.handleServerConnectingEvent(
+                new ServerConnectingEvent(connection2, URI.create("irc://foo.bar")));
         verify(connectionHandlerFactory).get(connection);
     }
 

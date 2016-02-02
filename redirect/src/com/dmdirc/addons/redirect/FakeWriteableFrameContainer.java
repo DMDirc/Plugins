@@ -60,12 +60,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     }
 
     @Override
-    @Deprecated
-    public void addLine(final String line, final boolean timestamp) {
-        addLine(line);
-    }
-
-    @Override
     public void sendLine(final String line) {
         target.sendLine(line);
     }
@@ -78,16 +72,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     @Override
     public void addLine(final String type, final Object... args) {
         sendLine(Formatter.formatMessage(getConfigManager(), type, args));
-    }
-
-    @Override
-    public void addLine(final StringBuffer type, final Date timestamp, final Object... args) {
-        addLine(type, args);
-    }
-
-    @Override
-    public void addLine(final StringBuffer type, final Object... args) {
-        addLine(type.toString(), args);
     }
 
     @Override
