@@ -29,7 +29,6 @@ import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 
 import java.awt.Color;
-import java.util.Date;
 
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -49,8 +48,6 @@ public class TopicLabel extends JPanel {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
-    /** How many milliseconds in a second. */
-    private static final int MILLIS_IN_SECOND = 1000;
     /** Topic this label represents. */
     private final Topic topic;
     /** The group chat to which this label belongs. */
@@ -138,7 +135,7 @@ public class TopicLabel extends JPanel {
         }
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
-        label = new TextLabel("on " + new Date(topic.getTime() * MILLIS_IN_SECOND));
+        label = new TextLabel("on " + topic.getDate());
         add(label, "wmax 450, grow, push, wrap, gapleft 5, pad 0");
 
         add(new JSeparator(), "newline, span, growx, pushx");
