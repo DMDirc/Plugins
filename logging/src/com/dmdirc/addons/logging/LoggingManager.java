@@ -280,8 +280,8 @@ public class LoggingManager implements ConfigChangeListener {
 
         appendLine(filename, "*** Topic is: %s", event.getTopic().getTopic());
         appendLine(filename, "*** Set at: %s on %s by %s",
-                timeFormat.format(1000 * event.getTopic().getTime()),
-                dateFormat.format(1000 * event.getTopic().getTime()),
+                timeFormat.format(event.getTopic().getDate()),
+                dateFormat.format(event.getTopic().getDate()),
                         event.getTopic().getClient()
                                 .map(GroupChatUser::getNickname).orElse("Unknown"));
     }
