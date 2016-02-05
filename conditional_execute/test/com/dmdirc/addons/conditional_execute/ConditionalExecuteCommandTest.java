@@ -22,20 +22,24 @@
 
 package com.dmdirc.addons.conditional_execute;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.events.CommandErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.never;
@@ -49,6 +53,8 @@ public class ConditionalExecuteCommandTest {
     @Mock private CommandParser commandParser;
     @Mock private WindowModel container;
     @Mock private CommandContext context;
+    @Mock private DMDircMBassador eventbus;
+    @Captor private ArgumentCaptor<CommandErrorEvent> errorEventCaptor;
     private ConditionalExecuteCommand command;
 
     @Before
@@ -57,6 +63,7 @@ public class ConditionalExecuteCommandTest {
         when(commandController.getSilenceChar()).thenReturn('/');
         when(container.getCommandParser()).thenReturn(commandParser);
         when(container.isWritable()).thenReturn(true);
+        when(container.getEventBus()).thenReturn(eventbus);
 
         command = new ConditionalExecuteCommand(commandController);
     }
@@ -166,8 +173,9 @@ public class ConditionalExecuteCommandTest {
         verify(commandParser, never()).parseCommand(same(container), anyString());
     }
 
-    private void verifyErrorOutput(final String substring) {
-        verify(container).addLine(eq("commandError"), contains(substring));
+    private void verifyErrorOutput(final CharSequence substring) {
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
+        assertTrue(errorEventCaptor.getValue().getMessage().contains(substring));
     }
 
 }

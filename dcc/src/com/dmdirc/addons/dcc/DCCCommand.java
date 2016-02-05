@@ -138,8 +138,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 sendFile(target, origin, connection, true,
                         args.getArgumentsAsString(2));
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "Unknown DCC Type: '" + type + "'");
+                showError(origin, args.isSilent(), "Unknown DCC Type: '" + type + '\'');
             }
         } else {
             showUsage(origin, true, INFO.getName(), INFO.getHelp());
@@ -229,8 +228,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             eventBus.publish(new DccSendRequestEvent(connection, target, selectedFile.
                     getAbsolutePath()));
 
-            sendLine(origin, isSilent, FORMAT_OUTPUT,
-                    "Starting DCC Send with: " + target);
+            showOutput(origin, isSilent, "Starting DCC Send with: " + target);
 
             send.setFileName(selectedFile.getAbsolutePath());
             send.setFileSize(selectedFile.length());

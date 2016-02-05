@@ -67,21 +67,20 @@ public class LoggingCommand extends Command implements IntelligentCommand {
         if (args.getArguments().length > 0) {
             if ("history".equalsIgnoreCase(args.getArguments()[0])) {
                 if (!manager.showHistory(origin)) {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                            "Unable to open history for this window.");
+                    showError(origin, args.isSilent(), "Unable to open history for this window.");
                 }
             } else if ("help".equalsIgnoreCase(args.getArguments()[0])) {
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
+                showOutput(origin, args.isSilent(), LOGGING
                         + " history          - Open the history of this window, if available.");
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, LOGGING
+                showOutput(origin, args.isSilent(), LOGGING
                         + " help             - Show this help.");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown command '" + args.
-                        getArguments()[0] + "'. Use " + LOGGING + " help for a list of commands.");
+                showError(origin, args.isSilent(), "Unknown command '"
+                        + args.getArguments()[0] + "'. Use " + LOGGING
+                        + " help for a list of commands.");
             }
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Use " + LOGGING
-                    + " help for a list of commands.");
+            showError(origin, args.isSilent(), "Use " + LOGGING + " help for a list of commands.");
         }
     }
 

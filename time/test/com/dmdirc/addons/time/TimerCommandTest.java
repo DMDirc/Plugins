@@ -22,9 +22,12 @@
 
 package com.dmdirc.addons.time;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand.IntelligentCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.CommandErrorEvent;
+import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -36,12 +39,13 @@ import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,10 +57,13 @@ public class TimerCommandTest {
     @Mock private TimerManager timerManager;
     @Mock private CommandController commandController;
     @Mock private WindowModel frameContainer;
+    @Mock private DMDircMBassador eventbus;
     @Mock private CommandContext commandContext;
     @Mock private IntelligentCommandContext intelligentCommandContext;
     @Mock private CommandArguments commandArguments;
     @Mock private TimedCommand timer;
+    @Captor private ArgumentCaptor<CommandOutputEvent> outputEventCaptor;
+    @Captor private ArgumentCaptor<CommandErrorEvent> errorEventCaptor;
 
     private TimerCommand instance;
 
@@ -66,6 +73,7 @@ public class TimerCommandTest {
         when(commandArguments.isSilent()).thenReturn(false);
         when(timerManager.getTimerByID(anyInt())).thenReturn(timer);
         when(commandController.getCommandChar()).thenReturn('/');
+        when(frameContainer.getEventBus()).thenReturn(eventbus);
     }
 
     private void mockCommandArguments(final String one, final String two) {
@@ -128,7 +136,8 @@ public class TimerCommandTest {
         mockCommandArguments("--list", "", "");
         instance.execute(frameContainer, commandArguments, commandContext);
         verify(timerManager, times(1)).listTimers();
-        verify(frameContainer).addLine("commandError", "There are currently no active timers");
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
+        assertEquals("There are currently no active timers", errorEventCaptor.getValue().getMessage());
     }
 
     @Test
@@ -138,55 +147,51 @@ public class TimerCommandTest {
         mockCommandArguments("--list", "", "");
         instance.execute(frameContainer, commandArguments, commandContext);
         verify(timerManager, times(1)).listTimers();
-        verify(frameContainer).addLine("commandOutput", "Timer ID: 1 - null");
+        verify(eventbus).publishAsync(outputEventCaptor.capture());
+        assertEquals("Timer ID: 1 - null", outputEventCaptor.getValue().getMessage());
     }
 
     @Test
     public void testExecute_incorrect() throws Exception {
         mockCommandArguments("woop", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1)).addLine(eq("commandUsage"), eq('/'),
-                eq(TimerCommand.INFO.getName()), eq(TimerCommand.INFO.getHelp()));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
     }
 
     @Test
     public void testExecute_no_args() throws Exception {
         when(commandArguments.getArguments()).thenReturn(new String[0]);
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1)).addLine(eq("commandUsage"), eq('/'),
-                eq(TimerCommand.INFO.getName()), eq(TimerCommand.INFO.getHelp()));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
     }
 
     @Test
     public void testExecute_too_few_args() throws Exception {
         mockCommandArguments("woop", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1)).addLine(eq("commandUsage"), eq('/'),
-                eq(TimerCommand.INFO.getName()), eq(TimerCommand.INFO.getHelp()));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
     }
 
     @Test
     public void testExecute_repetitions_not_number() throws Exception {
         mockCommandArguments("woop", "woop", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1)).addLine(eq("commandUsage"), eq('/'),
-                eq(TimerCommand.INFO.getName()), eq(TimerCommand.INFO.getHelp()));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
     }
 
     @Test
     public void testExecute_interval_not_number() throws Exception {
         mockCommandArguments("1", "woop", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1)).addLine(eq("commandUsage"), eq('/'),
-                eq(TimerCommand.INFO.getName()), eq(TimerCommand.INFO.getHelp()));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
     }
 
     @Test
     public void testExecute_interval_invalid() throws Exception {
         mockCommandArguments("1", "0", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
-        verify(frameContainer, times(1))
-                .addLine(eq("commandError"), eq("Cannot use intervals below 1"));
+        verify(eventbus).publishAsync(errorEventCaptor.capture());
+        assertEquals("Cannot use intervals below 1", errorEventCaptor.getValue().getMessage());
     }
 
     @Test
@@ -194,7 +199,8 @@ public class TimerCommandTest {
         mockCommandArguments("1", "1", "woop");
         instance.execute(frameContainer, commandArguments, commandContext);
         verify(timerManager).addTimer(1, 1, "woop", frameContainer);
-        verify(frameContainer, times(1)).addLine(eq("commandOutput"), eq("Command scheduled."));
+        verify(eventbus).publishAsync(outputEventCaptor.capture());
+        assertEquals("Command scheduled.", outputEventCaptor.getValue().getMessage());
     }
 
     @Test

@@ -71,7 +71,7 @@ public class DNSCommand extends Command {
             return;
         }
 
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Resolving: " + args.getArguments()[0]);
+        showOutput(origin, args.isSilent(), "Resolving: " + args.getArguments()[0]);
         new Timer("DNS Command Timer").schedule(new TimerTask() {
 
             @Override
@@ -85,10 +85,10 @@ public class DNSCommand extends Command {
             final String arg) {
         try {
             final InetAddress address = InetAddresses.forString(arg);
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+            showOutput(origin, isSilent, "Resolved: "
                     + arg + ": " + address.getCanonicalHostName());
         } catch (IllegalArgumentException ex) {
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Resolved: "
+            showOutput(origin, isSilent, "Resolved: "
                     + arg + ": " + getIPs(arg));
         }
     }

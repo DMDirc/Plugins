@@ -70,8 +70,7 @@ public class PopOutCommand extends Command {
         UIUtilities.invokeLater(() -> {
             final TextFrame swingWindow = windowFactory.getSwingWindow(origin);
             if (swingWindow == null) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "There is"
-                        + " currently no window to pop out.");
+                showError(origin, args.isSilent(), "There is currently no window to pop out.");
             } else {
                 swingWindow.setPopout(true);
             }
