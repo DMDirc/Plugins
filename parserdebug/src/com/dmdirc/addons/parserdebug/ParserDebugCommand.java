@@ -82,15 +82,15 @@ public final class ParserDebugCommand extends Command {
         final Optional<Parser> parser = connection.getParser();
 
         if (!parser.isPresent()) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "Unable to get a parser for this window.");
+            showError(origin, isSilent, "Unable to get a parser for this window.");
             return;
         }
         if (parserDebugManager.containsParser(parser.get())) {
             parserDebugManager.removeParser(parser.get(), false);
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Removed callback");
+            showOutput(origin, isSilent, "Removed callback");
         } else {
             parserDebugManager.addParser(parser.get(), connection);
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Added callback");
+            showOutput(origin, isSilent, "Added callback");
         }
     }
 

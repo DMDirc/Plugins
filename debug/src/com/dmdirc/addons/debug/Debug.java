@@ -109,6 +109,7 @@ public class Debug extends Command implements IntelligentCommand {
      * @param type     The type of message to send
      * @param args     The arguments of the message
      */
+    @Deprecated
     public void proxySendLine(final WindowModel target,
             final boolean isSilent, final String type, final Object... args) {
         sendLine(target, isSilent, type, args);

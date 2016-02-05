@@ -64,10 +64,10 @@ public class AudioCommand extends Command {
             if (AudioPlayer.isValid(file)) {
                 new AudioPlayer(file).play();
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Invalid file type");
+                showError(origin, args.isSilent(), "Invalid file type");
             }
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "File does not exist");
+            showError(origin, args.isSilent(), "File does not exist");
         }
     }
 

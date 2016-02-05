@@ -64,8 +64,7 @@ public class CalcCommand extends Command {
             int offset = 0;
             boolean showexpr = false;
 
-            if (args.getArguments().length > 0 && args.getArguments()[0]
-                    .equals("--showexpr")) {
+            if (args.getArguments().length > 0 && "--showexpr".equals(args.getArguments()[0])) {
                 showexpr = true;
                 offset++;
             }
@@ -75,14 +74,11 @@ public class CalcCommand extends Command {
             final Parser parser = new Parser(lexer);
             final Evaluator evaluator = new Evaluator(parser.parse());
             final Number result = evaluator.evaluate();
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                    (showexpr ? input + " = " : "") + result);
+            showOutput(origin, args.isSilent(), (showexpr ? input + " = " : "") + result);
         } catch (ParseException ex) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "Unable to parse expression: " + ex.getMessage());
+            showError(origin, args.isSilent(), "Unable to parse expression: " + ex.getMessage());
         } catch (ArithmeticException ex) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "Unable to calculate expression: " + ex.getMessage());
+            showError(origin, args.isSilent(), "Unable to calculate expression: " + ex.getMessage());
         }
     }
 

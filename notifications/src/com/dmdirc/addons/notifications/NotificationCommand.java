@@ -79,20 +79,18 @@ public class NotificationCommand extends Command implements
                 final NotificationHandler handler = manager.getHandler(sourceName);
 
                 if (handler == null) {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                            "Method not found.");
+                    showError(origin, args.isSilent(), "Method not found.");
                 } else {
                     handler.showNotification("DMDirc", args.getArgumentsAsString(2));
                 }
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                showError(origin, args.isSilent(),
                         "You must specify a method when using --method.");
             }
         } else if (manager.hasActiveHandler()) {
             manager.getPreferredHandler().showNotification("DMDirc", args.getArgumentsAsString(0));
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "No active notification methods available.");
+            showError(origin, args.isSilent(), "No active notification methods available.");
         }
     }
 
@@ -107,8 +105,7 @@ public class NotificationCommand extends Command implements
         final Collection<String> handlers = manager.getHandlerNames();
 
         if (handlers.isEmpty()) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "No notification "
-                    + "methods available.");
+            showError(origin, isSilent, "No notification methods available.");
         } else {
             final String[] headers = {"Method"};
             final String[][] data = new String[handlers.size()][1];
@@ -118,7 +115,7 @@ public class NotificationCommand extends Command implements
                 i++;
             }
 
-            sendLine(origin, isSilent, FORMAT_OUTPUT, doTable(headers, data));
+            showOutput(origin, isSilent, doTable(headers, data));
         }
     }
 

@@ -86,8 +86,8 @@ public class OsdCommand extends Command implements IntelligentCommand {
         } else if (args.getArguments().length > 0
                 && "--timeout".equalsIgnoreCase(args.getArguments()[0])) {
             if (args.getArguments().length < 2) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You "
-                        + "must specify a valid number for the OSD timeout.");
+                showError(origin, args.isSilent(),
+                        "You must specify a valid number for the OSD timeout.");
                 return;
             }
 
@@ -95,8 +95,8 @@ public class OsdCommand extends Command implements IntelligentCommand {
                 showOSD(Integer.parseInt(args.getArguments()[1]), null,
                         args.getArgumentsAsString(2));
             } catch (NumberFormatException ex) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You "
-                        + "must specify a valid number for the OSD timeout.");
+                showError(origin, args.isSilent(),
+                        "You must specify a valid number for the OSD timeout.");
             }
         } else {
             showOSD(-1, null, args.getArgumentsAsString());
@@ -111,8 +111,7 @@ public class OsdCommand extends Command implements IntelligentCommand {
         if (arg == 0) {
             res.add("--close");
             res.add("--timeout");
-        } else if (arg > 0 && context.getPreviousArgs().get(0)
-                .equals("--close")) {
+        } else if (arg > 0 && "--close".equals(context.getPreviousArgs().get(0))) {
             res.excludeAll();
         }
 

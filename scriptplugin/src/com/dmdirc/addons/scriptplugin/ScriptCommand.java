@@ -99,29 +99,28 @@ public class ScriptCommand extends Command implements IntelligentCommand {
 
         if (sargs.length > 0 && ("rehash".equalsIgnoreCase(sargs[0]) ||
                 "reload".equalsIgnoreCase(sargs[0]))) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Reloading scripts");
+            showOutput(origin, args.isSilent(), "Reloading scripts");
             scriptManager.rehash();
         } else if (sargs.length > 0 && "load".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Loading: " + filename + " ["
+                showOutput(origin, args.isSilent(), "Loading: " + filename + " ["
                         + scriptManager.loadScript(scriptDirectory + filename) + ']');
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "You must specify a script to load");
+                showError(origin, args.isSilent(), "You must specify a script to load");
             }
         } else if (sargs.length > 0 && "unload".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String filename = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Unloading: " + filename + " ["
+                showOutput(origin, args.isSilent(), "Unloading: " + filename + " ["
                         + scriptManager.loadScript(scriptDirectory + filename) + ']');
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "You must specify a script to unload");
+                showError(origin, args.isSilent(), "You must specify a script to unload");
             }
         } else if (sargs.length > 0 && "eval".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 1) {
                 final String script = args.getArgumentsAsString(1);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Evaluating: " + script);
+                showOutput(origin, args.isSilent(), "Evaluating: " + script);
                 try {
                     final ScriptEngineWrapper wrapper;
                     if (globalConfig.hasOptionString(domain, "eval.baseFile")) {
@@ -138,30 +137,29 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                     wrapper.getScriptEngine().put("cmd_origin", origin);
                     wrapper.getScriptEngine().put("cmd_isSilent", args.isSilent());
                     wrapper.getScriptEngine().put("cmd_args", sargs);
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Result: " + wrapper.
-                            getScriptEngine().eval(script));
+                    showOutput(origin, args.isSilent(), "Result: "
+                            + wrapper.getScriptEngine().eval(script));
                 } catch (ScriptException e) {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Exception: " + e + " -> " + e.
-                            getMessage());
+                    showOutput(origin, args.isSilent(), "Exception: " + e + " -> "
+                            + e.getMessage());
 
                     if (globalConfig.getOptionBool(domain, "eval.showStackTrace")) {
                         final String[] stacktrace = getTrace(e);
                         for (String line : stacktrace) {
-                            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Stack trace: " + line);
+                            showOutput(origin, args.isSilent(), "Stack trace: " + line);
                         }
                     }
 
                 }
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "You must specify some script to eval.");
+                showError(origin, args.isSilent(), "You must specify some script to eval.");
             }
         } else if (sargs.length > 0 && "savetobasefile".equalsIgnoreCase(sargs[0])) {
             if (sargs.length > 2) {
                 final String[] bits = sargs[1].split("/");
                 final String functionName = bits[0];
                 final String script = args.getArgumentsAsString(2);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Saving as '" + functionName
+                showOutput(origin, args.isSilent(), "Saving as '" + functionName
                         + "': " + script);
                 if (globalConfig.hasOptionString(domain, "eval.baseFile")) {
                     try {
@@ -181,43 +179,41 @@ public class ScriptCommand extends Command implements IntelligentCommand {
                             writer.flush();
                         }
                     } catch (IOException ioe) {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "IOException: " + ioe.
-                                getMessage());
+                        showError(origin, args.isSilent(), "IOException: " + ioe.getMessage());
                     }
                 } else {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                    showError(origin, args.isSilent(),
                             "No baseFile specified, please /set " + domain
                             + " eval.baseFile filename (stored in scripts dir of profile)");
                 }
             } else if (sargs.length > 1) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "You must specify some script to save.");
+                showError(origin, args.isSilent(), "You must specify some script to save.");
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                showError(origin, args.isSilent(),
                         "You must specify a function name and some script to save.");
             }
         } else if (sargs.length > 0 && "help".equalsIgnoreCase(sargs[0])) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "This command allows you to interact with the script plugin");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(), "-------------------");
+            showOutput(origin, args.isSilent(),
                     "reload/rehash                  - Reload all loaded scripts");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "load <script>                  - load scripts/<script> (file name relative to scripts dir)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "unload <script>                - unload <script> (full file name)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "eval <script>                  - evaluate the code <script> and return the result");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "savetobasefile <name> <script> - save the code <script> to the eval basefile ("
                     + domain + ".eval.basefile)");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "                                 as the function <name> (name/foo/bar will save it as 'name' with foo and");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "                                 bar as arguments.");
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "-------------------");
+            showOutput(origin, args.isSilent(), "-------------------");
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unknown subcommand.");
+            showError(origin, args.isSilent(), "Unknown subcommand.");
         }
     }
 

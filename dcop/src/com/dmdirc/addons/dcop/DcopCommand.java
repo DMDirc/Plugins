@@ -73,7 +73,7 @@ public class DcopCommand extends Command {
 
         final List<String> res = executor.getDcopResult(arguments[0], arguments[1], arguments[2]);
         for (String line : res) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
+            showOutput(origin, args.isSilent(), line);
         }
     }
 
