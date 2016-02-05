@@ -22,8 +22,10 @@
 
 package com.dmdirc.addons.debug;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.CommandErrorEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 
@@ -37,10 +39,9 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -54,12 +55,14 @@ public class DebugTest {
     @Mock private CommandController controller;
     @Mock private DebugCommand debugCommand;
     @Mock private CommandContext commandContext;
+    @Mock private DMDircMBassador eventbus;
     private Debug debug;
 
     @Before
     public void setup() {
         when(controller.getCommandChar()).thenReturn('/');
         when(debugCommand.getName()).thenReturn("test");
+        when(container.getEventBus()).thenReturn(eventbus);
     }
 
     /** Checks the debug command with no arguments shows usage. */
@@ -69,8 +72,7 @@ public class DebugTest {
         when(arguments.isCommand()).thenReturn(true);
         when(arguments.getArguments()).thenReturn(new String[0]);
         debug.execute(container, arguments, null);
-        verify(container).addLine(eq("commandUsage"), anyString(),
-                eq("debug"), anyObject());
+        verify(eventbus).publishAsync(isA(CommandErrorEvent.class));
     }
 
     /** Checks the debug command with an invalid subcommand shows an error. */
@@ -81,7 +83,7 @@ public class DebugTest {
         when(arguments.getArguments()).thenReturn(new String[]{"test"});
 
         debug.execute(container, arguments, null);
-        verify(container).addLine(eq("commandError"), anyString());
+        verify(eventbus).publishAsync(isA(CommandErrorEvent.class));
     }
 
     /** Checks the debug command executes a subcommand with no args. */
@@ -95,7 +97,7 @@ public class DebugTest {
 
         debug.execute(container, arguments, commandContext);
 
-        verify(container, never()).addLine(anyString(), anyString());
+        verify(eventbus, never()).publishAsync(any());
         verify(debugCommand).execute(same(container), eqLine("/test"),
                 same(commandContext));
     }
@@ -111,7 +113,7 @@ public class DebugTest {
 
         debug.execute(container, arguments, commandContext);
 
-        verify(container, never()).addLine(anyString(), anyString());
+        verify(eventbus, never()).publishAsync(any());
         verify(debugCommand).execute(same(container), eqLine("/test 1 2 3"),
                 same(commandContext));
     }

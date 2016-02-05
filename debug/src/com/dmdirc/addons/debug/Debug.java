@@ -89,8 +89,7 @@ public class Debug extends Command implements IntelligentCommand {
         } else {
             final DebugCommand command = commands.get(args.getArguments()[0]);
             if (command == null) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "Unknown debug action.");
+                showError(origin, args.isSilent(), "Unknown debug action.");
             } else {
                 final CommandArguments newArgs = new CommandArguments(
                         controller,
