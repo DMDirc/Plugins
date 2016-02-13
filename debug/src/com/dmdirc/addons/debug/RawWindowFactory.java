@@ -28,7 +28,6 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,24 +40,24 @@ public class RawWindowFactory {
 
     private final TabCompleterFactory tabCompleterFactory;
     private final CommandController commandController;
-    private final MessageSinkManager messageSinkManager;
     private final BackBufferFactory backBufferFactory;
     private final WindowManager windowManager;
 
     @Inject
-    public RawWindowFactory(final TabCompleterFactory tabCompleterFactory,
-            final CommandController commandController, final MessageSinkManager messageSinkManager,
-            final BackBufferFactory backBufferFactory, final WindowManager windowManager) {
+    public RawWindowFactory(
+            final TabCompleterFactory tabCompleterFactory,
+            final CommandController commandController,
+            final BackBufferFactory backBufferFactory,
+            final WindowManager windowManager) {
         this.tabCompleterFactory = tabCompleterFactory;
         this.commandController = commandController;
-        this.messageSinkManager = messageSinkManager;
         this.backBufferFactory = backBufferFactory;
         this.windowManager = windowManager;
     }
 
     public RawWindow getRawWindow(final Connection connection) {
         final RawWindow rawWindow = new RawWindow(connection,
-                messageSinkManager, tabCompleterFactory,  backBufferFactory);
+                tabCompleterFactory,  backBufferFactory);
         rawWindow.setCommandParser(new ServerCommandParser(
                 connection.getWindowModel().getConfigManager(),
                 commandController,

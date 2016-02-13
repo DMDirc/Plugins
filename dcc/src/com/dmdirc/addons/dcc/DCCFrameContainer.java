@@ -30,7 +30,6 @@ import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -53,7 +52,6 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param icon                The icon to use
      * @param configManager       Config manager
      * @param parser              Command parser to use for this window
-     * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param tabCompleterFactory The factory to use to create tab completers.
      * @param eventBus            The bus to dispatch events on.
      * @param components          The UI components that this frame requires
@@ -65,13 +63,11 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final AggregateConfigProvider configManager,
             final BackBufferFactory backBufferFactory,
             final CommandParser parser,
-            final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
         super(parent, icon, title, title, configManager, backBufferFactory,
                 tabCompleterFactory.getTabCompleter(configManager),
-                messageSinkManager,
                 eventBus,
                 components);
         initBackBuffer();

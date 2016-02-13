@@ -1,3 +1,0 @@
-dependencies {
-  compile plugin('ui_swing')
-}
