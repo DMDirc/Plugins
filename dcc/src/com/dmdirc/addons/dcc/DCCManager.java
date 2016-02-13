@@ -61,7 +61,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import com.google.common.collect.Sets;
 
@@ -100,8 +99,6 @@ public class DCCManager {
     private PlaceholderContainer container;
     /** Config manager to read settings from. */
     private final AggregateConfigProvider config;
-    /** The sink manager to use to dispatch messages. */
-    private final MessageSinkManager messageSinkManager;
     /** Window Management. */
     private final WindowManager windowManager;
     /** The command controller to use. */
@@ -127,7 +124,6 @@ public class DCCManager {
             final IdentityController identityController,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final CommandController commandController,
-            final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
@@ -137,7 +133,6 @@ public class DCCManager {
             @Directory(DirectoryType.BASE) final String baseDirectory,
             final BackBufferFactory backBufferFactory) {
         this.mainWindow = mainWindow;
-        this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         this.commandController = commandController;
         this.tabCompleterFactory = tabCompleterFactory;
@@ -476,7 +471,6 @@ public class DCCManager {
                 myNickname,
                 nickname,
                 tabCompleterFactory,
-                messageSinkManager,
                 eventBus);
         windowManager.addWindow(getContainer(), f);
         f.addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());

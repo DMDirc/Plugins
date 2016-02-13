@@ -36,7 +36,6 @@ import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -52,8 +51,6 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             "redirect <command> - sends the output of the command to a "
             + "channel or query window",
             CommandType.TYPE_CHAT);
-    /** The sink manager to use to dispatch messages. */
-    private final MessageSinkManager messageSinkManager;
     /** The bus to dispatch events on. */
     private final DMDircMBassador eventBus;
     private final BackBufferFactory backBufferFactory;
@@ -66,12 +63,10 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     @Inject
     public RedirectCommand(
             final CommandController controller,
-            final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory,
             final TabCompleterUtils tabCompleterUtils) {
         super(controller);
-        this.messageSinkManager = messageSinkManager;
         this.eventBus = eventBus;
         this.backBufferFactory = backBufferFactory;
         this.tabCompleterUtils = tabCompleterUtils;
@@ -83,7 +78,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
         final Chat target = ((ChatCommandContext) context).getChat();
         target.getWindowModel().getCommandParser().parseCommand(
                 new FakeWriteableFrameContainer(target.getWindowModel(),
-                        messageSinkManager, eventBus, backBufferFactory),
+                        eventBus, backBufferFactory),
                 args.getArgumentsAsString());
     }
 
