@@ -30,9 +30,8 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven {
-            url 'http://artifactory.dmdirc.com/artifactory/repo'
-        }
+        maven { url 'http://artifactory.dmdirc.com/artifactory/repo' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
