@@ -82,9 +82,8 @@ public class ConnectionHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        doReturn(scheduledFuture).when(
-                scheduledExecutorService.scheduleAtFixedRate(
-                        any(Runnable.class), anyLong(), anyLong(), any()));
+        doReturn(scheduledFuture).when(scheduledExecutorService)
+                .scheduleAtFixedRate(any(Runnable.class), anyLong(), anyLong(), any());
         when(windowModel.getEventBus()).thenReturn(eventBus);
         when(connection.getWindowModel()).thenReturn(windowModel);
         when(config.getBinder()).thenReturn(configBinder);
