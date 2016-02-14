@@ -89,12 +89,12 @@ public class RawWindow extends FrameContainer {
 
     @Handler
     private void handleDataIn(final DataInEvent event) {
-        addLine("rawIn", event.getDate(), event.getData());
+        getEventBus().publishAsync(new RawDataInEvent(this, event.getData()));
     }
 
     @Handler
     private void handleDataOut(final DataOutEvent event) {
-        addLine("rawOut", event.getDate(), event.getData());
+        getEventBus().publishAsync(new RawDataOutEvent(this, event.getData()));
     }
 
 }

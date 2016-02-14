@@ -63,12 +63,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
 
     @Override
     @Deprecated
-    public void addLine(final String type, final Date timestamp, final Object... args) {
-        addLine(type, args);
-    }
-
-    @Override
-    @Deprecated
     public void addLine(final String type, final Object... args) {
         sendLine(Formatter.formatMessage(getConfigManager(), type, args));
     }
