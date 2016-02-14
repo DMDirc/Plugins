@@ -24,6 +24,7 @@ package com.dmdirc.addons.systray;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -161,7 +162,7 @@ public class SystrayManager implements ActionListener, MouseListener {
         }
     }
 
-    @Handler
+    @Handler(invocation = EdtHandlerInvocation.class)
     public void handleClientMinimised(final ClientMinimisedEvent event) {
         if (globalConfig.getOptionBool(domain, "autominimise")) {
             mainFrame.setVisible(false);
