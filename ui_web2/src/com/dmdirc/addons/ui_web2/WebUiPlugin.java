@@ -20,39 +20,40 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.activewindow;
+package com.dmdirc.addons.ui_web2;
 
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.plugins.implementations.BaseCommandPlugin;
+import com.dmdirc.plugins.implementations.BasePlugin;
 
 import dagger.ObjectGraph;
 
-/** Plugin to provide an active window command to the Swing UI. */
-public class ActiveWindowPlugin extends BaseCommandPlugin {
+/**
+ * Web UI plugin.
+ */
+public class WebUiPlugin extends BasePlugin {
 
-    /** Manager to use for the active window sink. */
-    private ActiveWindowManager activeWindowManager;
+    private WebServer webServer;
 
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new ActiveWindowModule()));
-        registerCommand(ActiveCommand.class, ActiveCommand.INFO);
+        setObjectGraph(graph.plus(new WebUiModule(pluginInfo, pluginInfo.getDomain())));
+        getObjectGraph().validate();
 
-        activeWindowManager = getObjectGraph().get(ActiveWindowManager.class);
+        webServer = getObjectGraph().get(WebServer.class);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        activeWindowManager.register();
+        webServer.start();
     }
 
     @Override
     public void onUnload() {
         super.onUnload();
-        activeWindowManager.unregister();
+        webServer.stop();
     }
 
 }

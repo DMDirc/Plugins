@@ -101,17 +101,17 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                 final MediaSource source = manager.getSource(sourceName);
 
                 if (source == null) {
-                    sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source not found.");
+                    showError(origin, args.isSilent(), "Source not found.");
                 } else {
                     if (source.getState() == MediaSourceState.CLOSED) {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, "Source is not running.");
+                        showError(origin, args.isSilent(), "Source is not running.");
                     } else {
                         target.getWindowModel().getCommandParser().parseCommand(origin,
                                 getInformation(source, args.getArgumentsAsString(2)));
                     }
                 }
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                showError(origin, args.isSilent(),
                         "You must specify a source when using --source.");
             }
         } else {
@@ -120,8 +120,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                         getInformation(manager.getBestSource(), args.
                                 getArgumentsAsString(0)));
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "No running media sources available.");
+                showError(origin, args.isSilent(), "No running media sources available.");
             }
         }
     }
@@ -138,7 +137,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
         final List<MediaSource> sources = manager.getSources();
 
         if (sources.isEmpty()) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "No media sources available.");
+            showError(origin, isSilent, "No media sources available.");
         } else {
             final String[] headers = {"Source", "Status", "Information"};
             final String[][] data = new String[sources.size()][3];
@@ -158,7 +157,7 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                 i++;
             }
 
-            sendLine(origin, isSilent, FORMAT_OUTPUT, doTable(headers, data));
+            showOutput(origin, isSilent, doTable(headers, data));
         }
     }
 

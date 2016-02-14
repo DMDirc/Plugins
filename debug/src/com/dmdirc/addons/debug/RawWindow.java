@@ -32,7 +32,6 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -48,7 +47,6 @@ public class RawWindow extends FrameContainer {
 
     public RawWindow(
             final Connection connection,
-            final MessageSinkManager messageSinkManager,
             final TabCompleterFactory tabCompleterFactory,
             final BackBufferFactory backBufferFactory) {
         super(connection.getWindowModel(), "raw", "Raw", "(Raw log)",
@@ -57,7 +55,6 @@ public class RawWindow extends FrameContainer {
                 tabCompleterFactory.getTabCompleter(connection.getWindowModel().getTabCompleter(),
                         connection.getWindowModel().getConfigManager(),
                         CommandType.TYPE_QUERY, CommandType.TYPE_CHAT),
-                messageSinkManager,
                 connection.getWindowModel().getEventBus(),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                         WindowComponent.INPUTFIELD.getIdentifier()));

@@ -49,7 +49,6 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 
 import java.awt.Window;
 import java.io.File;
@@ -74,8 +73,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
     private final Window mainWindow;
     /** Window management. */
     private final WindowManager windowManager;
-    /** The sink manager to use to dispatch messages. */
-    private final MessageSinkManager messageSinkManager;
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
     /** The bus to dispatch events on. */
@@ -90,7 +87,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final CommandController controller,
             @MainWindow final Window mainWindow,
             final DCCManager plugin,
-            final MessageSinkManager messageSinkManager,
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus,
@@ -98,7 +94,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
         super(controller);
         this.mainWindow = mainWindow;
         myPlugin = plugin;
-        this.messageSinkManager = messageSinkManager;
         this.windowManager = windowManager;
         this.tabCompleterFactory = tabCompleterFactory;
         this.eventBus = eventBus;
@@ -138,8 +133,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                 sendFile(target, origin, connection, true,
                         args.getArgumentsAsString(2));
             } else {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                        "Unknown DCC Type: '" + type + "'");
+                showError(origin, args.isSilent(), "Unknown DCC Type: '" + type + '\'');
             }
         } else {
             showUsage(origin, true, INFO.getName(), INFO.getHelp());
@@ -171,11 +165,10 @@ public class DCCCommand extends Command implements IntelligentCommand {
                     myNickname,
                     target,
                     tabCompleterFactory,
-                    messageSinkManager,
                     eventBus);
             windowManager.addWindow(myPlugin.getContainer(), window);
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
-                    myPlugin.getListenIP(parser)) + " " + chat.getPort());
+                    myPlugin.getListenIP(parser)) + ' ' + chat.getPort());
             eventBus.publish(new DccChatRequestSentEvent(connection, target));
             sendLine(origin, isSilent, "DCCChatStarting", target, chat.getHost(), chat.getPort());
             window.addLine("DCCChatStarting", target, chat.getHost(), chat.getPort());
@@ -229,8 +222,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             eventBus.publish(new DccSendRequestEvent(connection, target, selectedFile.
                     getAbsolutePath()));
 
-            sendLine(origin, isSilent, FORMAT_OUTPUT,
-                    "Starting DCC Send with: " + target);
+            showOutput(origin, isSilent, "Starting DCC Send with: " + target);
 
             send.setFileName(selectedFile.getAbsolutePath());
             send.setFileSize(selectedFile.length());

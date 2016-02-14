@@ -20,48 +20,30 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.activewindow;
+package com.dmdirc.addons.ui_web2;
 
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
-
-import javax.inject.Inject;
+import spark.Spark;
 
 /**
- * Manages the active window sink.
+ * Web server used by the web UI.
  */
-public class ActiveWindowManager {
+public class WebServer {
 
-    /** The message sink to register and unregister. */
-    private final ActiveWindowMessageSink sink;
-    /** The manager to add and remove the sink from. */
-    private final MessageSinkManager sinkManager;
+    private final int port;
 
-    /**
-     * Creates a new instance of {@link ActiveWindowManager}.
-     *
-     * @param sinkManager The manager to add and remove sinks from.
-     * @param sink        The sink to be added and removed.
-     */
-    @Inject
-    public ActiveWindowManager(
-            final MessageSinkManager sinkManager,
-            final ActiveWindowMessageSink sink) {
-        this.sink = sink;
-        this.sinkManager = sinkManager;
+    public WebServer(final int port) {
+        this.port = port;
     }
 
-    /**
-     * Registers the sink with the manager.
-     */
-    public void register() {
-        sinkManager.addSink(sink);
+    public void start() {
+        Spark.port(port);
+        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.staticFileLocation("/www");
+        Spark.get("/test", (request, response) -> "HELLO");
     }
 
-    /**
-     * Unregisters the sink from the manager.
-     */
-    public void unregister() {
-        sinkManager.removeSink(sink);
+    public void stop() {
+        Spark.stop();
     }
 
 }

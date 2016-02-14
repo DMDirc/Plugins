@@ -20,15 +20,33 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.activewindow;
+package com.dmdirc.addons.ui_web2.serialisers;
 
-import com.dmdirc.addons.ui_swing.injection.SwingModule;
+import com.dmdirc.ui.messages.BackBuffer;
+import com.dmdirc.ui.messages.IRCDocument;
 
-import dagger.Module;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
 
 /**
- * DI module for the active window plugin.
+ * Serializes {@link BackBuffer}s.
  */
-@Module(injects = {ActiveWindowManager.class, ActiveCommand.class}, addsTo = SwingModule.class)
-public class ActiveWindowModule {
+public class BackBufferSerializer implements JsonSerializer<BackBuffer> {
+
+    @Override
+    public JsonElement serialize(final BackBuffer src, final Type typeOfSrc,
+            final JsonSerializationContext context) {
+        final JsonArray res = new JsonArray();
+        final IRCDocument document = src.getDocument();
+        for (int i = 0; i < document.getNumLines(); i++) {
+            // TODO: Pass on foreground and background colours
+            res.add(document.getLine(i).getText());
+        }
+        return res;
+    }
+
 }

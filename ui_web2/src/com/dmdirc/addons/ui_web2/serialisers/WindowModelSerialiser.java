@@ -20,39 +20,34 @@
  * SOFTWARE.
  */
 
-package com.dmdirc.addons.activewindow;
+package com.dmdirc.addons.ui_web2.serialisers;
 
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
+import com.dmdirc.interfaces.WindowModel;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
-import static org.mockito.Mockito.verify;
+import java.lang.reflect.Type;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ActiveWindowManagerTest {
+/**
+ * Serialises {@link WindowModel}s.
+ */
+public class WindowModelSerialiser implements JsonSerializer<WindowModel> {
 
-    @Mock private MessageSinkManager messageSinkManager;
-    @Mock private ActiveWindowMessageSink activeWindowMessageSink;
-    private ActiveWindowManager activeWindowManager;
-
-    @Before
-    public void setUp() throws Exception {
-        activeWindowManager = new ActiveWindowManager(messageSinkManager, activeWindowMessageSink);
+    @Override
+    public JsonElement serialize(final WindowModel src, final Type typeOfSrc,
+            final JsonSerializationContext context) {
+        final JsonObject res = new JsonObject();
+        res.addProperty("name", src.getName());
+        res.addProperty("icon", src.getIcon());
+        res.addProperty("title", src.getTitle());
+        res.addProperty("writable", src.isWritable());
+        res.add("children", context.serialize(src.getChildren()));
+        res.add("components", context.serialize(src.getComponents()));
+        res.add("backbuffer", context.serialize(src.getBackBuffer()));
+        return res;
     }
 
-    @Test
-    public void testRegister() throws Exception {
-        activeWindowManager.register();
-        verify(messageSinkManager).addSink(activeWindowMessageSink);
-    }
-
-    @Test
-    public void testUnregister() throws Exception {
-        activeWindowManager.unregister();
-        verify(messageSinkManager).removeSink(activeWindowMessageSink);
-    }
 }

@@ -28,7 +28,9 @@ import com.dmdirc.addons.ui_swing.components.RunnableSwingWorker;
 import com.dmdirc.addons.ui_swing.components.SupplierLoggingSwingWorker;
 import com.dmdirc.util.colours.Colour;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -457,26 +459,28 @@ public final class UIUtilities {
      * @param bounds           Bounds to paint within
      * @param backgroundImage  background image
      * @param backgroundOption How to draw the background
+     * @param opacity          Opacity of the image
      */
     public static void paintBackground(final Graphics2D g,
             final Rectangle bounds,
             final Image backgroundImage,
-            final BackgroundOption backgroundOption) {
+            final BackgroundOption backgroundOption,
+            final float opacity) {
         if (backgroundImage == null) {
             paintNoBackground(g, bounds);
         } else {
             switch (backgroundOption) {
                 case TILED:
-                    paintTiledBackground(g, bounds, backgroundImage);
+                    paintTiledBackground(g, bounds, backgroundImage, opacity);
                     break;
                 case SCALE:
-                    paintStretchedBackground(g, bounds, backgroundImage);
+                    paintStretchedBackground(g, bounds, backgroundImage, opacity);
                     break;
                 case SCALE_ASPECT_RATIO:
-                    paintStretchedAspectRatioBackground(g, bounds, backgroundImage);
+                    paintStretchedAspectRatioBackground(g, bounds, backgroundImage, opacity);
                     break;
                 case CENTER:
-                    paintCenterBackground(g, bounds, backgroundImage);
+                    paintCenterBackground(g, bounds, backgroundImage, opacity);
                     break;
                 default:
                     break;
@@ -489,20 +493,26 @@ public final class UIUtilities {
     }
 
     private static void paintStretchedBackground(final Graphics2D g,
-            final Rectangle bounds, final Image backgroundImage) {
+            final Rectangle bounds, final Image backgroundImage, final float opacity) {
+        final Composite originalComposite = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g.drawImage(backgroundImage, 0, 0, bounds.width, bounds.height, null);
+        g.setComposite(originalComposite);
     }
 
     private static void paintCenterBackground(final Graphics2D g,
-            final Rectangle bounds, final Image backgroundImage) {
+            final Rectangle bounds, final Image backgroundImage, final float opacity) {
         final int x = bounds.width / 2 - backgroundImage.getWidth(null) / 2;
         final int y = bounds.height / 2 - backgroundImage.getHeight(null) / 2;
+        final Composite originalComposite = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g.drawImage(backgroundImage, x, y, backgroundImage.getWidth(null),
                 backgroundImage.getHeight(null), null);
+        g.setComposite(originalComposite);
     }
 
     private static void paintStretchedAspectRatioBackground(final Graphics2D g,
-            final Rectangle bounds, final Image backgroundImage) {
+            final Rectangle bounds, final Image backgroundImage, final float opacity) {
         final double widthratio = bounds.width
                 / (double) backgroundImage.getWidth(null);
         final double heightratio = bounds.height
@@ -513,11 +523,14 @@ public final class UIUtilities {
 
         final int x = bounds.width / 2 - width / 2;
         final int y = bounds.height / 2 - height / 2;
+        final Composite originalComposite = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g.drawImage(backgroundImage, x, y, width, height, null);
+        g.setComposite(originalComposite);
     }
 
     private static void paintTiledBackground(final Graphics2D g,
-            final Rectangle bounds, final Image backgroundImage) {
+            final Rectangle bounds, final Image backgroundImage, final float opacity) {
         final int width = backgroundImage.getWidth(null);
         final int height = backgroundImage.getHeight(null);
 
@@ -526,11 +539,14 @@ public final class UIUtilities {
             return;
         }
 
+        final Composite originalComposite = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         for (int x = 0; x < bounds.width; x += width) {
             for (int y = 0; y < bounds.height; y += height) {
                 g.drawImage(backgroundImage, x, y, width, height, null);
             }
         }
+        g.setComposite(originalComposite);
     }
 
     /**

@@ -34,7 +34,6 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.sink.MessageSinkManager;
 import com.dmdirc.util.EventUtils;
 
 import java.util.Arrays;
@@ -66,7 +65,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param nick                My Current Nickname
      * @param targetNick          Nickname of target
      * @param tabCompleterFactory The factory to use to create tab completers.
-     * @param messageSinkManager  The sink manager to use to dispatch messages.
      * @param eventBus            The bus to dispatch events on.
      */
     public ChatContainer(
@@ -79,11 +77,9 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final String nick,
             final String targetNick,
             final TabCompleterFactory tabCompleterFactory,
-            final MessageSinkManager messageSinkManager,
             final DMDircMBassador eventBus) {
         super(parent, title, "dcc-chat-inactive", configManager, backBufferFactory,
                 new DCCCommandParser(configManager, commandController, eventBus),
-                messageSinkManager,
                 tabCompleterFactory,
                 eventBus,
                 Arrays.asList(

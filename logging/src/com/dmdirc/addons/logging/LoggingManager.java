@@ -205,12 +205,12 @@ public class LoggingManager implements ConfigChangeListener {
 
         synchronized (openFiles) {
             final Collection<String> old = new ArrayList<>(openFiles.size());
-            for (Map.Entry<String, OpenFile> entry : openFiles.entrySet()) {
-                if (entry.getValue().lastUsedTime < oldestTime) {
-                    StreamUtils.close(entry.getValue().writer);
-                    old.add(entry.getKey());
-                }
-            }
+            openFiles.entrySet().stream()
+                    .filter(entry -> entry.getValue().lastUsedTime < oldestTime)
+                    .forEach(entry -> {
+                        StreamUtils.close(entry.getValue().writer);
+                        old.add(entry.getKey());
+                    });
 
             openFiles.keySet().removeAll(old);
         }
@@ -280,8 +280,8 @@ public class LoggingManager implements ConfigChangeListener {
 
         appendLine(filename, "*** Topic is: %s", event.getTopic().getTopic());
         appendLine(filename, "*** Set at: %s on %s by %s",
-                timeFormat.format(1000 * event.getTopic().getTime()),
-                dateFormat.format(1000 * event.getTopic().getTime()),
+                timeFormat.format(event.getTopic().getDate()),
+                dateFormat.format(event.getTopic().getDate()),
                         event.getTopic().getClient()
                                 .map(GroupChatUser::getNickname).orElse("Unknown"));
     }
@@ -410,18 +410,19 @@ public class LoggingManager implements ConfigChangeListener {
 
         final Path testFile = Paths.get(filename);
         if (Files.exists(testFile)) {
-            try {
-                final ReverseFileReader file = new ReverseFileReader(testFile);
+            try (final ReverseFileReader file = new ReverseFileReader(testFile)) {
                 // Because the file includes a newline char at the end, an empty line
                 // is returned by getLines. To counter this, we call getLines(1) and do
                 // nothing with the output.
                 file.getLines(1);
                 final Stack<String> lines = file.getLines(backbufferLines);
                 while (!lines.empty()) {
-                    frame.addLine(getColouredString(colour, lines.pop()));
+                    frame.getEventBus().publishAsync(new HistoricalLineRestoredEvent(frame,
+                            getColouredString(colour, lines.pop())));
                 }
                 file.close();
-                frame.addLine(getColouredString(colour, "--- End of backbuffer\n"));
+                frame.getEventBus().publishAsync(new HistoricalLineRestoredEvent(frame,
+                        getColouredString(colour, "--- End of backbuffer\n")));
             } catch (IOException | SecurityException e) {
                 LOG.info(USER_ERROR, "Unable to show backbuffer (Filename: {}): {}", filename,
                         e.getMessage(), e);

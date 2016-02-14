@@ -85,11 +85,10 @@ public class NotifyMyAndroidCommand extends Command {
         new Thread(() -> {
             try {
                 client.notify(parts[0], parts[1]);
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Notification sent");
+                showOutput(origin, args.isSilent(), "Notification sent");
             } catch (IOException ex) {
                 LOG.info("Exception when trying to notify NMA", ex);
-                sendLine(origin, args.isSilent(), FORMAT_ERROR, "Unable to send: " + ex.
-                        getMessage());
+                showError(origin, args.isSilent(), "Unable to send: " + ex.getMessage());
             }
         }, "NMA Thread").start();
     }

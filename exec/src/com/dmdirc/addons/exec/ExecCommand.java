@@ -72,10 +72,10 @@ public class ExecCommand extends Command {
             // This checks the command to execute has correct quotes
             // (if necessary). Without this /exec "command arg1 arg2 would error.
             if (commandArray.length == 0) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                showError(origin, args.isSilent(),
                         "Could not execute: Invalid file name provided");
             } else if (!new File(commandArray[0]).exists()) {
-                sendLine(origin, args.isSilent(), FORMAT_ERROR,
+                showError(origin, args.isSilent(),
                         "Could not execute: " + commandArray[0] + " does not exist.");
             } else {
                 final Process p = Runtime.getRuntime().exec(commandArray);
@@ -88,10 +88,10 @@ public class ExecCommand extends Command {
                     final List<String> errorOutput = CharStreams.readLines(
                             new InputStreamReader(p.getErrorStream()));
                     for (String line : execOutput) {
-                        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, line);
+                        showOutput(origin, args.isSilent(), line);
                     }
                     for (String line : errorOutput) {
-                        sendLine(origin, args.isSilent(), FORMAT_ERROR, line);
+                        showError(origin, args.isSilent(), line);
                     }
                 }
             }

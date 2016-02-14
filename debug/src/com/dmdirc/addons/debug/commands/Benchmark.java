@@ -26,6 +26,7 @@ import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.interfaces.WindowModel;
 
 import javax.annotation.Nonnull;
@@ -67,8 +68,8 @@ public class Benchmark extends DebugCommand {
             final long start = System.nanoTime();
 
             for (int j = 0; j < 5000; j++) {
-                origin.addLine(FORMAT_OUTPUT,
-                        "This is a benchmark. Lorem ipsum doler...");
+                origin.getEventBus().publishAsync(new CommandOutputEvent(origin,
+                        "This is a benchmark. Lorem ipsum doler..."));
             }
 
             final long end = System.nanoTime();
@@ -77,8 +78,8 @@ public class Benchmark extends DebugCommand {
         }
 
         for (int i = 0; i < results.length; i++) {
-            origin.addLine(FORMAT_OUTPUT, "Iteration " + i + ": " + results[i]
-                    + " nanoseconds.");
+            origin.getEventBus().publishAsync(new CommandOutputEvent(origin,
+                    "Iteration " + i + ": " + results[i] + " nanoseconds."));
         }
     }
 

@@ -20,7 +20,31 @@
  * SOFTWARE.
  */
 
+package com.dmdirc.addons.tabcompletion_bash;
+
+import com.dmdirc.events.BaseDisplayableEvent;
+import com.dmdirc.interfaces.WindowModel;
+
 /**
- * Provides an active window command to the swing UI.
+ * Event raised when multiple potential results match a bash-style completion attempt.
  */
-package com.dmdirc.addons.activewindow;
+public class BashDisambiguationEvent extends BaseDisplayableEvent {
+
+    private final String matches;
+
+    public BashDisambiguationEvent(final long timestamp, final WindowModel source,
+            final String matches) {
+        super(timestamp, source);
+        this.matches = matches;
+    }
+
+    public BashDisambiguationEvent(final WindowModel source, final String matches) {
+        super(source);
+        this.matches = matches;
+    }
+
+    public String getMatches() {
+        return matches;
+    }
+
+}

@@ -109,13 +109,12 @@ public class TimerCommand extends Command implements IntelligentCommand {
         }
 
         if (interval < 1) {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR, "Cannot use intervals below 1");
+            showError(origin, args.isSilent(), "Cannot use intervals below 1");
             return;
         }
 
         manager.addTimer(repetitions, interval, command, origin);
-
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Command scheduled.");
+        showOutput(origin, args.isSilent(), "Command scheduled.");
     }
 
     private void doCancel(final WindowModel origin, final boolean isSilent, final String arg) {
@@ -128,19 +127,19 @@ public class TimerCommand extends Command implements IntelligentCommand {
         }
         if (manager.hasTimerWithID(timerKey)) {
             manager.getTimerByID(timerKey).cancelTimer();
-            sendLine(origin, isSilent, FORMAT_OUTPUT, "Timer cancelled");
+            showOutput(origin, isSilent, "Timer cancelled");
         } else {
-            sendLine(origin, isSilent, FORMAT_ERROR, "There is currently no timer with that ID");
+            showError(origin, isSilent, "There is currently no timer with that ID");
         }
     }
 
     private void doList(final WindowModel origin, final boolean isSilent) {
         final Set<Entry<Integer, TimedCommand>> timerList = manager.listTimers();
         if (timerList.isEmpty()) {
-            sendLine(origin, isSilent, FORMAT_ERROR, "There are currently no active timers");
+            showError(origin, isSilent, "There are currently no active timers");
         } else {
             for (Entry<Integer, TimedCommand> entry : timerList) {
-                sendLine(origin, isSilent, FORMAT_OUTPUT,
+                showOutput(origin, isSilent,
                         "Timer ID: " + entry.getKey() + " - " + entry.getValue().getCommand());
             }
         }

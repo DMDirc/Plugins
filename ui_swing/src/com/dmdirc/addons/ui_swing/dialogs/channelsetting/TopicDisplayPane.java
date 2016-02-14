@@ -41,7 +41,6 @@ import com.dmdirc.ui.messages.ColourManagerFactory;
 import java.awt.Color;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.swing.JLabel;
@@ -164,7 +163,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         if (topic.isPresent()) {
             topicWho.setText("Topic set by " + topic.get().getClient()
                     .map(GroupChatUser::getNickname).orElse("Unknown")
-                    + "<br> on " + new Date(1000 * topic.get().getTime()));
+                    + "<br> on " + topic.get().getDate());
             topicText.setText(topic.get().getTopic());
         } else {
             topicWho.setText("No topic set.");
