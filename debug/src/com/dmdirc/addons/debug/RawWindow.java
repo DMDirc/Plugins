@@ -24,8 +24,6 @@ package com.dmdirc.addons.debug;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.events.RawDataInEvent;
-import com.dmdirc.events.RawDataOutEvent;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.events.DataInEvent;
