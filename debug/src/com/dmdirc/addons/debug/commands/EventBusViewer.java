@@ -30,7 +30,9 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.ClientLineAddedEvent;
+import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.DisplayableEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -128,7 +130,9 @@ public class EventBusViewer extends DebugCommand {
         @Handler
         public void handleEvent(final DMDircEvent event) {
             if (event instanceof ClientLineAddedEvent
-                    && ((ClientLineAddedEvent) event).getFrameContainer() == target) {
+                    && ((ClientLineAddedEvent) event).getFrameContainer() == target
+                    || event instanceof CommandOutputEvent
+                    && ((DisplayableEvent) event).getSource() == target) {
                 // Don't add a line every time we add a line to our output window.
                 // Things will explode otherwise.
                 return;
@@ -154,7 +158,7 @@ public class EventBusViewer extends DebugCommand {
                 }
             }
 
-            target.addLine(FORMAT_OUTPUT, output.toString());
+            target.getEventBus().publishAsync(new CommandOutputEvent(target, output.toString()));
         }
 
     }
