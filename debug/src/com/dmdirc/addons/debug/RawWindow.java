@@ -24,6 +24,8 @@ package com.dmdirc.addons.debug;
 
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.CommandType;
+import com.dmdirc.events.RawDataInEvent;
+import com.dmdirc.events.RawDataOutEvent;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.events.DataInEvent;
@@ -89,12 +91,12 @@ public class RawWindow extends FrameContainer {
 
     @Handler
     private void handleDataIn(final DataInEvent event) {
-        addLine("rawIn", event.getDate(), event.getData());
+        getEventBus().publishAsync(new RawDataInEvent(this, event.getData()));
     }
 
     @Handler
     private void handleDataOut(final DataOutEvent event) {
-        addLine("rawOut", event.getDate(), event.getData());
+        getEventBus().publishAsync(new RawDataOutEvent(this, event.getData()));
     }
 
 }
