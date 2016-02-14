@@ -55,6 +55,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,7 +68,7 @@ public class ConnectionHandlerTest {
     @Mock private WindowModel windowModel;
     @Mock private DMDircMBassador eventBus;
     @Mock private ScheduledExecutorService scheduledExecutorService;
-    @Mock private ScheduledFuture scheduledFuture;
+    @Mock private ScheduledFuture<?> scheduledFuture;
     @Mock private ConnectionManager connectionManager;
     @Mock private Connection connection;
     @Mock private GroupChat groupChat;
@@ -81,8 +82,9 @@ public class ConnectionHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(scheduledExecutorService.scheduleAtFixedRate(any(Runnable.class), anyLong(), anyLong(),
-                any())).thenReturn(scheduledFuture);
+        doReturn(scheduledFuture).when(
+                scheduledExecutorService.scheduleAtFixedRate(
+                        any(Runnable.class), anyLong(), anyLong(), any()));
         when(windowModel.getEventBus()).thenReturn(eventBus);
         when(connection.getWindowModel()).thenReturn(windowModel);
         when(config.getBinder()).thenReturn(configBinder);
@@ -108,7 +110,7 @@ public class ConnectionHandlerTest {
         instance.load();
         verify(configBinder).bind(instance, ConnectionHandler.class);
         verify(eventBus).subscribe(instance);
-        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5l), eq(5l),
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5L), eq(5L),
                 eq(TimeUnit.MILLISECONDS));
     }
 
@@ -124,9 +126,9 @@ public class ConnectionHandlerTest {
     public void testHandleWhoInterval() throws Exception {
         instance.handleWhoInterval(10);
         verify(scheduledFuture).cancel(false);
-        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5l), eq(5l),
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(5L), eq(5L),
                 eq(TimeUnit.MILLISECONDS));
-        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(10l), eq(10l),
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(10L), eq(10L),
                 eq(TimeUnit.MILLISECONDS));
     }
 
@@ -148,7 +150,7 @@ public class ConnectionHandlerTest {
 
     @Test
     public void testHandleAwayEvent_WithReason() throws Exception {
-        when(channelUserAwayEvent.getReason()).thenReturn(Optional.ofNullable("reason"));
+        when(channelUserAwayEvent.getReason()).thenReturn(Optional.of("reason"));
         instance.load();
         instance.handleAwayEvent(channelUserAwayEvent);
         verify(channelUserAwayEvent, never())
