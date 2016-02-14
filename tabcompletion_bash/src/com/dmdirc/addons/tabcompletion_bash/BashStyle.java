@@ -88,8 +88,8 @@ public class BashStyle implements TabCompletionStyle {
 
             final String sub = getBestSubstring(res);
             if (sub.equalsIgnoreCase(word) && tabCount >= 2) {
-                window.addLine("tabCompletion", res.toString());
-
+                window.getEventBus().publishAsync(
+                        new BashDisambiguationEvent(window, res.toString()));
                 return null;
             } else {
                 return new TabCompletionResult(

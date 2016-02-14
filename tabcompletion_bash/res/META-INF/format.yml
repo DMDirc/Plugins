@@ -1,0 +1,4 @@
+---
+BashDisambiguationEvent:
+  format: "Multiple possibilities: {{matches}}."
+  colour: 14
