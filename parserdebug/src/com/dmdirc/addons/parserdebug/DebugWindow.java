@@ -24,13 +24,13 @@ package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
+import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -74,8 +74,9 @@ public class DebugWindow extends FrameContainer {
      * Set the parser to null to stop us holding onto parsers when the server connection is closed.
      */
     public void unsetParser() {
-        addLine("======================", new Date());
-        addLine("Unset parser: " + parser, new Date());
+        getEventBus().publishAsync(new CommandOutputEvent(this,
+                "======================\n" +
+                "Unset parser: " + parser));
         parser = null;
     }
 

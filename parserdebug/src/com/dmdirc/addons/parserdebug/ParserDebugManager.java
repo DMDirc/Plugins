@@ -23,6 +23,7 @@
 package com.dmdirc.addons.parserdebug;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.events.DebugInfoEvent;
@@ -30,7 +31,6 @@ import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,9 +96,10 @@ public class ParserDebugManager {
                 connection, eventBus, backBufferFactory);
         windowManager.addWindow(connection.getWindowModel(), window);
         registeredParsers.put(parser, window);
-        window.addLine("======================", new Date());
-        window.addLine("Started Monitoring: " + parser, new Date());
-        window.addLine("======================", new Date());
+        window.getEventBus().publishAsync(new CommandOutputEvent(window,
+                "======================\n" +
+                "Started Monitoring: " + parser + '\n' +
+                "======================"));
     }
 
     /**
@@ -110,9 +111,10 @@ public class ParserDebugManager {
     public void removeParser(final Parser parser, final boolean close) {
         parser.getCallbackManager().unsubscribe(this);
         final DebugWindow window = registeredParsers.get(parser);
-        window.addLine("======================", new Date());
-        window.addLine("No Longer Monitoring: " + parser + " (User Requested)", new Date());
-        window.addLine("======================", new Date());
+        window.getEventBus().publishAsync(new CommandOutputEvent(window,
+                "======================\n" +
+                "No Longer Monitoring: " + parser + " (User Requested)\n" +
+                "======================"));
         if (close) {
             window.close();
         }
@@ -142,7 +144,8 @@ public class ParserDebugManager {
     public void onDebugInfo(final DebugInfoEvent event) {
         final DebugWindow window = registeredParsers.get(event.getParser());
         if (window != null) {
-            window.addLine(String.format("[%d] %s%n", event.getLevel(), event.getData()), new Date());
+            window.getEventBus().publishAsync(new CommandOutputEvent(window,
+                    String.format("[%d] %s%n", event.getLevel(), event.getData())));
         }
     }
 

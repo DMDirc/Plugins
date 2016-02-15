@@ -34,10 +34,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,12 +81,8 @@ public class HistoryWindow extends FrameContainer {
         try (final ReverseFileReader reader = new ReverseFileReader(logFile)) {
             final List<String> lines = reader.getLines(Math.min(limit, numLines));
             Collections.reverse(lines);
-            lines.forEach(l -> {
-                final ParsePosition pos = new ParsePosition(0);
-                final Date date = new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]").parse(l, pos);
-                final String text = l.substring(pos.getIndex()+1);
-                addLine(text, date);
-            });
+            lines.forEach(l ->
+                    getEventBus().publishAsync(new HistoricalLineRestoredEvent(this, l)));
         } catch (IOException | SecurityException ex) {
             LOG.warn(USER_ERROR, "Unable to read log file.", ex);
         }

@@ -24,34 +24,36 @@ package com.dmdirc.addons.logging;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
-import com.dmdirc.events.DisplayPropertyMap;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBuffer;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.IRCDocument;
 
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Listener;
+import net.engio.mbassy.listener.References;
+
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class HistoryWindowTest {
 
-    @Mock private IRCDocument document;
     @Mock private BackBuffer backBuffer;
     @Mock private AggregateConfigProvider config;
     @Mock private ConfigBinder configBinder;
@@ -64,7 +66,6 @@ public class HistoryWindowTest {
     @Before
     public void setUp() throws Exception {
         when(backBufferFactory.getBackBuffer(any())).thenReturn(backBuffer);
-        when(backBuffer.getDocument()).thenReturn(document);
         when(config.getBinder()).thenReturn(configBinder);
         when(frameContainer.getConfigManager()).thenReturn(config);
         when(frameContainer.getConnection()).thenReturn(Optional.of(connection));
@@ -80,20 +81,28 @@ public class HistoryWindowTest {
 
     @Test
     public void testOutputLoggingBackBuffer() throws Exception {
+        final LineListener listener = new LineListener();
+        instance.getEventBus().subscribe(listener);
         instance.outputLoggingBackBuffer(4);
-        final InOrder inOrder = inOrder(document);
-        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 12:58:02]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAR"));
-        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 12:59:03]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAAR"));
-        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 13:00:04]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAAAR"));
-        inOrder.verify(document).addText(eq(new SimpleDateFormat("[dd/MM/yyyy HH:mm:ss]")
-                .parse("[21/12/2015 13:01:05]").getTime()), eq
-                (DisplayPropertyMap.EMPTY), eq("RAAAAAR"));
-        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(listener.latch.await(5, TimeUnit.SECONDS));
+        assertEquals("[21/12/2015 12:58:02] RAAR", listener.values.get(0).getLine());
+        assertEquals("[21/12/2015 12:59:03] RAAAR", listener.values.get(1).getLine());
+        assertEquals("[21/12/2015 13:00:04] RAAAAR", listener.values.get(2).getLine());
+        assertEquals("[21/12/2015 13:01:05] RAAAAAR", listener.values.get(3).getLine());
+    }
+
+    @Listener(references = References.Strong)
+    private static class LineListener {
+
+        public final List<HistoricalLineRestoredEvent> values = new ArrayList<>();
+        public final CountDownLatch latch = new CountDownLatch(4);
+
+        @Handler
+        private void handleLineRestored(final HistoricalLineRestoredEvent event) {
+            values.add(event);
+            latch.countDown();
+        }
+
     }
 }
