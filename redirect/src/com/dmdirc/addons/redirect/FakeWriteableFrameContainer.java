@@ -30,7 +30,6 @@ import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.Formatter;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -65,12 +64,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     @Deprecated
     public void addLine(final String type, final Object... args) {
         sendLine(Formatter.formatMessage(getConfigManager(), type, args));
-    }
-
-    @Override
-    @Deprecated
-    public void addLine(final String line, final Date timestamp) {
-        addLine(line);
     }
 
     @Override
