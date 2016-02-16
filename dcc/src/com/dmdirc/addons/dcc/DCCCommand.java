@@ -24,6 +24,7 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.dcc.events.DccChatRequestSentEvent;
+import com.dmdirc.addons.dcc.events.DccChatStartingEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
@@ -170,12 +171,15 @@ public class DCCCommand extends Command implements IntelligentCommand {
             parser.sendCTCP(target, "DCC", "CHAT chat " + DCC.ipToLong(
                     myPlugin.getListenIP(parser)) + ' ' + chat.getPort());
             eventBus.publish(new DccChatRequestSentEvent(connection, target));
-            sendLine(origin, isSilent, "DCCChatStarting", target, chat.getHost(), chat.getPort());
-            window.addLine("DCCChatStarting", target, chat.getHost(), chat.getPort());
+
+            // Send the starting event to both the source window, and the new DCC window.
+            window.getEventBus().publishAsync(new DccChatStartingEvent(
+                    window, target, chat.getHost(), chat.getPort()));
+            origin.getEventBus().publishAsync(new DccChatStartingEvent(
+                    origin, target, chat.getHost(), chat.getPort()));
         } else {
-            sendLine(origin, isSilent, "DCCChatError",
-                    "Unable to start chat with " + target
-                    + " - unable to create listen socket");
+            showError(origin, isSilent,
+                    "Unable to start chat with " + target + " - unable to create listen socket");
         }
     }
 
@@ -253,8 +257,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
                             + " " + send.getPort() + " " + send.getFileSize()
                             + (send.isTurbo() ? " T" : ""));
                 } else {
-                    sendLine(origin, isSilent, "DCCSendError",
-                            "Unable to start dcc send with " + target
+                    showError(origin, isSilent, "Unable to start dcc send with " + target
                             + " - unable to create listen socket");
                 }
             }

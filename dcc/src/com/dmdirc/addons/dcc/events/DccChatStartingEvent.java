@@ -22,33 +22,41 @@
 
 package com.dmdirc.addons.dcc.events;
 
-import com.dmdirc.addons.dcc.ChatContainer;
 import com.dmdirc.interfaces.WindowModel;
 
 /**
- * Fired on a DCC chat self message.
+ * Event raised when a DCC chat is starting.
  */
-public class DccChatSelfmessageEvent extends DccDisplayableEvent {
+public class DccChatStartingEvent extends DccDisplayableEvent {
 
-    private final ChatContainer chatWindow;
-    private final String message;
+    private final WindowModel source;
+    private final String target;
+    private final String host;
+    private final int port;
 
-    public DccChatSelfmessageEvent(final ChatContainer chatWindow, final String message) {
-        this.chatWindow = chatWindow;
-        this.message = message;
-    }
-
-    public ChatContainer getChatWindow() {
-        return chatWindow;
-    }
-
-    public String getMessage() {
-        return message;
+    public DccChatStartingEvent(final WindowModel source, final String target, final String host,
+            final int port) {
+        this.source = source;
+        this.target = target;
+        this.host = host;
+        this.port = port;
     }
 
     @Override
     public WindowModel getSource() {
-        return chatWindow;
+        return source;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 
 }
