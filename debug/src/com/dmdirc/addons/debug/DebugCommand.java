@@ -32,13 +32,8 @@ import javax.inject.Provider;
 /**
  * Debug command, serves as a proxy between debug commands and normal commands.
  */
-@SuppressWarnings("unused")
 public abstract class DebugCommand {
 
-    /** The format name used for command output. */
-    public static final String FORMAT_OUTPUT = "commandOutput";
-    /** The format name used for command errors. */
-    public static final String FORMAT_ERROR = "commandError";
     /** Parent debug command. */
     private final Provider<Debug> commandProvider;
 
