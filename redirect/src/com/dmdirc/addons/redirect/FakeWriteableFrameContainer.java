@@ -27,7 +27,6 @@ import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.Formatter;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -58,12 +57,6 @@ public class FakeWriteableFrameContainer extends FrameContainer {
     @Override
     public void sendLine(final String line) {
         target.sendLine(line);
-    }
-
-    @Override
-    @Deprecated
-    public void addLine(final String type, final Object... args) {
-        sendLine(Formatter.formatMessage(getConfigManager(), type, args));
     }
 
     @Override
