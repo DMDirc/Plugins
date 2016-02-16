@@ -88,7 +88,7 @@ public class Identities extends DebugCommand {
                 String.valueOf(source.getTarget().getOrder())};
         }
 
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+        showOutput(origin, args.isSilent(),
                 doTable(new String[]{"Name", "Target", "Data", "Priority"}, data));
     }
 

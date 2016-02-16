@@ -66,23 +66,22 @@ public class ServerInfo extends DebugCommand {
         final Optional<Connection> optionalConnection = origin.getConnection();
         if (optionalConnection.isPresent()) {
             final Connection connection = optionalConnection.get();
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Server name: "
+            showOutput(origin, args.isSilent(), "Server name: "
                     + connection.getAddress());
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Actual name: "
+            showOutput(origin, args.isSilent(), "Actual name: "
                     + connection.getParser().get().getServerName());
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Network: "
+            showOutput(origin, args.isSilent(), "Network: "
                     + connection.getNetwork());
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "IRCd: "
+            showOutput(origin, args.isSilent(), "IRCd: "
                     + connection.getParser().get().getServerSoftware() + " - "
                     + connection.getParser().get().getServerSoftwareType());
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Modes: "
+            showOutput(origin, args.isSilent(), "Modes: "
                     + connection.getParser().get().getBooleanChannelModes() + ' '
                     + connection.getParser().get().getListChannelModes() + ' '
                     + connection.getParser().get().getParameterChannelModes() + ' '
                     + connection.getParser().get().getDoubleParameterChannelModes());
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "This window isn't connected to a server");
+            showError(origin, args.isSilent(), "This window isn't connected to a server");
         }
     }
 

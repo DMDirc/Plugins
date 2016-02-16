@@ -60,11 +60,11 @@ public class MemInfo extends DebugCommand {
     @Override
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Total Memory: "
+        showOutput(origin, args.isSilent(), "Total Memory: "
                 + Runtime.getRuntime().totalMemory());
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Free Memory: "
+        showOutput(origin, args.isSilent(), "Free Memory: "
                 + Runtime.getRuntime().freeMemory());
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Used Memory: "
+        showOutput(origin, args.isSilent(), "Used Memory: "
                 + (Runtime.getRuntime().totalMemory()
                 - Runtime.getRuntime().freeMemory()));
     }

@@ -65,10 +65,10 @@ public class Notify extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         final Optional<Colour> colour = origin.getUnreadStatusManager().getNotificationColour();
         if (colour.isPresent()) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "Current notification colour is: " + colour.get());
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "No current notification colour");
         }
     }

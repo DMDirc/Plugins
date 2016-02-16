@@ -65,12 +65,10 @@ public class Threads extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         for (Entry<Thread, StackTraceElement[]> thread
                 : Thread.getAllStackTraces().entrySet()) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, Styliser.CODE_BOLD
-                    + thread.getKey().getName());
+            showOutput(origin, args.isSilent(), Styliser.CODE_BOLD + thread.getKey().getName());
 
             for (StackTraceElement element : thread.getValue()) {
-                sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                        Styliser.CODE_FIXED + "    " + element.toString());
+                showOutput(origin, args.isSilent(), Styliser.CODE_FIXED + "    " + element);
             }
         }
     }

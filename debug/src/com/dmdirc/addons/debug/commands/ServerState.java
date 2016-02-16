@@ -65,11 +65,10 @@ public class ServerState extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         final Optional<Connection> optionalConnection = origin.getConnection();
         if (optionalConnection.isPresent()) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     optionalConnection.get().getStatus().getTransitionHistory());
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "This window isn't connected to a server");
+            showError(origin, args.isSilent(), "This window isn't connected to a server");
         }
     }
 

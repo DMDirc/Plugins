@@ -61,8 +61,7 @@ public class RunGC extends DebugCommand {
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         System.gc();
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
-                "Invoked garbage collector.");
+        showOutput(origin, args.isSilent(), "Invoked garbage collector.");
     }
 
 }

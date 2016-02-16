@@ -61,7 +61,7 @@ public class ColourSpam extends DebugCommand {
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         for (int i = 0; i < 100; i++) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     ((char) 3) + "5Colour! "
                     + ((char) 3) + "6Colour! " + ((char) 3) + "7Colour! "
                     + ((char) 3) + "6Colour! " + ((char) 3) + "7Colour! "
