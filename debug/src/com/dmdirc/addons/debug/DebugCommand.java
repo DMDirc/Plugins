@@ -86,16 +86,25 @@ public abstract class DebugCommand {
             final CommandArguments args, final CommandContext context);
 
     /**
-     * Sends a line, if appropriate, to the specified target.
+     * Shows output, if appropriate, in the specified target.
      *
      * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param type     The type of message to send
-     * @param args     The arguments of the message
+     * @param message  The message to be sent
      */
-    public void sendLine(final WindowModel target,
-            final boolean isSilent, final String type, final Object... args) {
-        commandProvider.get().proxySendLine(target, isSilent, type, args);
+    public void showOutput(final WindowModel target, final boolean isSilent, final String message) {
+        commandProvider.get().proxyShowOutput(target, isSilent, message);
+    }
+
+    /**
+     * Shows an error, if appropriate, in the specified target.
+     *
+     * @param target   The command window to send the line to
+     * @param isSilent Whether this command is being silenced or not
+     * @param message  The message to be sent
+     */
+    public void showError(final WindowModel target, final boolean isSilent, final String message) {
+        commandProvider.get().proxyShowError(target, isSilent, message);
     }
 
     /**

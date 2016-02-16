@@ -69,8 +69,7 @@ public class ShowRaw extends DebugCommand {
         if (connection.isPresent()) {
             windowFactory.getRawWindow(connection.get());
         } else {
-            sendLine(origin, args.isSilent(), FORMAT_ERROR,
-                    "Cannot show raw window here.");
+            showError(origin, args.isSilent(), "Cannot show raw window here.");
         }
     }
 

@@ -62,7 +62,7 @@ public class ConfigInfo extends DebugCommand {
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         for (ConfigProvider source : origin.getConfigManager().getSources()) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, source.getTarget()
+            showOutput(origin, args.isSilent(), source.getTarget()
                     + " - " + source + "(" + source.getTarget().getOrder()
                     + ")");
         }

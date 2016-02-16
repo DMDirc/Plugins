@@ -72,14 +72,13 @@ public class Services extends DebugCommand implements IntelligentCommand {
     @Override
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
-        sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "Available Services:");
+        showOutput(origin, args.isSilent(), "Available Services:");
         for (Service service : serviceManager.getAllServices()) {
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT, "    "
-                    + service.toString());
+            showOutput(origin, args.isSilent(), "    " + service);
             if (args.getArguments().length > 0
-                    && args.getArguments()[0].equals("full")) {
+                    && "full".equals(args.getArguments()[0])) {
                 for (ServiceProvider provider : service.getProviders()) {
-                    sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+                    showOutput(origin, args.isSilent(),
                             "            " + provider.getProviderName()
                             + " [Active: " + provider.isActive() + "]");
                 }

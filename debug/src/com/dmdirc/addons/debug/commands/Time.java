@@ -83,7 +83,7 @@ public class Time extends DebugCommand implements IntelligentCommand {
             final long start = System.currentTimeMillis();
             origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(0));
             final long end = System.currentTimeMillis();
-            sendLine(origin, args.isSilent(), FORMAT_OUTPUT,
+            showOutput(origin, args.isSilent(),
                     "Command executed in " + (end - start) + " milliseconds.");
         }
     }

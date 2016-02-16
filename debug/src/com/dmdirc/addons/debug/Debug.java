@@ -102,17 +102,27 @@ public class Debug extends Command implements IntelligentCommand {
     }
 
     /**
-     * Sends a line, if appropriate, to the specified target.
+     * Shows output, if appropriate, in the specified target.
      *
      * @param target   The command window to send the line to
      * @param isSilent Whether this command is being silenced or not
-     * @param type     The type of message to send
-     * @param args     The arguments of the message
+     * @param message  The message to be sent
      */
-    @Deprecated
-    public void proxySendLine(final WindowModel target,
-            final boolean isSilent, final String type, final Object... args) {
-        sendLine(target, isSilent, type, args);
+    public void proxyShowOutput(final WindowModel target,
+            final boolean isSilent, final String message) {
+        showOutput(target, isSilent, message);
+    }
+
+    /**
+     * Shows an error, if appropriate, in the specified target.
+     *
+     * @param target   The command window to send the line to
+     * @param isSilent Whether this command is being silenced or not
+     * @param message  The message to be sent
+     */
+    public void proxyShowError(final WindowModel target,
+            final boolean isSilent, final String message) {
+        showError(target, isSilent, message);
     }
 
     /**
