@@ -26,13 +26,13 @@ import com.dmdirc.addons.dcc.ChatContainer;
 import com.dmdirc.interfaces.WindowModel;
 
 /**
- * Fired when a chat socket is closed.
+ * Fired when a chat socket is opened.
  */
-public class DccChatSocketclosedEvent extends DccDisplayableEvent {
+public class DccChatSocketOpenedEvent extends DccDisplayableEvent {
 
     private final ChatContainer chatWindow;
 
-    public DccChatSocketclosedEvent(final ChatContainer chatWindow) {
+    public DccChatSocketOpenedEvent(final ChatContainer chatWindow) {
         this.chatWindow = chatWindow;
     }
 
@@ -44,4 +44,5 @@ public class DccChatSocketclosedEvent extends DccDisplayableEvent {
     public WindowModel getSource() {
         return chatWindow;
     }
+
 }

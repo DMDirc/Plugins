@@ -25,6 +25,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
+import com.dmdirc.addons.dcc.events.DccChatStartingEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCChat;
@@ -461,7 +462,7 @@ public class DCCManager {
         final DCCChat chat = new DCCChat();
         chat.setAddress(ipAddress, port);
         final String myNickname = parser.getLocalClient().getNickname();
-        final DCCFrameContainer f = new ChatContainer(
+        final DCCFrameContainer container = new ChatContainer(
                 getContainer(),
                 chat,
                 config,
@@ -472,8 +473,9 @@ public class DCCManager {
                 nickname,
                 tabCompleterFactory,
                 eventBus);
-        windowManager.addWindow(getContainer(), f);
-        f.addLine("DCCChatStarting", nickname, chat.getHost(), chat.getPort());
+        windowManager.addWindow(getContainer(), container);
+        container.getEventBus().publishAsync(new DccChatStartingEvent(
+                container, nickname, chat.getHost(), chat.getPort()));
         chat.connect();
     }
 

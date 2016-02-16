@@ -1,0 +1,11 @@
+---
+DccChatStartingEvent:
+  format: "Starting DCC Chat with: {{target}} on {{host}}:{{port}}..."
+DccChatSocketClosedEvent:
+  format: "Socket closed."
+DccChatSocketOpenedEvent:
+  format: "Socket opened."
+DccChatMessageEvent:
+  format: "<{{nickname}}> {{message}}"
+DccChatSelfMessageEvent:
+  format: "<{{nickname}}> {{message}}"
