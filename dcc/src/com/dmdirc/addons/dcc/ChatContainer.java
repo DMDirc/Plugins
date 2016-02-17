@@ -68,7 +68,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
      * @param eventBus            The bus to dispatch events on.
      */
     public ChatContainer(
-            @Nullable final WindowModel parent,
             final DCCChat dcc,
             final AggregateConfigProvider configManager,
             final BackBufferFactory backBufferFactory,
@@ -78,7 +77,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final String targetNick,
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus) {
-        super(parent, title, "dcc-chat-inactive", configManager, backBufferFactory,
+        super(title, "dcc-chat-inactive", configManager, backBufferFactory,
                 new DCCCommandParser(configManager, commandController, eventBus),
                 tabCompleterFactory,
                 eventBus,

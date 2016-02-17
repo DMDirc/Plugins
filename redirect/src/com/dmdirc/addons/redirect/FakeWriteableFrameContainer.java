@@ -46,7 +46,7 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final WindowModel target,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {
-        super(target, target.getIcon(), target.getName(), target.getTitle(),
+        super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), backBufferFactory,
                 target.getTabCompleter(), eventBus, Collections.<String>emptyList());
         this.target = target;

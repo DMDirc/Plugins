@@ -157,7 +157,6 @@ public class DCCCommand extends Command implements IntelligentCommand {
         final DCCChat chat = new DCCChat();
         if (myPlugin.listen(chat)) {
             final ChatContainer window = new ChatContainer(
-                    myPlugin.getContainer(),
                     chat,
                     origin.getConfigManager(),
                     backBufferFactory,
