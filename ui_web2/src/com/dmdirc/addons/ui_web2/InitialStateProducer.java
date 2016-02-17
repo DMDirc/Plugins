@@ -45,9 +45,11 @@ public class InitialStateProducer {
     private final WindowManager windowManager;
 
     @Inject
-    public InitialStateProducer(final WindowManager windowManager) {
+    public InitialStateProducer(
+            final WindowManager windowManager,
+            final WindowModelSerialiser windowSerialiser) {
         serialiser = new GsonBuilder()
-                .registerTypeHierarchyAdapter(WindowModel.class, new WindowModelSerialiser())
+                .registerTypeHierarchyAdapter(WindowModel.class, windowSerialiser)
                 .registerTypeAdapter(BackBuffer.class, new BackBufferSerializer())
                 .create();
         this.windowManager = windowManager;

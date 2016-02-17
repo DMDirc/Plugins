@@ -28,6 +28,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.awt.Dialog.ModalityType;
@@ -44,6 +45,7 @@ public class PlaceholderContainer extends FrameContainer {
     private final DCCManager plugin;
     /** Window that will own new dialogs. */
     private final Window parentWindow;
+    private final WindowManager windowManager;
 
     /**
      * Creates a placeholder DCC frame.
@@ -58,18 +60,20 @@ public class PlaceholderContainer extends FrameContainer {
             final AggregateConfigProvider config,
             final BackBufferFactory backBufferFactory,
             final Window parentWindow,
+            final WindowManager windowManager,
             final DMDircMBassador eventBus) {
         super(null, "dcc", "DCCs", "DCCs", config, backBufferFactory, eventBus,
                 Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;
+        this.windowManager = windowManager;
         initBackBuffer();
     }
 
     @Override
     public void close() {
         int dccs = 0;
-        for (WindowModel window : getChildren()) {
+        for (WindowModel window : windowManager.getChildren(this)) {
             if (window instanceof TransferContainer
                     && ((TransferContainer) window).getDCC().isActive()
                     || window instanceof ChatContainer
@@ -99,7 +103,7 @@ public class PlaceholderContainer extends FrameContainer {
     public void removeChild(final WindowModel child) {
         super.removeChild(child);
 
-        if (getChildren().isEmpty()) {
+        if (windowManager.getChildren(this).isEmpty()) {
             close();
         }
     }

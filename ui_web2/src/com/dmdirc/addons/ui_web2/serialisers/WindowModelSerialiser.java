@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_web2.serialisers;
 
 import com.dmdirc.interfaces.WindowModel;
+import com.dmdirc.ui.WindowManager;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,10 +32,19 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
+import javax.inject.Inject;
+
 /**
  * Serialises {@link WindowModel}s.
  */
 public class WindowModelSerialiser implements JsonSerializer<WindowModel> {
+
+    private final WindowManager windowManager;
+
+    @Inject
+    public WindowModelSerialiser(final WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
 
     @Override
     public JsonElement serialize(final WindowModel src, final Type typeOfSrc,
@@ -44,7 +54,7 @@ public class WindowModelSerialiser implements JsonSerializer<WindowModel> {
         res.addProperty("icon", src.getIcon());
         res.addProperty("title", src.getTitle());
         res.addProperty("writable", src.isWritable());
-        res.add("children", context.serialize(src.getChildren()));
+        res.add("children", context.serialize(windowManager.getChildren(src)));
         res.add("components", context.serialize(src.getComponents()));
         res.add("backbuffer", context.serialize(src.getBackBuffer()));
         return res;

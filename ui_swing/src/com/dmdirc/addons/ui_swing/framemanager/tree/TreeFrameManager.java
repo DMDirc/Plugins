@@ -312,7 +312,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
             for (WindowModel window : windowManager.getRootWindows()) {
                 addWindow(null, windowFactory.getSwingWindow(window));
-                final Collection<WindowModel> childWindows = window.getChildren();
+                final Collection<WindowModel> childWindows = windowManager.getChildren(window);
                 for (WindowModel childWindow : childWindows) {
                     addWindow(nodes.get(windowFactory.getSwingWindow(window)),
                             windowFactory.getSwingWindow(childWindow));
