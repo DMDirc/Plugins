@@ -698,7 +698,8 @@ public class DCCManager {
      * Create the container window.
      */
     protected void createContainer() {
-        container = new PlaceholderContainer(this, config, backBufferFactory, mainWindow, eventBus);
+        container = new PlaceholderContainer(this, config, backBufferFactory, mainWindow,
+                windowManager, eventBus);
         windowManager.addWindow(container);
     }
 

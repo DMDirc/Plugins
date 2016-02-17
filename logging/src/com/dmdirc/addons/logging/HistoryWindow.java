@@ -49,6 +49,7 @@ import static com.dmdirc.util.LogUtils.USER_ERROR;
 public class HistoryWindow extends FrameContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryWindow.class);
+    private final Optional<Connection> connection;
     private final Path logFile;
     private final int numLines;
 
@@ -66,6 +67,7 @@ public class HistoryWindow extends FrameContainer {
                 eventBus, Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
         this.logFile = logFile;
         this.numLines = numLines;
+        this.connection = parent.getConnection();
 
         initBackBuffer();
         outputLoggingBackBuffer(parent.getConfigManager().getOptionInt("ui", "frameBufferSize"));
@@ -73,7 +75,7 @@ public class HistoryWindow extends FrameContainer {
 
     @Override
     public Optional<Connection> getConnection() {
-        return getParent().flatMap(WindowModel::getConnection);
+        return connection;
     }
 
     @VisibleForTesting
