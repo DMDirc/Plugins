@@ -26,15 +26,12 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Collection;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
 
 /**
  * This class links DCC objects to a window.
@@ -47,7 +44,6 @@ public abstract class DCCFrameContainer extends FrameContainer {
     /**
      * Creates a new instance of DCCFrame.
      *
-     * @param parent              The parent of this frame container, if any.
      * @param title               The title of this window
      * @param icon                The icon to use
      * @param configManager       Config manager
@@ -57,7 +53,6 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param components          The UI components that this frame requires
      */
     public DCCFrameContainer(
-            @Nullable final WindowModel parent,
             final String title,
             final String icon,
             final AggregateConfigProvider configManager,
@@ -66,7 +61,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
-        super(parent, icon, title, title, configManager, backBufferFactory,
+        super(icon, title, title, configManager, backBufferFactory,
                 tabCompleterFactory.getTabCompleter(configManager),
                 eventBus,
                 components);

@@ -63,7 +63,7 @@ public class HistoryWindow extends FrameContainer {
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory,
             final int numLines) {
-        super(parent, "raw", title, title, parent.getConfigManager(), backBufferFactory,
+        super("raw", title, title, parent.getConfigManager(), backBufferFactory,
                 eventBus, Collections.singletonList(WindowComponent.TEXTAREA.getIdentifier()));
         this.logFile = logFile;
         this.numLines = numLines;

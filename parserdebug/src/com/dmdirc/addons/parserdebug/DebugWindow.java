@@ -56,7 +56,7 @@ public class DebugWindow extends FrameContainer {
             final Connection connection,
             final DMDircMBassador eventBus,
             final BackBufferFactory backBufferFactory) {
-        super(connection.getWindowModel(), "raw", "Parser Debug", title,
+        super("raw", "Parser Debug", title,
                 connection.getWindowModel().getConfigManager(), backBufferFactory,
                 eventBus, Arrays.asList(WindowComponent.TEXTAREA.getIdentifier()));
         this.listener = listener;

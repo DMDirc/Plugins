@@ -88,7 +88,7 @@ public class TransferContainer extends FrameContainer implements
             final BackBufferFactory backBufferFactory, final String title,
             final String targetNick, @Nullable final Connection connection,
             final DMDircMBassador eventBus) {
-        super(plugin.getContainer(), dcc.getType() == DCCTransfer.TransferType.SEND
+        super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, backBufferFactory, eventBus,
                 Arrays.asList("com.dmdirc.addons.dcc.ui.TransferPanel"));

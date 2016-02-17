@@ -463,7 +463,6 @@ public class DCCManager {
         chat.setAddress(ipAddress, port);
         final String myNickname = parser.getLocalClient().getNickname();
         final DCCFrameContainer container = new ChatContainer(
-                getContainer(),
                 chat,
                 config,
                 backBufferFactory,

@@ -62,7 +62,7 @@ public class PlaceholderContainer extends FrameContainer {
             final Window parentWindow,
             final WindowManager windowManager,
             final DMDircMBassador eventBus) {
-        super(null, "dcc", "DCCs", "DCCs", config, backBufferFactory, eventBus,
+        super("dcc", "DCCs", "DCCs", config, backBufferFactory, eventBus,
                 Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;
         this.parentWindow = parentWindow;
@@ -97,15 +97,6 @@ public class PlaceholderContainer extends FrameContainer {
     @Override
     public Optional<Connection> getConnection() {
         return Optional.empty();
-    }
-
-    @Override
-    public void removeChild(final WindowModel child) {
-        super.removeChild(child);
-
-        if (windowManager.getChildren(this).isEmpty()) {
-            close();
-        }
     }
 
 }
