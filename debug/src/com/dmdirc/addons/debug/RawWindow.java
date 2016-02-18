@@ -23,7 +23,6 @@
 package com.dmdirc.addons.debug;
 
 import com.dmdirc.FrameContainer;
-import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.parser.events.DataInEvent;
@@ -52,10 +51,6 @@ public class RawWindow extends FrameContainer {
         super("raw", "Raw", "(Raw log)",
                 connection.getWindowModel().getConfigManager(),
                 backBufferFactory,
-                tabCompleterFactory.getTabCompleter(
-                        connection.getWindowModel().getInputModel().get().getTabCompleter(),
-                        connection.getWindowModel().getConfigManager(),
-                        CommandType.TYPE_QUERY, CommandType.TYPE_CHAT),
                 connection.getWindowModel().getEventBus(),
                 Arrays.asList(WindowComponent.TEXTAREA.getIdentifier(),
                         WindowComponent.INPUTFIELD.getIdentifier()));
@@ -76,11 +71,6 @@ public class RawWindow extends FrameContainer {
         connection.getParser().map(Parser::getCallbackManager).ifPresent(c -> c.unsubscribe(this));
         connection.getWindowModel().getEventBus().unsubscribe(this);
         super.close();
-    }
-
-    @Override
-    public int getMaxLineLength() {
-        return -1;
     }
 
     @Handler

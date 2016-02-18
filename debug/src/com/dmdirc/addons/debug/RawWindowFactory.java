@@ -22,6 +22,8 @@
 
 package com.dmdirc.addons.debug;
 
+import com.dmdirc.DefaultInputModel;
+import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.parsers.ServerCommandParser;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
@@ -58,11 +60,19 @@ public class RawWindowFactory {
     public RawWindow getRawWindow(final Connection connection) {
         final RawWindow rawWindow = new RawWindow(connection,
                 tabCompleterFactory,  backBufferFactory);
-        rawWindow.setCommandParser(new ServerCommandParser(
-                connection.getWindowModel().getConfigManager(),
-                commandController,
-                connection.getWindowModel().getEventBus(),
-                connection));
+        rawWindow.setInputModel(
+                new DefaultInputModel(
+                        connection::sendLine,
+                        new ServerCommandParser(
+                                connection.getWindowModel().getConfigManager(),
+                                commandController,
+                                connection.getWindowModel().getEventBus(),
+                                connection),
+                        tabCompleterFactory.getTabCompleter(
+                                connection.getWindowModel().getInputModel().get().getTabCompleter(),
+                                connection.getWindowModel().getConfigManager(),
+                                CommandType.TYPE_QUERY, CommandType.TYPE_CHAT),
+                        () -> -1));
         windowManager.addWindow(connection.getWindowModel(), rawWindow);
         return rawWindow;
     }
