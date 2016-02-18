@@ -24,10 +24,8 @@ package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
-import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Collection;
@@ -47,8 +45,6 @@ public abstract class DCCFrameContainer extends FrameContainer {
      * @param title               The title of this window
      * @param icon                The icon to use
      * @param configManager       Config manager
-     * @param parser              Command parser to use for this window
-     * @param tabCompleterFactory The factory to use to create tab completers.
      * @param eventBus            The bus to dispatch events on.
      * @param components          The UI components that this frame requires
      */
@@ -57,21 +53,12 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final String icon,
             final AggregateConfigProvider configManager,
             final BackBufferFactory backBufferFactory,
-            final CommandParser parser,
-            final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus,
             final Collection<String> components) {
         super(icon, title, title, configManager, backBufferFactory,
-                tabCompleterFactory.getTabCompleter(configManager),
                 eventBus,
                 components);
         initBackBuffer();
-        setCommandParser(parser);
-    }
-
-    @Override
-    public int getMaxLineLength() {
-        return 512;
     }
 
     @Override

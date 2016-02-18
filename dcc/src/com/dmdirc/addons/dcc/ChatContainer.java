@@ -23,6 +23,7 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.DMDircMBassador;
+import com.dmdirc.DefaultInputModel;
 import com.dmdirc.addons.dcc.events.DccChatMessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSelfMessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSocketClosedEvent;
@@ -30,15 +31,12 @@ import com.dmdirc.addons.dcc.events.DccChatSocketOpenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.events.CommandErrorEvent;
 import com.dmdirc.interfaces.CommandController;
-import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Arrays;
-
-import javax.annotation.Nullable;
 
 /**
  * This class links DCC Chat objects to a window.
@@ -57,7 +55,6 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
      *
-     * @param parent              The parent of this frame container, if any.
      * @param dcc                 The DCCChat object this window wraps around
      * @param configManager       Config manager
      * @param commandController   The controller to use in the command parser.
@@ -78,12 +75,15 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final TabCompleterFactory tabCompleterFactory,
             final DMDircMBassador eventBus) {
         super(title, "dcc-chat-inactive", configManager, backBufferFactory,
-                new DCCCommandParser(configManager, commandController, eventBus),
-                tabCompleterFactory,
                 eventBus,
                 Arrays.asList(
                         WindowComponent.TEXTAREA.getIdentifier(),
                         WindowComponent.INPUTFIELD.getIdentifier()));
+        setInputModel(new DefaultInputModel(
+                this::sendLine,
+                new DCCCommandParser(configManager, commandController, eventBus),
+                tabCompleterFactory.getTabCompleter(configManager),
+                () -> 512));
         dccChat = dcc;
         dcc.setHandler(this);
         nickname = nick;
@@ -101,8 +101,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
         return dccChat;
     }
 
-    @Override
-    public void sendLine(final String line) {
+    private void sendLine(final String line) {
         if (dccChat.isWriteable()) {
             eventBus.publishAsync(new DccChatSelfMessageEvent(this, nickname, line));
             dccChat.sendLine(line);
