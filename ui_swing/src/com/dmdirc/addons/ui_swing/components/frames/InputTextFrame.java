@@ -96,7 +96,7 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final WindowModel owner) {
-        super(owner, owner.getCommandParser(), deps);
+        super(owner, owner.getInputModel().get().getCommandParser(), deps);
 
         serviceManager = deps.serviceManager;
         commandController = deps.commandController;
@@ -135,9 +135,10 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
             final TabCompleterUtils tabCompleterUtils) {
         inputField = inputFieldProvider.get();
         inputHandler = new SwingInputHandler(serviceManager, inputField, commandController,
-                getContainer().getCommandParser(), getContainer(), tabCompleterUtils, eventBus);
+                getContainer().getInputModel().get().getCommandParser(), getContainer(),
+                tabCompleterUtils, eventBus);
         inputHandler.addValidationListener(inputField);
-        inputHandler.setTabCompleter(frameParent.getTabCompleter());
+        inputHandler.setTabCompleter(frameParent.getInputModel().get().getTabCompleter());
 
         initPopupMenu();
         nickPopup = new JPopupMenu();

@@ -27,9 +27,13 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.InputModel;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompletionType;
+
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -79,9 +83,11 @@ public class Time extends DebugCommand implements IntelligentCommand {
             return;
         }
 
-        if (origin.isWritable()) {
+        final Optional<CommandParser> parser =
+                origin.getInputModel().map(InputModel::getCommandParser);
+        if (parser.isPresent()) {
             final long start = System.currentTimeMillis();
-            origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(0));
+            parser.get().parseCommand(origin, args.getArgumentsAsString(0));
             final long end = System.currentTimeMillis();
             showOutput(origin, args.isSilent(),
                     "Command executed in " + (end - start) + " milliseconds.");

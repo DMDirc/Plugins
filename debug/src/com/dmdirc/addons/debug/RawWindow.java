@@ -52,7 +52,8 @@ public class RawWindow extends FrameContainer {
         super("raw", "Raw", "(Raw log)",
                 connection.getWindowModel().getConfigManager(),
                 backBufferFactory,
-                tabCompleterFactory.getTabCompleter(connection.getWindowModel().getTabCompleter(),
+                tabCompleterFactory.getTabCompleter(
+                        connection.getWindowModel().getInputModel().get().getTabCompleter(),
                         connection.getWindowModel().getConfigManager(),
                         CommandType.TYPE_QUERY, CommandType.TYPE_CHAT),
                 connection.getWindowModel().getEventBus(),

@@ -59,7 +59,7 @@ public class DCCCommandParser extends GlobalCommandParser {
      */
     @Override
     protected void handleNonCommand(final WindowModel origin, final String line) {
-        origin.sendLine(line);
+        origin.getInputModel().ifPresent(im -> im.sendLine(line));
     }
 
 }

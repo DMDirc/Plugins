@@ -23,8 +23,10 @@
 package com.dmdirc.addons.time;
 
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.InputModel;
 import com.dmdirc.interfaces.WindowModel;
 
+import java.util.Optional;
 import java.util.Timer;
 
 import org.junit.Before;
@@ -45,6 +47,7 @@ public class TimedCommandTest {
 
     @Mock private TimerManager timerManager;
     @Mock private WindowModel origin;
+    @Mock private InputModel inputModel;
     @Mock private CommandParser commandParser;
     @Mock private TimerFactory timerFactory;
     @Mock private Timer timer;
@@ -54,7 +57,8 @@ public class TimedCommandTest {
     @Before
     public void setUp() throws Exception {
         when(timerFactory.getTimer(anyString())).thenReturn(timer);
-        when(origin.getCommandParser()).thenReturn(commandParser);
+        when(origin.getInputModel()).thenReturn(Optional.of(inputModel));
+        when(inputModel.getCommandParser()).thenReturn(commandParser);
         instance = new TimedCommand(timerManager, 1, 2, 3, "command", origin);
     }
 

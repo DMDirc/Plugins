@@ -33,6 +33,7 @@ import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.InputModel;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
@@ -106,8 +107,9 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
                     if (source.getState() == MediaSourceState.CLOSED) {
                         showError(origin, args.isSilent(), "Source is not running.");
                     } else {
-                        target.getWindowModel().getCommandParser().parseCommand(origin,
-                                getInformation(source, args.getArgumentsAsString(2)));
+                        target.getWindowModel().getInputModel().map(InputModel::getCommandParser)
+                                .ifPresent(cp -> cp.parseCommand(origin,
+                                        getInformation(source, args.getArgumentsAsString(2))));
                     }
                 }
             } else {
@@ -116,9 +118,10 @@ public class NowPlayingCommand extends Command implements IntelligentCommand {
             }
         } else {
             if (manager.hasRunningSource()) {
-                target.getWindowModel().getCommandParser().parseCommand(origin,
-                        getInformation(manager.getBestSource(), args.
-                                getArgumentsAsString(0)));
+                target.getWindowModel().getInputModel().map(InputModel::getCommandParser)
+                        .ifPresent(cp -> cp.parseCommand(origin,
+                                getInformation(manager.getBestSource(),
+                                        args.getArgumentsAsString(0))));
             } else {
                 showError(origin, args.isSilent(), "No running media sources available.");
             }
