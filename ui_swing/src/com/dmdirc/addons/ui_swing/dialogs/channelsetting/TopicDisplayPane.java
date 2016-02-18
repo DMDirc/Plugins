@@ -125,10 +125,11 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         topicText.setRows(5);
         topicText.setColumns(30);
         final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
-                commandController, groupChat.getWindowModel().getCommandParser(),
+                commandController,
+                groupChat.getWindowModel().getInputModel().get().getCommandParser(),
                 channelWindow.getContainer(), tabCompleterUtils, groupChat.getEventBus());
         handler.setTypes(true, false, true, false);
-        handler.setTabCompleter(groupChat.getWindowModel().getTabCompleter());
+        handler.setTabCompleter(groupChat.getWindowModel().getInputModel().get().getTabCompleter());
 
         topicText.getActionMap().put("paste-from-clipboard",
                 new ReplacePasteAction(clipboard, "(\r\n|\n|\r)", " "));

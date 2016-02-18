@@ -101,7 +101,7 @@ public class TimedCommand extends TimerTask {
         if (timer == null) {
             return;
         }
-        origin.getCommandParser().parseCommand(origin, command);
+        origin.getInputModel().get().getCommandParser().parseCommand(origin, command);
 
         if (--repetitions <= 0) {
             manager.removeTimer(timerKey);

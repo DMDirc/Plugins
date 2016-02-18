@@ -53,7 +53,7 @@ public class WindowModelSerialiser implements JsonSerializer<WindowModel> {
         res.addProperty("name", src.getName());
         res.addProperty("icon", src.getIcon());
         res.addProperty("title", src.getTitle());
-        res.addProperty("writable", src.isWritable());
+        res.addProperty("writable", src.getInputModel().isPresent());
         res.add("children", context.serialize(windowManager.getChildren(src)));
         res.add("components", context.serialize(src.getComponents()));
         res.add("backbuffer", context.serialize(src.getBackBuffer()));

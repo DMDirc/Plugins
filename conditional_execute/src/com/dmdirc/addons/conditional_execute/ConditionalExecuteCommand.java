@@ -28,6 +28,7 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.InputModel;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.util.HashMap;
@@ -231,8 +232,10 @@ public class ConditionalExecuteCommand extends Command {
                         "You can't run commands and manipulate the namespace at the same time, ignored.");
             } else {
                 // Command to run!
-                if (namespace.canRun(inverse) && origin.isWritable()) {
-                    origin.getCommandParser().parseCommand(origin, args.getArgumentsAsString(i));
+                if (namespace.canRun(inverse)) {
+                    final String command = args.getArgumentsAsString(i);
+                    origin.getInputModel().map(InputModel::getCommandParser)
+                            .ifPresent(cp -> cp.parseCommand(origin, command));
                 }
                 return;
             }

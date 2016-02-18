@@ -147,14 +147,14 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
         setResizable(false);
 
         infoLabel.setText("This will be sent as "
-                + parent.getContainer().getNumLines(textField.getText())
+                + parent.getContainer().getInputModel().get().getNumLines(textField.getText())
                 + " lines. Are you sure you want to continue?");
 
         textField.setColumns(50);
         textField.setRows(10);
 
         new SwingInputHandler(serviceManager, textField, commandController,
-                parent.getContainer().getCommandParser(),
+                parent.getContainer().getInputModel().get().getCommandParser(),
                 parent.getContainer(), tabCompleterUtils, eventBus)
                 .setTypes(false, false, true,false);
 
@@ -218,7 +218,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
                         Integer.MAX_VALUE);
                 for (final String line : lines) {
                     if (!line.isEmpty()) {
-                        parent.getContainer().sendLine(line);
+                        parent.getContainer().getInputModel().ifPresent(im -> im.sendLine(line));
                         parent.getInputHandler().addToBuffer(line);
                     }
                 }
@@ -229,7 +229,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
             setResizable(true);
             scrollPane.setVisible(true);
             infoLabel.setText("This will be sent as "
-                    + parent.getContainer().getNumLines(textField.getText())
+                    + parent.getContainer().getInputModel().get().getNumLines(textField.getText())
                     + " lines.");
             setResizable(true);
             pack();
@@ -242,7 +242,7 @@ public final class PasteDialog extends StandardDialog implements ActionListener,
     @Override
     public void keyTyped(final KeyEvent e) {
         infoLabel.setText("This will be sent as "
-                + parent.getContainer().getNumLines(textField.getText())
+                + parent.getContainer().getInputModel().get().getNumLines(textField.getText())
                 + " lines.");
     }
 

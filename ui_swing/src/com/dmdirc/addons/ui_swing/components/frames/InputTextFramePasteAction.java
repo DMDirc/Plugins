@@ -137,13 +137,15 @@ public final class InputTextFramePasteAction extends AbstractAction {
             final Integer pasteTrigger = container.getConfigManager().
                     getOptionInt("ui", "pasteProtectionLimit", false);
             //check whether the number of lines is over the limit
-            if (pasteTrigger != null && container.getNumLines(text) > pasteTrigger) {
+            if (pasteTrigger != null && container.getInputModel().get().getNumLines(text) >
+                    pasteTrigger) {
                 //show the multi line paste dialog
                 pasteDialogFactory.getPasteDialog(inputFrame, text, window).displayOrRequestFocus();
             } else {
                 //send the lines
                 for (final String clipboardLine : clipboardLines) {
-                    inputFrame.getContainer().sendLine(clipboardLine);
+                    inputFrame.getContainer().getInputModel()
+                            .ifPresent(im -> im.sendLine(clipboardLine));
                 }
             }
         } else {

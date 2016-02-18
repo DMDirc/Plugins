@@ -48,20 +48,21 @@ public class FakeWriteableFrameContainer extends FrameContainer {
             final BackBufferFactory backBufferFactory) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), backBufferFactory,
-                target.getTabCompleter(), eventBus, Collections.<String>emptyList());
+                target.getInputModel().get().getTabCompleter(), eventBus,
+                Collections.<String>emptyList());
         this.target = target;
         initBackBuffer();
-        setCommandParser(target.getCommandParser());
+        setCommandParser(target.getInputModel().get().getCommandParser());
     }
 
     @Override
     public void sendLine(final String line) {
-        target.sendLine(line);
+        target.getInputModel().ifPresent(im -> im.sendLine(line));
     }
 
     @Override
     public int getMaxLineLength() {
-        return target.getMaxLineLength();
+        return target.getInputModel().get().getMaxLineLength();
     }
 
     @Override

@@ -122,7 +122,6 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
      * @param channel           The channel that this topic bar is for.
      * @param window            The window this topic bar is for.
      * @param iconManager       The icon manager to use for this bar's icons.
-     * @param eventBus          The event bus to post errors to
      */
     public TopicBar(
             final Window parentWindow,
@@ -159,10 +158,11 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
 
         final SwingInputHandler handler = new SwingInputHandler(
                 serviceManager, topicText, commandController,
-                channel.getWindowModel().getCommandParser(), channel.getWindowModel(),
+                channel.getWindowModel().getInputModel().get().getCommandParser(),
+                channel.getWindowModel(),
                 tabCompleterUtils, channel.getEventBus());
         handler.setTypes(true, false, true, false);
-        handler.setTabCompleter(channel.getWindowModel().getTabCompleter());
+        handler.setTabCompleter(channel.getWindowModel().getInputModel().get().getTabCompleter());
 
         final JScrollPane sp = new JScrollPane(topicText);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
