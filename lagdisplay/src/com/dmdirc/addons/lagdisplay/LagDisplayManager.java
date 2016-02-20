@@ -36,6 +36,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
+import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.events.ServerGotPingEvent;
 import com.dmdirc.events.ServerNoPingEvent;
@@ -207,7 +208,7 @@ public class LagDisplayManager implements ConfigChangeListener {
             } catch (NumberFormatException ex) {
                 pings.remove(event.getConnection());
             }
-            event.setDisplayFormat("");
+            event.setDisplayProperty(DisplayProperty.DO_NOT_DISPLAY, true);
 
             panel.refreshDialog();
         }

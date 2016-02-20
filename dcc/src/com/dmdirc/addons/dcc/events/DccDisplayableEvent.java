@@ -27,27 +27,14 @@ import com.dmdirc.events.DisplayPropertyMap;
 import com.dmdirc.events.DisplayableEvent;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Base class for displayable DCC events.
  */
 public abstract class DccDisplayableEvent extends DccEvent implements DisplayableEvent {
 
-    /** The display format to use for this event. */
-    private final AtomicReference<String> displayFormatRef = new AtomicReference<>("");
     /** The properties associated with this event. */
     private final DisplayPropertyMap properties = new DisplayPropertyMap();
-
-    @Override
-    public String getDisplayFormat() {
-        return displayFormatRef.get();
-    }
-
-    @Override
-    public void setDisplayFormat(final String format) {
-        displayFormatRef.set(format);
-    }
 
     @Override
     public <T> void setDisplayProperty(final DisplayProperty<T> property, final T value) {
