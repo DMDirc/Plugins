@@ -25,6 +25,8 @@ package com.dmdirc.addons.logging;
 import com.dmdirc.events.BaseDisplayableEvent;
 import com.dmdirc.interfaces.WindowModel;
 
+import java.time.LocalDateTime;
+
 /**
  * Event raised when a line from the log is restored into a window.
  */
@@ -32,7 +34,7 @@ public class HistoricalLineRestoredEvent extends BaseDisplayableEvent {
 
     private final String line;
 
-    public HistoricalLineRestoredEvent(final long timestamp, final WindowModel source,
+    public HistoricalLineRestoredEvent(final LocalDateTime timestamp, final WindowModel source,
             final String line) {
         super(timestamp, source);
         this.line = line;

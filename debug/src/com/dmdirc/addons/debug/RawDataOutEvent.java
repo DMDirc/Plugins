@@ -25,6 +25,8 @@ package com.dmdirc.addons.debug;
 import com.dmdirc.events.BaseDisplayableEvent;
 import com.dmdirc.interfaces.WindowModel;
 
+import java.time.LocalDateTime;
+
 /**
  * Event raised when a raw data out line is displayed.
  */
@@ -32,7 +34,8 @@ public class RawDataOutEvent extends BaseDisplayableEvent {
 
     private final String line;
 
-    public RawDataOutEvent(final long timestamp, final WindowModel source, final String line) {
+    public RawDataOutEvent(final LocalDateTime timestamp, final WindowModel source,
+            final String line) {
         super(timestamp, source);
         this.line = line;
     }
