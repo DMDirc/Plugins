@@ -73,6 +73,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -275,13 +276,10 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleChannelGotTopic(final ChannelGotTopicEvent event) {
         final String filename = locator.getLogFile(event.getChannel());
-        final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
         appendLine(filename, "*** Topic is: %s", event.getTopic().getTopic());
         appendLine(filename, "*** Set at: %s on %s by %s",
-                timeFormat.format(event.getTopic().getDate()),
-                dateFormat.format(event.getTopic().getDate()),
+                event.getTopic().getDate().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                event.getTopic().getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                         event.getTopic().getClient()
                                 .map(GroupChatUser::getNickname).orElse("Unknown"));
     }

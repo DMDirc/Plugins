@@ -30,7 +30,7 @@ import com.dmdirc.logger.ErrorLevel;
 import com.dmdirc.logger.ErrorReportStatus;
 import com.dmdirc.ui.core.errors.DisplayableError;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -124,7 +124,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
                 table.getSelectionModel().setSelectionInterval(-1, -1);
             }
             date.setText(selectedError.map(DisplayableError::getDate)
-                    .map(d -> new SimpleDateFormat("MMM dd hh:mm aa").format(d)).orElse(""));
+                    .map(d -> d.format(DateTimeFormatter.ofPattern("MMM dd hh:mm aa"))).orElse(""));
             severity.setText(selectedError.map(DisplayableError::getSeverity)
                     .map(ErrorLevel::name).orElse(""));
             reportStatus.setText(
