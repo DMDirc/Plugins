@@ -25,6 +25,8 @@ package com.dmdirc.addons.tabcompletion_bash;
 import com.dmdirc.events.BaseDisplayableEvent;
 import com.dmdirc.interfaces.WindowModel;
 
+import java.time.LocalDateTime;
+
 /**
  * Event raised when multiple potential results match a bash-style completion attempt.
  */
@@ -32,7 +34,7 @@ public class BashDisambiguationEvent extends BaseDisplayableEvent {
 
     private final String matches;
 
-    public BashDisambiguationEvent(final long timestamp, final WindowModel source,
+    public BashDisambiguationEvent(final LocalDateTime timestamp, final WindowModel source,
             final String matches) {
         super(timestamp, source);
         this.matches = matches;
