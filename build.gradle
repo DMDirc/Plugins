@@ -30,7 +30,7 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven { url 'http://artifactory.dmdirc.com/artifactory/repo' }
+        maven { url 'https://artifactory.dmdirc.com/artifactory/repo' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
@@ -146,7 +146,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.11'
 }
 
 subprojects.each { evaluationDependsOn it.path }
