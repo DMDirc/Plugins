@@ -486,7 +486,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
-        if (event.getContainer().equals(getContainer())) {
+        if (event.getSource().equals(getContainer())) {
             if (popout) {
                 setPopout(false);
             }
