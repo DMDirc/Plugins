@@ -91,7 +91,7 @@ public class TypingLabel extends JLabel {
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
-        if (event.getContainer().equals(container)) {
+        if (event.getSource().equals(container)) {
             container.getConfigManager().getBinder().unbind(this);
             container.getEventBus().unsubscribe(this);
         }
