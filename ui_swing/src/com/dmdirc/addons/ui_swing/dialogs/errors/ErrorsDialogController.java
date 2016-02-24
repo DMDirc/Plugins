@@ -124,7 +124,7 @@ class ErrorsDialogController implements ErrorsDialogModelListener {
                 table.getSelectionModel().setSelectionInterval(-1, -1);
             }
             date.setText(selectedError.map(DisplayableError::getDate)
-                    .map(d -> d.format(DateTimeFormatter.ofPattern("MMM dd hh:mm aa"))).orElse(""));
+                    .map(d -> d.format(DateTimeFormatter.ofPattern("MMM dd hh:mm a"))).orElse(""));
             severity.setText(selectedError.map(DisplayableError::getSeverity)
                     .map(ErrorLevel::name).orElse(""));
             reportStatus.setText(
