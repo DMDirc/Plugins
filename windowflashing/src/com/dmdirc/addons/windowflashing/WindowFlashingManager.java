@@ -176,8 +176,6 @@ public class WindowFlashingManager {
         }
     }
 
-
-
     @Handler
     public void showConfig(final ClientPrefsOpenedEvent event) {
         final PreferencesDialogModel manager = event.getModel();

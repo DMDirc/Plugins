@@ -134,10 +134,10 @@ public class ParserDebugManager {
 
     @Handler
     public void handleServerDisconnected(final ServerDisconnectedEvent event) {
-            final Parser parser = event.getConnection().getParser().get();
-            if (registeredParsers.containsKey(parser)) {
-                removeParser(parser, false);
-            }
+        final Parser parser = event.getConnection().getParser().get();
+        if (registeredParsers.containsKey(parser)) {
+            removeParser(parser, false);
+        }
     }
 
     @Handler

@@ -124,7 +124,9 @@ public class EventBusViewer extends DebugCommand {
 
         @Handler
         public void handleFrameClosing(final FrameClosingEvent event) {
-            eventBus.unsubscribe(this);
+            if (event.getSource().equals(target)) {
+                eventBus.unsubscribe(this);
+            }
         }
 
         @Handler

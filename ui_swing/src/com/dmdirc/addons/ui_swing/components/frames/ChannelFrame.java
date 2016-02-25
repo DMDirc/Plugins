@@ -224,10 +224,12 @@ public final class ChannelFrame extends InputTextFrame {
     @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
-        saveSplitPanePosition();
-        topicBar.close();
-        dialogProvider.dispose(groupChat);
-        super.windowClosing(event);
+        if (event.getSource().equals(getContainer())) {
+            saveSplitPanePosition();
+            topicBar.close();
+            dialogProvider.dispose(groupChat);
+            super.windowClosing(event);
+        }
     }
 
     @Override

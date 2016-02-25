@@ -224,23 +224,31 @@ public class NickList extends JScrollPane implements MouseListener {
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleClientsChanged(final NickListClientsChangedEvent event) {
-        nicklistModel.replace(event.getUsers());
+        if (event.getChannel().getWindowModel().equals(frame.getContainer())) {
+            nicklistModel.replace(event.getUsers());
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleNickListUpdated(final NickListUpdatedEvent event) {
-        nicklistModel.sort();
-        repaint();
+        if (event.getChannel().getWindowModel().equals(frame.getContainer())) {
+            nicklistModel.sort();
+            repaint();
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleClientAdded(final NickListClientAddedEvent event) {
-        nicklistModel.add(event.getUser());
+        if (event.getChannel().getWindowModel().equals(frame.getContainer())) {
+            nicklistModel.add(event.getUser());
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleClientRemoved(final NickListClientRemovedEvent event) {
-        nicklistModel.remove(event.getUser());
+        if (event.getChannel().getWindowModel().equals(frame.getContainer())) {
+            nicklistModel.remove(event.getUser());
+        }
     }
 
 }

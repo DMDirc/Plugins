@@ -77,7 +77,6 @@ public class IdentdManager {
      * Called when the plugin is loaded.
      */
     public void onLoad() {
-        // Add action hooks
         eventBus.subscribe(this);
 
         if (config.getOptionBool(domain, "advanced.alwaysOn")) {
@@ -97,11 +96,11 @@ public class IdentdManager {
     @Handler
     public void handleServerConnecting(final ServerConnectingEvent event) {
         synchronized (connections) {
-                if (connections.isEmpty()) {
-                    server.startServer();
-                }
-                connections.add(event.getConnection());
+            if (connections.isEmpty()) {
+                server.startServer();
             }
+            connections.add(event.getConnection());
+        }
     }
 
     @Handler
@@ -116,15 +115,13 @@ public class IdentdManager {
 
     private void handleServerRemoved(final Connection connection) {
         synchronized (connections) {
-                connections.remove(connection);
+            connections.remove(connection);
 
-                if (connections.isEmpty() && !config.getOptionBool(domain, "advanced.alwaysOn")) {
-                    server.stopServer();
-                }
+            if (connections.isEmpty() && !config.getOptionBool(domain, "advanced.alwaysOn")) {
+                server.stopServer();
             }
+        }
     }
-
-
 
     @Handler
     public void showConfig(final ClientPrefsOpenedEvent event) {

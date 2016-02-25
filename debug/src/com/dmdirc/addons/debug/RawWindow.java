@@ -29,7 +29,6 @@ import com.dmdirc.parser.events.DataInEvent;
 import com.dmdirc.parser.events.DataOutEvent;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.core.components.WindowComponent;
-import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Arrays;
@@ -44,10 +43,7 @@ public class RawWindow extends FrameContainer {
 
     private final Connection connection;
 
-    public RawWindow(
-            final Connection connection,
-            final TabCompleterFactory tabCompleterFactory,
-            final BackBufferFactory backBufferFactory) {
+    public RawWindow(final Connection connection, final BackBufferFactory backBufferFactory) {
         super("raw", "Raw", "(Raw log)",
                 connection.getWindowModel().getConfigManager(),
                 backBufferFactory,
@@ -75,7 +71,11 @@ public class RawWindow extends FrameContainer {
 
     @Handler
     public void handleServerConnecting(final ServerConnectingEvent connectingEvent) {
-        connection.getParser().map(Parser::getCallbackManager).ifPresent(c -> c.subscribe(this));
+        if (connectingEvent.getConnection().equals(connection)) {
+            connection.getParser()
+                    .map(Parser::getCallbackManager)
+                    .ifPresent(c -> c.subscribe(this));
+        }
     }
 
     @Handler

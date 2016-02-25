@@ -75,8 +75,8 @@ public class AwayColoursManager {
 
     @Handler
     public void handleAwayEvent(final ChannelUserAwayEvent event) {
-            event.getUser().setDisplayProperty(DisplayProperty.FOREGROUND_COLOUR, colour);
-            event.getChannel().refreshClients();
+        event.getUser().setDisplayProperty(DisplayProperty.FOREGROUND_COLOUR, colour);
+        event.getChannel().refreshClients();
     }
 
     @Handler

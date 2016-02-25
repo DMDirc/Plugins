@@ -142,27 +142,33 @@ public final class ServerFrame extends InputTextFrame {
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleCertProblem(final ServerCertificateProblemEncounteredEvent event) {
-        if (sslDialog != null) {
-            sslDialog.dispose();
-        }
+        if (event.getConnection().equals(connection)) {
+            if (sslDialog != null) {
+                sslDialog.dispose();
+            }
 
-        sslDialog = sslDialogFactory.create(event);
-        sslDialog.display();
+            sslDialog = sslDialogFactory.create(event);
+            sslDialog.display();
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleCertProblemResolved(final ServerCertificateProblemResolvedEvent event) {
-        if (sslDialog != null) {
-            sslDialog.dispose();
+        if (event.getConnection().equals(connection)) {
+            if (sslDialog != null) {
+                sslDialog.dispose();
+            }
         }
     }
 
     @Override
     @Handler(invocation = EdtHandlerInvocation.class)
     public void windowClosing(final FrameClosingEvent event) {
-        connection.getWindowModel().getEventBus().unsubscribe(this);
-        dialogProvider.dispose(connection);
-        super.windowClosing(event);
+        if (event.getSource().equals(frameParent)) {
+            connection.getWindowModel().getEventBus().unsubscribe(this);
+            dialogProvider.dispose(connection);
+            super.windowClosing(event);
+        }
     }
 
     @Override
