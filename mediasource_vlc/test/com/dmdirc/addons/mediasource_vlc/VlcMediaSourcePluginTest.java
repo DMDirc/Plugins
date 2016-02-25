@@ -38,8 +38,7 @@ import static org.mockito.Mockito.*;
 public class VlcMediaSourcePluginTest {
 
     @Test
-    public void testProcessInformation1() throws IOException, URISyntaxException,
-            UnsupportedEncodingException {
+    public void testProcessInformation1() throws Exception {
         final PluginInfo pluginInfo = mock(PluginInfo.class);
         final IdentityController identityController = mock(IdentityController.class);
         final VlcManager plugin = new VlcManager(pluginInfo, identityController);
