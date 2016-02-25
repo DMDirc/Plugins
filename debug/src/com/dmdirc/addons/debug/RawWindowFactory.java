@@ -58,8 +58,7 @@ public class RawWindowFactory {
     }
 
     public RawWindow getRawWindow(final Connection connection) {
-        final RawWindow rawWindow = new RawWindow(connection,
-                tabCompleterFactory,  backBufferFactory);
+        final RawWindow rawWindow = new RawWindow(connection, backBufferFactory);
         rawWindow.setInputModel(
                 new DefaultInputModel(
                         connection::sendLine,

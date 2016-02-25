@@ -70,27 +70,37 @@ public class ContactListListener {
 
     @Handler
     public void handleClientsUpdated(final NickListClientsChangedEvent event) {
-        event.getUsers().forEach(this::clientAdded);
+        if (event.getChannel().equals(groupChat)) {
+            event.getUsers().forEach(this::clientAdded);
+        }
     }
 
     @Handler
     public void handleClientAdded(final NickListClientAddedEvent event) {
-        clientAdded(event.getUser());
+        if (event.getChannel().equals(groupChat)) {
+            clientAdded(event.getUser());
+        }
     }
 
     @Handler
     public void handleUserAway(final ChannelUserAwayEvent event) {
-        clientAdded(event.getUser());
+        if (event.getChannel().equals(groupChat)) {
+            clientAdded(event.getUser());
+        }
     }
 
     @Handler
     public void handleUserBack(final ChannelUserBackEvent event) {
-        clientAdded(event.getUser());
+        if (event.getChannel().equals(groupChat)) {
+            clientAdded(event.getUser());
+        }
     }
 
     @Handler
     public void windowClosing(final FrameClosingEvent event) {
-        removeListeners();
+        if (event.getSource().equals(groupChat.getWindowModel())) {
+            removeListeners();
+        }
     }
 
     void clientAdded(final GroupChatUser client) {

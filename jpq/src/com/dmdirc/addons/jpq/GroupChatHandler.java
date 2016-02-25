@@ -77,21 +77,27 @@ public class GroupChatHandler {
     @VisibleForTesting
     @Handler
     void handleJoin(final ChannelJoinEvent event) {
-        hideEvent(event);
+        if (event.getChannel().equals(groupChat)) {
+            hideEvent(event);
+        }
     }
 
     @SuppressWarnings("TypeMayBeWeakened")
     @VisibleForTesting
     @Handler
     void handlePart(final ChannelPartEvent event) {
-        hideEvent(event);
+        if (event.getChannel().equals(groupChat)) {
+            hideEvent(event);
+        }
     }
 
     @SuppressWarnings("TypeMayBeWeakened")
     @VisibleForTesting
     @Handler
     void handleQuit(final ChannelQuitEvent event) {
-        hideEvent(event);
+        if (event.getChannel().equals(groupChat)) {
+            hideEvent(event);
+        }
     }
 
     private void hideEvent(final DisplayableEvent event) {

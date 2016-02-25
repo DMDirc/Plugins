@@ -87,13 +87,11 @@ public class ConnectionHandler {
 
     @VisibleForTesting
     void checkWho() {
-        connectionManager.getConnections().forEach(
-                connection -> connection.getGroupChatManager().getChannels().forEach(channel -> {
-                    if (channel.getWindowModel().getConfigManager()
-                            .getOptionBool(domain, "sendwho")) {
-                        channel.requestUsersInfo();
-                    }
-                }));
+        connection.getGroupChatManager().getChannels().forEach(channel -> {
+            if (channel.getWindowModel().getConfigManager().getOptionBool(domain, "sendwho")) {
+                channel.requestUsersInfo();
+            }
+        });
     }
 
     @VisibleForTesting
@@ -109,7 +107,8 @@ public class ConnectionHandler {
     @VisibleForTesting
     @Handler
     void handleAwayEvent(final ChannelUserAwayEvent event) {
-        if (!event.getReason().isPresent()) {
+        if (event.getChannel().getConnection().equals(connection)
+                && !event.getReason().isPresent()) {
             event.setDisplayProperty(DisplayProperty.DO_NOT_DISPLAY, true);
             final boolean notseen = !users.containsKey(event.getUser().getNickname());
             users.put(event.getUser().getNickname(), event.getUser());
@@ -123,7 +122,7 @@ public class ConnectionHandler {
     @VisibleForTesting
     @Handler
     void handleServerNumericEvent(final ServerNumericEvent event) {
-        if (event.getNumeric() == 301) {
+        if (event.getConnection().equals(connection) && event.getNumeric() == 301) {
             final String nickname = event.getArgs()[3];
             final String reason = event.getArgs()[4];
             users.removeAll(nickname).forEach(u -> u.getGroupChat().getEventBus()

@@ -228,12 +228,16 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleTopicChanged(final ChannelTopicChangeEvent event) {
-        topicChanged(event.getChannel(), event.getTopic());
+        if (event.getChannel().equals(channel)) {
+            topicChanged(event.getChannel(), event.getTopic());
+        }
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void handleTopicUnset(final ChannelTopicUnsetEvent event) {
-        topicChanged(event.getChannel(), null);
+        if (event.getChannel().equals(channel)) {
+            topicChanged(event.getChannel(), null);
+        }
     }
 
     private void topicChanged(final GroupChat channel, final Topic topic) {
