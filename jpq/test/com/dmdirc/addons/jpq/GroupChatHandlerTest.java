@@ -62,6 +62,9 @@ public class GroupChatHandlerTest {
         when(windowModel.getConfigManager()).thenReturn(configProvider);
         when(configProvider.getBinder()).thenReturn(configBinder);
         when(configBinder.withDefaultDomain("domain")).thenReturn(configBinder);
+        when(channelJoinEvent.getChannel()).thenReturn(groupChat);
+        when(channelPartEvent.getChannel()).thenReturn(groupChat);
+        when(channelQuitEvent.getChannel()).thenReturn(groupChat);
         instance = new GroupChatHandler("domain", groupChat);
     }
 
