@@ -142,11 +142,11 @@ public class ParserTest {
 
         parser.parseHiddenOperator(tokens, 0);
         assertEquals(4, tokens.size());
-        assertTrue(tokens.get(0).getToken().getType() == TokenType.BRACKET_OPEN);
+        assertSame(TokenType.BRACKET_OPEN, tokens.get(0).getToken().getType());
 
         parser.parseHiddenOperator(tokens, 3);
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(2).getToken().getType() == TokenType.BRACKET_CLOSE);
+        assertSame(TokenType.BRACKET_CLOSE, tokens.get(2).getToken().getType());
     }
 
     @Test
@@ -161,9 +161,9 @@ public class ParserTest {
 
         parser.parseUnaryOperator(tokens, 1);
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(0).getToken().getType() == TokenType.START);
-        assertTrue(tokens.get(1).getToken().getType() == TokenType.MOD_NEGATIVE);
-        assertTrue(tokens.get(2).getToken().getType() == TokenType.END);
+        assertSame(TokenType.START, tokens.get(0).getToken().getType());
+        assertSame(TokenType.MOD_NEGATIVE, tokens.get(1).getToken().getType());
+        assertSame(TokenType.END, tokens.get(2).getToken().getType());
 
         assertTrue(tokens.get(1).isProcessed());
         assertEquals(1, tokens.get(1).getChildren().size());
@@ -184,9 +184,9 @@ public class ParserTest {
         parser.parseBinaryOperator(tokens, 2);
 
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(0).getToken().getType() == TokenType.START);
-        assertTrue(tokens.get(1).getToken().getType() == TokenType.OP_MINUS);
-        assertTrue(tokens.get(2).getToken().getType() == TokenType.END);
+        assertSame(TokenType.START, tokens.get(0).getToken().getType());
+        assertSame(TokenType.OP_MINUS, tokens.get(1).getToken().getType());
+        assertSame(TokenType.END, tokens.get(2).getToken().getType());
 
         assertTrue(tokens.get(1).isProcessed());
         assertEquals(2, tokens.get(1).getChildren().size());
