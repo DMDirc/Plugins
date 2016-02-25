@@ -102,6 +102,9 @@ public class ConnectionHandlerTest {
         instance = new ConnectionHandler(config, scheduledExecutorService, connectionManager,
                 "domain", connection);
         instance.handleWhoInterval(5);
+
+        when(serverNumericEvent.getConnection()).thenReturn(connection);
+        when(channelUserAwayEvent.getChannel()).thenReturn(groupChat);
     }
 
     @Test
