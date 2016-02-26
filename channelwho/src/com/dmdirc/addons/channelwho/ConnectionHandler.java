@@ -107,7 +107,7 @@ public class ConnectionHandler {
     @VisibleForTesting
     @Handler
     void handleAwayEvent(final ChannelUserAwayEvent event) {
-        if (event.getChannel().getConnection().equals(connection)
+        if (event.getChannel().getConnection().equals(Optional.of(connection))
                 && !event.getReason().isPresent()) {
             event.setDisplayProperty(DisplayProperty.DO_NOT_DISPLAY, true);
             final boolean notseen = !users.containsKey(event.getUser().getNickname());
