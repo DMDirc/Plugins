@@ -116,8 +116,7 @@ public class LoggingManager implements ConfigChangeListener {
     /** The manager to add history windows to. */
     private final WindowManager windowManager;
     /** Map of open files. */
-    private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(
-            new HashMap<>());
+    private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(new HashMap<>());
     private final DMDircMBassador eventBus;
     private final Provider<String> directoryProvider;
     private final BackBufferFactory backBufferFactory;
@@ -249,14 +248,14 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryActions(final BaseQueryActionEvent event) {
-        final User user = event.getUser();
+        final User user = event.getQuery().getUser();
         final String filename = locator.getLogFile(user);
         appendLine(filename, "* %s %s", user.getNickname(), event.getMessage());
     }
 
     @Handler
     public void handleQueryMessages(final BaseQueryMessageEvent event) {
-        final User user = event.getUser();
+        final User user = event.getQuery().getUser();
         final String filename = locator.getLogFile(user);
         appendLine(filename, "<%s> %s", user.getNickname(), event.getMessage());
     }
