@@ -31,26 +31,22 @@ import com.dmdirc.ui.messages.BackBuffer;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Listener;
-import net.engio.mbassy.listener.References;
-
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class HistoryWindowTest {
 
@@ -61,6 +57,7 @@ public class HistoryWindowTest {
     @Mock private WindowModel frameContainer;
     @Mock private DMDircMBassador eventBus;
     @Mock private BackBufferFactory backBufferFactory;
+    @Captor private ArgumentCaptor<HistoricalLineRestoredEvent> eventCaptor;
     private HistoryWindow instance;
 
     @Before
@@ -81,28 +78,13 @@ public class HistoryWindowTest {
 
     @Test
     public void testOutputLoggingBackBuffer() throws Exception {
-        final LineListener listener = new LineListener();
-        instance.getEventBus().subscribe(listener);
         instance.outputLoggingBackBuffer(4);
 
-        assertTrue(listener.latch.await(5, TimeUnit.SECONDS));
-        assertEquals("[21/12/2015 12:58:02] RAAR", listener.values.get(0).getLine());
-        assertEquals("[21/12/2015 12:59:03] RAAAR", listener.values.get(1).getLine());
-        assertEquals("[21/12/2015 13:00:04] RAAAAR", listener.values.get(2).getLine());
-        assertEquals("[21/12/2015 13:01:05] RAAAAAR", listener.values.get(3).getLine());
+        verify(eventBus, times(4)).publishAsync(eventCaptor.capture());
+        assertEquals("[21/12/2015 12:58:02] RAAR", eventCaptor.getAllValues().get(0).getLine());
+        assertEquals("[21/12/2015 12:59:03] RAAAR", eventCaptor.getAllValues().get(1).getLine());
+        assertEquals("[21/12/2015 13:00:04] RAAAAR", eventCaptor.getAllValues().get(2).getLine());
+        assertEquals("[21/12/2015 13:01:05] RAAAAAR", eventCaptor.getAllValues().get(3).getLine());
     }
 
-    @Listener(references = References.Strong)
-    private static class LineListener {
-
-        public final List<HistoricalLineRestoredEvent> values = new ArrayList<>();
-        public final CountDownLatch latch = new CountDownLatch(4);
-
-        @Handler
-        private void handleLineRestored(final HistoricalLineRestoredEvent event) {
-            values.add(event);
-            latch.countDown();
-        }
-
-    }
 }
