@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.dmdirc.util.LogUtils.USER_ERROR;
+import static com.dmdirc.util.LogUtils.APP_ERROR;
 
 /**
  * {@link LoggingSwingWorker} that runs a {@link Supplier}.
@@ -98,7 +98,7 @@ public class SupplierLoggingSwingWorker<T, V> extends LoggingSwingWorker<T, V> {
         } catch (InterruptedException ex) {
             //Ignore
         } catch (ExecutionException ex) {
-            LOG.warn(USER_ERROR, ex.getMessage(), ex);
+            LOG.warn(APP_ERROR, ex.getMessage(), ex);
         }
     }
 
