@@ -28,6 +28,7 @@ import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.ServerAwayEvent;
 import com.dmdirc.events.ServerBackEvent;
+import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 
@@ -82,6 +83,11 @@ public class AwayLabel extends JLabel {
     public void handleBack(final ServerBackEvent event) {
         container.getConnection().filter(c -> c.equals(event.getConnection()))
                 .map(Connection::isAway).ifPresent(this::updateVisibility);
+    }
+
+    @Handler(delivery = Invoke.Asynchronously, invocation = EdtHandlerInvocation.class)
+    public void handleReconnect(final ServerConnectedEvent event) {
+        updateVisibility(false);
     }
 
     private void updateVisibility(final boolean away) {
