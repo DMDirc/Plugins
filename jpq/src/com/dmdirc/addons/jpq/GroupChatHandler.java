@@ -25,6 +25,7 @@ package com.dmdirc.addons.jpq;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelJoinEvent;
+import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.events.ChannelPartEvent;
 import com.dmdirc.events.ChannelQuitEvent;
 import com.dmdirc.events.DisplayProperty;
@@ -44,6 +45,7 @@ public class GroupChatHandler {
     private final GroupChat groupChat;
     private final ConfigBinder binder;
     private boolean hideEvents;
+    private boolean hideNickChanges;
 
     public GroupChatHandler(final String domain, final GroupChat groupChat) {
         this.groupChat = groupChat;
@@ -73,6 +75,12 @@ public class GroupChatHandler {
         hideEvents = value;
     }
 
+    @VisibleForTesting
+    @ConfigBinding(key = "hidenickchanges")
+    void handleSettingChangeNickname(final boolean value) {
+        hideNickChanges = value;
+    }
+
     @SuppressWarnings("TypeMayBeWeakened")
     @VisibleForTesting
     @Handler
@@ -97,6 +105,15 @@ public class GroupChatHandler {
     void handleQuit(final ChannelQuitEvent event) {
         if (event.getChannel().equals(groupChat)) {
             hideEvent(event);
+        }
+    }
+
+    @SuppressWarnings("TypeMayBeWeakened")
+    @VisibleForTesting
+    @Handler
+    void handleNickChange(final ChannelNickChangeEvent event) {
+        if (event.getChannel().equals(groupChat) && hideNickChanges) {
+            event.setDisplayProperty(DisplayProperty.DO_NOT_DISPLAY, true);
         }
     }
 
