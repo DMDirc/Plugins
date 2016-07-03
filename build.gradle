@@ -3,25 +3,23 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'findbugs'
     apply plugin: 'pmd'
+    apply plugin: 'idea'
 
     apply from: '../gradle/coverage.gradle'
+
+    idea {
+        module {
+             sourceDirs += file('src/main/generated')
+             testSourceDirs += file('src/test/generated_tests')
+             generatedSourceDirs = [file('src/main/generated'), file('src/test/generated_tests')]
+        }
+    }
 
     configurations {
         bundle
 
         compile {
             extendsFrom bundle
-        }
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs = ['src']
-            resources.srcDirs = ['res']
-        }
-        test {
-            java.srcDirs = ['test']
-            resources.srcDirs = ['test-res']
         }
     }
 
