@@ -103,7 +103,7 @@ subprojects {
         }
 
         from { configurations.bundle.minus(configurations.provided).collect { it.isDirectory() ? it : zipTree(it) } } {
-            exclude 'META-INF/**'
+            exclude 'META-INF/*'
         }
     }
 
