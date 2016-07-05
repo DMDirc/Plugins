@@ -22,28 +22,84 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import spark.Spark;
+import com.dmdirc.util.LogUtils;
+
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Web server used by the web UI.
  */
 public class WebServer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WebServer.class);
+
     private final int port;
+    private Server server;
 
     public WebServer(final int port) {
         this.port = port;
     }
 
     public void start() {
-        Spark.port(port);
-        Spark.webSocket("/ws", WebSocketHandler.class);
-        Spark.staticFileLocation("/www");
-        Spark.get("/test", (request, response) -> "HELLO");
+        server = new Server(port);
+
+        // Override the context classloader, so that Jetty uses the plugin classloader not the main DMDirc loader.
+        final Thread currentThread = Thread.currentThread();
+        final ClassLoader classLoader = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(getClass().getClassLoader());
+
+        try {
+            final ResourceHandler resourceHandler = new ResourceHandler();
+            resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+            resourceHandler.setBaseResource(Resource.newClassPathResource("/www"));
+
+            final ServletContextHandler wsHandler = new ServletContextHandler();
+            wsHandler.setContextPath("/");
+            wsHandler.addServlet(WebUiWebSocketServlet.class, "/ws");
+
+            HandlerList handlers = new HandlerList();
+            handlers.setHandlers(new Handler[] { resourceHandler, wsHandler, new DefaultHandler() });
+            server.setHandler(handlers);
+
+            server.start();
+        } catch (Exception ex) {
+            LOG.error(LogUtils.USER_ERROR, "Unable to start web server", ex);
+            server = null;
+        } finally {
+            // Restore the usual context class loader.
+            currentThread.setContextClassLoader(classLoader);
+        }
     }
 
     public void stop() {
-        Spark.stop();
+        try {
+            server.stop();
+        } catch (Exception ex) {
+            LOG.error(LogUtils.USER_ERROR, "Unable to stop web server", ex);
+        }
+
+        server = null;
     }
 
+    /**
+     * Web Socket Servlet that creates a {@link WebSocketHandler} for each connection.
+     */
+    public static class WebUiWebSocketServlet extends WebSocketServlet {
+
+        @Override
+        public void configure(final WebSocketServletFactory factory) {
+            factory.register(WebSocketHandler.class);
+        }
+
+    }
 }
