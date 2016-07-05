@@ -26,6 +26,7 @@ import com.dmdirc.util.LogUtils;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -63,12 +64,22 @@ public class WebServer {
             resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
             resourceHandler.setBaseResource(Resource.newClassPathResource("/www"));
 
+            final ResourceHandler clientResourceHandler = new ResourceHandler();
+            clientResourceHandler.setBaseResource(Resource.newClassPathResource("/com/dmdirc/res/"));
+            final ContextHandler clientResourceContext = new ContextHandler("/res");
+            clientResourceContext.setHandler(clientResourceHandler);
+
             final ServletContextHandler wsHandler = new ServletContextHandler();
             wsHandler.setContextPath("/");
             wsHandler.addServlet(WebUiWebSocketServlet.class, "/ws");
 
             HandlerList handlers = new HandlerList();
-            handlers.setHandlers(new Handler[] { resourceHandler, wsHandler, new DefaultHandler() });
+            handlers.setHandlers(new Handler[] {
+                    resourceHandler,
+                    clientResourceContext,
+                    wsHandler,
+                    new DefaultHandler()
+            });
             server.setHandler(handlers);
 
             server.start();
