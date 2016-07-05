@@ -47,9 +47,9 @@ public class WindowModelSerialiser implements JsonSerializer<WindowModel> {
     }
 
     @Override
-    public JsonElement serialize(final WindowModel src, final Type typeOfSrc,
-            final JsonSerializationContext context) {
+    public JsonElement serialize(final WindowModel src, final Type typeOfSrc, final JsonSerializationContext context) {
         final JsonObject res = new JsonObject();
+        res.addProperty("id", src.getId());
         res.addProperty("name", src.getName());
         res.addProperty("icon", src.getIcon());
         res.addProperty("title", src.getTitle());

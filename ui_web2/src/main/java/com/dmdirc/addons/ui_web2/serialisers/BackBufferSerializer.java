@@ -38,8 +38,7 @@ import java.lang.reflect.Type;
 public class BackBufferSerializer implements JsonSerializer<BackBuffer> {
 
     @Override
-    public JsonElement serialize(final BackBuffer src, final Type typeOfSrc,
-            final JsonSerializationContext context) {
+    public JsonElement serialize(final BackBuffer src, final Type typeOfSrc, final JsonSerializationContext context) {
         final JsonArray res = new JsonArray();
         final IRCDocument document = src.getDocument();
         for (int i = 0; i < document.getNumLines(); i++) {

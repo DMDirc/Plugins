@@ -1,4 +1,8 @@
 dependencies {
-  bundle group: 'com.sparkjava', name: 'spark-core', version: '2.5'
-  bundle group: 'com.google.code.gson', name: 'gson', 'version': '2.5'
+    bundle group: 'com.google.code.gson', name: 'gson', version: '2.5'
+
+    bundle group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.9.v20160517'
+    bundle group: 'org.eclipse.jetty.websocket', name: 'websocket-server', version: '9.3.9.v20160517'
+    bundle group: 'org.eclipse.jetty.websocket', name: 'websocket-servlet', version: '9.3.9.v20160517'
+
 }
