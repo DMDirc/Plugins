@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import com.dmdirc.addons.ui_web2.serialisers.BackBufferSerializer;
+import com.dmdirc.addons.ui_web2.serialisers.BackBufferSimpleSerializer;
 import com.dmdirc.addons.ui_web2.serialisers.WindowModelSerialiser;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.WindowManager;
@@ -50,7 +50,7 @@ public class InitialStateProducer {
             final WindowModelSerialiser windowSerialiser) {
         serialiser = new GsonBuilder()
                 .registerTypeHierarchyAdapter(WindowModel.class, windowSerialiser)
-                .registerTypeAdapter(BackBuffer.class, new BackBufferSerializer())
+                .registerTypeAdapter(BackBuffer.class, new BackBufferSimpleSerializer())
                 .create();
         this.windowManager = windowManager;
     }
@@ -60,6 +60,7 @@ public class InitialStateProducer {
         return serialiser.toJson(state);
     }
 
+    /** Class to serialize and pass to the client with initial state. */
     private static class InitialState {
 
         private final Collection<WindowModel> windows;
@@ -71,6 +72,7 @@ public class InitialStateProducer {
         public Collection<WindowModel> getWindows() {
             return Collections.unmodifiableCollection(windows);
         }
+
     }
 
 }
