@@ -22,9 +22,12 @@
 
 package com.dmdirc.addons.ui_web2;
 
+import com.dmdirc.DMDircMBassador;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,22 +44,56 @@ import org.eclipse.jetty.websocket.api.Session;
 public class WebSocketController {
 
     private final Collection<Session> sessions = new CopyOnWriteArrayList<>();
+    private final Object sessionLock = new Object();
+    private final AtomicBoolean subscribed = new AtomicBoolean(false);
+    private final DMDircMBassador eventBus;
     private final InitialStateProducer initialStateProducer;
 
     @Inject
-    public WebSocketController(final InitialStateProducer initialStateProducer) {
+    public WebSocketController(final DMDircMBassador eventBus, final InitialStateProducer initialStateProducer) {
+        this.eventBus = eventBus;
         this.initialStateProducer = initialStateProducer;
     }
 
+    /**
+     * Handles a session connected event raised by a {@link WebSocketHandler}.
+     *
+     * @param session The session that is now connected.
+     */
     void sessionConnected(final Session session) {
-        sessions.add(session);
+        synchronized (sessionLock) {
+            if (!subscribed.getAndSet(true)) {
+                eventBus.subscribe(this);
+            }
+
+            sessions.add(session);
+        }
+
         sendMessage(session, initialStateProducer.getInitialState());
     }
 
+    /**
+     * Handles a session closed event raised by a {@link WebSocketHandler}.
+     *
+     * @param session The session that is now closed.
+     * @param statusCode The status code returned.
+     * @param reason The reason for quitting.
+     */
     void sessionClosed(final Session session, final int statusCode, final String reason) {
-        sessions.remove(session);
+        synchronized (sessionLock) {
+            sessions.remove(session);
+            if (sessions.isEmpty() && subscribed.getAndSet(false)) {
+                eventBus.unsubscribe(this);
+            }
+        }
     }
 
+    /**
+     * Handles a message received event raised by a {@link WebSocketHandler}.
+     *
+     * @param session The session that the message is sent on.
+     * @param message The message that was received.
+     */
     void messageReceived(final Session session, final String message) {
         // Echo the message back for testing
         sendMessage(session, message);
@@ -68,7 +105,7 @@ public class WebSocketController {
      * @param session The session to send a message to.
      * @param message The message to be sent.
      */
-    public void sendMessage(final Session session, final String message) {
+    private void sendMessage(final Session session, final String message) {
         try {
             WebSocketHandler.sendMessage(session, message);
         } catch (IOException ex) {
@@ -81,7 +118,7 @@ public class WebSocketController {
      *
      * @param message The message to be sent.
      */
-    public void sendMessage(final String message) {
+    private void sendMessage(final String message) {
         sessions.forEach(s -> sendMessage(s, message));
     }
 
