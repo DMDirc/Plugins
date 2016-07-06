@@ -23,8 +23,8 @@
 package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.IRCDocument;
 import com.dmdirc.ui.messages.IRCDocumentListener;
@@ -73,8 +73,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final TextPaneCanvas canvas;
     /** IRCDocument. */
     private final IRCDocument document;
-    /** Parent Frame. */
-    private final Window frame;
+    /** Parent window. */
+    private final WindowModel window;
     /** Indicator to show whether new lines have been added. */
     private final JLabel newLineIndicator;
     /** Background painter. */
@@ -94,18 +94,18 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      * @param configDomain The domain to read configuration from.
      * @param urlBuilder   The builder to use to construct URLs for resources.
      * @param clipboard    The clipboard to handle copy and paste actions
-     * @param frame        Parent Frame
+     * @param window       Parent window
      */
     public TextPane(
             final String configDomain,
             final URLBuilder urlBuilder, final Clipboard clipboard,
-            final Window frame) {
-        this.frame = frame;
+            final WindowModel window) {
+        this.window = window;
         this.configDomain = configDomain;
         this.clipboard = clipboard;
 
         setUI(new TextPaneUI());
-        document = frame.getContainer().getBackBuffer().getDocument();
+        document = window.getBackBuffer().getDocument();
         newLineIndicator = new JLabel("", SwingConstants.CENTER);
         newLineIndicator.setBackground(Color.RED);
         newLineIndicator.setForeground(Color.WHITE);
@@ -113,7 +113,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         newLineIndicator.setVisible(false);
 
         setLayout(new MigLayout("fill, hidemode 3"));
-        backgroundPainter = new BackgroundPainter(frame.getContainer().getConfigManager(),
+        backgroundPainter = new BackgroundPainter(window.getConfigManager(),
                 urlBuilder, configDomain, "textpanebackground",
                 "textpanebackgroundoption", "textpanebackgroundopacity");
         canvas = new TextPaneCanvas(this,
@@ -130,8 +130,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         add(scrollBar, "dock east");
         scrollBar.addAdjustmentListener(this);
         scrollBar.addAdjustmentListener(canvas);
-        frame.getContainer().getConfigManager().addChangeListener(configDomain,
-                "textpanelinenotification", this);
+        window.getConfigManager().addChangeListener(configDomain, "textpanelinenotification", this);
         configChanged("", "textpanelinenotification");
 
         addMouseWheelListener(this);
@@ -497,8 +496,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      *
      * @return Parent window
      */
-    public Window getWindow() {
-        return frame;
+    public WindowModel getWindow() {
+        return window;
     }
 
     /**
@@ -521,8 +520,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
 
     @Override
     public void configChanged(final String domain, final String key) {
-        showNotification = frame.getContainer().getConfigManager()
-                .getOptionBool(configDomain, "textpanelinenotification");
+        showNotification = window.getConfigManager().getOptionBool(configDomain, "textpanelinenotification");
         if (!showNotification) {
             UIUtilities.invokeLater(() -> newLineIndicator.setVisible(false));
         }
