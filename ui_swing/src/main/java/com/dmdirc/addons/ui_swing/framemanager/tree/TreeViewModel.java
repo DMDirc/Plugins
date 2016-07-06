@@ -108,8 +108,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * @return True iff newChild should be sorted before child
      */
     private boolean sortBefore(final TreeViewNode newChild, final TreeViewNode child) {
-        return comparator.compare(newChild.getWindow(), child.
-                getWindow()) <= -1;
+        return comparator.compare(newChild.getWindow(), child.getWindow()) <= -1;
     }
 
     /**
@@ -122,8 +121,7 @@ public class TreeViewModel extends DefaultTreeModel {
      * @return True iff newChild should be sorted before child
      */
     private boolean sortAfter(final TreeViewNode newChild, final TreeViewNode child) {
-        return comparator.compare(newChild.getWindow(), child.
-                getWindow()) >= 1;
+        return comparator.compare(newChild.getWindow(), child.getWindow()) >= 1;
     }
 
     /**

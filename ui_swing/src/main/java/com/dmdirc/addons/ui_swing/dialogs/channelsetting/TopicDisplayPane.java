@@ -32,8 +32,8 @@ import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -64,7 +64,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
     /** Associated group chat. */
     private final GroupChat groupChat;
     /** Channel window. */
-    private final InputWindow channelWindow;
+    private final WindowModel channelWindow;
     /** the maximum length allowed for a topic. */
     private final int topicLengthMax;
     /** Clipboard to copy and paste from. */
@@ -90,7 +90,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
      */
     public TopicDisplayPane(final GroupChat groupChat, final IconManager iconManager,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow, final Clipboard clipboard,
+            final WindowModel channelWindow, final Clipboard clipboard,
             final CommandController commandController,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
@@ -127,7 +127,7 @@ public class TopicDisplayPane extends JPanel implements DocumentListener {
         final SwingInputHandler handler = new SwingInputHandler(serviceManager, topicText,
                 commandController,
                 groupChat.getWindowModel().getInputModel().get().getCommandParser(),
-                channelWindow.getContainer(), tabCompleterUtils, groupChat.getEventBus());
+                channelWindow, tabCompleterUtils, groupChat.getEventBus());
         handler.setTypes(true, false, true, false);
         handler.setTabCompleter(groupChat.getWindowModel().getInputModel().get().getTabCompleter());
 

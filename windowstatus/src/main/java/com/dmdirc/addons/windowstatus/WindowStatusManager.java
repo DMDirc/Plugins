@@ -27,6 +27,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
@@ -45,7 +46,6 @@ import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 
@@ -113,7 +113,7 @@ public class WindowStatusManager {
 
     @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
-        event.getWindow().map(Window::getContainer).ifPresent(this::updateStatus);
+        event.getWindow().map(TextFrame::getContainer).ifPresent(this::updateStatus);
     }
 
     /** Update the window status using the current active window. */

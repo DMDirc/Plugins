@@ -42,7 +42,6 @@ import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
@@ -67,13 +66,12 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.Invoke;
 import net.miginfocom.swing.MigLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Invoke;
 
 /**
  * Manages open windows in the application in a tree style view.
@@ -84,7 +82,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     /** Serial version UID. */
     private static final long serialVersionUID = 5;
     /** node storage, used for adding and deleting nodes correctly. */
-    private final Map<Window, TreeViewNode> nodes;
+    private final Map<TextFrame, TreeViewNode> nodes;
     /** Configuration manager. */
     private final AggregateConfigProvider config;
     /** Colour manager. */

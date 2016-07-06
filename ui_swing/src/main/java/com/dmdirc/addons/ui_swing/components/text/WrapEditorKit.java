@@ -11,7 +11,7 @@ import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.IRCTextAttribute;
 
 import java.awt.Cursor;
@@ -47,7 +47,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
     /** Event bus to fire link click events on. */
     private final DMDircMBassador eventBus;
     /** The window this editor kit is used in. */
-    private final Window window;
+    private final WindowModel window;
 
     /**
      * Initialises a new wrapping editor kit.
@@ -56,7 +56,7 @@ public class WrapEditorKit extends StyledEditorKit implements MouseListener, Mou
      * @param eventBus Event bus to raise hyperlink events on
      * @param window   Window as source for hyperlink events
      */
-    public WrapEditorKit(final boolean wrapping, final DMDircMBassador eventBus, final Window window) {
+    public WrapEditorKit(final boolean wrapping, final DMDircMBassador eventBus, final WindowModel window) {
         this.window = window;
         this.eventBus = eventBus;
         wrap = wrapping;

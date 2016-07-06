@@ -143,7 +143,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         topicLengthMax = channel.getMaxTopicLength();
         updateOptions();
         errorIcon = new JLabel(iconManager.getIcon("input-error"));
-        topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
+        topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window.getContainer()));
         ((AbstractDocument) topicText.getDocument()).setDocumentFilter(
                 new NewlinesDocumentFilter());
 
@@ -425,7 +425,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         setVisible(showBar);
         cancelTopicEdit();
         if ("showfulltopic".equals(key)) {
-            topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window));
+            topicText.setEditorKit(new WrapEditorKit(showFull, channel.getEventBus(), window.getContainer()));
             ((AbstractDocument) topicText.getDocument()).setDocumentFilter(
                     new NewlinesDocumentFilter());
             topicChanged(channel, null);

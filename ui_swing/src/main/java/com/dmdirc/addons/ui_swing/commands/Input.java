@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.commands;
 
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
+import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -32,7 +33,6 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
 import javax.annotation.Nonnull;
@@ -73,10 +73,10 @@ public class Input extends Command implements IntelligentCommand {
                     "[--clear] <text to insert into inputfield");
         } else if (args.getArguments().length == 1
                 && "--clear".equals(args.getArgumentsAsString(0))) {
-            ((InputWindow) windowFactory.getSwingWindow(origin))
+            ((InputTextFrame) windowFactory.getSwingWindow(origin))
                     .getInputHandler().clearInputField();
         } else {
-            ((InputWindow) windowFactory.getSwingWindow(origin))
+            ((InputTextFrame) windowFactory.getSwingWindow(origin))
                     .getInputHandler().addToInputField(args
                             .getArgumentsAsString());
         }
