@@ -35,7 +35,6 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
 import com.dmdirc.ui.input.TabCompleterUtils;
@@ -57,7 +56,7 @@ import net.miginfocom.layout.PlatformDefaults;
 /**
  * Frame with an input field.
  */
-public abstract class InputTextFrame extends TextFrame implements InputWindow, MouseListener {
+public abstract class InputTextFrame extends TextFrame implements MouseListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 3;
@@ -187,7 +186,6 @@ public abstract class InputTextFrame extends TextFrame implements InputWindow, M
      *
      * @return Input handlers for this frame
      */
-    @Override
     public final InputHandler getInputHandler() {
         return inputHandler;
     }

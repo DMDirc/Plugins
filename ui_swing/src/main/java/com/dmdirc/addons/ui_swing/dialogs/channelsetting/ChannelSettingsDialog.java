@@ -32,9 +32,9 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
-import com.dmdirc.interfaces.ui.InputWindow;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -66,7 +66,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
     /** Channel identity file. */
     private final ConfigProvider identity;
     /** Channel window. */
-    private final InputWindow channelWindow;
+    private final WindowModel channelWindow;
     private final IconManager iconManager;
     /** Tabbed pane. */
     private JTabbedPane tabbedPane;
@@ -135,7 +135,7 @@ public class ChannelSettingsDialog extends StandardDialog implements ActionListe
 
         identity = identityFactory.createChannelConfig(groupChat.getConnection().get().getNetwork(),
                 groupChat.getName());
-        channelWindow = (InputWindow) windowFactory.getSwingWindow(groupChat.getWindowModel());
+        channelWindow = groupChat.getWindowModel();
 
         initComponents(tabCompleterUtils);
         initListeners();

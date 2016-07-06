@@ -61,7 +61,7 @@ public class SwingLinkHandler {
 
     @Handler
     public void handleChannelClick(final LinkChannelClickedEvent event) {
-        final WindowModel container = event.getWindow().getContainer();
+        final WindowModel container = event.getWindow();
         container.getConnection()
                 .map(Connection::getGroupChatManager)
                 .ifPresent(c -> c.join(new ChannelJoinRequest(event.getTarget())));
@@ -74,7 +74,7 @@ public class SwingLinkHandler {
 
     @Handler
     public void handleNicknameClick(final LinkNicknameClickedEvent event) {
-        final WindowModel container = event.getWindow().getContainer();
+        final WindowModel container = event.getWindow();
         container.getConnection().ifPresent(c ->
                 eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
                         windowFactory.getSwingWindow(c.getQuery(event.getTarget()))))));

@@ -44,7 +44,6 @@ import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
@@ -62,9 +61,8 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import net.miginfocom.swing.MigLayout;
-
 import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 import static java.util.function.Predicate.isEqual;
@@ -521,7 +519,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     @Handler(invocation = EdtHandlerInvocation.class)
     public void titleChanged(final FrameTitleChangedEvent event) {
         checkOnEDT();
-        activeFrame.map(Window::getContainer)
+        activeFrame.map(TextFrame::getContainer)
                 .filter(isEqual(event.getContainer()))
                 .ifPresent(c -> setTitle(event.getTitle()));
     }
@@ -529,7 +527,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     @Handler(invocation = EdtHandlerInvocation.class)
     public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
         checkOnEDT();
-        activeFrame.map(Window::getContainer)
+        activeFrame.map(TextFrame::getContainer)
                 .filter(isEqual(event.getSource()))
                 .ifPresent(c -> event.getManager().clearStatus());
     }

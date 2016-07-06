@@ -29,6 +29,7 @@ import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.InputFieldCopyAction;
 import com.dmdirc.addons.ui_swing.actions.SearchAction;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBar;
 import com.dmdirc.addons.ui_swing.components.SwingSearchBarFactory;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
@@ -59,9 +60,7 @@ import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.ui.Window;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -84,14 +83,13 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import net.miginfocom.swing.MigLayout;
-
 import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Implements a generic (internal) frame.
  */
-public abstract class TextFrame extends JPanel implements Window, TextPaneListener {
+public abstract class TextFrame extends JPanel implements TextPaneListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -268,8 +266,12 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         getActionMap().put("homeAction", new TextPaneHomeAction(getTextPane()));
         getActionMap().put("endAction", new TextPaneEndAction(getTextPane()));
     }
-    
-    @Override
+
+    /**
+     * Gets the core model for this window.
+     *
+     * @return This window's model
+     */
     public WindowModel getContainer() {
         return frameParent;
     }
@@ -301,13 +303,13 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
         if (eventType == MouseEventType.CLICK && event.getButton() == MouseEvent.BUTTON1) {
             switch (clicktype.getType()) {
                 case CHANNEL:
-                    eventBus.publishAsync(new LinkChannelClickedEvent(this, clicktype.getValue()));
+                    eventBus.publishAsync(new LinkChannelClickedEvent(getContainer(), clicktype.getValue()));
                     break;
                 case NICKNAME:
-                    eventBus.publishAsync(new LinkNicknameClickedEvent(this, clicktype.getValue()));
+                    eventBus.publishAsync(new LinkNicknameClickedEvent(getContainer(), clicktype.getValue()));
                     break;
                 case HYPERLINK:
-                    eventBus.publishAsync(new LinkUrlClickedEvent(this, clicktype.getValue()));
+                    eventBus.publishAsync(new LinkUrlClickedEvent(getContainer(), clicktype.getValue()));
                     break;
                 case NORMAL:
                     //Ignore normal clicks

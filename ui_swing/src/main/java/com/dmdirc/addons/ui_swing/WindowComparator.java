@@ -23,15 +23,15 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.WindowModelComparator;
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Compares {@link Window}s by name.
+ * Compares {@link TextFrame}s by name.
  */
-public class WindowComparator implements Comparator<Window>, Serializable {
+public class WindowComparator implements Comparator<TextFrame>, Serializable {
 
     private static final long serialVersionUID = 1L;
     private final WindowModelComparator comparator;
@@ -41,7 +41,7 @@ public class WindowComparator implements Comparator<Window>, Serializable {
     }
 
     @Override
-    public int compare(final Window item1, final Window item2) {
+    public int compare(final TextFrame item1, final TextFrame item2) {
         return comparator.compare(item1.getContainer(), item2.getContainer());
     }
 }

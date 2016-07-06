@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.interfaces.ui.InputWindow;
+import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
@@ -49,7 +49,7 @@ public class TopicPane extends JPanel implements ActionListener {
     /** Parent group chat. */
     private final GroupChat groupChat;
     /** Channel window. */
-    private final InputWindow channelWindow;
+    private final WindowModel channelWindow;
     /** Parent dialog. */
     private final ChannelSettingsDialog parent;
     /** Clipboard to copy and paste with. */
@@ -73,7 +73,7 @@ public class TopicPane extends JPanel implements ActionListener {
     public TopicPane(final GroupChat groupChat, final IconManager iconManager,
             final CommandController commandController,
             final ServiceManager serviceManager, final ChannelSettingsDialog parent,
-            final InputWindow channelWindow, final Clipboard clipboard,
+            final WindowModel channelWindow, final Clipboard clipboard,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         setOpaque(UIUtilities.getTabbedPaneOpaque());
