@@ -51,7 +51,7 @@ public class TextPaneFactory {
     }
 
     public TextPane getTextPane(final TextFrame frame) {
-        return new TextPane(configDomain, urlBuilder, clipboard, frame);
+        return new TextPane(configDomain, urlBuilder, clipboard, frame.getContainer());
     }
 
 }

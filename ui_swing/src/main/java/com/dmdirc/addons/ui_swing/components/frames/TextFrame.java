@@ -455,7 +455,7 @@ public abstract class TextFrame extends JPanel implements Window, TextPaneListen
                 menu.add(populatePopupMenu(new JMenu(menuItem.getName()),
                         menuItem.getSubMenu(), arguments));
             } else {
-                menu.add(new JMenuItem(new CommandAction(commandParser, this,
+                menu.add(new JMenuItem(new CommandAction(commandParser, getContainer(),
                         menuItem.getName(), menuItem.getCommand(arguments))));
             }
 

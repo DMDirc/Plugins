@@ -259,7 +259,7 @@ public class Tree extends JTree implements MouseMotionListener, MouseListener, A
 
             popupMenu.add(moveUp);
             popupMenu.add(moveDown);
-            popupMenu.add(new JMenuItem(new CloseWindowAction(frame)));
+            popupMenu.add(new JMenuItem(new CloseWindowAction(frame.getContainer())));
             popupMenu.show(this, e.getX(), e.getY());
         }
     }

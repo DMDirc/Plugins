@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.event.ActionEvent;
 
@@ -39,7 +39,7 @@ public class CommandAction extends AbstractAction {
     /** Command parser. */
     private final CommandParser parser;
     /** Window. */
-    private final transient Window window;
+    private final transient WindowModel window;
     /** Command. */
     private final String command;
 
@@ -51,7 +51,7 @@ public class CommandAction extends AbstractAction {
      * @param name    Command name
      * @param command Command to execute
      */
-    public CommandAction(final CommandParser parser, final Window window,
+    public CommandAction(final CommandParser parser, final WindowModel window,
             final String name, final String command) {
         super(name);
 
@@ -63,7 +63,7 @@ public class CommandAction extends AbstractAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         for (String line : command.split("\n")) {
-            parser.parseCommand(window.getContainer(), line);
+            parser.parseCommand(window, line);
         }
     }
 

@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_swing.actions;
 
-import com.dmdirc.interfaces.ui.Window;
+import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.event.ActionEvent;
 
@@ -36,23 +36,22 @@ public final class CloseWindowAction extends AbstractAction {
     /** A version number for this class. */
     private static final long serialVersionUID = 1;
     /** Window to be closed. */
-    private final Window frame;
+    private final WindowModel window;
 
     /**
      * Instantiates a new close a window action.
      *
-     * @param frame window to be closed
+     * @param window window to be closed
      */
-    public CloseWindowAction(final Window frame) {
+    public CloseWindowAction(final WindowModel window) {
         super("Close");
-
-        this.frame = frame;
+        this.window = window;
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (frame != null) {
-            frame.getContainer().close();
+        if (window != null) {
+            window.close();
         }
     }
 
