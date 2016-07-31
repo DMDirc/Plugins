@@ -54,16 +54,21 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Optional;
 
+import javax.inject.Provider;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
 
 import net.engio.mbassy.listener.Handler;
+
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 import static java.util.function.Predicate.isEqual;
 
