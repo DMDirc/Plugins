@@ -47,6 +47,7 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -54,6 +55,8 @@ import java.awt.event.WindowListener;
 import java.util.Optional;
 
 import javax.inject.Provider;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -61,8 +64,10 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import net.engio.mbassy.listener.Handler;
+import net.miginfocom.layout.PlatformDefaults;
 import net.miginfocom.swing.MigLayout;
+
+import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.addons.ui_swing.SwingPreconditions.checkOnEDT;
 import static java.util.function.Predicate.isEqual;
@@ -279,8 +284,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
 
         setPreferredSize(new Dimension(800, 600));
 
-        getContentPane().setLayout(new MigLayout(
-                "fill, ins rel, wrap 1, hidemode 2"));
+        getContentPane().setLayout(new BorderLayout());
         layoutComponents();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -330,9 +334,11 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
      * Lays out the this component.
      */
     private void layoutComponents() {
-        getContentPane().add(mainSplitPane, "grow, push");
-        getContentPane().add(statusBar, "wmax 100%-2*rel, "
-                + "wmin 100%-2*rel, south, gap rel rel 0 rel");
+        int gap = (int) PlatformDefaults.getPanelInsets(0).getValue();
+        mainSplitPane.setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
+        statusBar.setBorder(BorderFactory.createEmptyBorder(0, gap, gap, gap));
+        getContentPane().add(mainSplitPane, BorderLayout.CENTER);
+        getContentPane().add(statusBar, BorderLayout.PAGE_END);
     }
 
     /**
