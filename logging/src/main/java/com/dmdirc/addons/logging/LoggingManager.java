@@ -88,10 +88,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import net.engio.mbassy.listener.Handler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.util.LogUtils.USER_ERROR;
 
@@ -220,7 +220,7 @@ public class LoggingManager implements ConfigChangeListener {
     public void handleQueryOpened(final QueryOpenedEvent event) {
         final String filename = locator.getLogFile(event.getQuery().getUser());
         if (autobackbuffer) {
-            showBackBuffer(event.getQuery(), filename);
+            showBackBuffer(event.getQuery().getWindowModel(), filename);
         }
 
         synchronized (FORMAT_LOCK) {
