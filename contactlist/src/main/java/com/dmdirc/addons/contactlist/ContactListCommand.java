@@ -22,6 +22,7 @@
 
 package com.dmdirc.addons.contactlist;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -47,14 +48,19 @@ public class ContactListCommand extends Command implements IntelligentCommand {
             "contactlist - show a contact list for the current channel",
             CommandType.TYPE_CHANNEL);
 
+    private final DMDircMBassador eventBus;
+
     /**
      * Creates a new instance of this command.
      *
      * @param controller The controller to use for command information.
      */
     @Inject
-    public ContactListCommand(final CommandController controller) {
+    public ContactListCommand(
+            final CommandController controller,
+            final DMDircMBassador eventBus) {
         super(controller);
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -62,7 +68,8 @@ public class ContactListCommand extends Command implements IntelligentCommand {
             final CommandArguments args, final CommandContext context) {
         final ChannelCommandContext chanContext = (ChannelCommandContext) context;
 
-        final ContactListListener listener = new ContactListListener(chanContext.getGroupChat());
+        final ContactListListener listener =
+                new ContactListListener(chanContext.getGroupChat(), eventBus);
         listener.addListeners();
         chanContext.getGroupChat().getUsers().forEach(listener::clientAdded);
     }

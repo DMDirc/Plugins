@@ -97,10 +97,9 @@ public class ConnectionHandlerTest {
         when(groupChatUser.getNickname()).thenReturn("nickname");
         when(channelUserAwayEvent.getUser()).thenReturn(groupChatUser);
         when(channelUserAwayEvent.getChannel()).thenReturn(groupChat);
-        when(groupChat.getEventBus()).thenReturn(eventBus);
         when(groupChatUser.getUser()).thenReturn(user);
-        instance = new ConnectionHandler(config, scheduledExecutorService, connectionManager,
-                "domain", connection);
+        instance = new ConnectionHandler(config, scheduledExecutorService, eventBus,
+            "domain", connection);
         instance.handleWhoInterval(5);
 
         when(serverNumericEvent.getConnection()).thenReturn(connection);
