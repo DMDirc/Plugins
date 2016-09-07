@@ -23,7 +23,6 @@
 package com.dmdirc.addons.contactlist;
 
 import com.dmdirc.DMDircMBassador;
-import com.dmdirc.Query;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.FrameClosingEvent;
@@ -31,6 +30,7 @@ import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
+import com.dmdirc.interfaces.PrivateChat;
 
 import net.engio.mbassy.listener.Handler;
 
@@ -104,8 +104,10 @@ public class ContactListListener {
     }
 
     void clientAdded(final GroupChatUser client) {
-        final Query query = groupChat.getConnection().get().getQuery(client.getNickname(), false);
-        query.setIcon("query-" + client.getUser().getAwayState().name().toLowerCase());
+        final PrivateChat query =
+            groupChat.getConnection().get().getQuery(client.getNickname(), false);
+        query.getWindowModel()
+            .setIcon("query-" + client.getUser().getAwayState().name().toLowerCase());
     }
 
 }
