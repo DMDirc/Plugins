@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.channelwho;
 
+import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.ServerNumericEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -51,22 +51,23 @@ import net.engio.mbassy.listener.Handler;
 public class ConnectionHandler {
 
     private final Multimap<String, GroupChatUser> users;
+    private final DMDircMBassador eventBus;
     private final Connection connection;
     private final String domain;
     private final ScheduledExecutorService executorService;
-    private final ConnectionManager connectionManager;
     private final ConfigBinder configBinder;
     private ScheduledFuture<?> future;
 
     public ConnectionHandler(
             final AggregateConfigProvider config,
             final ScheduledExecutorService executorService,
-            final ConnectionManager connectionManager, final String domain,
+            final DMDircMBassador eventBus,
+            final String domain,
             final Connection connection) {
+        this.eventBus = eventBus;
         this.connection = connection;
         this.domain = domain;
         this.executorService = executorService;
-        this.connectionManager = connectionManager;
         configBinder = config.getBinder().withDefaultDomain(domain);
         users = HashMultimap.create();
     }
@@ -125,9 +126,8 @@ public class ConnectionHandler {
         if (event.getConnection().equals(connection) && event.getNumeric() == 301) {
             final String nickname = event.getArgs()[3];
             final String reason = event.getArgs()[4];
-            users.removeAll(nickname).forEach(u -> u.getGroupChat().getEventBus()
-                .publishAsync(new ChannelUserAwayEvent(u.getGroupChat(), u,
-                        Optional.ofNullable(reason))));
+            users.removeAll(nickname).forEach(u -> eventBus.publishAsync(
+                new ChannelUserAwayEvent(u.getGroupChat(), u, Optional.ofNullable(reason))));
         }
     }
 }

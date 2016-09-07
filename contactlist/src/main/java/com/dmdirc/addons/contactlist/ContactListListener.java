@@ -49,9 +49,9 @@ public class ContactListListener {
      *
      * @param groupChat The group chat to show a contact list for
      */
-    public ContactListListener(final GroupChat groupChat) {
+    public ContactListListener(final GroupChat groupChat, final DMDircMBassador eventBus) {
         this.groupChat = groupChat;
-        this.eventBus = groupChat.getEventBus();
+        this.eventBus = eventBus;
     }
 
     /**
