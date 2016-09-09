@@ -77,6 +77,7 @@ public class SwingLinkHandler {
         final WindowModel container = event.getWindow();
         container.getConnection().ifPresent(c ->
                 eventBus.publishAsync(new SwingActiveWindowChangeRequestEvent(Optional.ofNullable(
-                        windowFactory.getSwingWindow(c.getQuery(event.getTarget()))))));
+                        windowFactory.getSwingWindow(
+                                c.getQuery(event.getTarget()).getWindowModel())))));
     }
 }
