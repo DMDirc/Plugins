@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.addons.ui_swing.components.statusbar.FeedbackNag;
 import com.dmdirc.addons.ui_swing.components.statusbar.SwingStatusBar;
@@ -36,6 +35,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.FeedbackNagEvent;
 import com.dmdirc.events.FirstRunEvent;
 import com.dmdirc.events.UnknownURLEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
@@ -75,7 +75,7 @@ public class SwingManager {
     /** Link handler for swing links. */
     private final SwingLinkHandler linkHandler;
     /** Bus to listen on for events. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The event bus for this plugin. */
     private final SwingEventBus swingEventBus;
     /** The provider to use to create tree-based frame managers. */
@@ -122,7 +122,7 @@ public class SwingManager {
             final Provider<FeedbackNag> feedbackNagProvider,
             final URLDialogFactory urlDialogFactory,
             final SwingLinkHandler linkHandler,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final SwingEventBus swingEventBus,
             final TreeFrameManagerProvider treeProvider,
             final Provider<SwingWindowManager> swingWindowManager,

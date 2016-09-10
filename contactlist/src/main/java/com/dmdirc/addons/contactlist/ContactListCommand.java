@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
@@ -32,6 +31,7 @@ import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChannelCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 
@@ -48,7 +48,7 @@ public class ContactListCommand extends Command implements IntelligentCommand {
             "contactlist - show a contact list for the current channel",
             CommandType.TYPE_CHANNEL);
 
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of this command.
@@ -58,7 +58,7 @@ public class ContactListCommand extends Command implements IntelligentCommand {
     @Inject
     public ContactListCommand(
             final CommandController controller,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(controller);
         this.eventBus = eventBus;
     }

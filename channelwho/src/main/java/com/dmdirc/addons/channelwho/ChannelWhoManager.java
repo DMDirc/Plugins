@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
@@ -32,6 +31,7 @@ import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.validators.NumericalValidator;
 
@@ -52,7 +52,7 @@ public class ChannelWhoManager {
     private final String domain;
     private final ConnectionHandlerFactory connectionHandlerFactory;
     private final ConnectionManager connectionManager;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final Map<Connection, ConnectionHandler> connectionHandlers;
 
     @Inject
@@ -60,7 +60,7 @@ public class ChannelWhoManager {
             @PluginDomain(ChannelWhoPlugin.class) final String domain,
             final ConnectionHandlerFactory connectionHandlerFactory,
             final ConnectionManager connectionManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.domain = domain;
         this.connectionHandlerFactory = connectionHandlerFactory;
         this.connectionManager = connectionManager;

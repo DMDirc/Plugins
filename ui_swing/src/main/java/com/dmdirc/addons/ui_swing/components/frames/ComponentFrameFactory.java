@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.parsers.CommandParser;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.util.function.Supplier;
@@ -40,12 +40,12 @@ import static com.dmdirc.addons.ui_swing.components.frames.TextFrame.TextFrameDe
 @Singleton
 public class ComponentFrameFactory {
 
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final TextFrameDependencies dependencies;
 
     @Inject
     public ComponentFrameFactory(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final TextFrameDependencies dependencies) {
         this.eventBus = eventBus;
         this.dependencies = dependencies;

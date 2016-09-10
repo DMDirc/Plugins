@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.jpq;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ChannelSelfJoinEvent;
@@ -32,6 +31,7 @@ import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.plugins.PluginDomain;
 
@@ -52,7 +52,7 @@ public class JPQManager {
     private final String domain;
     private final ConnectionManager connectionManager;
     private final GroupChatHandlerFactory groupChatHandlerFactory;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final Map<GroupChat, GroupChatHandler> groupChatHandlers;
 
     @Inject
@@ -60,7 +60,7 @@ public class JPQManager {
             @PluginDomain(JPQPlugin.class) final String domain,
             final ConnectionManager connectionManager,
             final GroupChatHandlerFactory groupChatHandlerFactory,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.domain = domain;
         this.connectionManager = connectionManager;
         this.groupChatHandlerFactory = groupChatHandlerFactory;

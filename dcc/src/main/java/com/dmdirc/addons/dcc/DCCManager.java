@@ -23,7 +23,6 @@
 package com.dmdirc.addons.dcc;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
 import com.dmdirc.addons.dcc.events.DccChatStartingEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
@@ -51,6 +50,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ServerCtcpEvent;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -111,7 +111,7 @@ public class DCCManager {
     /** The configuration domain to use. */
     private final String domain;
     /** The bus to dispatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Plugin info. */
     private final PluginInfo pluginInfo;
 
@@ -129,7 +129,7 @@ public class DCCManager {
             final TabCompleterFactory tabCompleterFactory,
             final SwingWindowFactory windowFactory,
             final ComponentFrameFactory componentFrameFactory,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final GlobalCommandParser commandParser,
             @Directory(DirectoryType.BASE) final String baseDirectory,
             final BackBufferFactory backBufferFactory) {

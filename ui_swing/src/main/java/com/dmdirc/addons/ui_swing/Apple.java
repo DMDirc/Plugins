@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
@@ -80,7 +80,7 @@ public class Apple implements InvocationHandler {
     /** The server manager to use to connect to URLs. */
     private final ConnectionManager connectionManager;
     /** Event bus. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of {@link Apple}.
@@ -96,7 +96,7 @@ public class Apple implements InvocationHandler {
     public Apple(
             @GlobalConfig final AggregateConfigProvider configManager,
             final ConnectionManager connectionManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.configManager = configManager;
         this.connectionManager = connectionManager;
         this.eventBus = eventBus;

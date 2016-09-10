@@ -23,9 +23,9 @@
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -47,7 +47,7 @@ public class PasteDialogFactory {
     private final AggregateConfigProvider config;
     private final ServiceManager serviceManager;
     private final CommandController commandController;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final ColourManagerFactory colourManagerFactory;
     private final TabCompleterUtils tabCompleterUtils;
 
@@ -57,7 +57,7 @@ public class PasteDialogFactory {
             @GlobalConfig final AggregateConfigProvider config,
             final ServiceManager serviceManager,
             final CommandController commandController,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils) {
         this.iconManager = iconManager;

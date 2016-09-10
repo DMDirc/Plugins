@@ -23,12 +23,12 @@
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.StatusBarMessageEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.StatusMessage;
@@ -43,7 +43,7 @@ import javax.inject.Provider;
 public class StatusbarMessage extends DebugCommand {
 
     /** The event bus to post messages on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The global configuration. */
     private final AggregateConfigProvider globalConfig;
 
@@ -57,7 +57,7 @@ public class StatusbarMessage extends DebugCommand {
     @Inject
     public StatusbarMessage(
             final Provider<Debug> commandProvider,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig) {
         super(commandProvider);
 

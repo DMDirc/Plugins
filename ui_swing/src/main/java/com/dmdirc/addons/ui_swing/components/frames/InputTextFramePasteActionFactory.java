@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.Window;
@@ -39,14 +39,14 @@ import javax.inject.Inject;
 public class InputTextFramePasteActionFactory {
 
     private final Clipboard clipboard;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final PasteDialogFactory pasteDialogFactory;
     private final Window window;
 
     @Inject
     public InputTextFramePasteActionFactory(
             final Clipboard clipboard,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final PasteDialogFactory pasteDialogFactory,
             @MainWindow final Window window) {
         this.clipboard = clipboard;

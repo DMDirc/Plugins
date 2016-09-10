@@ -23,7 +23,6 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Query;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -48,6 +47,7 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
@@ -117,7 +117,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final WindowManager windowManager;
     /** Map of open files. */
     private final Map<String, OpenFile> openFiles = Collections.synchronizedMap(new HashMap<>());
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final Provider<String> directoryProvider;
     private final BackBufferFactory backBufferFactory;
     private final LogFileLocator locator;
@@ -137,7 +137,7 @@ public class LoggingManager implements ConfigChangeListener {
     public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
             @PluginDomain(LoggingPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider globalConfig,
-            final WindowManager windowManager, final DMDircMBassador eventBus,
+            final WindowManager windowManager, final EventBus eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
             final BackBufferFactory backBufferFactory,
             final LogFileLocator locator) {

@@ -24,7 +24,6 @@ package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.CustomWindow;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
@@ -34,6 +33,7 @@ import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.DisplayableEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
@@ -57,7 +57,7 @@ public class EventBusViewer extends DebugCommand {
 
     private final AggregateConfigProvider globalConfig;
     private final WindowManager windowManager;
-    private final DMDircMBassador globalEventBus;
+    private final EventBus globalEventBus;
     private final BackBufferFactory backBufferFactory;
 
     /**
@@ -68,7 +68,7 @@ public class EventBusViewer extends DebugCommand {
             final Provider<Debug> commandProvider,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager,
-            final DMDircMBassador globalEventBus,
+            final EventBus globalEventBus,
             final BackBufferFactory backBufferFactory) {
         super(commandProvider);
         this.globalConfig = globalConfig;
@@ -103,7 +103,7 @@ public class EventBusViewer extends DebugCommand {
             windowManager.addWindow(origin, window);
         }
 
-        final DMDircMBassador eventBus = isGlobal ? globalEventBus : origin.getEventBus();
+        final EventBus eventBus = isGlobal ? globalEventBus : origin.getEventBus();
         final WindowUpdater updater = new WindowUpdater(eventBus, window);
         eventBus.subscribe(updater);
     }
@@ -114,10 +114,10 @@ public class EventBusViewer extends DebugCommand {
     @Listener(references = References.Strong)
     private static class WindowUpdater {
 
-        private final DMDircMBassador eventBus;
+        private final EventBus eventBus;
         private final WindowModel target;
 
-        WindowUpdater(final DMDircMBassador eventBus, final WindowModel target) {
+        WindowUpdater(final EventBus eventBus, final WindowModel target) {
             this.eventBus = eventBus;
             this.target = target;
         }

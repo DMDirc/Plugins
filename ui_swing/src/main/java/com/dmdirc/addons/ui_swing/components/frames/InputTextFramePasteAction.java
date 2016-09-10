@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.paste.PasteDialogFactory;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.awt.Toolkit;
@@ -55,7 +55,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
     /** Text component to be acted upon. */
     private final InputTextFrame inputFrame;
     /** Event bus to post events to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Swing input field. */
     private final SwingInputField inputField;
     /** Frame container. */
@@ -75,7 +75,7 @@ public final class InputTextFramePasteAction extends AbstractAction {
             final SwingInputField inputField,
             final WindowModel container,
             final Clipboard clipboard,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final PasteDialogFactory pasteDialogFactory,
             final Window window) {
         super("Paste");

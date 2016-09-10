@@ -23,7 +23,6 @@
 package com.dmdirc.addons.notifications;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -31,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -60,12 +60,12 @@ public class NotificationsManager {
     /** Plugin manager. */
     private final PluginManager pluginManager;
     /** Event bus to listen for events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     @Inject
     public NotificationsManager(@PluginDomain(NotificationsPlugin.class) final String domain,
             @PluginDomain(NotificationsPlugin.class) final PluginInfo pluginInfo,
-            @GlobalConfig final AggregateConfigProvider globalConfig, final DMDircMBassador eventBus,
+            @GlobalConfig final AggregateConfigProvider globalConfig, final EventBus eventBus,
             final PluginManager pluginManager) {
         this.domain = domain;
         this.pluginInfo = pluginInfo;

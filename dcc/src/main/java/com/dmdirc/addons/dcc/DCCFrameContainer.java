@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
@@ -53,7 +53,7 @@ public abstract class DCCFrameContainer extends FrameContainer {
             final String icon,
             final AggregateConfigProvider configManager,
             final BackBufferFactory backBufferFactory,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final Collection<String> components) {
         super(icon, title, title, configManager, backBufferFactory,
                 eventBus,

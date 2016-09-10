@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import com.dmdirc.DMDircMBassador;
+import com.dmdirc.interfaces.EventBus;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -46,11 +46,11 @@ public class WebSocketController {
     private final Collection<Session> sessions = new CopyOnWriteArrayList<>();
     private final Object sessionLock = new Object();
     private final AtomicBoolean subscribed = new AtomicBoolean(false);
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final InitialStateProducer initialStateProducer;
 
     @Inject
-    public WebSocketController(final DMDircMBassador eventBus, final InitialStateProducer initialStateProducer) {
+    public WebSocketController(final EventBus eventBus, final InitialStateProducer initialStateProducer) {
         this.eventBus = eventBus;
         this.initialStateProducer = initialStateProducer;
     }

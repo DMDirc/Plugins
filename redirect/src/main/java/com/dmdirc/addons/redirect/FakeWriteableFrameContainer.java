@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
@@ -44,7 +44,7 @@ public class FakeWriteableFrameContainer extends FrameContainer {
      */
     public FakeWriteableFrameContainer(
             final WindowModel target,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory) {
         super(target.getIcon(), target.getName(), target.getTitle(),
                 target.getConfigManager(), backBufferFactory,

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.redirect;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
@@ -32,6 +31,7 @@ import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.Chat;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.InputModel;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
@@ -53,7 +53,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
             + "channel or query window",
             CommandType.TYPE_CHAT);
     /** The bus to dispatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final BackBufferFactory backBufferFactory;
     /** Tab-completer utilities. */
     private final TabCompleterUtils tabCompleterUtils;
@@ -64,7 +64,7 @@ public class RedirectCommand extends Command implements IntelligentCommand {
     @Inject
     public RedirectCommand(
             final CommandController controller,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory,
             final TabCompleterUtils tabCompleterUtils) {
         super(controller);

@@ -23,11 +23,11 @@
 package com.dmdirc.addons.debug.commands;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -51,7 +51,7 @@ public class ForceUpdate extends DebugCommand {
     /** The update manager to use when forcing an update. */
     private final CachingUpdateManager updateManager;
     /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of the command.
@@ -68,7 +68,7 @@ public class ForceUpdate extends DebugCommand {
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final IdentityController identityController,
             final CachingUpdateManager updateManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(commandProvider);
 
         this.globalConfig = globalConfig;

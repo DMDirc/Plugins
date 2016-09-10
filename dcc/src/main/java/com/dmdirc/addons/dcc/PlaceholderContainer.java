@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardQuestionDialog;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
@@ -61,7 +61,7 @@ public class PlaceholderContainer extends FrameContainer {
             final BackBufferFactory backBufferFactory,
             final Window parentWindow,
             final WindowManager windowManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super("dcc", "DCCs", "DCCs", config, backBufferFactory, eventBus,
                 Collections.singletonList("com.dmdirc.addons.dcc.ui.PlaceholderPanel"));
         this.plugin = plugin;

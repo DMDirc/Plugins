@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -54,7 +54,7 @@ public class DebugWindow extends FrameContainer {
             final String title,
             final Parser parser,
             final Connection connection,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory) {
         super("raw", "Parser Debug", title,
                 connection.getWindowModel().getConfigManager(), backBufferFactory,

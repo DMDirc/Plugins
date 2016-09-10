@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.dcc.events.DccSendDatatransferedEvent;
@@ -31,6 +30,7 @@ import com.dmdirc.addons.dcc.events.DccSendSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.events.SocketCloseEvent;
 import com.dmdirc.parser.interfaces.Parser;
@@ -78,7 +78,7 @@ public class TransferContainer extends FrameContainer implements
     private final boolean showOpen = Desktop.isDesktopSupported()
             && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
     /** Event bus to post events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of DCCTransferWindow with a given DCCTransfer object.
@@ -87,7 +87,7 @@ public class TransferContainer extends FrameContainer implements
             final AggregateConfigProvider config,
             final BackBufferFactory backBufferFactory, final String title,
             final String targetNick, @Nullable final Connection connection,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(dcc.getType() == DCCTransfer.TransferType.SEND
                 ? "dcc-send-inactive" : "dcc-receive-inactive",
                 title, title, config, backBufferFactory, eventBus,

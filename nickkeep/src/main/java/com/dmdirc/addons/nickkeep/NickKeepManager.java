@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.nickkeep;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 
 import java.util.Optional;
 
@@ -38,10 +38,10 @@ import net.engio.mbassy.listener.Handler;
  */
 public class NickKeepManager {
 
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     @Inject
-    public NickKeepManager(final DMDircMBassador eventBus) {
+    public NickKeepManager(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

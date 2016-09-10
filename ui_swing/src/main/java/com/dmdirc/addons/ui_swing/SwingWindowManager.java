@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
+import com.dmdirc.interfaces.EventBus;
 
 import java.awt.Window;
 import java.awt.event.WindowEvent;
@@ -45,7 +45,7 @@ public class SwingWindowManager {
     private final List<Window> windows;
 
     @Inject
-    public SwingWindowManager(final DMDircMBassador eventBus) {
+    public SwingWindowManager(final EventBus eventBus) {
         windows = new ArrayList<>();
         eventBus.subscribe(this);
     }

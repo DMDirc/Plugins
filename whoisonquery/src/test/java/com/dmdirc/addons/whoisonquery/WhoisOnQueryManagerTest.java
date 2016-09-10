@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.whoisonquery;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Query;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -31,6 +30,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ConnectionPrefsRequestedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WhoisOnQueryManagerTest {
 
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private PluginInfo pluginInfo;
     @Mock private PluginMetaData pluginMetaData;
     @Mock private QueryOpenedEvent queryOpenedEvent;

@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.debug;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.events.CommandErrorEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 
 import com.google.common.collect.Sets;
@@ -55,7 +55,7 @@ public class DebugTest {
     @Mock private CommandController controller;
     @Mock private DebugCommand debugCommand;
     @Mock private CommandContext commandContext;
-    @Mock private DMDircMBassador eventbus;
+    @Mock private EventBus eventbus;
     private Debug debug;
 
     @Before

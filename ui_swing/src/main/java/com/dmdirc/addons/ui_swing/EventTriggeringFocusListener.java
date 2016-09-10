@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
 import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
+import com.dmdirc.interfaces.EventBus;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -34,9 +34,9 @@ import java.awt.event.WindowFocusListener;
 */
 class EventTriggeringFocusListener implements WindowFocusListener {
 
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
-    public EventTriggeringFocusListener(final DMDircMBassador eventBus) {
+    public EventTriggeringFocusListener(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

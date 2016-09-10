@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
@@ -34,6 +33,7 @@ import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.InputHandler;
@@ -81,7 +81,7 @@ public abstract class InputTextFrame extends TextFrame implements MouseListener 
     /** The controller to use to retrieve command information. */
     private final CommandController commandController;
     /** The bus to dispatch input events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of InputFrame.

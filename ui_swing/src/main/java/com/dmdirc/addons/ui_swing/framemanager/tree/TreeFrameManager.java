@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -39,6 +38,7 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -94,7 +94,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
     /** Active frame manager. */
     private final ActiveFrameManager activeFrameManager;
     /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Swing event bus. */
     private final SwingEventBus swingEventBus;
     /** Icon manager. */
@@ -113,7 +113,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
             final ActiveFrameManager activeFrameManager,
             final SwingWindowFactory windowFactory,
             @PluginDomain(SwingController.class) final String domain,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final SwingEventBus swingEventBus,
             final IconManager iconManager) {
         this.windowFactory = windowFactory;

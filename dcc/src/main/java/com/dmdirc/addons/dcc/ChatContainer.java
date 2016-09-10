@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.DefaultInputModel;
 import com.dmdirc.addons.dcc.events.DccChatMessageEvent;
 import com.dmdirc.addons.dcc.events.DccChatSelfMessageEvent;
@@ -31,6 +30,7 @@ import com.dmdirc.addons.dcc.events.DccChatSocketOpenedEvent;
 import com.dmdirc.addons.dcc.io.DCCChat;
 import com.dmdirc.events.CommandErrorEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.input.TabCompleterFactory;
@@ -50,7 +50,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
     /** Other Nickname. */
     private final String otherNickname;
     /** Event bus to post events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of DCCChatWindow with a given DCCChat object.
@@ -73,7 +73,7 @@ public class ChatContainer extends DCCFrameContainer implements DCCChatHandler {
             final String nick,
             final String targetNick,
             final TabCompleterFactory tabCompleterFactory,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(title, "dcc-chat-inactive", configManager, backBufferFactory,
                 eventBus,
                 Arrays.asList(

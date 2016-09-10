@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.FileBrowser;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -35,6 +34,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
 import com.dmdirc.config.prefs.PreferencesSetting;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
@@ -76,7 +76,7 @@ public final class PrefsComponentFactory {
     /** The colour manager to use for colour preferences. */
     private final ColourManager colourManager;
     /** The global event bus. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of PrefsComponentFactory.
@@ -87,7 +87,7 @@ public final class PrefsComponentFactory {
      */
     @Inject
     public PrefsComponentFactory(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final IconManager iconManager,
             @GlobalConfig final ColourManager colourManager) {
         this.iconManager = iconManager;

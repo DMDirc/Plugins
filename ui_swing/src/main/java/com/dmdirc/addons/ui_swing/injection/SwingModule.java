@@ -25,7 +25,6 @@ package com.dmdirc.addons.ui_swing.injection;
 import com.dmdirc.ClientModule;
 import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.NoopClipboard;
@@ -55,6 +54,7 @@ import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -134,7 +134,7 @@ public class SwingModule {
             final Provider<QuitWorker> quitWorker,
             final URLBuilder urlBuilder,
             final Provider<FrameManager> frameManagerProvider,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final SwingEventBus swingEventBus) {
         return UIUtilities.invokeAndWait(() -> new MainFrame(
                 apple,
@@ -169,7 +169,7 @@ public class SwingModule {
             final ErrorPanel errorLabel,
             final UpdaterLabel updaterLabel,
             final MessageLabel messageLabel,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         final SwingStatusBar sb = UIUtilities.invokeAndWait(
                 () -> new SwingStatusBar(inviteLabel, updaterLabel, errorLabel, messageLabel));
         eventBus.subscribe(messageLabel);
@@ -180,7 +180,7 @@ public class SwingModule {
     @Provides
     @Singleton
     public URLHandler getURLHandler(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final ConnectionManager connectionManager) {
         return new URLHandler(eventBus, globalConfig, connectionManager);
@@ -195,7 +195,7 @@ public class SwingModule {
             @GlobalConfig final AggregateConfigProvider configManager,
             @UserConfig final ConfigProvider identity,
             final ServiceManager serviceManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         return new PreferencesDialogModel(pluginPanel, themePanel, updatePanel, urlPanel,
                 configManager, identity, serviceManager, eventBus);
     }

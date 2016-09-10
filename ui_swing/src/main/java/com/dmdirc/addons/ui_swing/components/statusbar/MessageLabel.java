@@ -23,11 +23,11 @@
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.StatusBarMessageClearEvent;
 import com.dmdirc.events.StatusBarMessageEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -78,7 +78,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
     /** Icon manager to retrieve icons from. */
     private final IconManager iconManager;
     /** The event bus to post status messages on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Instantiates a new message label.
@@ -93,7 +93,7 @@ public class MessageLabel extends JPanel implements StatusBarComponent,
             @GlobalConfig final AggregateConfigProvider config,
             final IconManager iconManager,
             @MainWindow final Window parentWindow,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(new MigLayout("fill, ins 0, gap 0  0"));
         this.iconManager = iconManager;
         this.eventBus = eventBus;

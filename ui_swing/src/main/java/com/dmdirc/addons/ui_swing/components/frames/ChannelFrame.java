@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
@@ -38,6 +37,7 @@ import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.events.FrameClosingEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -74,7 +74,7 @@ public final class ChannelFrame extends InputTextFrame {
     /** Topic bar. */
     private TopicBar topicBar;
     /** Event bus to dispatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Config to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Channel settings dialog provider. */

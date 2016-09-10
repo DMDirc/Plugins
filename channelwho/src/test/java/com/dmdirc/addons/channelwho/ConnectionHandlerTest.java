@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.ServerNumericEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatManager;
 import com.dmdirc.interfaces.GroupChatUser;
@@ -66,7 +66,7 @@ public class ConnectionHandlerTest {
     @Mock private AggregateConfigProvider config;
     @Mock private ConfigBinder configBinder;
     @Mock private WindowModel windowModel;
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private ScheduledExecutorService scheduledExecutorService;
     @Mock private ScheduledFuture<?> scheduledFuture;
     @Mock private ConnectionManager connectionManager;

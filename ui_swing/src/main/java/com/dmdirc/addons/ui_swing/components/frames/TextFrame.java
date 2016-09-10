@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -58,6 +57,7 @@ import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
 import com.dmdirc.events.LinkUrlClickedEvent;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.ServiceManager;
@@ -108,7 +108,7 @@ public abstract class TextFrame extends JPanel implements TextPaneListener {
     /** Manager to use for building popups. */
     private final PopupManager popupManager;
     /** Bus to despatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
     private final IconManager iconManager;
@@ -514,7 +514,7 @@ public abstract class TextFrame extends JPanel implements TextPaneListener {
         final TextPaneFactory textPaneFactory;
         final SwingController controller;
         final PopupManager popupManager;
-        final DMDircMBassador eventBus;
+        final EventBus eventBus;
         final AggregateConfigProvider globalConfig;
         final PasteDialogFactory pasteDialog;
         final ServiceManager serviceManager;
@@ -532,7 +532,7 @@ public abstract class TextFrame extends JPanel implements TextPaneListener {
                 final TextPaneFactory textPaneFactory,
                 final SwingController controller,
                 final PopupManager popupManager,
-                final DMDircMBassador eventBus,
+                final EventBus eventBus,
                 final PasteDialogFactory pasteDialog,
                 final ServiceManager serviceManager,
                 @GlobalConfig final AggregateConfigProvider globalConfig,

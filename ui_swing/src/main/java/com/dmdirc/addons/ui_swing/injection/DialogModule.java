@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -45,6 +44,7 @@ import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -213,7 +213,7 @@ public class DialogModule {
             @MainWindow final Window parentWindow,
             final Clipboard clipboard,
             final CommandController commandController,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final ColourManagerFactory colourManagerFactory,
             final TabCompleterUtils tabCompleterUtils,
             final IconManager iconManager) {

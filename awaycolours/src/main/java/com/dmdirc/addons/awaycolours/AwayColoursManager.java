@@ -23,12 +23,12 @@
 package com.dmdirc.addons.awaycolours;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.DisplayProperty;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.messages.ColourManager;
@@ -43,13 +43,13 @@ import net.engio.mbassy.listener.Handler;
  */
 public class AwayColoursManager {
 
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final ConfigBinder binder;
     private final ColourManager colourManager;
     private Colour colour = Colour.BLACK;
 
     @Inject
-    public AwayColoursManager(final DMDircMBassador eventBus,
+    public AwayColoursManager(final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(AwayColoursPlugin.class) final String domain,
             @GlobalConfig final ColourManager colourManager) {
