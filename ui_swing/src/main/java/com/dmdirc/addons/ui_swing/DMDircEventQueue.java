@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.actions.CopyAction;
 import com.dmdirc.addons.ui_swing.actions.CutAction;
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
 import com.dmdirc.addons.ui_swing.events.ClientKeyPressedEvent;
+import com.dmdirc.interfaces.EventBus;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -52,12 +52,12 @@ import javax.swing.text.JTextComponent;
 public class DMDircEventQueue extends EventQueue {
 
     /** Event bus to dispatch events to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Clipboard to copy and paste from. */
     private final Clipboard clipboard;
 
     @Inject
-    public DMDircEventQueue(final DMDircMBassador eventBus, final Clipboard clipboard) {
+    public DMDircEventQueue(final EventBus eventBus, final Clipboard clipboard) {
         this.eventBus = eventBus;
         this.clipboard = clipboard;
     }

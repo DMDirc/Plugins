@@ -23,7 +23,6 @@
 package com.dmdirc.addons.systray;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
@@ -33,6 +32,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.addons.ui_swing.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -66,7 +66,7 @@ public class SystrayManager implements ActionListener, MouseListener {
     /** Icon manager to get images from. */
     private final IconManager iconManager;
     /** The event bus to listen to events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The tray icon we're currently using. */
     private TrayIcon icon;
 
@@ -77,7 +77,7 @@ public class SystrayManager implements ActionListener, MouseListener {
             @PluginDomain(SystrayPlugin.class) final PluginInfo pluginInfo,
             final MainFrame mainFrame,
             final IconManager iconManager,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.pluginInfo = pluginInfo;

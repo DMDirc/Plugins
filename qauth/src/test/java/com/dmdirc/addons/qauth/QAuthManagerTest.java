@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.qauth;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
 import com.dmdirc.Query;
 import com.dmdirc.config.ConfigBinder;
@@ -35,6 +34,7 @@ import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.events.ServerNoticeEvent;
 import com.dmdirc.events.UserInfoResponseEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
@@ -66,7 +66,7 @@ public class QAuthManagerTest {
     @Mock private AggregateConfigProvider aggregateConfigProvider;
     @Mock private ConfigProvider configProvider;
     @Mock private PreferencesDialogModel preferencesDialogModel;
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private PluginInfo pluginInfo;
     @Mock private PluginMetaData pluginMetaData;
     @Mock private AggregateConfigProvider config;

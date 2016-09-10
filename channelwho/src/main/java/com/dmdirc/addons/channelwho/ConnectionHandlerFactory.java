@@ -23,8 +23,8 @@
 package com.dmdirc.addons.channelwho;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 
@@ -40,13 +40,13 @@ public class ConnectionHandlerFactory {
 
     private final AggregateConfigProvider config;
     private final ScheduledExecutorService executorService;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final String domain;
 
     @Inject
     public ConnectionHandlerFactory(@GlobalConfig final AggregateConfigProvider config,
             @Named("channelwho") final ScheduledExecutorService executorService,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             @PluginDomain(ChannelWhoPlugin.class) final String domain) {
         this.config = config;
         this.executorService = executorService;

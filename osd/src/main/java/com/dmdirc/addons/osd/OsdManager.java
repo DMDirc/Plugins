@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.osd;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.prefs.CategoryChangeListener;
@@ -34,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.config.prefs.SettingChangeListener;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -83,7 +83,7 @@ public class OsdManager implements CategoryChangeListener, PreferencesInterface,
     private PreferencesSetting maxWindowsSetting;
     /** This plugin's plugin info. */
     private final PluginInfo pluginInfo;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The controller to read/write settings with. */
     private final IdentityController identityController;
     /** The manager to use to parse colours. */
@@ -92,7 +92,7 @@ public class OsdManager implements CategoryChangeListener, PreferencesInterface,
     @Inject
     public OsdManager(
             @MainWindow final Window mainFrame,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final IdentityController identityController,
             final ColourManagerFactory colourManagerFactory,
             @PluginDomain(OsdPlugin.class) final PluginInfo pluginInfo) {

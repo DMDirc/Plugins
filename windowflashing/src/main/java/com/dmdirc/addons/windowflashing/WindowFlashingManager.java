@@ -23,7 +23,6 @@
 package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
@@ -34,6 +33,7 @@ import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -56,7 +56,7 @@ public class WindowFlashingManager {
     /** Swing main frame. */
     private final MainFrame mainFrame;
     /** Event bus. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Config binder. */
     private final ConfigBinder binder;
     /** Cached blink rate setting. */
@@ -81,7 +81,7 @@ public class WindowFlashingManager {
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(WindowFlashing.class) final PluginInfo pluginInfo,
             final MainFrame mainFrame,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
         this.mainFrame = mainFrame;
         this.eventBus = eventBus;

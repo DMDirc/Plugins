@@ -23,10 +23,10 @@
 package com.dmdirc.addons.nickkeep;
 
 import com.dmdirc.Channel;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 
 import com.google.common.collect.Lists;
 
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NickKeepManagerTest {
 
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private ChannelNickChangeEvent event;
     @Mock private Channel channel;
     @Mock private Connection connection;

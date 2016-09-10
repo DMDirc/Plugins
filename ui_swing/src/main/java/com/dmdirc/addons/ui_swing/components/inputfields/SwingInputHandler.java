@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.ui_swing.components.inputfields;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.plugins.ServiceManager;
@@ -66,7 +66,7 @@ public class SwingInputHandler extends InputHandler implements KeyListener {
             final CommandParser commandParser,
             final WindowModel parentWindow,
             final TabCompleterUtils tabCompleterUtils,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(serviceManager, target, commandController, commandParser, parentWindow,
                 tabCompleterUtils, eventBus);
     }

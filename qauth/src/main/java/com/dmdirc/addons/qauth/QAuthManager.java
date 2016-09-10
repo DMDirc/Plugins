@@ -23,7 +23,6 @@
 package com.dmdirc.addons.qauth;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.Invite;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
@@ -37,6 +36,7 @@ import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.events.ServerNoticeEvent;
 import com.dmdirc.events.UserInfoResponseEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.events.UserInfoEvent;
@@ -57,7 +57,7 @@ public class QAuthManager {
 
     private final String domain;
     private final PluginInfo pluginInfo;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final ConfigBinder configBinder;
     private String username;
     private String password;
@@ -71,7 +71,7 @@ public class QAuthManager {
             @PluginDomain(QAuthPlugin.class) final String domain,
             @PluginDomain(QAuthPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider config,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.domain = domain;
         this.pluginInfo = pluginInfo;
         this.eventBus = eventBus;

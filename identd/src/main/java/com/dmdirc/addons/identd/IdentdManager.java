@@ -23,7 +23,6 @@
 package com.dmdirc.addons.identd;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -34,6 +33,7 @@ import com.dmdirc.events.ServerConnectErrorEvent;
 import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
@@ -57,14 +57,14 @@ public class IdentdManager {
     /** Ident server. */
     private final IdentdServer server;
     /** Event bus to subscribe to events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final PluginInfo pluginInfo;
 
     @Inject
     public IdentdManager(@GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(IdentdPlugin.class) final String domain,
             @PluginDomain(IdentdPlugin.class) final PluginInfo pluginInfo,
-            final IdentdServer server, final DMDircMBassador eventBus) {
+            final IdentdServer server, final EventBus eventBus) {
         this.pluginInfo = pluginInfo;
         connections = new ArrayList<>();
         this.config = config;

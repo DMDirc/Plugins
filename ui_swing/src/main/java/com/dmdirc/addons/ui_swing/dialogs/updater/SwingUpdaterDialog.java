@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.updater;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
@@ -30,6 +29,7 @@ import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogModule.ForUpdates;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.updater.UpdateComponent;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 import com.dmdirc.updater.manager.UpdateManager;
@@ -78,7 +78,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
     /** Provider of restart dialogs. */
     private final DialogProvider<SwingRestartDialog> restartDialogProvider;
     /** The event bus to post errors to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new instance of the updater dialog.
@@ -93,7 +93,7 @@ public class SwingUpdaterDialog extends StandardDialog implements
             final CachingUpdateManager updateManager,
             @MainWindow final Window parentWindow,
             @ForUpdates final DialogProvider<SwingRestartDialog> restartDialogProvider,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(parentWindow, ModalityType.MODELESS);
 
         this.updateManager = updateManager;

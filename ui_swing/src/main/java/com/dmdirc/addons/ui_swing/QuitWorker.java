@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
@@ -46,7 +46,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
     /** The main frame to interact with. */
     private final MainFrame mainFrame;
     /** Bus to dispatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new {@link QuitWorker}.
@@ -61,7 +61,7 @@ public class QuitWorker extends SwingWorker<Void, Void> {
             final IdentityController identityController,
             final ConnectionManager connectionManager,
             final MainFrame mainFrame,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.globalIdentity = identityController.getUserSettings();
         this.globalConfig = identityController.getGlobalConfiguration();
         this.connectionManager = connectionManager;

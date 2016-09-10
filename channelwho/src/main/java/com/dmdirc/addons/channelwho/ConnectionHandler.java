@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.ServerNumericEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -51,7 +51,7 @@ import net.engio.mbassy.listener.Handler;
 public class ConnectionHandler {
 
     private final Multimap<String, GroupChatUser> users;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final Connection connection;
     private final String domain;
     private final ScheduledExecutorService executorService;
@@ -61,7 +61,7 @@ public class ConnectionHandler {
     public ConnectionHandler(
             final AggregateConfigProvider config,
             final ScheduledExecutorService executorService,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final String domain,
             final Connection connection) {
         this.eventBus = eventBus;

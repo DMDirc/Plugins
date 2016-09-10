@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -40,6 +39,7 @@ import com.dmdirc.events.ChannelGotNamesEvent;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.DisplayProperty;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -72,7 +72,7 @@ public class NickColourManager {
     private final ConfigBinder configBinder;
     private final IconManager iconManager;
     private final Provider<Window> mainWindowProvider;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final NickColourYamlStore nickColourYamlStore;
     private final Path path;
     private final PluginInfo pluginInfo;
@@ -91,7 +91,7 @@ public class NickColourManager {
             final IconManager iconManager,
             @MainWindow final Provider<Window> mainWindowProvider,
             @PluginDomain(NickColourPlugin.class) final PluginInfo pluginInfo,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final NickColourYamlStore nickColourYamlStore,
             @Directory(DirectoryType.BASE) final Path path) {
         this.colourManager = colourManager;

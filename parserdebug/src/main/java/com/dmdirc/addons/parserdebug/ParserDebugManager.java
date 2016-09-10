@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.parserdebug;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.parser.events.DebugInfoEvent;
 import com.dmdirc.parser.interfaces.Parser;
 import com.dmdirc.ui.WindowManager;
@@ -41,7 +41,7 @@ import net.engio.mbassy.listener.Handler;
 public class ParserDebugManager {
 
     /** Event bus to subscribe to events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Map of parsers registered. */
     protected final Map<Parser, DebugWindow> registeredParsers;
     /** Window manager. */
@@ -51,7 +51,7 @@ public class ParserDebugManager {
     @Inject
     public ParserDebugManager(
             final WindowManager windowManager,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory) {
         this.windowManager = windowManager;
         this.eventBus = eventBus;

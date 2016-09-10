@@ -23,7 +23,6 @@
 package com.dmdirc.addons.lagdisplay;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.ServerState;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -45,6 +44,7 @@ import com.dmdirc.events.ServerPingSentEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -71,7 +71,7 @@ import net.engio.mbassy.listener.Handler;
 public class LagDisplayManager implements ConfigChangeListener {
 
     /** Event bus to receive events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Swing event bus to receive events from. */
     private final SwingEventBus swingEventBus;
     /** Active frame manager. */
@@ -96,7 +96,7 @@ public class LagDisplayManager implements ConfigChangeListener {
     private LagDisplayPanel panel;
 
     @Inject
-    public LagDisplayManager(final DMDircMBassador eventBus,
+    public LagDisplayManager(final EventBus eventBus,
             final SwingEventBus swingEventBus,
             final ActiveFrameManager activeFrameManager,
             final Provider<LagDisplayPanel> panelProvider,

@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.TopicBarFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.channelsetting.ChannelSettingsDialog;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.IdentityFactory;
@@ -58,11 +58,11 @@ public class ChannelFrameFactory implements SwingWindowFactory.WindowProvider {
     private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
     private final Provider<KeyedDialogProvider<GroupChat, ChannelSettingsDialog>> dialogProvider;
     private final TopicBarFactory topicBarFactory;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     @Inject
     public ChannelFrameFactory(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             @PluginDomain(SwingController.class) final String domain,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,

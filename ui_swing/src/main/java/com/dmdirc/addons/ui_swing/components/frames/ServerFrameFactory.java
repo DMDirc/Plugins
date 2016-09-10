@@ -22,13 +22,13 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.sslcertificate.SSLCertificateDialogFactory;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -51,13 +51,13 @@ public class ServerFrameFactory implements SwingWindowFactory.WindowProvider {
     private final Provider<TextFrameDependencies> dependencies;
     private final Provider<SwingInputField> inputFieldProvider;
     private final Provider<KeyedDialogProvider<Connection, ServerSettingsDialog>> dialogProvider;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
     private final SSLCertificateDialogFactory sslCertificateDialogFactory;
 
     @Inject
     public ServerFrameFactory(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,

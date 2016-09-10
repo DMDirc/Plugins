@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
 import com.dmdirc.interfaces.CommandController;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 
@@ -46,7 +46,7 @@ public class DCCCommandParser extends GlobalCommandParser {
     public DCCCommandParser(
             final AggregateConfigProvider configManager,
             final CommandController commandController,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(configManager, commandController, eventBus);
     }
 

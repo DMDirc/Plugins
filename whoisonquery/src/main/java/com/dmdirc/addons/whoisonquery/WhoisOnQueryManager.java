@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.whoisonquery;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
@@ -30,6 +29,7 @@ import com.dmdirc.config.prefs.PreferencesType;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ConnectionPrefsRequestedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
@@ -48,12 +48,12 @@ public class WhoisOnQueryManager {
 
     private final String domain;
     private final PluginInfo pluginInfo;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     @Inject
     public WhoisOnQueryManager(@PluginDomain(WhoisOnQueryPlugin.class) final String domain,
             @PluginDomain(WhoisOnQueryPlugin.class) final PluginInfo pluginInfo,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         this.domain = domain;
         this.pluginInfo = pluginInfo;
         this.eventBus = eventBus;

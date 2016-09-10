@@ -23,7 +23,6 @@
 package com.dmdirc.addons.nowplaying;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
@@ -31,6 +30,7 @@ import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginDomain;
@@ -53,7 +53,7 @@ public class NowPlayingManager {
     /** Global configuration to read settings from. */
     private final AggregateConfigProvider globalConfig;
     /** Event bus to subscribe to events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final PluginInfo pluginInfo;
     /** This plugin's settings domain. */
     private final String domain;
@@ -65,7 +65,7 @@ public class NowPlayingManager {
     private List<String> order;
 
     @Inject
-    public NowPlayingManager(final PluginManager pluginManager, final DMDircMBassador eventBus,
+    public NowPlayingManager(final PluginManager pluginManager, final EventBus eventBus,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             @PluginDomain(NowPlayingPlugin.class) final String domain,
             @PluginDomain(NowPlayingPlugin.class) final PluginInfo pluginInfo) {

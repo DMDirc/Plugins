@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 
@@ -46,12 +46,12 @@ public class CustomInputFrameFactory implements SwingWindowFactory.WindowProvide
 
     private final Provider<TextFrameDependencies> dependencies;
     private final Provider<SwingInputField> inputFieldProvider;
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final InputTextFramePasteActionFactory inputTextFramePasteActionFactory;
 
     @Inject
     public CustomInputFrameFactory(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final InputTextFramePasteActionFactory inputTextFramePasteActionFactory,
             final Provider<TextFrameDependencies> dependencies,
             final Provider<SwingInputField> inputFieldProvider) {

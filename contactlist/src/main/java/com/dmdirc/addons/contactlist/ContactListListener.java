@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.contactlist;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;
@@ -42,14 +42,14 @@ public class ContactListListener {
     /** The group chat this listener is for. */
     private final GroupChat groupChat;
     /** Event bus to register listeners with. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
 
     /**
      * Creates a new ContactListListener for the specified group chat.
      *
      * @param groupChat The group chat to show a contact list for
      */
-    public ContactListListener(final GroupChat groupChat, final DMDircMBassador eventBus) {
+    public ContactListListener(final GroupChat groupChat, final EventBus eventBus) {
         this.groupChat = groupChat;
         this.eventBus = eventBus;
     }

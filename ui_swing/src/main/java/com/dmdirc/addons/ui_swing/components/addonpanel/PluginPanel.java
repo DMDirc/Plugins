@@ -23,11 +23,11 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.events.PluginRefreshEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
@@ -80,7 +80,7 @@ public class PluginPanel extends AddonPanel {
      */
     @Inject
     public PluginPanel(
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             @MainWindow final Window parentWindow,
             final PluginManager pluginManager,
             final DataLoaderWorkerFactory workerFactory,

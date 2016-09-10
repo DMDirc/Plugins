@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.dcc.events.DccChatRequestSentEvent;
 import com.dmdirc.addons.dcc.events.DccChatStartingEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
@@ -42,6 +41,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.interfaces.Parser;
@@ -77,7 +77,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
     /** The factory to use for tab completers. */
     private final TabCompleterFactory tabCompleterFactory;
     /** The bus to dispatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final BackBufferFactory backBufferFactory;
 
     /**
@@ -90,7 +90,7 @@ public class DCCCommand extends Command implements IntelligentCommand {
             final DCCManager plugin,
             final WindowManager windowManager,
             final TabCompleterFactory tabCompleterFactory,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory) {
         super(controller);
         this.mainWindow = mainWindow;

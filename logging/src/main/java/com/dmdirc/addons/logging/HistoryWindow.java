@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.core.components.WindowComponent;
 import com.dmdirc.ui.messages.BackBufferFactory;
@@ -60,7 +60,7 @@ public class HistoryWindow extends FrameContainer {
             final String title,
             final Path logFile,
             final WindowModel parent,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final BackBufferFactory backBufferFactory,
             final int numLines) {
         super("raw", title, title, parent.getConfigManager(), backBufferFactory,

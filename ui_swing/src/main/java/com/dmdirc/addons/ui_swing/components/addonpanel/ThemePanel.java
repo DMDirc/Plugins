@@ -23,10 +23,10 @@
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
 import com.dmdirc.ClientModule.UserConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.themes.Theme;
@@ -77,7 +77,7 @@ public class ThemePanel extends AddonPanel {
             final IconManager iconManager,
             final CachingUpdateManager updateManager,
             @UserConfig final ConfigProvider userConfig,
-            final DMDircMBassador eventBus) {
+            final EventBus eventBus) {
         super(parentWindow, workerFactory, eventBus);
         this.themeManager = themeManager;
         this.iconManager = iconManager;

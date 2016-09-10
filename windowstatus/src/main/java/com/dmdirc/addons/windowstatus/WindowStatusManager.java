@@ -23,7 +23,6 @@
 package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -42,6 +41,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.WindowModel;
@@ -64,7 +64,7 @@ public class WindowStatusManager {
     /** Config to read settings from. */
     private final ConfigBinder configBinder;
     /** The event bus to post events to. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The swing event bus to register for events on. */
     private final SwingEventBus swingEventBus;
     /** The panel we use in the status bar. */
@@ -80,7 +80,7 @@ public class WindowStatusManager {
     public WindowStatusManager(final ActiveFrameManager activeFrameManager,
             @GlobalConfig final AggregateConfigProvider config,
             @PluginDomain(WindowStatusPlugin.class) final String domain,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final SwingEventBus swingEventBus,
             @PluginDomain(WindowStatusPlugin.class) final PluginInfo pluginInfo) {
         this.activeFrameManager = activeFrameManager;

@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
@@ -30,6 +29,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.events.ServerInviteExpiredEvent;
 import com.dmdirc.events.ServerInviteReceivedEvent;
 import com.dmdirc.interfaces.Connection;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.InviteManager;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 
@@ -63,14 +63,14 @@ public class InviteLabel extends StatusbarPopupPanel<JLabel> {
     /** Parent window that will own popup windows. */
     private final Window parentWindow;
     /** The client event bus to use for invite events. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** The swing event bus to use for selection events. */
     private final SwingEventBus swingEventBus;
     /** Active connection. */
     private Optional<Connection> activeConnection;
 
     @Inject
-    public InviteLabel(final DMDircMBassador eventBus, final IconManager iconManager,
+    public InviteLabel(final EventBus eventBus, final IconManager iconManager,
             final MainFrame mainFrame, final SwingEventBus swingEventBus) {
         super(new JLabel());
 

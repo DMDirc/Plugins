@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.events.DMDircEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
+import com.dmdirc.interfaces.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,13 +49,13 @@ import static com.dmdirc.util.LogUtils.USER_ERROR;
 public class ScriptPluginManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScriptPluginManager.class);
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     private final String scriptDir;
     private final ScriptManager scriptManager;
     private final TypedProperties globalVariables;
 
     @Inject
-    public ScriptPluginManager(final DMDircMBassador eventBus,
+    public ScriptPluginManager(final EventBus eventBus,
             @Directory(ScriptModule.SCRIPTS) final String scriptDir,
             final ScriptManager scriptManager,
             final ScriptEngineManager scriptEngineManager) {

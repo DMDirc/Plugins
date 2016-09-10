@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.jpq;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.ChannelPartEvent;
 import com.dmdirc.events.ChannelQuitEvent;
 import com.dmdirc.events.DisplayProperty;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -49,7 +49,7 @@ public class GroupChatHandlerTest {
     @Mock private WindowModel windowModel;
     @Mock private AggregateConfigProvider configProvider;
     @Mock private ConfigBinder configBinder;
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private ChannelJoinEvent channelJoinEvent;
     @Mock private ChannelPartEvent channelPartEvent;
     @Mock private ChannelQuitEvent channelQuitEvent;

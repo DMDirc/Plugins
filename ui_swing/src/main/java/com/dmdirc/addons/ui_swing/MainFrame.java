@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.SplitPane;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
@@ -41,6 +40,7 @@ import com.dmdirc.addons.ui_swing.framemanager.FramemanagerPosition;
 import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
+import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.LifecycleController;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -98,7 +98,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
     /** Provider of frame managers. */
     private final Provider<FrameManager> frameManagerProvider;
     /** The bus to despatch events on. */
-    private final DMDircMBassador eventBus;
+    private final EventBus eventBus;
     /** Swing event bus to post events to. */
     private final SwingEventBus swingEventBus;
     /** The main application icon. */
@@ -145,7 +145,7 @@ public class MainFrame extends JFrame implements WindowListener, ConfigChangeLis
             final Provider<QuitWorker> quitWorker,
             final IconManager iconManager,
             final Provider<FrameManager> frameManagerProvider,
-            final DMDircMBassador eventBus,
+            final EventBus eventBus,
             final SwingEventBus swingEventBus) {
         checkOnEDT();
         this.apple = apple;

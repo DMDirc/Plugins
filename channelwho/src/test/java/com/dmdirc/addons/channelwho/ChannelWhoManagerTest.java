@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.events.ServerDisconnectedEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
+import com.dmdirc.interfaces.EventBus;
 
 import com.google.common.collect.Lists;
 
@@ -50,7 +50,7 @@ public class ChannelWhoManagerTest {
     @Mock private ConnectionManager connectionManager;
     @Mock private Connection connection;
     @Mock private Connection connection2;
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
 
     private ChannelWhoManager instance;
 

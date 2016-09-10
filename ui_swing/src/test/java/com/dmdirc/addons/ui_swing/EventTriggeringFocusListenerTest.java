@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.DMDircMBassador;
 import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
 import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
+import com.dmdirc.interfaces.EventBus;
 
 import java.awt.event.WindowEvent;
 
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class EventTriggeringFocusListenerTest {
 
-    @Mock private DMDircMBassador eventBus;
+    @Mock private EventBus eventBus;
     @Mock private WindowEvent windowEvent;
     private EventTriggeringFocusListener instance;
 
