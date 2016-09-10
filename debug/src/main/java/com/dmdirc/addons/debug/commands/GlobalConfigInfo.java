@@ -72,9 +72,7 @@ public class GlobalConfigInfo extends DebugCommand {
     public void execute(@Nonnull final WindowModel origin,
             final CommandArguments args, final CommandContext context) {
         for (ConfigProvider source : globalConfig.getSources()) {
-            showOutput(origin, args.isSilent(), source.getTarget()
-                    + " - " + source + "(" + source.getTarget().getOrder()
-                    + ")");
+            showOutput(origin, args.isSilent(), String.valueOf(source));
         }
     }
 

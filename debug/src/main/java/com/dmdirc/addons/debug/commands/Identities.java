@@ -83,13 +83,10 @@ public class Identities extends DebugCommand {
 
         int i = 0;
         for (ConfigProvider source : identities) {
-            data[i++] = new String[]{source.getName(),
-                source.getTarget().getTypeName(), source.getTarget().getData(),
-                String.valueOf(source.getTarget().getOrder())};
+            data[i++] = new String[]{source.getName()};
         }
 
-        showOutput(origin, args.isSilent(),
-                doTable(new String[]{"Name", "Target", "Data", "Priority"}, data));
+        showOutput(origin, args.isSilent(), doTable(new String[]{"Name"}, data));
     }
 
 }
