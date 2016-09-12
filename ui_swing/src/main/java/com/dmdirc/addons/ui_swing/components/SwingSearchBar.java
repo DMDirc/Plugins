@@ -32,7 +32,7 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.interfaces.ui.SearchBar;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.ui.messages.IRCDocument;
+import com.dmdirc.ui.messages.Document;
 import com.dmdirc.ui.messages.IRCDocumentSearcher;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.util.collections.ListenerList;
@@ -226,7 +226,7 @@ public final class SwingSearchBar extends JPanel implements ActionListener,
         final boolean up = Direction.UP == direction;
 
         final TextPane textPane = parent.getTextPane();
-        final IRCDocument document = textPane.getDocument();
+        final Document document = textPane.getDocument();
         final IRCDocumentSearcher searcher = new IRCDocumentSearcher(text,
                 document,
                 caseSensitive);

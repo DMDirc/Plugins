@@ -23,7 +23,7 @@
 package com.dmdirc.addons.ui_web2.serialisers;
 
 import com.dmdirc.ui.messages.BackBuffer;
-import com.dmdirc.ui.messages.IRCDocument;
+import com.dmdirc.ui.messages.Document;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -40,7 +40,7 @@ public class BackBufferSerializer implements JsonSerializer<BackBuffer> {
     @Override
     public JsonElement serialize(final BackBuffer src, final Type typeOfSrc, final JsonSerializationContext context) {
         final JsonArray res = new JsonArray();
-        final IRCDocument document = src.getDocument();
+        final Document document = src.getDocument();
         for (int i = 0; i < document.getNumLines(); i++) {
             // TODO: Pass on foreground and background colours
             res.add(document.getLine(i).getText());
