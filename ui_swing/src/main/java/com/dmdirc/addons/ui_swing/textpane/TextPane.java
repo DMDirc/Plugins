@@ -22,17 +22,18 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.CachingDocument;
-import com.dmdirc.ui.messages.IRCDocument;
-import com.dmdirc.ui.messages.IRCDocumentListener;
+import com.dmdirc.ui.messages.Document;
+import com.dmdirc.ui.messages.DocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.StringUtils;
 import com.dmdirc.util.URLBuilder;
-
 import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.Point;
@@ -46,7 +47,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
@@ -54,16 +54,13 @@ import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
-
 import net.miginfocom.swing.MigLayout;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Styled, scrollable text pane.
  */
 public final class TextPane extends JComponent implements MouseWheelListener,
-        AdjustmentListener, IRCDocumentListener, ConfigChangeListener {
+        AdjustmentListener, DocumentListener, ConfigChangeListener {
 
     /** A version number for this class. */
     private static final long serialVersionUID = 5;
@@ -72,7 +69,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     /** Canvas object, used to draw text. */
     private final TextPaneCanvas canvas;
     /** IRCDocument. */
-    private final IRCDocument document;
+    private final Document document;
     /** Parent window. */
     private final WindowModel window;
     /** Indicator to show whether new lines have been added. */
@@ -487,7 +484,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
      *
      * @return This TextPane's IRC document
      */
-    public IRCDocument getDocument() {
+    public Document getDocument() {
         return document;
     }
 
