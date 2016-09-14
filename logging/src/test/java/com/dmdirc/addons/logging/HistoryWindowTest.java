@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class HistoryWindowTest {
 
-    @Mock private BackBuffer backBuffer;
+    @Mock private BackBufferImpl backBuffer;
     @Mock private AggregateConfigProvider config;
     @Mock private ConfigBinder configBinder;
     @Mock private Connection connection;
