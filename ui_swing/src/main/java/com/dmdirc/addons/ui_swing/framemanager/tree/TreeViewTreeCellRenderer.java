@@ -26,6 +26,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.ui.messages.ColourManager;
+import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.ui.messages.Styliser;
 
 import java.awt.Color;
@@ -133,9 +134,9 @@ public class TreeViewTreeCellRenderer implements TreeCellRenderer,
 
         final StringBuilder sb = new StringBuilder();
         if (bold) {
-            sb.append(Styliser.CODE_BOLD);
+            sb.append(IRCControlCodes.BOLD);
         }
-        sb.append(Styliser.CODE_HEXCOLOUR);
+        sb.append(IRCControlCodes.COLOUR_HEX);
         sb.append(UIUtilities.getHex(foreground));
         sb.append(',');
         sb.append(UIUtilities.getHex(background));

@@ -31,7 +31,7 @@ import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
 
@@ -95,7 +95,7 @@ public class ForceUpdate extends DebugCommand {
         } else {
             showError(origin, args.isSilent(), "Update checking is "
                     + "currently disabled.  You can enable it by typing:");
-            showError(origin, args.isSilent(), Styliser.CODE_FIXED
+            showError(origin, args.isSilent(), IRCControlCodes.FIXED
                     + "    /set updater enable true");
         }
     }

@@ -38,7 +38,7 @@ import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.IRCControlCodes;
 
 import java.lang.reflect.Method;
 
@@ -141,17 +141,17 @@ public class EventBusViewer extends DebugCommand {
             }
 
             final StringBuilder output = new StringBuilder();
-            output.append(Styliser.CODE_BOLD)
+            output.append(IRCControlCodes.BOLD)
                     .append(event.getClass().getSimpleName())
-                    .append(Styliser.CODE_BOLD);
+                    .append(IRCControlCodes.BOLD);
 
             for (Method method : event.getClass().getMethods()) {
                 if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
                     try {
                         output.append(' ')
-                                .append(Styliser.CODE_UNDERLINE)
+                                .append(IRCControlCodes.UNDERLINE)
                                 .append(method.getName().substring(3))
-                                .append(Styliser.CODE_UNDERLINE)
+                                .append(IRCControlCodes.UNDERLINE)
                                 .append('=')
                                 .append(method.invoke(event));
                     } catch (ReflectiveOperationException ex) {

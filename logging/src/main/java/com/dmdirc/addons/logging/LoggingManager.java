@@ -59,6 +59,7 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
+import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
@@ -447,17 +448,17 @@ public class LoggingManager implements ConfigChangeListener {
             }
 
             if (num >= 0 && num <= 15) {
-                res = String.format("%c%02d%s%1$c", Styliser.CODE_COLOUR, num, line);
+                res = String.format("%c%02d%s%1$c", IRCControlCodes.COLOUR, num, line);
             }
         } else if (colour.length() == 6) {
             try {
                 Color.decode('#' + colour);
-                res = String.format("%c%s%s%1$c", Styliser.CODE_HEXCOLOUR, colour, line);
+                res = String.format("%c%s%s%1$c", IRCControlCodes.COLOUR_HEX, colour, line);
             } catch (NumberFormatException ex) { /* Do Nothing */ }
         }
 
         if (res == null) {
-            res = String.format("%c%02d%s%1$c", Styliser.CODE_COLOUR, 14, line);
+            res = String.format("%c%02d%s%1$c", IRCControlCodes.COLOUR, 14, line);
         }
         return res;
     }

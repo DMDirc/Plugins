@@ -27,7 +27,7 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.IRCControlCodes;
 
 import java.util.Map.Entry;
 
@@ -65,10 +65,10 @@ public class Threads extends DebugCommand {
             final CommandArguments args, final CommandContext context) {
         for (Entry<Thread, StackTraceElement[]> thread
                 : Thread.getAllStackTraces().entrySet()) {
-            showOutput(origin, args.isSilent(), Styliser.CODE_BOLD + thread.getKey().getName());
+            showOutput(origin, args.isSilent(), IRCControlCodes.BOLD + thread.getKey().getName());
 
             for (StackTraceElement element : thread.getValue()) {
-                showOutput(origin, args.isSilent(), Styliser.CODE_FIXED + "    " + element);
+                showOutput(origin, args.isSilent(), IRCControlCodes.FIXED + "    " + element);
             }
         }
     }
