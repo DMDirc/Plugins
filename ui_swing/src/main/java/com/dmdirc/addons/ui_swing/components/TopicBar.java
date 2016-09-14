@@ -40,7 +40,7 @@ import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.IRCControlCodes;
 
 import java.awt.Color;
 import java.awt.Window;
@@ -248,7 +248,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         if (topic != null) {
             channel.getWindowModel().getBackBuffer().getStyliser().addStyledString(
                     new StyledDocumentMaker((StyledDocument) topicText.getDocument(), as),
-                    Styliser.CODE_HEXCOLOUR
+                    IRCControlCodes.COLOUR_HEX
                             + UIUtilities.getHex(foregroundColour)
                             + topic.getTopic());
         }
