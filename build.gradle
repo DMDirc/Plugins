@@ -32,7 +32,7 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven { url 'https://artifactory.dmdirc.com/artifactory/repo' }
+        maven { url 'https://artifactory.dmdirc.com/artifactory/releases' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
