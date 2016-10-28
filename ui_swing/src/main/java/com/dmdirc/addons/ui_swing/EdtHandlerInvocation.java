@@ -24,6 +24,7 @@ package com.dmdirc.addons.ui_swing;
 
 import java.lang.reflect.Method;
 
+import net.engio.mbassy.bus.MessagePublication;
 import net.engio.mbassy.dispatch.ReflectiveHandlerInvocation;
 import net.engio.mbassy.subscription.SubscriptionContext;
 
@@ -48,9 +49,9 @@ public class EdtHandlerInvocation extends ReflectiveHandlerInvocation {
     }
 
     @Override
-    protected void invokeHandler(final Object message, final Object listener,
-            final Method handler) {
+    public void invoke(final Object listener, final Object message,
+            final MessagePublication publication) {
         UIUtilities.invokeAndWait(
-                () -> EdtHandlerInvocation.super.invokeHandler(message, listener, handler));
+                () -> EdtHandlerInvocation.super.invoke(listener, message, publication));
     }
 }
