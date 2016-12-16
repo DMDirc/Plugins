@@ -37,7 +37,7 @@ dependencies:
 
 test:
   override:
-    - ./gradlew --stacktrace plugins:jar plugins:test plugins:coveralls:
+    - ./gradlew --stacktrace plugins:jars plugins:tests plugins:coveralls:
         pwd:
           ../meta
 
