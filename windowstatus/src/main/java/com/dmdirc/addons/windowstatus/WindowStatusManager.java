@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.windowstatus;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -32,6 +31,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -48,9 +48,7 @@ import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-
 import javax.inject.Inject;
-
 import net.engio.mbassy.listener.Handler;
 
 /**

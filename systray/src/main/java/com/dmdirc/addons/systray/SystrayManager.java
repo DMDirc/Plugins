@@ -22,23 +22,22 @@
 
 package com.dmdirc.addons.systray;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
+import com.dmdirc.addons.ui_swing.components.IconManager;
+import com.dmdirc.addons.ui_swing.events.ClientMinimisedEvent;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
-import com.dmdirc.addons.ui_swing.events.ClientMinimisedEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.messages.Styliser;
-
 import java.awt.AWTException;
 import java.awt.Frame;
 import java.awt.MenuItem;
@@ -49,9 +48,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.inject.Inject;
-
 import net.engio.mbassy.listener.Handler;
 
 public class SystrayManager implements ActionListener, MouseListener {

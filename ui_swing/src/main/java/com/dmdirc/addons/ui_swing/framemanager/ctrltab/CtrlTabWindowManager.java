@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.ctrltab;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -37,15 +36,14 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.LogUtils;
-
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.InputMap;
@@ -55,11 +53,9 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
+import net.engio.mbassy.listener.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 /**
  * A Window manager to handle ctrl[+shift]+tab switching between windows.

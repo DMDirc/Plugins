@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.FileBrowser;
 import com.dmdirc.addons.ui_swing.components.FontPicker;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -33,19 +32,18 @@ import com.dmdirc.addons.ui_swing.components.durationeditor.DurationDisplay;
 import com.dmdirc.addons.ui_swing.components.renderers.MapEntryRenderer;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.components.validating.ValidatingJTextField;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.validators.NumericalValidator;
 import com.dmdirc.util.validators.OptionalValidator;
 import com.dmdirc.util.validators.Validator;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.AbstractButton;
@@ -62,7 +60,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.JTextComponent;
-
 import net.miginfocom.swing.MigLayout;
 
 /**

@@ -22,15 +22,14 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.ClientModule;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -52,7 +51,7 @@ public class GlobalConfigInfo extends DebugCommand {
     @Inject
     public GlobalConfigInfo(
             final Provider<Debug> commandProvider,
-            @ClientModule.GlobalConfig final AggregateConfigProvider globalConfig) {
+            @GlobalConfig final AggregateConfigProvider globalConfig) {
         super(commandProvider);
 
         this.globalConfig = globalConfig;

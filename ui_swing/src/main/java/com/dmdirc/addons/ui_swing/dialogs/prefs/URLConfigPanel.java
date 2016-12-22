@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.IconManager;
@@ -30,11 +29,11 @@ import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.config.validators.URLProtocolValidator;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
-
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -46,7 +45,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -54,7 +52,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import net.miginfocom.swing.MigLayout;
 
 /**

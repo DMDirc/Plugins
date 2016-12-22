@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -36,6 +35,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.FrameManager;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.interfaces.EventBus;
@@ -46,14 +46,12 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.LogUtils;
-
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -65,11 +63,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Invoke;
 import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

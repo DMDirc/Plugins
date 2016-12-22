@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.ui.messages.ColourManager;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

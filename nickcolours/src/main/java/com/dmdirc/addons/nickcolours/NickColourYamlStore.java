@@ -22,10 +22,9 @@
 
 package com.dmdirc.addons.nickcolours;
 
-import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.BaseYamlStore;
-
 import java.awt.Color;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,10 +32,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

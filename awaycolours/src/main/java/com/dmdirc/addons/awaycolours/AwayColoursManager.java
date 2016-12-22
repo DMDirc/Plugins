@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.awaycolours;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.DisplayProperty;

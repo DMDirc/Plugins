@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components.frames;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.UIUtilities;
@@ -52,6 +51,7 @@ import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.LinkChannelClickedEvent;
 import com.dmdirc.events.LinkNicknameClickedEvent;
@@ -64,7 +64,6 @@ import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
-
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
@@ -72,7 +71,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Optional;
-
 import javax.inject.Inject;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
@@ -82,7 +80,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 

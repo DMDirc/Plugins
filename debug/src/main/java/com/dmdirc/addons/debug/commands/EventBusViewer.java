@@ -22,12 +22,12 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.CustomWindow;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.ClientLineAddedEvent;
 import com.dmdirc.events.CommandOutputEvent;
 import com.dmdirc.events.DMDircEvent;
@@ -39,13 +39,10 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.IRCControlCodes;
-
 import java.lang.reflect.Method;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Listener;
 import net.engio.mbassy.listener.References;

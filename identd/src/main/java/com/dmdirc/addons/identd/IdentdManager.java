@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -38,12 +38,9 @@ import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.PortValidator;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import net.engio.mbassy.listener.Handler;
 
 public class IdentdManager {

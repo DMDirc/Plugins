@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.events.SwingEventBus;
@@ -30,18 +29,16 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowAddedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowDeletedEvent;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.plugins.PluginDomain;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import net.miginfocom.swing.MigLayout;
-
 import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Provides an MDI style bar for closing frames.

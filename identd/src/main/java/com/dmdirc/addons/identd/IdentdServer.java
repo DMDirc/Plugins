@@ -22,20 +22,17 @@
 
 package com.dmdirc.addons.identd;
 
-import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.SystemInfo;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

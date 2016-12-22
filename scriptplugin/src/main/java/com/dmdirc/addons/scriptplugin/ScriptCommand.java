@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.scriptplugin;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
@@ -31,18 +30,17 @@ import com.dmdirc.commandparser.CommandType;
 import com.dmdirc.commandparser.commands.Command;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.script.ScriptEngineManager;

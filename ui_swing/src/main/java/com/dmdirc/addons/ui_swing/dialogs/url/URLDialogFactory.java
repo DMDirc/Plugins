@@ -23,16 +23,14 @@
 package com.dmdirc.addons.ui_swing.dialogs.url;
 
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
-
 import java.awt.Window;
 import java.net.URI;
-
 import javax.inject.Inject;
 
-import static com.dmdirc.ClientModule.GlobalConfig;
 import static com.dmdirc.ClientModule.UserConfig;
 
 /**

@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
 import com.dmdirc.util.URLBuilder;
-
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -35,13 +35,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-
-import static com.dmdirc.ClientModule.GlobalConfig;
 
 /**
  * The icon manager provides a standard way to access icons for use in DMDirc. It allows the user to
