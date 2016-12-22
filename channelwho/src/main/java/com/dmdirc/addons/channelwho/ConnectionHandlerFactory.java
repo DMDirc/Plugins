@@ -22,7 +22,7 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;

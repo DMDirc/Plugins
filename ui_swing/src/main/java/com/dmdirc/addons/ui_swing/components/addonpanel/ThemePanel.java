@@ -22,22 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactory;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.ConfigProvider;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;
-
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;

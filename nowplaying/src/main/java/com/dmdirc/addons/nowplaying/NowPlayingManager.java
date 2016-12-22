@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.nowplaying;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -36,14 +36,11 @@ import com.dmdirc.plugins.Plugin;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import net.engio.mbassy.listener.Handler;
 
 public class NowPlayingManager {

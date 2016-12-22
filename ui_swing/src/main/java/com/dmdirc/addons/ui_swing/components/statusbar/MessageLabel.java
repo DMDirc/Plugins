@@ -22,17 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.components.statusbar;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.StatusBarMessageClearEvent;
 import com.dmdirc.events.StatusBarMessageEvent;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.StatusMessage;
-
 import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -41,18 +40,14 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import javax.inject.Inject;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
+import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 /**
  * Message label handles showing messages in the status bar.

@@ -22,22 +22,20 @@
 
 package com.dmdirc.addons.ui_swing.wizard.firstrun;
 
-import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.dialogs.profile.ProfileManagerDialog;
 import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.addons.ui_swing.wizard.WizardDialog;
 import com.dmdirc.addons.ui_swing.wizard.WizardListener;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.interfaces.ui.FirstRunWizard;
 import com.dmdirc.plugins.CorePluginExtractor;
-import com.dmdirc.addons.ui_swing.components.IconManager;
-
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.util.ArrayList;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

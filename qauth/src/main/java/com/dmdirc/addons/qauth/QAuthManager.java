@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.qauth;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Invite;
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
@@ -43,11 +43,8 @@ import com.dmdirc.parser.events.UserInfoEvent;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.NotEmptyValidator;
-
 import java.util.Optional;
-
 import javax.inject.Inject;
-
 import net.engio.mbassy.listener.Handler;
 
 /**

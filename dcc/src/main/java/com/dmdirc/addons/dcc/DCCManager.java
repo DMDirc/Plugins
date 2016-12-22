@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.dcc;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.dcc.events.DccChatRequestEvent;
 import com.dmdirc.addons.dcc.events.DccChatStartingEvent;
 import com.dmdirc.addons.dcc.events.DccSendRequestEvent;
@@ -41,6 +40,7 @@ import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.commandparser.parsers.CommandParser;
 import com.dmdirc.commandparser.parsers.GlobalCommandParser;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -62,9 +62,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.messages.BackBufferFactory;
-
 import com.google.common.collect.Sets;
-
 import java.awt.Dialog;
 import java.awt.Window;
 import java.io.File;
@@ -74,17 +72,14 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.Supplier;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
+import net.engio.mbassy.listener.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.util.LogUtils.USER_ERROR;
 

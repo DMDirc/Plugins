@@ -22,18 +22,16 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.paste;
 
-import com.dmdirc.ClientModule.GlobalConfig;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.frames.InputTextFrame;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.ServiceManager;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
-
 import java.awt.Window;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

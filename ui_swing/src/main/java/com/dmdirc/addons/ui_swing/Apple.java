@@ -22,15 +22,14 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;
-
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
@@ -43,18 +42,15 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
-
+import net.engio.mbassy.listener.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.util.LogUtils.USER_ERROR;
 

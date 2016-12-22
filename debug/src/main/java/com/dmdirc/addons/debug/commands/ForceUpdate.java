@@ -22,11 +22,11 @@
 
 package com.dmdirc.addons.debug.commands;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.debug.Debug;
 import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -34,7 +34,6 @@ import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.updater.UpdateChecker;
 import com.dmdirc.updater.manager.CachingUpdateManager;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;

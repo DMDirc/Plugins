@@ -25,6 +25,7 @@ package com.dmdirc.addons.ui_swing.components;
 import com.dmdirc.addons.ui_swing.SwingController;
 import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
@@ -32,15 +33,11 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
-
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
-import static com.dmdirc.ClientModule.GlobalConfig;
 
 /**
  * Factory for {@link TopicBar}s.

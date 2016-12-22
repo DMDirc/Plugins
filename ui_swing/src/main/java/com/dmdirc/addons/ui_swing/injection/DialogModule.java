@@ -22,7 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.injection;
 
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.PrefsComponentFactory;
 import com.dmdirc.addons.ui_swing.SwingWindowFactory;
@@ -41,6 +40,7 @@ import com.dmdirc.addons.ui_swing.dialogs.serversetting.ServerSettingsDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingRestartDialog;
 import com.dmdirc.addons.ui_swing.dialogs.updater.SwingUpdaterDialog;
 import com.dmdirc.commandparser.auto.AutoCommandManager;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.Connection;
@@ -66,16 +66,13 @@ import com.dmdirc.ui.core.newserver.CoreNewServerDialogModel;
 import com.dmdirc.ui.core.profiles.CoreProfilesDialogModel;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;
-
+import dagger.Module;
+import dagger.Provides;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
 
 /**
  * Facilitates injection of dialogs.

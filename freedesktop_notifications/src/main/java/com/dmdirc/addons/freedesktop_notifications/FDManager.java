@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.ClientModule.GlobalConfig;
-import com.dmdirc.ClientModule.UserConfig;
+import com.dmdirc.config.GlobalConfig;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -38,19 +38,14 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.StreamUtils;
-
 import com.google.common.base.Strings;
 import com.google.common.html.HtmlEscapers;
-
 import java.io.IOException;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
+import net.engio.mbassy.listener.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.engio.mbassy.listener.Handler;
 
 import static com.dmdirc.util.LogUtils.USER_ERROR;
 

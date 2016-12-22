@@ -22,9 +22,9 @@
 
 package com.dmdirc.addons.logging;
 
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.Query;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
@@ -63,7 +63,6 @@ import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
-
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -84,13 +83,10 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
 import net.engio.mbassy.listener.Handler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

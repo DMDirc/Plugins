@@ -22,23 +22,19 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ClientModule.AddonConfig;
-import com.dmdirc.ClientModule.GlobalConfig;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.config.AddonConfig;
+import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.util.LogUtils;
-
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
-
 import javax.inject.Inject;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import net.miginfocom.layout.PlatformDefaults;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
