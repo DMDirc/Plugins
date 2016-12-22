@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.freedesktop_notifications;
 
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.config.GlobalConfig;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;

@@ -22,10 +22,10 @@
 
 package com.dmdirc.addons.ui_swing.dialogs.prefs;
 
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.components.GenericTableModel;
 import com.dmdirc.addons.ui_swing.components.PackingTable;
 import com.dmdirc.config.GlobalConfig;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.config.prefs.PreferencesInterface;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigChangeListener;

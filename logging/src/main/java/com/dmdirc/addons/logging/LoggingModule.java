@@ -23,10 +23,10 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
 import com.dmdirc.commandline.CommandLineOptionsModule.DirectoryType;
 import com.dmdirc.config.GlobalConfig;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;

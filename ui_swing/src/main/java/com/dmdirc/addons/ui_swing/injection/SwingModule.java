@@ -23,7 +23,6 @@
 package com.dmdirc.addons.ui_swing.injection;
 
 import com.dmdirc.ClientModule;
-import com.dmdirc.ClientModule.UserConfig;
 import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.NoopClipboard;
@@ -53,6 +52,7 @@ import com.dmdirc.addons.ui_swing.framemanager.FrameManagerProvider;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeFrameManagerProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.config.GlobalConfig;
+import com.dmdirc.config.UserConfig;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.EventBus;
