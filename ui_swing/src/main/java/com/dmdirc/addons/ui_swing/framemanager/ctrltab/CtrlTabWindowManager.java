@@ -115,11 +115,7 @@ public class CtrlTabWindowManager {
         final Optional<TextFrame> parent = event.getParentWindow();
         final TextFrame window = event.getChildWindow();
         final TreeViewNode parentNode;
-        if (parent.isPresent()) {
-            parentNode = nodes.get(parent.get());
-        } else {
-            parentNode = model.getRootNode();
-        }
+        parentNode = parent.map(nodes::get).orElseGet(model::getRootNode);
 
         UIUtilities.invokeAndWait(() -> {
             final TreeViewNode node = new TreeViewNode(null, window);

@@ -25,7 +25,6 @@ package com.dmdirc.addons.calc;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,8 +43,7 @@ public class Parser {
     static {
         TOKENS_BY_PRECEDENCE = new ArrayList<>(Arrays.asList(
                 TokenType.values()));
-        Collections.sort(TOKENS_BY_PRECEDENCE,
-                new TokenTypePrecedenceComparator());
+        TOKENS_BY_PRECEDENCE.sort(new TokenTypePrecedenceComparator());
     }
 
     public Parser(final Lexer lexer) {

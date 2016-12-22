@@ -104,7 +104,7 @@ public final class NicklistListModel extends AbstractListModel<GroupChatUser> im
      */
     public void sort() {
         synchronized (nicknames) {
-            Collections.sort(nicknames, new NicklistComparator(sortByMode, sortByCase));
+            nicknames.sort(new NicklistComparator(sortByMode, sortByCase));
         }
         rerender();
     }

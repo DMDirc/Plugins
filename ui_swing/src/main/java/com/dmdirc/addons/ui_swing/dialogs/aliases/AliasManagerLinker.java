@@ -140,9 +140,7 @@ public class AliasManagerLinker implements AliasDialogModelListener {
         deleteAlias.setEnabled(false);
         deleteAlias.addActionListener(e -> {
             final Optional<Alias> alias = model.getSelectedAlias();
-            if (alias.isPresent()) {
-                model.removeAlias(alias.get().getName());
-            }
+            alias.ifPresent(alias1 -> model.removeAlias(alias1.getName()));
         });
     }
 
@@ -198,11 +196,7 @@ public class AliasManagerLinker implements AliasDialogModelListener {
         command.setEnabled(model.isCommandValid());
         command.setText(model.getSelectedAliasName());
         final int index;
-        if (alias.isPresent()) {
-            index = commandModel.indexOf(alias.get());
-        } else {
-            index = -1;
-        }
+        index = alias.map(alias1 -> commandModel.indexOf(alias1)).orElseGet(() -> -1);
         if (index != selectionModel.getLeadSelectionIndex()) {
             selectionModel.setLeadSelectionIndex(index);
         }

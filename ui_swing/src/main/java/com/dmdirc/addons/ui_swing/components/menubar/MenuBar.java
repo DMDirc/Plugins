@@ -111,9 +111,7 @@ public class MenuBar extends JMenuBar {
         final Optional<JMenu> menu = getParentMenuItem(parentMenu);
         if (menu.isPresent()) {
             final Optional<JMenuItem> menuItem = getChildItem(menu.get(), childItem);
-            if (menuItem.isPresent()) {
-                menu.get().remove(menuItem.get());
-            }
+            menuItem.ifPresent(jMenuItem -> menu.get().remove(jMenuItem));
         }
     }
 

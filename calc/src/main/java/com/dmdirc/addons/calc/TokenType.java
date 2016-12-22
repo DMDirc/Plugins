@@ -130,9 +130,8 @@ public enum TokenType {
 
                 @Override
                 public Number evaluate(final TreeToken token) {
-                    return new Float(Math.pow(token.getChildren().get(0).evaluate()
-                                    .doubleValue(),
-                                    token.getChildren().get(1).evaluate().doubleValue()));
+                    return (float) Math.pow(token.getChildren().get(0).evaluate().doubleValue(),
+                            token.getChildren().get(1).evaluate().doubleValue());
                 }
             };
     /** The string representation of tokens that may follow this one. */

@@ -60,13 +60,7 @@ public final class FDNotifyCommand extends Command {
     @Override
     public void execute(@Nonnull final WindowModel origin, final CommandArguments args,
             final CommandContext context) {
-        new Thread() {
-
-            @Override
-            public void run() {
-                manager.showNotification("", args.getArgumentsAsString());
-            }
-        }.start();
+        new Thread(() -> manager.showNotification("", args.getArgumentsAsString())).start();
     }
 
 }

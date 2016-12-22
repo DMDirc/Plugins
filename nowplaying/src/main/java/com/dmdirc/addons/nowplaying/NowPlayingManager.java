@@ -38,7 +38,6 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import net.engio.mbassy.listener.Handler;
@@ -195,7 +194,7 @@ public class NowPlayingManager {
     public MediaSource getBestSource() {
         final List<MediaSource> possibleSources = getSources();
 
-        Collections.sort(possibleSources, new MediaSourceComparator(order));
+        possibleSources.sort(new MediaSourceComparator(order));
 
         MediaSource paused = null;
         for (final MediaSource source : possibleSources) {
