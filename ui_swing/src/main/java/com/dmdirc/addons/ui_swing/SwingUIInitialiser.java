@@ -22,8 +22,8 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.ClientModule.AddonConfig;
 import com.dmdirc.addons.ui_swing.dialogs.DialogKeyListener;
+import com.dmdirc.config.AddonConfig;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ConfigProvider;
