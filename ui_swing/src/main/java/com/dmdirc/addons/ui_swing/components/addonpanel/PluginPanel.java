@@ -36,7 +36,6 @@ import com.dmdirc.updater.manager.CachingUpdateManager;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
@@ -99,14 +98,14 @@ public class PluginPanel extends AddonPanel {
         final List<PluginInfo> list = new ArrayList<>();
         final Collection<PluginInfo> sortedList = new ArrayList<>();
         list.addAll(pluginManager.getPluginInfos());
-        Collections.sort(list, COMPARATOR);
+        list.sort(COMPARATOR);
         list.stream().filter(plugin -> plugin.getMetaData().getParent() == null).forEach(plugin -> {
             final List<PluginInfo> childList = new ArrayList<>();
             sortedList.add(plugin);
             plugin.getChildren().stream()
                     .filter(child -> !childList.contains(child))
                     .forEach(childList::add);
-            Collections.sort(childList, COMPARATOR);
+            childList.sort(COMPARATOR);
             sortedList.addAll(childList);
         });
 

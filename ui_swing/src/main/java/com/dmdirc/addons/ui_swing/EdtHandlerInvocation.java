@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import java.lang.reflect.Method;
-
 import net.engio.mbassy.bus.MessagePublication;
 import net.engio.mbassy.dispatch.ReflectiveHandlerInvocation;
 import net.engio.mbassy.subscription.SubscriptionContext;

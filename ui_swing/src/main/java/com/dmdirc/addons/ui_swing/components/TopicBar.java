@@ -221,9 +221,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         validateTopic();
 
         final Optional<Topic> topic = channel.getCurrentTopic();
-        if (topic.isPresent()) {
-            topicChanged(channel, topic.get());
-        }
+        topic.ifPresent(topic1 -> topicChanged(channel, topic1));
     }
 
     @Handler(invocation = EdtHandlerInvocation.class)
@@ -316,9 +314,7 @@ public class TopicBar extends JComponent implements ActionListener, ConfigChange
         topicText.setVisible(false);
         topicText.setText("");
         final Optional<Topic> topic = channel.getCurrentTopic();
-        if (topic.isPresent()) {
-            topicText.setText(topic.get().getTopic());
-        }
+        topic.ifPresent(topic1 -> topicText.setText(topic1.getTopic()));
         applyAttributes();
         topicText.setCaretPosition(0);
         topicText.setFocusable(true);

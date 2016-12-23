@@ -29,11 +29,8 @@ import com.dmdirc.ui.input.TabCompleter;
 import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
-
 import com.google.common.collect.Lists;
-
 import java.awt.Toolkit;
-import java.util.Collections;
 import java.util.List;
 
 public class MircStyle implements TabCompletionStyle {
@@ -68,7 +65,7 @@ public class MircStyle implements TabCompletionStyle {
         if (word.equals(lastWord)) {
             final TabCompletionMatches res = tabCompleter.complete(tabString, additional);
             final List<String> results = Lists.newArrayList(res.getResults());
-            Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
+            results.sort(String.CASE_INSENSITIVE_ORDER);
             // We're continuing to tab through
             target = results.get((results.indexOf(lastWord) + (shiftPressed ? -1: 1) + results.size()) % results.size());
         } else {
@@ -80,7 +77,7 @@ public class MircStyle implements TabCompletionStyle {
                 Toolkit.getDefaultToolkit().beep();
                 return null;
             } else {
-                Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
+                results.sort(String.CASE_INSENSITIVE_ORDER);
 
                 if (!word.isEmpty()
                         && window instanceof GroupChat

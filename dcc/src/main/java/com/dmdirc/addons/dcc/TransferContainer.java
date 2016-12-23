@@ -307,11 +307,9 @@ public class TransferContainer extends FrameContainer implements
             //that this send is for.
             if (connection.getParser().get().getStringConverter().equalsIgnoreCase(
                     otherNickname, myNickname)) {
-                final Thread errorThread = new Thread(() -> {
-                    JOptionPane.showMessageDialog(null,
-                            "You can't DCC yourself.", "DCC Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }, "DCC-Error-Message");
+                final Thread errorThread = new Thread(() -> JOptionPane.showMessageDialog(null,
+                        "You can't DCC yourself.", "DCC Error",
+                        JOptionPane.ERROR_MESSAGE), "DCC-Error-Message");
                 errorThread.start();
             } else {
                 if (config.getOptionBool(plugin.getDomain(), "send.reverse")) {

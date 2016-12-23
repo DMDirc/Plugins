@@ -85,14 +85,14 @@ public class DialogModule {
      * Qualifier that indicates a restart dialog is needed for updates to be applied.
      */
     @Qualifier
-    public static @interface ForUpdates {
+    public @interface ForUpdates {
     }
 
     /**
      * Qualifier that indicates a restart dialog is needed for settings to be applied.
      */
     @Qualifier
-    public static @interface ForSettings {
+    public @interface ForSettings {
     }
 
     @Provides

@@ -54,9 +54,7 @@ public class NickColourYamlStore extends BaseYamlStore<NickColourEntry> {
     public Map<String, Color> readNickColourEntries(final Path path) {
         final Map<String, Color> nickColours = new HashMap<>();
         final Collection<NickColourEntry> nickColourEntries = read(path);
-        nickColourEntries.stream().forEach(
-                e -> nickColours.put(e.getNetwork() + ':' + e.getUser(), e.getColor())
-        );
+        nickColourEntries.forEach(e -> nickColours.put(e.getNetwork() + ':' + e.getUser(), e.getColor()));
         return nickColours;
     }
 
