@@ -31,8 +31,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
-import com.dmdirc.ui.messages.Styliser;
-
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import javax.annotation.Nonnull;
 
 /**
@@ -71,9 +70,8 @@ public class OsdCommand extends Command implements IntelligentCommand {
      *
      * @return True if the notification was shown.
      */
-    public boolean showOSD(final int timeout, final String title,
-            final String message) {
-        osdManager.showWindow(timeout, Styliser.stipControlCodes(message));
+    public boolean showOSD(final int timeout, final String title, final String message) {
+        osdManager.showWindow(timeout, new StyledMessageUtils().stripControlCodes(message));
         return true;
     }
 

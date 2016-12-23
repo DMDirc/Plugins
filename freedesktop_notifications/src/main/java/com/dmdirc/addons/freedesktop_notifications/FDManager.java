@@ -36,7 +36,7 @@ import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.implementations.PluginFilesHelper;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import com.dmdirc.util.io.StreamUtils;
 import com.google.common.base.Strings;
 import com.google.common.html.HtmlEscapers;
@@ -140,7 +140,7 @@ public class FDManager implements ConfigChangeListener {
     public String prepareString(final String input) {
         String output = input;
         if (stripcodes) {
-            output = Styliser.stipControlCodes(output);
+            output = new StyledMessageUtils().stripControlCodes(output);
         }
         if (escapehtml) {
             output = HtmlEscapers.htmlEscaper().escape(output);

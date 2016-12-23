@@ -60,6 +60,7 @@ import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.BackBufferFactory;
 import com.dmdirc.ui.messages.IRCControlCodes;
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.io.ReverseFileReader;
 import com.dmdirc.util.io.StreamUtils;
@@ -118,6 +119,7 @@ public class LoggingManager implements ConfigChangeListener {
     private final Provider<String> directoryProvider;
     private final BackBufferFactory backBufferFactory;
     private final LogFileLocator locator;
+    private final StyledMessageUtils styleUtils;
     /** Timer used to close idle files. */
     private Timer idleFileTimer;
     /** Cached boolean settings. */
@@ -131,13 +133,15 @@ public class LoggingManager implements ConfigChangeListener {
     private int backbufferLines;
 
     @Inject
-    public LoggingManager(@PluginDomain(LoggingPlugin.class) final String domain,
+    public LoggingManager(
+            @PluginDomain(LoggingPlugin.class) final String domain,
             @PluginDomain(LoggingPlugin.class) final PluginInfo pluginInfo,
             @GlobalConfig final AggregateConfigProvider globalConfig,
             final WindowManager windowManager, final EventBus eventBus,
             @Directory(LoggingModule.LOGS_DIRECTORY) final Provider<String> directoryProvider,
             final BackBufferFactory backBufferFactory,
-            final LogFileLocator locator) {
+            final LogFileLocator locator,
+            final StyledMessageUtils styleUtils) {
         this.domain = domain;
         this.pluginInfo = pluginInfo;
         this.config = globalConfig;
@@ -146,6 +150,7 @@ public class LoggingManager implements ConfigChangeListener {
         this.directoryProvider = directoryProvider;
         this.backBufferFactory = backBufferFactory;
         this.locator = locator;
+        this.styleUtils = styleUtils;
     }
 
     public void load() {
@@ -490,7 +495,7 @@ public class LoggingManager implements ConfigChangeListener {
         }
 
         if (stripcodes) {
-            finalLine.append(Styliser.stipControlCodes(line));
+            finalLine.append(styleUtils.stripControlCodes(line));
         } else {
             finalLine.append(line);
         }
@@ -514,7 +519,7 @@ public class LoggingManager implements ConfigChangeListener {
              * Do Nothing
              *
              * Makes no sense to keep adding errors to the logger when we can't write to the file,
-             * as chances are it will happen on every incomming line.
+             * as chances are it will happen on every incoming line.
              */
         }
         return false;

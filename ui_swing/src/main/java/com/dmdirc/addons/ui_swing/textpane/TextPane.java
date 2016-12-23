@@ -22,8 +22,6 @@
 
 package com.dmdirc.addons.ui_swing.textpane;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.ConfigChangeListener;
@@ -31,6 +29,7 @@ import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.Document;
 import com.dmdirc.ui.messages.DocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.StringUtils;
 import com.dmdirc.util.URLBuilder;
@@ -56,6 +55,8 @@ import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
 import net.miginfocom.swing.MigLayout;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Styled, scrollable text pane.
  */
@@ -80,6 +81,8 @@ public final class TextPane extends JComponent implements MouseWheelListener,
     private final String configDomain;
     /** Clipboard to handle copy and paste cations. */
     private final Clipboard clipboard;
+    /** Style utilities class. */
+    private final StyledMessageUtils styleUtils;
     /** Last seen line. */
     private int lastSeenLine;
     /** Show new line notifications. */
@@ -100,6 +103,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         this.window = window;
         this.configDomain = configDomain;
         this.clipboard = clipboard;
+        styleUtils = new StyledMessageUtils(); // TODO: inject this
 
         setUI(new TextPaneUI());
         document = window.getBackBuffer().getDocument();
@@ -282,7 +286,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     }
                 } else if (i == selectedRange.getStartLine()) {
                     //loop from start of range to the end
-                    final int length = Styliser.stipControlCodes(line).length();
+                    final int length = styleUtils.stripControlCodes(line).length();
                     if (selectedRange.getStartPos() != -1 && selectedRange.getStartPos() < length) {
                         // Ensure that we're actually selecting some text on this line
                         selectedText.append(getText(line, selectedRange.getStartPos(), length,
@@ -295,7 +299,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
                     }
                 } else {
                     //loop the whole line
-                    final int length = Styliser.stipControlCodes(line).length();
+                    final int length = styleUtils.stripControlCodes(line).length();
                     selectedText.append(getText(line, 0, length, styled));
                 }
             }
@@ -320,7 +324,7 @@ public final class TextPane extends JComponent implements MouseWheelListener,
         checkArgument(start >= 0, "'start' (" + start + ") must be non-negative");
 
         if (styled) {
-            return Styliser.getStyledText(text, start, end);
+            return styleUtils.getStyledText(text, start, end);
         } else {
             return text.substring(start, end);
         }
