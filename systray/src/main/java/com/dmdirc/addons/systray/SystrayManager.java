@@ -37,7 +37,7 @@ import com.dmdirc.interfaces.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
-import com.dmdirc.ui.messages.Styliser;
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import java.awt.AWTException;
 import java.awt.Frame;
 import java.awt.MenuItem;
@@ -62,6 +62,7 @@ public class SystrayManager implements ActionListener, MouseListener {
     private final AggregateConfigProvider globalConfig;
     /** Icon manager to get images from. */
     private final IconManager iconManager;
+    private final StyledMessageUtils styleUtils;
     /** The event bus to listen to events on. */
     private final EventBus eventBus;
     /** The tray icon we're currently using. */
@@ -74,12 +75,14 @@ public class SystrayManager implements ActionListener, MouseListener {
             @PluginDomain(SystrayPlugin.class) final PluginInfo pluginInfo,
             final MainFrame mainFrame,
             final IconManager iconManager,
+            final StyledMessageUtils styleUtils,
             final EventBus eventBus) {
         this.globalConfig = globalConfig;
         this.domain = domain;
         this.pluginInfo = pluginInfo;
         this.mainFrame = mainFrame;
         this.iconManager = iconManager;
+        this.styleUtils = styleUtils;
         this.eventBus = eventBus;
     }
 
@@ -119,9 +122,8 @@ public class SystrayManager implements ActionListener, MouseListener {
      * @param message The contents of the notification
      * @param type    The type of notification
      */
-    public void notify(final String title, final String message,
-            final TrayIcon.MessageType type) {
-        icon.displayMessage(title, Styliser.stipControlCodes(message), type);
+    public void notify(final String title, final String message, final TrayIcon.MessageType type) {
+        icon.displayMessage(title, styleUtils.stripControlCodes(message), type);
     }
 
     /**

@@ -24,12 +24,10 @@ package com.dmdirc.addons.windowstatus;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
-import com.dmdirc.ui.messages.Styliser;
-
+import com.dmdirc.ui.messages.StyledMessageUtils;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import net.miginfocom.swing.MigLayout;
 
 public class WindowStatusPanel extends JPanel implements StatusBarComponent {
@@ -52,7 +50,7 @@ public class WindowStatusPanel extends JPanel implements StatusBarComponent {
      * @param text New text
      */
     public void setText(final String text) {
-        UIUtilities.invokeLater(() -> label.setText(Styliser.stipControlCodes(text)));
+        UIUtilities.invokeLater(() -> label.setText(new StyledMessageUtils().stripControlCodes(text)));
     }
 
 }
