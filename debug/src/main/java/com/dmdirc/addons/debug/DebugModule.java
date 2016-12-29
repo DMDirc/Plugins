@@ -37,7 +37,6 @@ import com.dmdirc.addons.debug.commands.MemInfo;
 import com.dmdirc.addons.debug.commands.Notify;
 import com.dmdirc.addons.debug.commands.RunGC;
 import com.dmdirc.addons.debug.commands.ServerInfo;
-import com.dmdirc.addons.debug.commands.ServerState;
 import com.dmdirc.addons.debug.commands.Services;
 import com.dmdirc.addons.debug.commands.ShowRaw;
 import com.dmdirc.addons.debug.commands.StatusbarMessage;
@@ -115,11 +114,6 @@ public class DebugModule {
 
     @Provides(type = Provides.Type.SET)
     public DebugCommand getCommand(final ServerInfo command) {
-        return command;
-    }
-
-    @Provides(type = Provides.Type.SET)
-    public DebugCommand getCommand(final ServerState command) {
         return command;
     }
 
