@@ -25,11 +25,11 @@ package com.dmdirc.addons.tabcompletion_bash;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
 
 import java.awt.Toolkit;
+import java.util.List;
 import java.util.Locale;
 
 public class BashStyle implements TabCompletionStyle {
@@ -61,7 +61,7 @@ public class BashStyle implements TabCompletionStyle {
             final int end, final boolean shiftPressed,
             final AdditionalTabTargets additional) {
         final String word = original.substring(start, end);
-        final TabCompletionMatches res = tabCompleter.complete(word, additional);
+        final List<String> res = tabCompleter.complete(word, additional);
 
         if (start == lastPosition && word.equals(lastWord)) {
             tabCount++;
@@ -71,14 +71,14 @@ public class BashStyle implements TabCompletionStyle {
             tabCount = 1;
         }
 
-        if (res.getResultCount() == 0) {
+        if (res.isEmpty()) {
             Toolkit.getDefaultToolkit().beep();
 
             return null;
-        } else if (res.getResultCount() == 1) {
+        } else if (res.size() == 1) {
             // One result, just replace it
 
-            final String result = res.getResults().get(0);
+            final String result = res.get(0);
 
             return new TabCompletionResult(
                     original.substring(0, start) + result + original.substring(end),
@@ -104,16 +104,16 @@ public class BashStyle implements TabCompletionStyle {
      *
      * @return longest possible substring matching all results
      */
-    private String getBestSubstring(final TabCompletionMatches res) {
-        if (res.getResultCount() == 0) {
+    private String getBestSubstring(final List<String> res) {
+        if (res.isEmpty()) {
             return "";
         }
 
         final boolean caseSensitive = window.getConfigManager()
                 .getOptionBool("tabcompletion", "casesensitive");
 
-        String substring = res.getResults().get(0);
-        for (String entry : res.getResults()) {
+        String substring = res.get(0);
+        for (String entry : res) {
             if (caseSensitive) {
                 while (!entry.startsWith(substring)) {
                     substring = substring.substring(0, substring.length() - 1);
