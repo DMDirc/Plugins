@@ -26,11 +26,11 @@ import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.input.TabCompleter;
-import com.dmdirc.ui.input.TabCompletionMatches;
 import com.dmdirc.ui.input.tabstyles.TabCompletionResult;
 import com.dmdirc.ui.input.tabstyles.TabCompletionStyle;
-import com.google.common.collect.Lists;
+
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MircStyle implements TabCompletionStyle {
@@ -63,17 +63,15 @@ public class MircStyle implements TabCompletionStyle {
         final String word = original.substring(start, end);
         final String target;
         if (word.equals(lastWord)) {
-            final TabCompletionMatches res = tabCompleter.complete(tabString, additional);
-            final List<String> results = Lists.newArrayList(res.getResults());
-            results.sort(String.CASE_INSENSITIVE_ORDER);
             // We're continuing to tab through
+            final List<String> results = new ArrayList<>(tabCompleter.complete(tabString, additional));
+            results.sort(String.CASE_INSENSITIVE_ORDER);
             target = results.get((results.indexOf(lastWord) + (shiftPressed ? -1: 1) + results.size()) % results.size());
         } else {
             // New tab target
-            final TabCompletionMatches res = tabCompleter.complete(word, additional);
-            final List<String> results = Lists.newArrayList(res.getResults());
+            final List<String> results = new ArrayList<>(tabCompleter.complete(word, additional));
 
-            if (res.getResultCount() == 0) {
+            if (results.isEmpty()) {
                 Toolkit.getDefaultToolkit().beep();
                 return null;
             } else {
