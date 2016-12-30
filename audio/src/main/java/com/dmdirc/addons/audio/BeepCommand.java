@@ -26,20 +26,19 @@ import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 
-import java.awt.Toolkit;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.awt.*;
 
 /**
  * The Beep Command emits a beep
  */
-public class BeepCommand extends Command {
+public class BeepCommand extends BaseCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("beep",

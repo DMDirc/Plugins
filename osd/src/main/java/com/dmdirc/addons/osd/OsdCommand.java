@@ -25,19 +25,20 @@ package com.dmdirc.addons.osd;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.messages.StyledMessageUtils;
+
 import javax.annotation.Nonnull;
 
 /**
  * The osd command shows an on screen message.
  */
-public class OsdCommand extends Command implements IntelligentCommand {
+public class OsdCommand extends BaseCommand implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("osd",

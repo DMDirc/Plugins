@@ -26,13 +26,14 @@ import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
-
 import com.google.common.net.InetAddresses;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -40,13 +41,10 @@ import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
 /**
  * Performs DNS lookups for nicknames, hostnames or IPs.
  */
-public class DNSCommand extends Command {
+public class DNSCommand extends BaseCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("dns",
