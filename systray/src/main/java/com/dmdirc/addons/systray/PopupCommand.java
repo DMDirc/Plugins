@@ -25,7 +25,7 @@ package com.dmdirc.addons.systray;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
@@ -36,7 +36,7 @@ import javax.inject.Inject;
 /**
  * The /popup command allows the user to show a popup message from the system tray icon.
  */
-public class PopupCommand extends Command {
+public class PopupCommand extends BaseCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("popup",

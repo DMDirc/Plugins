@@ -25,7 +25,7 @@ package com.dmdirc.addons.redirect;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.ChatCommandContext;
 import com.dmdirc.commandparser.commands.context.CommandContext;
@@ -45,7 +45,7 @@ import javax.inject.Inject;
  * The redirect command allows the user to redirect the output from another command that would
  * normally echo results locally to a query or channel window instead.
  */
-public class RedirectCommand extends Command implements IntelligentCommand {
+public class RedirectCommand extends BaseCommand implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo("redirect",

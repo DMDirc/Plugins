@@ -25,7 +25,7 @@ package com.dmdirc.addons.parserdebug;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.CommandOptions;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
@@ -34,16 +34,15 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.parser.interfaces.Parser;
 
-import java.util.Optional;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * The ParserDebug Command allows controlling of which parsers spam debug info.
  */
 @CommandOptions(allowOffline = false)
-public final class ParserDebugCommand extends Command {
+public final class ParserDebugCommand extends BaseCommand {
 
     /** A command info object for this command. */
     public static final BaseCommandInfo INFO = new BaseCommandInfo(

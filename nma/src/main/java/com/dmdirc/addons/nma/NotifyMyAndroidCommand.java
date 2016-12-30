@@ -25,23 +25,21 @@ package com.dmdirc.addons.nma;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.plugins.PluginDomain;
-
-import java.io.IOException;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 /**
  * Command to raise notifications with NotifyMyAndroid.
  */
-public class NotifyMyAndroidCommand extends Command {
+public class NotifyMyAndroidCommand extends BaseCommand {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.
             getLogger(NotifyMyAndroidCommand.class);

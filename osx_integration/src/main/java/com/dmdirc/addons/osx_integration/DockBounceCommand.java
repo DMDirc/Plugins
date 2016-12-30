@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.Apple;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
@@ -37,7 +37,7 @@ import javax.inject.Inject;
 /**
  * A command to bounce the icon in the OSX dock.
  */
-public class DockBounceCommand extends Command {
+public class DockBounceCommand extends BaseCommand {
 
     /**
      * Information about this command.

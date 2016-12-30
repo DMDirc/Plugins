@@ -26,20 +26,19 @@ import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 
-import java.io.File;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 
 /**
  * The Audio Command allows playing of audio files.
  */
-public class AudioCommand extends Command {
+public class AudioCommand extends BaseCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("audio",

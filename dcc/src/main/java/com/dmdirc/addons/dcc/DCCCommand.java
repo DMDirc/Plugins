@@ -35,7 +35,7 @@ import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandInfo;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.IntelligentCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.commandparser.commands.context.ServerCommandContext;
@@ -51,18 +51,17 @@ import com.dmdirc.ui.input.TabCompleterFactory;
 import com.dmdirc.ui.input.TabCompletionType;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
-import java.awt.Window;
-import java.io.File;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import java.awt.Window;
+import java.io.File;
 
 /**
  * This command allows starting dcc chats/file transfers.
  */
-public class DCCCommand extends Command implements IntelligentCommand {
+public class DCCCommand extends BaseCommand implements IntelligentCommand {
 
     /** A command info object for this command. */
     public static final CommandInfo INFO = new BaseCommandInfo("dcc",

@@ -25,31 +25,28 @@ package com.dmdirc.addons.exec;
 import com.dmdirc.commandparser.BaseCommandInfo;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.CommandType;
-import com.dmdirc.commandparser.commands.Command;
+import com.dmdirc.commandparser.commands.BaseCommand;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.util.CommandUtils;
 import com.dmdirc.util.LogUtils;
 import com.dmdirc.util.io.StreamUtils;
-
 import com.google.common.io.CharStreams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A command which allows users execute scripts.
  */
-public class ExecCommand extends Command {
+public class ExecCommand extends BaseCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExecCommand.class);
     /** A command info object for this command. */
