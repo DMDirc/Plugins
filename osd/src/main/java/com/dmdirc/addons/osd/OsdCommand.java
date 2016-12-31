@@ -34,6 +34,7 @@ import com.dmdirc.ui.input.AdditionalTabTargets;
 import com.dmdirc.ui.messages.StyledMessageUtils;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * The osd command shows an on screen message.
@@ -55,6 +56,7 @@ public class OsdCommand extends BaseCommand implements IntelligentCommand {
      * @param controller The controller to use for command information.
      * @param osdManager OSD Manager used to control OSD windows
      */
+    @Inject
     public OsdCommand(final CommandController controller, final OsdManager osdManager) {
         super(controller);
 
