@@ -46,6 +46,7 @@ import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.WindowManager;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.util.LogUtils;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
@@ -212,7 +213,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
      */
     public void addWindow(final MutableTreeNode parent, final TextFrame window) {
         UIUtilities.invokeAndWait(() -> {
-            final NodeLabel label = new NodeLabel(window, iconManager);
+            final NodeLabel label = new NodeLabel(window, iconManager, getForegroundColour());
             eventBus.subscribe(label);
             swingEventBus.subscribe(label);
             final TreeViewNode node = new TreeViewNode(label, window);
@@ -231,11 +232,7 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
                 tree.scrollRectToVisible(new Rectangle(0, (int) view.getY(), 0, 0));
             }
 
-            node.getLabel().unreadStatusChanged(new UnreadStatusChangedEvent(
-                    window.getContainer(),
-                    window.getContainer().getUnreadStatusManager(),
-                    window.getContainer().getUnreadStatusManager().getNotificationColour(),
-                    window.getContainer().getUnreadStatusManager().getUnreadLines()));
+            refreshNodeLabel(window, node);
             node.getLabel().iconChanged(new FrameIconChangedEvent(window.getContainer(),
                     window.getContainer().getIcon()));
         });
@@ -273,14 +270,31 @@ public class TreeFrameManager implements FrameManager, Serializable, ConfigChang
 
     /** Sets treeview colours. */
     private void setColours() {
+        final Color foregroundColour = getForegroundColour();
+        tree.setForeground(foregroundColour);
         tree.setBackground(UIUtilities.convertColour(colourManager.getColourFromString(
                         config.getOptionString("treeview", "backgroundcolour", "ui",
                                 "backgroundcolour"), null)));
-        tree.setForeground(UIUtilities.convertColour(colourManager.getColourFromString(
-                        config.getOptionString("treeview", "foregroundcolour", "ui",
-                                "foregroundcolour"), null)));
-
         tree.repaint();
+
+        nodes.entrySet().forEach(pair -> {
+            pair.getValue().getLabel().setDefaultForegroundColour(foregroundColour);
+            refreshNodeLabel(pair.getKey(), pair.getValue());
+        });
+    }
+
+    private Color getForegroundColour() {
+        return UIUtilities.convertColour(colourManager.getColourFromString(
+                config.getOptionString("treeview", "foregroundcolour", "ui",
+                        "foregroundcolour"), null));
+    }
+
+    private void refreshNodeLabel(TextFrame window, TreeViewNode node) {
+        node.getLabel().unreadStatusChanged(new UnreadStatusChangedEvent(
+                window.getContainer(),
+                window.getContainer().getUnreadStatusManager(),
+                window.getContainer().getUnreadStatusManager().getNotificationColour(),
+                window.getContainer().getUnreadStatusManager().getUnreadLines()));
     }
 
     @Override

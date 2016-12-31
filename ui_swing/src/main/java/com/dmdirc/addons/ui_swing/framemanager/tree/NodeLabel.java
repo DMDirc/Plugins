@@ -23,6 +23,7 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
+import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.ImageButton;
 import com.dmdirc.addons.ui_swing.components.frames.TextFrame;
 import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
@@ -30,22 +31,16 @@ import com.dmdirc.addons.ui_swing.textpane.StyledDocumentMaker;
 import com.dmdirc.events.FrameIconChangedEvent;
 import com.dmdirc.events.FrameNameChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
-import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.Styliser;
-import com.dmdirc.util.colours.Colour;
-
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
-
-import net.miginfocom.swing.MigLayout;
-
 import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Node label.
@@ -68,6 +63,8 @@ public class NodeLabel extends JPanel {
     private final JTextPane text = new JTextPane(new DefaultStyledDocument());
     /** Icon manager. */
     private final IconManager iconManager;
+    /** Default foreground colour when there are no notifications. */
+    private Color defaultForegroundColour;
     /** Current styled text. */
     private String currentText = "";
 
@@ -76,9 +73,10 @@ public class NodeLabel extends JPanel {
      *
      * @param window Window for this node
      */
-    public NodeLabel(final TextFrame window, final IconManager iconManager) {
+    public NodeLabel(final TextFrame window, final IconManager iconManager, final Color defaultForegroundColour) {
         this.window = window;
         this.iconManager = iconManager;
+        this.defaultForegroundColour = defaultForegroundColour;
 
         init();
     }
@@ -112,9 +110,8 @@ public class NodeLabel extends JPanel {
     }
 
     public void unreadStatusChanged(final UnreadStatusChangedEvent event) {
-        // TODO: Should this colour be configurable?
-        notificationColour = UIUtilities.convertColour(
-                event.getNotificationColour().orElse(Colour.BLACK));
+        notificationColour = event.getNotificationColour().map(UIUtilities::convertColour)
+                .orElse(defaultForegroundColour);
     }
 
     @Handler
@@ -165,6 +162,15 @@ public class NodeLabel extends JPanel {
      */
     public Color getNotificationColour() {
         return notificationColour;
+    }
+
+    /**
+     * Sets the default foreground colour to use when no notification is present.
+     *
+     * @param defaultForegroundColour The default colour to use.
+     */
+    public void setDefaultForegroundColour(Color defaultForegroundColour) {
+        this.defaultForegroundColour = defaultForegroundColour;
     }
 
     @Override
