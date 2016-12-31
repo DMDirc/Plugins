@@ -64,6 +64,9 @@ import net.engio.mbassy.listener.Handler;
 @Singleton
 public class NickColourManager {
 
+    private static final String[] DEFAULT_RANDOM_COLOURS =
+            {"E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3"};
+
     /** Manager to parse colours with. */
     private final ColourManager colourManager;
     private final ConfigBinder configBinder;
@@ -73,8 +76,7 @@ public class NickColourManager {
     private final NickColourYamlStore nickColourYamlStore;
     private final Path path;
     private final PluginInfo pluginInfo;
-    private String[] randColours = {
-        "E90E7F", "8E55E9", "B30E0E", "18B33C", "58ADB3", "9E54B3", "B39875", "3176B3",};
+    private String[] randColours = DEFAULT_RANDOM_COLOURS;
     private boolean useowncolour;
     private String owncolour;
     private boolean userandomcolour;
@@ -122,7 +124,7 @@ public class NickColourManager {
     private void colourClient(final String network, final GroupChatUser client) {
         final StringConverter sc = client.getUser().getConnection().getParser().get()
                 .getStringConverter();
-        final User myself = client.getUser();
+        final User myself = client.getUser().getConnection().getLocalUser().orElse(null);
         final String nickOption1 = sc.toLowerCase(network + ':' + client.getNickname());
         final String nickOption2 = sc.toLowerCase("*:" + client.getNickname());
 
@@ -212,7 +214,7 @@ public class NickColourManager {
 
     @ConfigBinding(key = "randomcolours", invocation = EDTInvocation.class)
     public void handleRandomColours(final List<String> value) {
-        randColours = value.toArray(new String[value.size()]);
+        randColours = value.isEmpty() ? DEFAULT_RANDOM_COLOURS : value.toArray(new String[value.size()]);
     }
 
     @Handler
