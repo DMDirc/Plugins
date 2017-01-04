@@ -21,7 +21,7 @@ import com.dmdirc.addons.ui_swing.components.menubar.MenuBar;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.ClientOpenedEvent;
 import com.dmdirc.interfaces.ConnectionManager;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.util.InvalidURIException;
 import com.dmdirc.util.URIParser;

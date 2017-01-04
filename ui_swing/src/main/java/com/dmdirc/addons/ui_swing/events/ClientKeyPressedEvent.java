@@ -17,14 +17,14 @@
 
 package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 
 import javax.swing.KeyStroke;
 
 /**
  * Event describing a function key press.
  */
-public class ClientKeyPressedEvent extends DMDircEvent {
+public class ClientKeyPressedEvent extends BaseEvent {
 
     private final KeyStroke keyStroke;
 

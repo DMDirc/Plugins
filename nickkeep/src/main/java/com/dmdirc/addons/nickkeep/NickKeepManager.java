@@ -20,7 +20,7 @@ package com.dmdirc.addons.nickkeep;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import java.util.Optional;
 

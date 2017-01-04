@@ -21,7 +21,7 @@ import com.dmdirc.Channel;
 import com.dmdirc.config.profiles.Profile;
 import com.dmdirc.events.ChannelNickChangeEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import com.google.common.collect.Lists;
 

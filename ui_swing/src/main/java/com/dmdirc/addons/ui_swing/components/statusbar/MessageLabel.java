@@ -23,7 +23,7 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.StatusBarMessageClearEvent;
 import com.dmdirc.events.StatusBarMessageEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.StatusBarComponent;
 import com.dmdirc.ui.StatusMessage;

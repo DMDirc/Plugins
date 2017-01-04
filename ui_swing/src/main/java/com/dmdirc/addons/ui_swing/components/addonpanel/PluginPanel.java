@@ -23,7 +23,7 @@ import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactor
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.UserConfig;
 import com.dmdirc.events.PluginRefreshEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.config.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;

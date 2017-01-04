@@ -18,10 +18,10 @@
 package com.dmdirc.addons.scriptplugin;
 
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 import com.dmdirc.events.PluginLoadedEvent;
 import com.dmdirc.events.PluginUnloadedEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,7 +95,7 @@ public class ScriptPluginManager {
     }
 
     @Handler
-    public void handlePluginLoadEvent(final DMDircEvent event) throws ReflectiveOperationException {
+    public void handlePluginLoadEvent(final BaseEvent event) throws ReflectiveOperationException {
         if (event instanceof PluginLoadedEvent || event instanceof PluginUnloadedEvent) {
             return;
         }
