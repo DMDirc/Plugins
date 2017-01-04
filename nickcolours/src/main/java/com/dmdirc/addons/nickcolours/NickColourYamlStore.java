@@ -19,7 +19,7 @@ package com.dmdirc.addons.nickcolours;
 
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.ui.messages.ColourManager;
-import com.dmdirc.util.BaseYamlStore;
+import com.dmdirc.util.io.yaml.BaseYamlStore;
 import java.awt.Color;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.dmdirc.util.YamlReaderUtils.asMap;
-import static com.dmdirc.util.YamlReaderUtils.requiredString;
+import static com.dmdirc.util.io.yaml.YamlReaderUtils.asMap;
+import static com.dmdirc.util.io.yaml.YamlReaderUtils.requiredString;
 
 @Singleton
 public class NickColourYamlStore extends BaseYamlStore<NickColourEntry> {
