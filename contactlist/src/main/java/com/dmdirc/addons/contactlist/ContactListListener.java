@@ -22,7 +22,7 @@ import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.PrivateChat;

@@ -17,7 +17,7 @@
 
 package com.dmdirc.addons.ui_web2;
 
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
 import com.dmdirc.addons.ui_swing.events.ClientFocusLostEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import java.awt.event.WindowEvent;
 

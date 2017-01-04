@@ -17,11 +17,11 @@
 
 package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 
 /**
  * Fired when the the client is unminimised.
  */
-public class ClientUnminimisedEvent extends DMDircEvent {
+public class ClientUnminimisedEvent extends BaseEvent {
 
 }

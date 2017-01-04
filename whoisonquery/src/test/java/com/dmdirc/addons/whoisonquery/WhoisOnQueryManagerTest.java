@@ -25,7 +25,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ConnectionPrefsRequestedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;

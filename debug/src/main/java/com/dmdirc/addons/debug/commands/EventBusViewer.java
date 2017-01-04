@@ -25,10 +25,10 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.ClientLineAddedEvent;
 import com.dmdirc.events.CommandOutputEvent;
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 import com.dmdirc.events.DisplayableEvent;
 import com.dmdirc.events.FrameClosingEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.WindowManager;
@@ -122,7 +122,7 @@ public class EventBusViewer extends DebugCommand {
         }
 
         @Handler
-        public void handleEvent(final DMDircEvent event) {
+        public void handleEvent(final BaseEvent event) {
             if (event instanceof ClientLineAddedEvent
                     && ((ClientLineAddedEvent) event).getFrameContainer() == target
                     || event instanceof CommandOutputEvent

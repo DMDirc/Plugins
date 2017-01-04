@@ -17,11 +17,11 @@
 
 package com.dmdirc.addons.ui_swing.events;
 
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 
 /**
  * Base class for all swing UI events.
  */
-public abstract class SwingEvent extends DMDircEvent {
+public abstract class SwingEvent extends BaseEvent {
 
 }

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBufferFactory;

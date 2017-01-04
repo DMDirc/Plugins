@@ -17,11 +17,11 @@
 
 package com.dmdirc.addons.dcc.events;
 
-import com.dmdirc.events.DMDircEvent;
+import com.dmdirc.events.eventbus.BaseEvent;
 
 /**
  * Base class for DCC events.
  */
-public abstract class DccEvent extends DMDircEvent {
+public abstract class DccEvent extends BaseEvent {
 
 }

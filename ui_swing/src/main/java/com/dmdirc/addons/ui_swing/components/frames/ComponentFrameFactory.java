@@ -18,7 +18,7 @@
 package com.dmdirc.addons.ui_swing.components.frames;
 
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.util.function.Supplier;

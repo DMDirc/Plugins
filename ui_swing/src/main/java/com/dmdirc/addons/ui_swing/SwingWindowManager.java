@@ -18,7 +18,7 @@
 package com.dmdirc.addons.ui_swing;
 
 import com.dmdirc.addons.ui_swing.events.SwingWindowEvent;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 
 import java.awt.Window;
 import java.awt.event.WindowEvent;

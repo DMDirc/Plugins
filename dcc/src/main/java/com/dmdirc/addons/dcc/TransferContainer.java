@@ -25,7 +25,7 @@ import com.dmdirc.addons.dcc.events.DccSendSocketopenedEvent;
 import com.dmdirc.addons.dcc.io.DCC;
 import com.dmdirc.addons.dcc.io.DCCTransfer;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.parser.events.SocketCloseEvent;
 import com.dmdirc.parser.interfaces.Parser;

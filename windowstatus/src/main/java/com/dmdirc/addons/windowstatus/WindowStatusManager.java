@@ -36,7 +36,7 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.WindowModel;

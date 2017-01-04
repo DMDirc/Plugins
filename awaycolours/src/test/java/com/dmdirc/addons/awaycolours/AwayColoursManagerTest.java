@@ -22,7 +22,7 @@ import com.dmdirc.config.ConfigBinder;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.DisplayProperty;
-import com.dmdirc.interfaces.EventBus;
+import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.ui.messages.ColourManager;
