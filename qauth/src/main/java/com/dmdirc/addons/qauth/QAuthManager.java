@@ -18,8 +18,8 @@
 package com.dmdirc.addons.qauth;
 
 import com.dmdirc.Invite;
-import com.dmdirc.config.ConfigBinder;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesSetting;

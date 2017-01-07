@@ -17,7 +17,7 @@
 
 package com.dmdirc.addons.ui_swing;
 
-import com.dmdirc.config.BasicInvocation;
+import com.dmdirc.config.binding.BasicInvocation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

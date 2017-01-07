@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinder;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;

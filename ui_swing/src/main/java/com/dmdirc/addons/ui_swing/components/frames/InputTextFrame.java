@@ -26,7 +26,7 @@ import com.dmdirc.addons.ui_swing.components.AwayLabel;
 import com.dmdirc.addons.ui_swing.components.TypingLabel;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputField;
 import com.dmdirc.addons.ui_swing.components.inputfields.SwingInputHandler;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;

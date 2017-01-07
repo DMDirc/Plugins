@@ -17,7 +17,7 @@
 
 package com.dmdirc.addons.jpq;
 
-import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinder;
 import com.dmdirc.events.ChannelJoinEvent;
 import com.dmdirc.events.ChannelPartEvent;
 import com.dmdirc.events.ChannelQuitEvent;

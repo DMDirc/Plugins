@@ -19,8 +19,8 @@ package com.dmdirc.addons.windowflashing;
 
 import com.dmdirc.addons.ui_swing.MainFrame;
 import com.dmdirc.addons.ui_swing.events.ClientFocusGainedEvent;
-import com.dmdirc.config.ConfigBinder;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.prefs.PluginPreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesCategory;

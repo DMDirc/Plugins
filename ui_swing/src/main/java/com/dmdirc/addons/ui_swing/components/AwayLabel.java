@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.EDTInvocation;
 import com.dmdirc.addons.ui_swing.EdtHandlerInvocation;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.ServerAwayEvent;
 import com.dmdirc.events.ServerBackEvent;

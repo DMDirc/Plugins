@@ -19,7 +19,7 @@ package com.dmdirc.addons.qauth;
 
 import com.dmdirc.Invite;
 import com.dmdirc.Query;
-import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinder;
 import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.events.ClientPrefsOpenedEvent;

@@ -18,7 +18,7 @@
 package com.dmdirc.addons.awaycolours;
 
 import com.dmdirc.Channel;
-import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinder;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.ChannelUserBackEvent;
 import com.dmdirc.events.DisplayProperty;

@@ -17,7 +17,7 @@
 
 package com.dmdirc.addons.channelwho;
 
-import com.dmdirc.config.ConfigBinder;
+import com.dmdirc.config.binding.ConfigBinder;
 import com.dmdirc.events.ChannelUserAwayEvent;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.events.ServerNumericEvent;

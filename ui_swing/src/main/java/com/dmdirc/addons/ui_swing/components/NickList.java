@@ -24,7 +24,7 @@ import com.dmdirc.addons.ui_swing.components.frames.ChannelFrame;
 import com.dmdirc.addons.ui_swing.components.renderers.NicklistRenderer;
 import com.dmdirc.addons.ui_swing.textpane.ClickType;
 import com.dmdirc.addons.ui_swing.textpane.ClickTypeValue;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.events.NickListClientAddedEvent;
 import com.dmdirc.events.NickListClientRemovedEvent;
 import com.dmdirc.events.NickListClientsChangedEvent;
