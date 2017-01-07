@@ -45,7 +45,7 @@ import com.dmdirc.commandparser.PopupMenu;
 import com.dmdirc.commandparser.PopupMenuItem;
 import com.dmdirc.commandparser.PopupType;
 import com.dmdirc.commandparser.parsers.CommandParser;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.LinkChannelClickedEvent;

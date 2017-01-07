@@ -18,7 +18,7 @@
 package com.dmdirc.addons.logging;
 
 import com.dmdirc.commandline.CommandLineOptionsModule.Directory;
-import com.dmdirc.config.ConfigBinding;
+import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.GroupChat;
