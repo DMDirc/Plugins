@@ -21,7 +21,7 @@ import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.util.SystemInfo;
+import com.dmdirc.util.system.SystemInfo;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

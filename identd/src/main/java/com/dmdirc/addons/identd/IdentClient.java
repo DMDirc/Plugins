@@ -23,7 +23,7 @@ import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.config.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.util.LogUtils;
-import com.dmdirc.util.SystemInfo;
+import com.dmdirc.util.system.SystemInfo;
 import com.dmdirc.util.io.StreamUtils;
 
 import java.io.BufferedReader;
