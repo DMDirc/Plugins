@@ -30,7 +30,7 @@ import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatManager;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import com.google.common.collect.Lists;
 

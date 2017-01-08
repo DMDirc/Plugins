@@ -20,7 +20,7 @@ package com.dmdirc.addons.ui_swing.components.addonbrowser;
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.LoggingSwingWorker;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.updater.manager.UpdateManager;
 import com.dmdirc.util.URLBuilder;
 import com.dmdirc.util.io.ConfigFile;

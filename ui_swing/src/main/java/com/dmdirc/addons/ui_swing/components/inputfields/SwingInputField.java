@@ -22,7 +22,7 @@ import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.colours.ColourPickerDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.GlobalConfig;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.InputField;
 import com.dmdirc.interfaces.ui.InputValidationListener;
 import com.dmdirc.ui.messages.ColourManager;

@@ -29,7 +29,7 @@ import com.dmdirc.events.ServerConnectedEvent;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.util.validators.PortValidator;

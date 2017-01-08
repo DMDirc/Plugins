@@ -17,21 +17,19 @@
 
 package com.dmdirc.addons.identd;
 
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ReadOnlyConfigProvider;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.User;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ReadOnlyConfigProvider;
 import com.dmdirc.util.LogUtils;
-import com.dmdirc.util.system.SystemInfo;
 import com.dmdirc.util.io.StreamUtils;
-
+import com.dmdirc.util.system.SystemInfo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

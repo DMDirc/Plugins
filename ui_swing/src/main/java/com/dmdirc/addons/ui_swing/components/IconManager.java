@@ -18,8 +18,8 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.config.GlobalConfig;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigChangeListener;
 import com.dmdirc.util.URLBuilder;
 import java.awt.Image;
 import java.awt.Toolkit;

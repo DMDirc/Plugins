@@ -29,7 +29,7 @@ import com.dmdirc.interfaces.GroupChatManager;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.User;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import com.google.common.collect.Lists;
 

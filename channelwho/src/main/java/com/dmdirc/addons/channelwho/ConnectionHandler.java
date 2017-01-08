@@ -26,7 +26,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.HashMultimap;

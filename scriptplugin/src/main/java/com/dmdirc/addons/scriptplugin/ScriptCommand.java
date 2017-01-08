@@ -28,7 +28,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.ui.input.AdditionalTabTargets;
 

@@ -22,7 +22,7 @@ import com.dmdirc.addons.debug.DebugCommand;
 import com.dmdirc.commandparser.CommandArguments;
 import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

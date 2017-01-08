@@ -34,8 +34,8 @@ import com.dmdirc.events.ClientClosingEvent;
 import com.dmdirc.events.FrameClosingEvent;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 

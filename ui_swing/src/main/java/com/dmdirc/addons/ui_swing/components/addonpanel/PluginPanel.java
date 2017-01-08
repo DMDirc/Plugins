@@ -24,7 +24,7 @@ import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.UserConfig;
 import com.dmdirc.events.PluginRefreshEvent;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;

@@ -22,8 +22,8 @@ import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPa
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

@@ -28,7 +28,7 @@ import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;
 import com.dmdirc.ui.messages.ColourManagerFactory;

@@ -24,7 +24,7 @@ import com.dmdirc.commandparser.commands.context.CommandContext;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.interfaces.config.IdentityController;
 import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.updater.UpdateChecker;

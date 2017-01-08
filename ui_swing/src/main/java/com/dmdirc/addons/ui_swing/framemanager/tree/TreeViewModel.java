@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.GlobalWindow;
 import com.dmdirc.addons.ui_swing.WindowComparator;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;

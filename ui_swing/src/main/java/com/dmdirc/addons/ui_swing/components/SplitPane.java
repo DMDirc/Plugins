@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.binding.ConfigBinding;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import java.awt.Component;
 

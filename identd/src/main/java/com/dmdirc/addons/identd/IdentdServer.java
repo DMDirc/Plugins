@@ -19,7 +19,7 @@ package com.dmdirc.addons.identd;
 
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.ConnectionManager;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.util.system.SystemInfo;
 import java.io.IOException;

@@ -40,7 +40,7 @@ import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.PrivateChat;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import javax.inject.Inject;

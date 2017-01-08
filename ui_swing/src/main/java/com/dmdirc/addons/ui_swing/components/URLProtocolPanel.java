@@ -18,8 +18,8 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.addons.ui_swing.dialogs.url.URLSubstitutionsPanel;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.event.ActionEvent;

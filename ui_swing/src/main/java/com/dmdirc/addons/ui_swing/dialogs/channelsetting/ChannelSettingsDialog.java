@@ -28,7 +28,7 @@ import com.dmdirc.config.prefs.PreferencesManager;
 import com.dmdirc.interfaces.CommandController;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.plugins.ServiceManager;
 import com.dmdirc.ui.input.TabCompleterUtils;

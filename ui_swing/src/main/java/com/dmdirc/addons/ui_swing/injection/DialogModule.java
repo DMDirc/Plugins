@@ -42,7 +42,7 @@ import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.LifecycleController;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.interfaces.config.IdentityFactory;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.interfaces.ui.AliasDialogModel;

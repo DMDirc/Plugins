@@ -20,7 +20,7 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.GlobalConfig;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.util.URLHandler;
 import java.awt.Window;

@@ -20,8 +20,8 @@ package com.dmdirc.addons.ui_swing.dialogs.url;
 import com.dmdirc.addons.ui_swing.components.URLProtocolPanel;
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.ui.core.util.URLHandler;
 
 import java.awt.Window;

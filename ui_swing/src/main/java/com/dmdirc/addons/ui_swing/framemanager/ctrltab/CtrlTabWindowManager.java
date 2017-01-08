@@ -32,7 +32,7 @@ import com.dmdirc.addons.ui_swing.events.SwingWindowSelectedEvent;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewModel;
 import com.dmdirc.addons.ui_swing.framemanager.tree.TreeViewNode;
 import com.dmdirc.config.GlobalConfig;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.util.LogUtils;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

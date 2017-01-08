@@ -17,7 +17,7 @@
 
 package com.dmdirc.addons.ui_swing.components.addonpanel;
 
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.plugins.PluginManager;
 import com.dmdirc.ui.themes.Theme;

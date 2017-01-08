@@ -20,7 +20,7 @@ package com.dmdirc.addons.dcc;
 import com.dmdirc.FrameContainer;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.ui.messages.BackBufferFactory;
 
 import java.util.Collection;

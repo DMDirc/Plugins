@@ -31,7 +31,7 @@ import com.dmdirc.events.NickListClientsChangedEvent;
 import com.dmdirc.events.NickListUpdatedEvent;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 

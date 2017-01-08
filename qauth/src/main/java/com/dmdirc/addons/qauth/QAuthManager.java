@@ -33,7 +33,7 @@ import com.dmdirc.events.UserInfoResponseEvent;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.User;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.parser.events.UserInfoEvent;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
