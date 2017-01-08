@@ -90,10 +90,10 @@ public class FeedbackDialog extends StandardDialog {
         add(ValidationFactory.getValidatorPanel(name, model.getNameValidator(), iconManager),
                 "growx, pushx, wrap");
 
-        add(new JLabel("Email: "), "aligny label");
+        add(new JLabel("Email: "), "alignx label");
         add(ValidationFactory.getValidatorPanel(email, model.getEmailValidator(), iconManager),
                 "growx, pushx, wrap");
-        add(new JLabel("Feedback: "), "aligny label");
+        add(new JLabel("Feedback: "), "alignx label");
         add(ValidationFactory.getValidatorPanel(new JScrollPane(feedback), feedback,
                 model.getFeedbackValidator(), iconManager), "grow, push, wrap");
         add(serverInfo, "skip 1, growx, wrap");
