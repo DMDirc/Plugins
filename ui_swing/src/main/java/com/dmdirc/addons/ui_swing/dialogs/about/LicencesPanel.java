@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing.dialogs.about;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.addons.ui_swing.components.TreeScroller;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.interfaces.ui.AboutDialogModel;
 import com.dmdirc.ui.core.about.Licence;
 import com.dmdirc.ui.core.about.LicensedComponent;

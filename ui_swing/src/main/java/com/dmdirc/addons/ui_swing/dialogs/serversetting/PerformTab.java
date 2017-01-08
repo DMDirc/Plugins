@@ -23,7 +23,7 @@ import com.dmdirc.addons.ui_swing.components.renderers.PerformRenderer;
 import com.dmdirc.commandparser.auto.AutoCommand;
 import com.dmdirc.commandparser.auto.AutoCommandManager;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.ui.messages.ColourManagerFactory;
 

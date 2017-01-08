@@ -19,13 +19,12 @@ package com.dmdirc.addons.ui_swing.textpane;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.interfaces.WindowModel;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.config.provider.ConfigChangeListener;
 import com.dmdirc.ui.messages.CachingDocument;
 import com.dmdirc.ui.messages.Document;
 import com.dmdirc.ui.messages.DocumentListener;
 import com.dmdirc.ui.messages.LinePosition;
 import com.dmdirc.ui.messages.StyledMessageUtils;
-import com.dmdirc.ui.messages.Styliser;
 import com.dmdirc.util.StringUtils;
 import com.dmdirc.util.URLBuilder;
 import java.awt.Adjustable;

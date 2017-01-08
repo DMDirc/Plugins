@@ -18,7 +18,7 @@
 package com.dmdirc.addons.dcc.kde;
 
 import com.dmdirc.addons.dcc.DCCManager;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 
 import java.awt.Component;
 import java.awt.HeadlessException;

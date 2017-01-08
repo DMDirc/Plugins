@@ -18,8 +18,8 @@
 package com.dmdirc.addons.ui_swing.components;
 
 import com.dmdirc.interfaces.GroupChatUser;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigChangeListener;
 
 import java.util.ArrayList;
 import java.util.Collection;

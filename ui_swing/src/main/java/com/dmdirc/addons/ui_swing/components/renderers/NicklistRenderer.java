@@ -22,7 +22,7 @@ import com.dmdirc.addons.ui_swing.UIUtilities;
 import com.dmdirc.config.binding.ConfigBinding;
 import com.dmdirc.events.DisplayProperty;
 import com.dmdirc.interfaces.GroupChatUser;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.ui.messages.ColourManager;
 
 import java.awt.Color;

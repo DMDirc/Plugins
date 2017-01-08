@@ -18,8 +18,8 @@
 package com.dmdirc.addons.ui_swing.framemanager.tree;
 
 import com.dmdirc.addons.ui_swing.UIUtilities;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigChangeListener;
 import com.dmdirc.ui.messages.ColourManager;
 import com.dmdirc.ui.messages.IRCControlCodes;
 import com.dmdirc.ui.messages.Styliser;

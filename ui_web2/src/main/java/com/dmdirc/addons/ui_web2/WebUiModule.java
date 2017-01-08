@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_web2;
 
 import com.dmdirc.ClientModule;
 import com.dmdirc.config.GlobalConfig;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 import dagger.Module;

@@ -20,7 +20,7 @@ package com.dmdirc.addons.channelwho;
 import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 
 import java.util.concurrent.ScheduledExecutorService;

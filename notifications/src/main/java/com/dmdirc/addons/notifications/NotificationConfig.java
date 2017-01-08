@@ -20,7 +20,7 @@ package com.dmdirc.addons.notifications;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ListReorderButtonPanel;
 import com.dmdirc.addons.ui_swing.components.reorderablelist.ReorderableJList;
 import com.dmdirc.config.prefs.PreferencesInterface;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 
 import java.util.LinkedList;
 import java.util.List;

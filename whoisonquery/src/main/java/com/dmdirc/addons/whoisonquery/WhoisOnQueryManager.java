@@ -25,8 +25,8 @@ import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.ConnectionPrefsRequestedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.plugins.PluginDomain;
 import com.dmdirc.plugins.PluginInfo;
 

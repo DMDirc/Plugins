@@ -22,9 +22,9 @@ import com.dmdirc.addons.ui_swing.components.IconManager;
 import com.dmdirc.addons.ui_swing.components.renderers.ListModeCellRenderer;
 import com.dmdirc.addons.ui_swing.dialogs.StandardInputDialog;
 import com.dmdirc.interfaces.GroupChat;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigChangeListener;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.parser.common.ChannelListModeItem;
 import com.dmdirc.util.validators.NotEmptyValidator;
 

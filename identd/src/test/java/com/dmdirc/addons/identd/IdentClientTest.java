@@ -20,10 +20,10 @@ package com.dmdirc.addons.identd;
 import com.dmdirc.interfaces.Connection;
 import com.dmdirc.interfaces.ConnectionManager;
 import com.dmdirc.interfaces.User;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
+import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.parser.irc.IRCClientInfo;
 import com.dmdirc.parser.irc.IRCParser;
-import com.dmdirc.util.SystemInfo;
+import com.dmdirc.util.system.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;

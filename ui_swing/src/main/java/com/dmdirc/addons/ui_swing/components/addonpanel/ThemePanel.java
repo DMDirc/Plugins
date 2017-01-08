@@ -23,7 +23,7 @@ import com.dmdirc.addons.ui_swing.components.addonbrowser.DataLoaderWorkerFactor
 import com.dmdirc.addons.ui_swing.injection.MainWindow;
 import com.dmdirc.config.UserConfig;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.config.ConfigProvider;
+import com.dmdirc.config.provider.ConfigProvider;
 import com.dmdirc.ui.themes.Theme;
 import com.dmdirc.ui.themes.ThemeManager;
 import com.dmdirc.updater.manager.CachingUpdateManager;

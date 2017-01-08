@@ -37,8 +37,8 @@ import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.LifecycleController;
-import com.dmdirc.interfaces.config.AggregateConfigProvider;
-import com.dmdirc.interfaces.config.ConfigChangeListener;
+import com.dmdirc.config.provider.AggregateConfigProvider;
+import com.dmdirc.config.provider.ConfigChangeListener;
 import com.dmdirc.ui.CoreUIUtils;
 import com.dmdirc.util.collections.QueuedLinkedHashSet;
 
