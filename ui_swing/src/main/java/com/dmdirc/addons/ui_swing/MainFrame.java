@@ -36,7 +36,7 @@ import com.dmdirc.addons.ui_swing.framemanager.ctrltab.CtrlTabWindowManager;
 import com.dmdirc.events.FrameTitleChangedEvent;
 import com.dmdirc.events.UnreadStatusChangedEvent;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.util.system.LifecycleController;
 import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.config.provider.ConfigChangeListener;
 import com.dmdirc.ui.CoreUIUtils;
