@@ -27,7 +27,7 @@ import com.dmdirc.addons.ui_swing.injection.DialogProvider;
 import com.dmdirc.addons.ui_swing.injection.KeyedDialogProvider;
 import com.dmdirc.addons.ui_swing.interfaces.ActiveFrameManager;
 import com.dmdirc.interfaces.Connection;
-import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.util.system.LifecycleController;
 import com.dmdirc.interfaces.WindowModel;
 
 import java.util.Optional;

@@ -19,7 +19,7 @@ package com.dmdirc.addons.ui_swing.dialogs.updater;
 
 import com.dmdirc.addons.ui_swing.components.text.TextLabel;
 import com.dmdirc.addons.ui_swing.dialogs.StandardDialog;
-import com.dmdirc.interfaces.LifecycleController;
+import com.dmdirc.util.system.LifecycleController;
 import com.dmdirc.updater.components.LauncherComponent;
 
 import java.awt.Window;
