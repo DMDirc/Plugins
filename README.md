@@ -1,6 +1,8 @@
 DMDirc plugins
 ================================================================================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/920da51fe86c4341a2ffa320d531cad3)](https://www.codacy.com/app/DMDirc/Plugins?utm_source=github.com&utm_medium=referral&utm_content=DMDirc/Plugins&utm_campaign=badger)
+
 This repository contains plugins for [DMDirc](https://www.dmdirc.com/), a Java
 IRC client.
 
