@@ -37,15 +37,27 @@ import com.dmdirc.addons.debug.commands.ShowRaw;
 import com.dmdirc.addons.debug.commands.StatusbarMessage;
 import com.dmdirc.addons.debug.commands.Threads;
 import com.dmdirc.addons.debug.commands.Time;
-
+import com.dmdirc.plugins.PluginDomain;
+import com.dmdirc.plugins.PluginInfo;
 import dagger.Module;
 import dagger.Provides;
 
 /**
  * Dependency injection module for the debug plugin.
  */
-@Module(injects = Debug.class, addsTo = ClientModule.class)
+@Module(addsTo = ClientModule.class, injects = {DebugManager.class, Debug.class})
 public class DebugModule {
+    private final PluginInfo pluginInfo;
+
+    public DebugModule(final PluginInfo pluginInfo) {
+        this.pluginInfo = pluginInfo;
+    }
+
+    @Provides
+    @PluginDomain(DebugPlugin.class)
+    public String getDomain() {
+        return pluginInfo.getDomain();
+    }
 
     @Provides(type = Provides.Type.SET)
     public DebugCommand getCommand(final Benchmark command) {

@@ -22,17 +22,33 @@ import com.dmdirc.plugins.implementations.BaseCommandPlugin;
 
 import dagger.ObjectGraph;
 
+
 /**
  * Debug plugin providing commands to aid in debugging the client.
  */
 public class DebugPlugin extends BaseCommandPlugin {
 
+    /** The manager in use. */
+    private DebugManager manager;
+
     @Override
     public void load(final PluginInfo pluginInfo, final ObjectGraph graph) {
         super.load(pluginInfo, graph);
 
-        setObjectGraph(graph.plus(new DebugModule()));
+        setObjectGraph(graph.plus(new DebugModule(pluginInfo)));
+        manager = getObjectGraph().get(DebugManager.class);
         registerCommand(Debug.class, Debug.INFO);
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        manager.load();
+    }
+
+    @Override
+    public void onUnload() {
+        super.onUnload();
+        manager.unload();
+    }
 }
