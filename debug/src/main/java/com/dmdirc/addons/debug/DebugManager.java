@@ -21,15 +21,12 @@ import com.dmdirc.config.GlobalConfig;
 import com.dmdirc.config.provider.AggregateConfigProvider;
 import com.dmdirc.events.ServerConnectingEvent;
 import com.dmdirc.events.eventbus.EventBus;
-import com.dmdirc.interfaces.WindowModel;
 import com.dmdirc.plugins.PluginDomain;
-import com.dmdirc.plugins.PluginInfo;
 import com.dmdirc.ui.WindowManager;
 import net.engio.mbassy.listener.Handler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Date;
 
 /**
  * Debug plugin manager.
