@@ -65,9 +65,8 @@ public class SwingStatusBar extends JPanel {
             final MessageLabel messageLabel) {
         checkOnEDT();
 
-        final int height = getFontMetrics(UIManager.getFont("Table.font")).getHeight()
-                + (int) PlatformDefaults.getUnitValueX("related").getValue()
-                + (int) PlatformDefaults.getUnitValueX("related").getValue();
+        final int height = getFontMetrics(UIManager.getFont("Label.font")).getHeight()
+                + (int) PlatformDefaults.getUnitValueY("related").getValue();
         componentConstraints = "sgy components, hmax " + height + ", hmin " + height
                 + ", wmin 20, shrink 0";
 
