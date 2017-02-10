@@ -32,6 +32,7 @@ import com.dmdirc.config.prefs.PreferencesCategory;
 import com.dmdirc.config.prefs.PreferencesDialogModel;
 import com.dmdirc.config.prefs.PreferencesSetting;
 import com.dmdirc.config.prefs.PreferencesType;
+import com.dmdirc.events.ChannelUserModeChangeEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.StatusBarComponentAddedEvent;
 import com.dmdirc.events.StatusBarComponentRemovedEvent;
@@ -90,6 +91,7 @@ public class WindowStatusManager {
         panel = UIUtilities.invokeAndWait(WindowStatusPanel::new);
         eventBus.publishAsync(new StatusBarComponentAddedEvent(panel));
         swingEventBus.subscribe(this);
+        eventBus.subscribe(this);
         configBinder.bind(this, WindowStatusManager.class);
         UIUtilities.invokeLater(this::updateStatus);
     }
@@ -99,6 +101,7 @@ public class WindowStatusManager {
      */
     public void onUnload() {
         swingEventBus.unsubscribe(this);
+        eventBus.unsubscribe(this);
         eventBus.publishAsync(new StatusBarComponentRemovedEvent(panel));
         configBinder.unbind(this);
         panel = null;
@@ -107,6 +110,11 @@ public class WindowStatusManager {
     @Handler(invocation = EdtHandlerInvocation.class)
     public void selectionChanged(final SwingWindowSelectedEvent event) {
         event.getWindow().map(TextFrame::getContainer).ifPresent(this::updateStatus);
+    }
+
+    @Handler
+    public void usermodeChange(final ChannelUserModeChangeEvent event) {
+        updateStatus();
     }
 
     /** Update the window status using the current active window. */
@@ -168,8 +176,7 @@ public class WindowStatusManager {
                 if (!isFirst) {
                     textString.append(' ');
                 }
-                final String name = i > 0 ?
-                        Character.toString(channelUserModes.charAt(i)) : nonePrefix;
+                final String name = i > 0 ? Character.toString(channelUserModes.charAt(i)) : nonePrefix;
                 textString.append(name).append(count);
                 isFirst = false;
             }
@@ -199,13 +206,13 @@ public class WindowStatusManager {
         updateStatus();
     }
 
-    @ConfigBinding(key = "client.shownone", invocation = EDTInvocation.class)
+    @ConfigBinding(key = "channel.shownone", invocation = EDTInvocation.class)
     public void handleShowNone(final String value) {
         shownone = Boolean.valueOf(value);
         updateStatus();
     }
 
-    @ConfigBinding(key = "client.noneprefix", invocation = EDTInvocation.class)
+    @ConfigBinding(key = "channel.noneprefix", invocation = EDTInvocation.class)
     public void handleShowPrefix(final String value) {
         nonePrefix = value;
         updateStatus();
