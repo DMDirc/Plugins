@@ -5,6 +5,7 @@
 /lib
 *.iml
 /.gradle
+/.nb-gradle
 /pmd
 
 # Generated files created by IDEA
