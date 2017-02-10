@@ -50,7 +50,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public GenericListModel(final Collection<T> list) {
         this.list = Collections.synchronizedList(new ArrayList<>(list));
-        this.list.sort(Ordering.natural());
+        this.list.sort(Ordering.usingToString());
     }
 
     @Override
