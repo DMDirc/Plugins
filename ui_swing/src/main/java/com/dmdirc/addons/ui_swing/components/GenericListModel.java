@@ -17,11 +17,11 @@
 
 package com.dmdirc.addons.ui_swing.components;
 
+import com.google.common.collect.Ordering;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.swing.AbstractListModel;
 
 /**
@@ -40,7 +40,6 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      * Instantiates an empty generic list model.
      */
     public GenericListModel() {
-
         this.list = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -50,8 +49,8 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      * @param list Data to be included in the model
      */
     public GenericListModel(final Collection<T> list) {
-
         this.list = Collections.synchronizedList(new ArrayList<>(list));
+        this.list.sort(Ordering.usingToString());
     }
 
     @Override
@@ -152,6 +151,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     public void add(final T object) {
         final int index = list.size();
         list.add(object);
+        this.list.sort(Ordering.usingToString());
         fireIntervalAdded(this, index, index);
     }
 
@@ -180,6 +180,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     public void replace(final T oldValue, final T newValue) {
         final int index = list.indexOf(oldValue);
         list.set(index, newValue);
+        this.list.sort(Ordering.usingToString());
         fireContentsChanged(this, index, index);
     }
 
@@ -233,6 +234,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
     public void addAll(final Collection<T> collection) {
         final int lastIndex = list.size() - 1;
         list.addAll(collection);
+        this.list.sort(Ordering.usingToString());
         fireIntervalAdded(this, lastIndex < 0 ? 0 : lastIndex, collection.size());
     }
 
@@ -244,6 +246,7 @@ public class GenericListModel<T> extends AbstractListModel<T> {
      */
     public void addAll(final int index, final Collection<T> collection) {
         list.addAll(index, collection);
+        this.list.sort(Ordering.usingToString());
         fireIntervalAdded(this, index, collection.size());
     }
 
