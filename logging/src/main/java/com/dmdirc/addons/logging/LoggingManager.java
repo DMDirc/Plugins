@@ -42,6 +42,8 @@ import com.dmdirc.events.ChannelTopicChangeEvent;
 import com.dmdirc.events.ClientPrefsOpenedEvent;
 import com.dmdirc.events.QueryClosedEvent;
 import com.dmdirc.events.QueryOpenedEvent;
+import com.dmdirc.events.QuerySelfActionEvent;
+import com.dmdirc.events.QuerySelfMessageEvent;
 import com.dmdirc.events.eventbus.EventBus;
 import com.dmdirc.interfaces.GroupChat;
 import com.dmdirc.interfaces.GroupChatUser;
@@ -244,16 +246,45 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleQueryActions(final BaseQueryActionEvent event) {
+        if (event instanceof QuerySelfActionEvent) { return; }
+
         final User user = event.getQuery().getUser();
         final String filename = locator.getLogFile(user);
         appendLine(filename, "* %s %s", user.getNickname(), event.getMessage());
     }
 
     @Handler
-    public void handleQueryMessages(final BaseQueryMessageEvent event) {
+    public void handleQuerySelActions(final QuerySelfActionEvent event) {
         final User user = event.getQuery().getUser();
         final String filename = locator.getLogFile(user);
+
+        if (event.getSource().getConnection().isPresent() && event.getSource().getConnection().get().getLocalUser().isPresent()) {
+            appendLine(filename, "* %s %s", event.getSource().getConnection().get().getLocalUser().get().getNickname(), event.getMessage());
+        } else {
+            appendLine(filename, "* >> %s", event.getMessage());
+        }
+    }
+
+    @Handler
+    public void handleQueryMessages(final BaseQueryMessageEvent event) {
+        if (event instanceof QuerySelfMessageEvent) { return; }
+
+        final User user = event.getQuery().getUser();
+        final String filename = locator.getLogFile(user);
+
         appendLine(filename, "<%s> %s", user.getNickname(), event.getMessage());
+    }
+
+    @Handler
+    public void handleQuerySelfMessages(final QuerySelfMessageEvent event) {
+        final User user = event.getQuery().getUser();
+        final String filename = locator.getLogFile(user);
+
+        if (event.getSource().getConnection().isPresent() && event.getSource().getConnection().get().getLocalUser().isPresent()) {
+            appendLine(filename, "<%s> %s", event.getSource().getConnection().get().getLocalUser().get().getNickname(), event.getMessage());
+        } else {
+            appendLine(filename, ">> %s", event.getMessage());
+        }
     }
 
     @Handler
@@ -364,7 +395,6 @@ public class LoggingManager implements ConfigChangeListener {
     @Handler
     public void handleChannelOpened(final ChannelOpenedEvent event) {
         final String filename = locator.getLogFile(event.getChannel());
-        System.out.println("\tChannel opened filename: " + filename);
 
         if (autobackbuffer) {
             showBackBuffer(event.getChannel().getWindowModel(), filename);
