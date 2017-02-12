@@ -122,27 +122,6 @@ public class LogFileLocator {
     }
 
     /**
-     * Get the name of the log file for a specific object.
-     *
-     * @param descriptor Description of the object to get a log file for.
-     *
-     * @return the name of the log file to use for this object.
-     */
-    public String getLogFile(@Nullable final String descriptor) {
-        final StringBuffer directory = getLogDirectory();
-        final StringBuffer file = new StringBuffer();
-        final String md5String;
-        if (descriptor == null) {
-            file.append("null.log");
-            md5String = "";
-        } else {
-            file.append(sanitise(descriptor.toLowerCase()));
-            md5String = descriptor;
-        }
-        return getPath(directory, file, md5String);
-    }
-
-    /**
      * Gets the path for the given file and directory. Only intended to be used from getLogFile
      * methods.
      *

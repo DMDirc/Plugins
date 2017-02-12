@@ -363,7 +363,8 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelOpened(final ChannelOpenedEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getName());
+        final String filename = locator.getLogFile(event.getChannel());
+        System.out.println("\tChannel opened filename: " + filename);
 
         if (autobackbuffer) {
             showBackBuffer(event.getChannel().getWindowModel(), filename);
@@ -377,7 +378,7 @@ public class LoggingManager implements ConfigChangeListener {
 
     @Handler
     public void handleChannelClosed(final ChannelClosedEvent event) {
-        final String filename = locator.getLogFile(event.getChannel().getName());
+        final String filename = locator.getLogFile(event.getChannel());
 
         synchronized (FORMAT_LOCK) {
             appendLine(filename, "*** Channel closed at: %s", OPENED_AT_FORMAT.format(new Date()));
@@ -558,18 +559,18 @@ public class LoggingManager implements ConfigChangeListener {
      * @return True if the history is available, false otherwise
      */
     protected boolean showHistory(final WindowModel target) {
-        final String descriptor;
+        final Path log;
 
         if (target instanceof GroupChat) {
-            descriptor = target.getName();
+            log = Paths.get(locator.getLogFile((GroupChat)target));
         } else if (target instanceof Query) {
-            descriptor = ((PrivateChat) target).getNickname();
+            log = Paths.get(locator.getLogFile(((PrivateChat) target).getUser()));
         } else {
             // Unknown component
             return false;
         }
 
-        final Path log = Paths.get(locator.getLogFile(descriptor));
+
 
         if (!Files.exists(log)) {
             // File doesn't exist
