@@ -147,12 +147,12 @@ public class ErrorPanel extends StatusbarPopupPanel<JLabel> implements ErrorsDia
 
     @Override
     public void errorDeleted(final DisplayableError error) {
-        UIUtilities.invokeAndWait(this::checkErrors);
+        UIUtilities.invokeLater(this::checkErrors);
     }
 
     @Override
     public void errorAdded(final DisplayableError error) {
-        UIUtilities.invokeAndWait(this::checkErrors);
+        UIUtilities.invokeLater(this::checkErrors);
     }
 
     @Override
