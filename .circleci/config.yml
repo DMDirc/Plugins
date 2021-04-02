@@ -12,16 +12,21 @@ jobs:
     steps:
       - run: git clone https://github.com/DMDirc/Meta.git .
       - run: git submodule update --init --remote
-      - run: |
-          cd plugins
-          git remote set-url origin https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git:
-          if [ -n "$CIRCLE_PR_NUMBER" ]; then
-              git fetch origin pull/$CIRCLE_PR_NUMBER/head:circleci;
-          else
-              git fetch origin $CIRCLE_BRANCH:circleci;
-          fi
-      - run: cd plugins && git fetch --tags
-      - run: cd plugins && git checkout circleci
+      - run:
+          working_directory: plugins
+          command: |
+            git remote set-url origin https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+                git fetch origin pull/$CIRCLE_PR_NUMBER/head:circleci;
+            else
+                git fetch origin $CIRCLE_BRANCH:circleci;
+            fi
+      - run:
+          working_directory: plugins
+          command: git fetch --tags
+      - run:
+          working_directory: plugins
+          command: git checkout circleci
       - run: ./gradlew dependencies
       - run: ./gradlew --stacktrace plugins:jars plugins:tests plugins:coveralls
       - save_cache:
@@ -34,12 +39,15 @@ jobs:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: Prepare test output
+          when: always
           command: |
             mkdir -p ~/test-results/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
       - store_test_results:
+          when: always
           path: ~/test-results
       - store_artifacts:
+          when: always
           path: ~/test-results/junit
       - store_artifacts:
           path: plugins/dist
