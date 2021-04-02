@@ -1,0 +1,51 @@
+---
+version: 2
+
+jobs:
+  build:
+    environment:
+      TERM: dumb
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Xmx2g -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - run: git clone https://github.com/DMDirc/Meta.git .
+      - run: git submodule update --init --remote
+      - run: |
+          cd plugins
+          git remote set-url origin https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git:
+          if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              git fetch origin pull/$CIRCLE_PR_NUMBER/head:circleci;
+          else
+              git fetch origin $CIRCLE_BRANCH:circleci;
+          fi
+      - run: cd plugins && git fetch --tags
+      - run: cd plugins && git checkout circleci
+      - run: ./gradlew dependencies
+      - run: ./gradlew --stacktrace plugins:jars plugins:tests plugins:coveralls
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - run:
+          name: Prepare test output
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+      - store_artifacts:
+          path: plugins/dist
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build
